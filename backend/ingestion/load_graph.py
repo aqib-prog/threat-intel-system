@@ -43,7 +43,8 @@ def load_techniques(driver):
         for t in techniques:
             session.run("""
                        MERGE (n:Technique {id: $id})
-                       SET n.name = $name,
+                       SET n:MitreNode,
+                           n.name = $name,
                            n.description = $description,
                            n.external_id = $external_id,
                            n.url = $url,
@@ -68,7 +69,8 @@ def load_actors(driver):
         for a in actors:
             session.run("""
                         MERGE (n:Actor {id: $id})
-                        SET n.name = $name,
+                        SET n:MitreNode,
+                        n.name = $name,
                         n.description = $description,
                         n.external_id = $external_id,
                         n.url = $url,
@@ -89,7 +91,8 @@ def load_malware(driver):
         for m in malwares:
             session.run("""
                         MERGE (n:Malware {id: $id})
-                        SET n.name = $name,
+                        SET n:MitreNode, 
+                        n.name = $name,
                         n.description = $description,
                         n.external_id = $external_id,
                         n.url = $url,
@@ -112,7 +115,8 @@ def load_tools(driver):
         for t in tools:
             session.run("""
                         MERGE (n:Tool {id: $id})
-                        SET n.name = $name,
+                        SET n:MitreNode,
+                        n.name = $name,
                         n.description = $description,
                         n.external_id = $external_id,
                         n.url = $url,
@@ -135,7 +139,8 @@ def load_mitigations(driver):
         for m in mitigations:
             session.run("""
                         MERGE (n:Mitigation {id: $id})
-                        SET n.name = $name,
+                        SET n:MitreNode, 
+                        n.name = $name,
                         n.description = $description,
                         n.external_id = $external_id,
                         n.url = $url
@@ -154,7 +159,8 @@ def load_tactics(driver):
         for t in tactics:
             session.run("""
                         MERGE (n:Tactic {id: $id})
-                        SET n.name = $name,
+                        SET n:MitreNode, 
+                        n.name = $name,
                         n.description = $description,
                         n.external_id = $external_id,
                         n.url = $url,
@@ -175,7 +181,8 @@ def load_campaigns(driver):
         for c in campaigns:
             session.run("""
                         MERGE (n:Campaign {id: $id})
-                        SET n.name = $name,
+                        SET n:MitreNode,
+                        n.name = $name,
                         n.description = $description,
                         n.external_id = $external_id,
                         n.url = $url,
@@ -198,7 +205,8 @@ def load_data_components(driver):
         for c in components:
             session.run("""
                         MERGE (n:DataComponent {id: $id})
-                        SET n.name = $name,
+                        SET n:MitreNode, 
+                        n.name = $name,
                         n.description = $description,
                         n.external_id = $external_id,
                         n.url = $url,
@@ -218,7 +226,8 @@ def load_analytics(driver):
         for a in analytics:
             session.run("""
                         MERGE (n:Analytic {id: $id})
-                        SET n.name = $name,
+                        SET n:MitreNode, 
+                        n.name = $name,
                         n.description = $description,
                         n.external_id = $external_id,
                         n.url = $url,
@@ -239,7 +248,8 @@ def load_detection_strategies(driver):
         for s in strategies:
             session.run("""
                         MERGE (n:DetectionStrategy {id: $id})
-                        SET n.name = $name,
+                        SET n:MitreNode, 
+                        n.name = $name,
                         n.external_id = $external_id,
                         n.url = $url
                         """,
