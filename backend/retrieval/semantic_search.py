@@ -74,34 +74,22 @@ def rrf_fusion(vector_results: list, bm25_results: list, k: int=60) -> list[dict
     ranked = sorted(scores.values(), key=lambda x: x['score'], reverse=True)
     return [r['data'] for r in ranked]
 
-def search(query: str, filters: dict = {}, top_k: int=10)-> list[dict]:
+def search(query: str, top_k: int = 10) -> list[dict]:
     driver = get_driver()
     queries = expand_query(query)
 
     all_vector, all_bm25 = [], []
     for q in queries:
-        all_vector.extend(vector_search(driver,q))
-        all_bm25.extend(bm25_search(driver,q))
+        all_vector.extend(vector_search(driver, q))
+        all_bm25.extend(bm25_search(driver, q))
 
-        fused = rrf_fusion(all_vector, all_bm25)
-
-        #METADATA FILTER
-        if filters.get('type'):
-            fused = [r for r in fused if r['type'] in filters['type']]
-
-        driver.close()
-        return fused[:top_k]
+    fused = rrf_fusion(all_vector, all_bm25)
+    driver.close()
+    return fused[:top_k]
 
 if __name__ == "__main__":
-    # Test without filter
     results = search("credential theft using stolen passwords")
-    print("=== No filter ===")
-    for r in results:
-        print(f"[{r['type']}] {r['name']} ({r['external_id']})")
-    
-    # Test with type filter
-    results = search("credential theft", filters={"type": "Technique"})
-    print("\n=== Techniques only ===")
+    print("=== Search Results ===")
     for r in results:
         print(f"[{r['type']}] {r['name']} ({r['external_id']})")
 
