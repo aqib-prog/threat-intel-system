@@ -988,16 +988,68 @@ NODE_TYPE_MAP = {
 }
 
 
+REQUEST_NODE_TYPE_PATTERNS = {
+    "Technique": re.compile(r"\btechniques\b", re.IGNORECASE),
+    "Actor": re.compile(r"\bactors\b", re.IGNORECASE),
+    "Malware": re.compile(r"\bmalwares?\b", re.IGNORECASE),
+    "Tool": re.compile(r"\btools\b", re.IGNORECASE),
+    "Mitigation": re.compile(r"\bmitigations?\b", re.IGNORECASE),
+    "Tactic": re.compile(r"\btactics\b", re.IGNORECASE),
+    "Campaign": re.compile(r"\bcampaigns\b", re.IGNORECASE),
+    "Analytic": re.compile(r"\banalytics?\b", re.IGNORECASE),
+    "DetectionStrategy": re.compile(
+        r"\bdetection\s+strateg(?:y|ies)\b", re.IGNORECASE
+    ),
+    "DataComponent": re.compile(r"\bdata\s+components?\b", re.IGNORECASE),
+}
+
+QUALIFIER_NODE_TYPE_PATTERNS = {
+    "Technique": re.compile(r"\btechnique\b", re.IGNORECASE),
+    "Actor": re.compile(r"\bactor\b", re.IGNORECASE),
+    "Tool": re.compile(r"\btool\b", re.IGNORECASE),
+    "Tactic": re.compile(r"\btactic\b", re.IGNORECASE),
+    "Campaign": re.compile(r"\bcampaign\b", re.IGNORECASE),
+}
+
+
+def extract_requested_node_types(query: str) -> list[str]:
+    requested = [
+        node_type
+        for node_type, pattern in REQUEST_NODE_TYPE_PATTERNS.items()
+        if pattern.search(query)
+    ]
+    if requested:
+        return requested
+
+    return [
+        node_type
+        for node_type, pattern in QUALIFIER_NODE_TYPE_PATTERNS.items()
+        if pattern.search(query)
+    ]
+
+
+def reconcile_node_type_filters(query: str, filters: dict) -> dict:
+    node_types = extract_requested_node_types(query)
+    if not node_types:
+        return filters
+
+    reconciled = dict(filters)
+    reconciled["node_type"] = node_types
+    return reconciled
+
+
 def extract_entities_regex(query: str) -> dict:
     extracted = {}
     for entity_type, pattern in CYBER_ENTITY_REGEX.items():
+        if entity_type == "node_type":
+            node_types = extract_requested_node_types(query)
+            if node_types:
+                extracted[entity_type] = node_types
+            continue
+
         matches = list(set(pattern.findall(query)))
         if matches:
-            if entity_type == "node_type":
-                extracted[entity_type] = [
-                    NODE_TYPE_MAP.get(m.lower(), m) for m in matches]
-            else:
-                extracted[entity_type] = matches
+            extracted[entity_type] = matches
 
     return extracted
 
@@ -1294,7 +1346,7 @@ def extract_filters(query: str, driver) -> dict:
 
     # Pass query for context validation
     validated = validate_all_entities(merged, driver, query)
-    return validated
+    return reconcile_node_type_filters(query, validated)
 
 
 if __name__ == "__main__":

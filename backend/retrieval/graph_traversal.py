@@ -202,6 +202,16 @@ def traverse_nodes(driver, nodes:list)-> list[dict]:
         context = traverse_node(driver, node['id'], node['type'])
         if context:
             context['node_type'] = node['type']
+            if node.get('external_id'):
+                context['external_id'] = node['external_id']
+            elif context.get('id'):
+                context['external_id'] = context['id']
+            if 'score' in node:
+                context['score'] = node['score']
+            if 'source_score' in node:
+                context['source_score'] = node['source_score']
+            if 'rrf_score' in node:
+                context['rrf_score'] = node['rrf_score']
             results.append(context)
     return results
 
@@ -217,4 +227,3 @@ if __name__ == "__main__":
     import json
     print(json.dumps(results, indent=2, default=str))
     driver.close()
-
