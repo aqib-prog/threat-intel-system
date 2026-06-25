@@ -22,6 +22,15 @@ EXTERNAL_ID_RE = re.compile(
 ENTITY_REFERENCE_RE = re.compile(
     r"\b(?:[A-Z]{2,}\d+[A-Z0-9]*|[A-Z][a-z]+[A-Z][A-Za-z0-9]*|[A-Za-z]+\d+[A-Za-z0-9]*)\b"
 )
+LOW_SIGNAL_QUERY_RE = re.compile(
+    r"^\s*(?:"
+    r"hi|hello|hey|hi\s+there|hello\s+there|"
+    r"thanks|thank\s+you|thx|"
+    r"what\s+can\s+you\s+do\??|"
+    r"who\s+are\s+you\??"
+    r")\s*[.!?]*\s*$",
+    re.IGNORECASE
+)
 
 REQUEST_NODE_TYPE_PATTERNS = {
     "Technique": re.compile(r"\btechniques?\b", re.IGNORECASE),
@@ -61,6 +70,10 @@ def infer_node_types(query: str) -> set[str]:
     }
 
 
+def is_low_signal_query(query: str) -> bool:
+    return bool(LOW_SIGNAL_QUERY_RE.fullmatch(query or ""))
+
+
 def compact_text(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", value.lower())
 
@@ -98,7 +111,15 @@ def is_partial_entity_reference_match(query: str, node: dict) -> bool:
     if not name or has_exact_query_reference(query, node):
         return False
 
-    for token in explicit_reference_tokens(query):
+    tokens = explicit_reference_tokens(query)
+    if (
+        re.fullmatch(r"apt\d+", name)
+        and name not in tokens
+        and any(re.fullmatch(r"apt\d+", token) for token in tokens)
+    ):
+        return True
+
+    for token in tokens:
         if not token or token == name:
             continue
         prefix_len = common_prefix_len(token, name)
@@ -167,6 +188,28 @@ def exact_id_search(driver, query: str) -> list[dict]:
                    node.external_id as external_id,
                    labels(node)[0] as type, 1.0 as score
         ''', ids=ids)
+        return [dict(r) for r in result]
+
+
+def exact_name_search(driver, query: str, k: int = 10) -> list[dict]:
+    query_tokens = [token.lower() for token in re.findall(r"[A-Za-z0-9_.-]+", query)]
+    with driver.session() as session:
+        result = session.run('''
+            MATCH (node:MitreNode)
+            WHERE (
+                node.name IS NOT NULL
+                AND size(node.name) >= 3
+                AND toLower($search_text) CONTAINS toLower(node.name)
+            )
+            OR any(alias IN coalesce(node.aliases, [])
+                WHERE size(alias) >= 3
+                AND toLower(alias) IN $query_tokens
+            )
+            RETURN node.id as id, node.name as name,
+                   node.external_id as external_id,
+                   labels(node)[0] as type, 1.0 as score
+            LIMIT $k
+        ''', search_text=query, query_tokens=query_tokens, k=k)
         return [dict(r) for r in result]
 
 
@@ -250,6 +293,9 @@ def rrf_fusion(vector_results: list, bm25_results: list, exact_results: list | N
     return fused
 
 def search(query: str, top_k: int = 10) -> list[dict]:
+    if not query.strip() or is_low_signal_query(query):
+        return []
+
     driver = get_driver()
     try:
         queries = expand_query(query)
@@ -261,10 +307,11 @@ def search(query: str, top_k: int = 10) -> list[dict]:
             all_vector.extend(vector_search(driver, q, k=retrieval_k))
             all_bm25.extend(bm25_search(driver, q, k=retrieval_k))
 
+        exact_results = exact_id_search(driver, query) + exact_name_search(driver, query)
         fused = rrf_fusion(
             all_vector,
             all_bm25,
-            exact_results=exact_id_search(driver, query),
+            exact_results=exact_results,
             requested_types=requested_types
         )
         filtered = [
