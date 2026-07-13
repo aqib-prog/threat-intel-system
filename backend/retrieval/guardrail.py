@@ -1,6 +1,7 @@
 import re
 import ollama
 import json
+import logging
 
 from neo4j import GraphDatabase
 import sys
@@ -9,6 +10,9 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD
 from rapidfuzz import process, fuzz
+
+
+logger = logging.getLogger(__name__)
 
 
 def get_driver():
@@ -107,12 +111,14 @@ def build_fuzzy_index(driver):
             }
         FUZZY_INDEX["tactic"] = tactic_names
 
-    print(f"Fuzzy index built ")
-    print(f"  Actors: {len(FUZZY_INDEX['threat_actor'])}")
-    print(f"  Malware: {len(FUZZY_INDEX['malware'])}")
-    print(f"  Tools: {len(FUZZY_INDEX['tool'])}")
-    print(f"  Campaigns: {len(FUZZY_INDEX['campaign'])}")
-    print(f"  Tactics: {len(FUZZY_INDEX['tactic'])}")
+    logger.debug(
+        "Fuzzy index built: actors=%s malware=%s tools=%s campaigns=%s tactics=%s",
+        len(FUZZY_INDEX['threat_actor']),
+        len(FUZZY_INDEX['malware']),
+        len(FUZZY_INDEX['tool']),
+        len(FUZZY_INDEX['campaign']),
+        len(FUZZY_INDEX['tactic']),
+    )
 
 
 GLOBAL_INDEX = {}
@@ -194,7 +200,7 @@ def build_global_index(driver):
 
     GENERIC_ENTITY_CATEGORY_WORDS = build_generic_entity_category_words(
         category_contexts)
-    print(f"Global index built: {len(GLOBAL_INDEX)} entries ")
+    logger.debug("Global index built: %s entries", len(GLOBAL_INDEX))
 
 
 def ensure_entity_indexes(driver):
@@ -520,7 +526,9 @@ def extract_campaign_indicators(query: str, threshold: int = 75) -> dict:
         return matches
 
     for regex_match in re.finditer(
-        r"\b((?:\w+[\s-]+){0,3}\w+)\s+(?:campaign|campaigns|operation|operations)\b",
+        r"\b((?:\w+[\s-]+){0,3}\w+)\s+"
+        r"(?:campaign|campaigns|operation|operations|attack|attacks|"
+        r"compromise|intrusion|intrusions|incident|incidents)\b",
         query,
         re.IGNORECASE
     ):
@@ -670,8 +678,18 @@ def source_supports_value(field: str, value: str, source_text: str,
     if normalized_source not in normalized_query:
         return False
 
+    if field in {"analytic", "detection_strategy", "data_component"}:
+        return normalized_value in normalized_query
+
     if hint_supports_value(hints, field, str(value), source):
         return True
+
+    if field == "tactic":
+        if normalized_value in normalized_query:
+            return True
+        source_tokens = token_list(source)
+        if len(source_tokens) < 2:
+            return False
 
     if field in NAMED_ENTITY_FIELDS and is_generic_entity_category_value(str(value)):
         return False
@@ -683,6 +701,17 @@ def source_supports_value(field: str, value: str, source_text: str,
         return False
 
     return fuzz.WRatio(normalized_source, normalized_value) >= 82
+
+
+def has_detection_intent(query: str) -> bool:
+    return bool(
+        re.search(
+            r"\b(?:detect|detection|analytic|analytics|log|logs|event|events|"
+            r"data\s+source|data\s+sources|telemetry|alert|alerts)\b",
+            query or "",
+            re.IGNORECASE,
+        )
+    )
 
 
 def normalize_llm_entity_output(raw_output: dict, query: str,
@@ -831,19 +860,23 @@ def fuzzy_match(field: str, value: str, threshold: int = 85, query: str = "") ->
         # Reject if matched result is too short compared to input
         length_ratio = len(real_name) / max(len(value), 1)
         if length_ratio < 0.5:
-            print(
-                f"Rejected: '{value}' → '{real_name}' length ratio too low ({length_ratio:.2f})")
+            logger.debug(
+                "Rejected fuzzy match %r -> %r: length ratio %.2f",
+                value, real_name, length_ratio,
+            )
             return None
 
         # Verify value is contextually related to query
         if query:
             query_relevance = fuzz.partial_ratio(value.lower(), query.lower())
             if query_relevance < 60:
-                print(
-                    f"Rejected: '{value}' not relevant to query (score: {query_relevance})")
+                logger.debug(
+                    "Rejected fuzzy match %r: query relevance %.1f",
+                    value, query_relevance,
+                )
                 return None
 
-        print(f"Fuzzy match: '{value}' → '{real_name}' (score: {score:.1f})")
+        logger.debug("Fuzzy match %r -> %r (score %.1f)", value, real_name, score)
         return real_name
 
     return None
@@ -854,9 +887,12 @@ OFF_TOPIC_BLACKLIST = {
     "clearly_offtopic": re.compile(
         r"\b(?:"
         r"recipe\s+for\s+(?:pasta|chicken|cake|lasagna|pizza|soup|cookies)|"
+        r"recipe\s+for\s+\w+|"
         r"horoscope\s+today|dating\s+advice|relationship\s+problems|"
         r"restaurant\s+near\s+me|best\s+places\s+to\s+eat|"
-        r"movie\s+recommendations?|what\s+to\s+watch\s+on\s+netflix|"
+        r"movie\s+recommendations?|what\s+movie\s+should\s+i\s+watch|"
+        r"what\s+to\s+watch\s+on\s+netflix|best\s+phone\s+to\s+buy|"
+        r"what\s+is\s+the\s+weather|weather\s+today|"
         r"discount\s+codes?|coupon\s+for"
         r")\b",
         re.IGNORECASE
@@ -881,15 +917,41 @@ FALLBACK_MESSAGES = {
     "jailbreak": "This request has been blocked. I only assist with cybersecurity analysis."
 }
 
+CYBERSECURITY_SIGNAL_RE = re.compile(
+    r"\b(?:cyber(?:security)?|security\s+investigation|threat|attack|"
+    r"malware|ransomware|phishing|adversar(?:y|ies)|detect(?:ion)?|"
+    r"logs?|mitre|techniques?|tactics?|mitigations?|analytics?|"
+    r"data\s+sources?|actors?|tools?|APT\s*\d+|"
+    r"[GMSTC]A?\d{4}(?:\.\d{3})?|CVE-\d{4}-\d{4,7})\b",
+    re.IGNORECASE,
+)
+
+
+def has_cybersecurity_signal(query: str) -> bool:
+    value = query or ""
+    if CYBERSECURITY_SIGNAL_RE.search(value):
+        return True
+    actor_pattern = globals().get("CYBER_ENTITY_REGEX", {}).get("threat_actor")
+    return bool(actor_pattern and actor_pattern.search(value))
+
 
 def check_blacklist(query: str) -> dict:
-    for category, pattern in OFF_TOPIC_BLACKLIST.items():
-        if pattern.search(query):
-            return {
-                "allowed": False,
-                "category": category,
-                "message": FALLBACK_MESSAGES[category]
-            }
+    if OFF_TOPIC_BLACKLIST["jailbreak"].search(query):
+        return {
+            "allowed": False,
+            "category": "jailbreak",
+            "message": FALLBACK_MESSAGES["jailbreak"],
+        }
+
+    if (
+        OFF_TOPIC_BLACKLIST["clearly_offtopic"].search(query)
+        and not has_cybersecurity_signal(query)
+    ):
+        return {
+            "allowed": False,
+            "category": "clearly_offtopic",
+            "message": FALLBACK_MESSAGES["clearly_offtopic"],
+        }
     return {"allowed": True}
 
 
@@ -930,6 +992,9 @@ def guardrail(query: str) -> dict:
     blacklist_result = check_blacklist(query)
     if not blacklist_result["allowed"]:
         return blacklist_result
+
+    if has_cybersecurity_signal(query):
+        return {"allowed": True}
 
     # Layer 2 - LLM
     llm_result = check_llm_guardrail(query)
@@ -1260,7 +1325,7 @@ def validate_and_correct_field(field: str, value: str, driver, query: str = "") 
             continue
         result = validate_against_graph(fallback, value, driver, query)
         if result:
-            print(f"Corrected: '{value}' moved from '{field}' to '{fallback}'")
+            logger.debug("Corrected %r from %s to %s", value, field, fallback)
             return fallback, result
 
     return None
@@ -1320,7 +1385,15 @@ def extract_filters(query: str, driver) -> dict:
                 existing.append(value)
         seeded_regex_entities[k] = existing
 
-    llm_entities = extract_entities_llm(
+    has_explicit_identifier = bool(
+        CYBER_ENTITY_REGEX["mitre_id"].search(query)
+        or CYBER_ENTITY_REGEX["cve_id"].search(query)
+    )
+    has_deterministic_entity = any(
+        seeded_regex_entities.get(field)
+        for field in ("threat_actor", "malware", "tool", "campaign", "tactic")
+    )
+    llm_entities = {} if (has_explicit_identifier or has_deterministic_entity) else extract_entities_llm(
         query, seeded_regex_entities, database_hints)
 
     merged = {}
@@ -1346,6 +1419,26 @@ def extract_filters(query: str, driver) -> dict:
 
     # Pass query for context validation
     validated = validate_all_entities(merged, driver, query)
+    if not has_detection_intent(query):
+        for field in ("analytic", "detection_strategy", "data_component"):
+            validated.pop(field, None)
+    if validated.get("tactic"):
+        validated["tactic"] = [
+            tactic
+            for tactic in validated["tactic"]
+            if tactic.lower() in query.lower()
+            or fuzz.WRatio(tactic.lower(), query.lower()) >= 75
+        ]
+        if not validated["tactic"]:
+            validated.pop("tactic")
+    if validated.get("mitre_id") and validated.get("tactic"):
+        validated["tactic"] = [
+            tactic
+            for tactic in validated["tactic"]
+            if tactic.lower() in query.lower()
+        ]
+        if not validated["tactic"]:
+            validated.pop("tactic")
     return reconcile_node_type_filters(query, validated)
 
 

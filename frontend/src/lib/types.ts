@@ -1,0 +1,69 @@
+// retrieval/reranker.py clips relevance_score to this range (clipped_score) -
+// it is not a pre-normalized 0-1 fraction.
+export const MAX_RELEVANCE_SCORE = 10;
+
+export interface NodeSource {
+  name: string;
+  external_id: string | null;
+  node_type: string;
+  relevance_score: number | null;
+}
+
+export interface StatsResponse {
+  node_count: number;
+  relationship_count: number;
+  tactic_count: number;
+  generated_at: number;
+  cached: boolean;
+}
+
+/** One deterministic technique match from the log-analysis branch, tying a
+ * matched line from the user's own pasted log back to the ATT&CK technique
+ * it triggered - see backend/log_analysis/analyzer.py. */
+export interface LogEvidenceEntry {
+  technique_id: string;
+  technique_name: string;
+  matched_line: string;
+  confidence: "high" | "medium" | "low";
+}
+
+/** "rag" (default) is the existing question-answering path; "log_analysis"
+ * marks a response produced by deterministic raw-log parsing instead of
+ * semantic search - see backend/orchestration/pipeline.py's dispatch branch. */
+export type AnswerSource = "rag" | "log_analysis";
+
+export interface QueryResponse {
+  query: string;
+  response: string;
+  answer: string;
+  filters: Record<string, unknown>;
+  nodes: NodeSource[];
+  sources: NodeSource[];
+  allowed: boolean;
+  guardrail_category: string | null;
+  retrieved_count: number;
+  context_count: number;
+  latency_ms: number;
+  answer_source?: AnswerSource;
+  log_evidence?: LogEvidenceEntry[];
+}
+
+export type ChatRole = "user" | "assistant";
+
+export interface ChatMessage {
+  id: string;
+  role: ChatRole;
+  text: string;
+  createdAt: number;
+  filters?: Record<string, unknown>;
+  nodes?: NodeSource[];
+  allowed?: boolean;
+  guardrailCategory?: string | null;
+  latencyMs?: number;
+  isMock?: boolean;
+  pending?: boolean;
+  answerSource?: AnswerSource;
+  logEvidence?: LogEvidenceEntry[];
+}
+
+export type ConnectionState = "checking" | "online" | "offline";

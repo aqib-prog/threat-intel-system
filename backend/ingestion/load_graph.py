@@ -345,6 +345,13 @@ def load_tactic_relationships(driver):
                 loaded += 1
         
         print(f"Loaded {loaded} tactic relationships")
+
+
+def invalidate_contextual_embeddings(driver):
+    """Mark retrieval context stale after a complete graph/data refresh."""
+    with driver.session() as session:
+        session.run("MATCH (n:MitreNode) REMOVE n.context_fingerprint")
+    print("Marked contextual embeddings for refresh")
         
 
 if __name__ == "__main__":
@@ -363,4 +370,5 @@ if __name__ == "__main__":
     load_relationships(driver)
     load_analytic_relationships(driver)
     load_tactic_relationships(driver)
+    invalidate_contextual_embeddings(driver)
     driver.close()

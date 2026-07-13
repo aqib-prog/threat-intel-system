@@ -3,6 +3,7 @@ import ollama
 import re
 import sys
 import os
+from rapidfuzz import fuzz
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD
@@ -24,12 +25,31 @@ ENTITY_REFERENCE_RE = re.compile(
 )
 LOW_SIGNAL_QUERY_RE = re.compile(
     r"^\s*(?:"
-    r"hi|hello|hey|hi\s+there|hello\s+there|"
+    r"hi|hello|hey|hi\s*,?\s*(?:there|how\s+are\s+you)?|hello\s*,?\s*(?:there|how\s+are\s+you)?|"
+    r"how\s+are\s+you|"
     r"thanks|thank\s+you|thx|"
     r"what\s+can\s+you\s+do\??|"
     r"who\s+are\s+you\??"
     r")\s*[.!?]*\s*$",
     re.IGNORECASE
+)
+OFF_TOPIC_QUERY_RE = re.compile(
+    r"\b(?:recipe|pasta|movie|dating\s+advice|phone\s+to\s+buy|weather)\b",
+    re.IGNORECASE,
+)
+JAILBREAK_QUERY_RE = re.compile(
+    r"(?:\bforget\b.*\brules\b|\bact\s+as\s+dan\b|\bjailbreak\b|"
+    r"\bignore\b.*\b(?:instructions|guidelines)\b|\bhow\s+to\s+hack\b)",
+    re.IGNORECASE,
+)
+CYBER_SIGNAL_QUERY_RE = re.compile(
+    r"\b(?:cyber(?:security)?|security\s+investigation|threat|attack(?:er|ers)?|"
+    r"malware|ransomware|phishing|adversar(?:y|ies)|detect(?:ion)?|logs?|"
+    r"mitre|techniques?|tactics?|campaigns?|mitigations?|analytics?|"
+    r"data\s+sources?|actors?|tools?|credential|persistence|"
+    r"lateral\s+movement|APT\s*\d+|[GMSTC]A?\d{4}(?:\.\d{3})?|"
+    r"CVE-\d{4}-\d{4,7})\b",
+    re.IGNORECASE,
 )
 
 REQUEST_NODE_TYPE_PATTERNS = {
@@ -53,6 +73,8 @@ QUALIFIER_NODE_TYPE_PATTERNS = {
     "Campaign": re.compile(r"\bcampaign\b", re.IGNORECASE),
 }
 
+_FUZZY_ENTITY_CANDIDATES: list[dict] | None = None
+
 
 def infer_node_types(query: str) -> set[str]:
     requested = {
@@ -71,7 +93,21 @@ def infer_node_types(query: str) -> set[str]:
 
 
 def is_low_signal_query(query: str) -> bool:
-    return bool(LOW_SIGNAL_QUERY_RE.fullmatch(query or ""))
+    value = (query or "").strip()
+    if not re.search(r"[A-Za-z0-9]", value):
+        return True
+    if len(compact_text(value)) <= 1:
+        return True
+    if re.fullmatch(r"show\s+me\s+everything", value, re.IGNORECASE):
+        return True
+    return bool(
+        LOW_SIGNAL_QUERY_RE.fullmatch(value)
+        or (
+            OFF_TOPIC_QUERY_RE.search(value)
+            and not CYBER_SIGNAL_QUERY_RE.search(value)
+        )
+        or JAILBREAK_QUERY_RE.search(value)
+    )
 
 
 def compact_text(value: str) -> str:
@@ -135,16 +171,29 @@ def vector_search(driver, query: str, k: int = 10) -> list[dict]:
     embedding = ollama.embeddings(
         model='nomic-embed-text', prompt=query)['embedding']
     with driver.session() as session:
-        result = session.run('''
-    MATCH (node:MitreNode)
-    WHERE node.embedding IS NOT NULL
-    WITH node, vector.similarity.cosine(node.embedding, $embedding) AS score
-    ORDER BY score DESC
-    LIMIT $k
-    RETURN node.id as id, node.name as name,
-           node.external_id as external_id,
-           labels(node)[0] as type, score
-''', embedding=embedding, k=k)
+        try:
+            result = session.run('''
+                CALL db.index.vector.queryNodes('mitre_vector', $k, $embedding)
+                YIELD node, score
+                RETURN node.id as id, node.name as name,
+                       node.external_id as external_id,
+                       head([label IN labels(node) WHERE label <> 'MitreNode']) as type,
+                       score
+            ''', embedding=embedding, k=k)
+            return [dict(r) for r in result]
+        except Exception:
+            # Compatibility fallback for databases without an online vector index.
+            result = session.run('''
+                MATCH (node:MitreNode)
+                WHERE node.embedding IS NOT NULL
+                WITH node, vector.similarity.cosine(node.embedding, $embedding) AS score
+                ORDER BY score DESC
+                LIMIT $k
+                RETURN node.id as id, node.name as name,
+                       node.external_id as external_id,
+                       head([label IN labels(node) WHERE label <> 'MitreNode']) as type,
+                       score
+            ''', embedding=embedding, k=k)
         
         return [dict(r) for r in result]
 
@@ -160,7 +209,7 @@ def bm25_search(driver, query: str, k: int=10) -> list[dict]:
                                  YIELD node, score
                                  RETURN node.id as id, node.name as name,
                                     node.external_id as external_id,
-                                    labels(node)[0] as type, score
+                                    head([label IN labels(node) WHERE label <> 'MitreNode']) as type, score
                                  LIMIT $k''',
                                  index='mitre_bm25', search_query=search_query, k=k)
             return [dict(r) for r in result]
@@ -186,7 +235,7 @@ def exact_id_search(driver, query: str) -> list[dict]:
             WHERE toUpper(node.external_id) IN $ids
             RETURN node.id as id, node.name as name,
                    node.external_id as external_id,
-                   labels(node)[0] as type, 1.0 as score
+                   head([label IN labels(node) WHERE label <> 'MitreNode']) as type, 1.0 as score
         ''', ids=ids)
         return [dict(r) for r in result]
 
@@ -203,14 +252,63 @@ def exact_name_search(driver, query: str, k: int = 10) -> list[dict]:
             )
             OR any(alias IN coalesce(node.aliases, [])
                 WHERE size(alias) >= 3
-                AND toLower(alias) IN $query_tokens
+                AND (
+                    toLower(alias) IN $query_tokens
+                    OR toLower($search_text) CONTAINS toLower(alias)
+                )
             )
             RETURN node.id as id, node.name as name,
                    node.external_id as external_id,
-                   labels(node)[0] as type, 1.0 as score
+                   head([label IN labels(node) WHERE label <> 'MitreNode']) as type, 1.0 as score
             LIMIT $k
         ''', search_text=query, query_tokens=query_tokens, k=k)
         return [dict(r) for r in result]
+
+
+def fuzzy_entity_search(driver, query: str, k: int = 5) -> list[dict]:
+    global _FUZZY_ENTITY_CANDIDATES
+    query_words = re.findall(r"[A-Za-z0-9_.-]+", query)
+    compact_query = compact_text(query)
+    if not query_words or len(compact_query) < 4:
+        return []
+
+    if _FUZZY_ENTITY_CANDIDATES is None:
+        with driver.session() as session:
+            result = session.run('''
+                MATCH (node:MitreNode)
+                RETURN node.id as id, node.name as name,
+                       node.external_id as external_id,
+                       node.aliases as aliases,
+                       head([label IN labels(node) WHERE label <> 'MitreNode']) as type
+            ''')
+            _FUZZY_ENTITY_CANDIDATES = [dict(record) for record in result]
+    candidates = _FUZZY_ENTITY_CANDIDATES
+
+    matches = []
+    ignored = {"malware", "technique", "campaign", "analytic", "detection"}
+    for candidate in candidates:
+        references = [candidate.get("name"), *(candidate.get("aliases") or [])]
+        best = 0.0
+        for reference in references:
+            reference = str(reference or "").strip()
+            compact_reference = compact_text(reference)
+            if len(compact_reference) < 5 or compact_reference in ignored:
+                continue
+            if compact_reference in compact_query:
+                best = 100.0
+                break
+            word_count = max(1, len(reference.split()))
+            for size in range(max(1, word_count - 1), min(len(query_words), word_count + 1) + 1):
+                for start in range(len(query_words) - size + 1):
+                    phrase = " ".join(query_words[start:start + size])
+                    best = max(best, fuzz.ratio(reference.casefold(), phrase.casefold()))
+        if best >= 87.0:
+            item = dict(candidate)
+            item["score"] = best / 100.0
+            matches.append(item)
+
+    matches.sort(key=lambda item: item["score"], reverse=True)
+    return matches[:k]
 
 
 def clean_expanded_query(value: str) -> str:
@@ -223,6 +321,22 @@ def referenced_ids(query: str) -> set[str]:
     ids = {match.group(0).upper() for match in EXTERNAL_ID_RE.finditer(query)}
     ids.update(match.upper() for match in CVE_ID_RE.findall(query))
     return ids
+
+
+def deterministic_query_expansions(query: str) -> list[str]:
+    value = query.lower()
+    expansions = []
+    if re.search(r"\b(?:admin\s+share|admin\$|c\$|smb\s+share|windows\s+admin\s+share)", value):
+        expansions.append("SMB/Windows Admin Shares T1021.002 lateral movement remote services")
+    if re.search(r"\b(?:remote\s+service|service\s+creation|create(?:d)?\s+service|windows\s+service)", value):
+        expansions.append("Service Execution Windows Service Create or Modify System Process remote services")
+    if re.search(r"\b(?:event\s+4624|logon\s+type\s+3|network\s+logon)", value):
+        expansions.append("Valid Accounts Remote Services Windows logon session authentication")
+    if re.search(r"\b(?:rdp|remote\s+desktop)", value):
+        expansions.append("Remote Desktop Protocol T1021.001 lateral movement")
+    if re.search(r"\b(?:wmi|windows\s+management\s+instrumentation)", value):
+        expansions.append("Windows Management Instrumentation T1047 execution lateral movement")
+    return expansions
 
 
 def expand_query(query: str) -> list[str]:
@@ -243,8 +357,13 @@ def expand_query(query: str) -> list[str]:
         expanded = []
 
     original_ids = referenced_ids(query)
+    deterministic = deterministic_query_expansions(query)
     queries = [query]
     seen = {query.lower()}
+    for candidate in deterministic:
+        if candidate.lower() not in seen:
+            queries.append(candidate)
+            seen.add(candidate.lower())
     for candidate in expanded:
         cleaned = clean_expanded_query(candidate)
         candidate_ids = referenced_ids(cleaned)
@@ -292,11 +411,13 @@ def rrf_fusion(vector_results: list, bm25_results: list, exact_results: list | N
         fused.append(item)
     return fused
 
-def search(query: str, top_k: int = 10) -> list[dict]:
+def search(query: str, top_k: int = 10, driver=None) -> list[dict]:
     if not query.strip() or is_low_signal_query(query):
         return []
 
-    driver = get_driver()
+    owns_driver = driver is None
+    if owns_driver:
+        driver = get_driver()
     try:
         queries = expand_query(query)
         requested_types = infer_node_types(query)
@@ -307,7 +428,11 @@ def search(query: str, top_k: int = 10) -> list[dict]:
             all_vector.extend(vector_search(driver, q, k=retrieval_k))
             all_bm25.extend(bm25_search(driver, q, k=retrieval_k))
 
-        exact_results = exact_id_search(driver, query) + exact_name_search(driver, query)
+        exact_results = (
+            exact_id_search(driver, query)
+            + exact_name_search(driver, query)
+            + fuzzy_entity_search(driver, query)
+        )
         fused = rrf_fusion(
             all_vector,
             all_bm25,
@@ -320,7 +445,8 @@ def search(query: str, top_k: int = 10) -> list[dict]:
         ]
         return filtered[:top_k]
     finally:
-        driver.close()
+        if owns_driver:
+            driver.close()
 
 if __name__ == "__main__":
     results = search("credential theft using stolen passwords")

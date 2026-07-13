@@ -16,12 +16,15 @@ def get_driver():
 
 def create_fulltext_index(driver):
     with driver.session() as session:
+        # Neo4j cannot alter indexed properties in-place. Recreate it so existing
+        # installations pick up contextual_text as well as the original fields.
+        session.run("DROP INDEX mitre_bm25 IF EXISTS")
         session.run("""
-                    CREATE FULLTEXT INDEX mitre_bm25 IF NOT EXISTS 
+                    CREATE FULLTEXT INDEX mitre_bm25
                     FOR (n:Technique|Actor|Malware|Tool|Mitigation|Tactic|Campaign|DataComponent|Analytic|DetectionStrategy)
-                    ON EACH [n.name, n.description, n.external_id]
+                    ON EACH [n.name, n.description, n.external_id, n.contextual_text]
                     """)
-        print("BM25 index created")
+        print("Contextual BM25 index created")
 
 
 def create_vector_index(driver):

@@ -2,8 +2,18 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from neo4j import GraphDatabase
+from neo4j import GraphDatabase, Query
 from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD
+
+
+QUERY_TIMEOUT_SECONDS = float(os.getenv("NEO4J_QUERY_TIMEOUT_SECONDS", "30"))
+
+
+def run_query(session, cypher: str, **parameters):
+    return session.run(
+        Query(cypher, timeout=QUERY_TIMEOUT_SECONDS),
+        **parameters,
+    )
 
 def get_driver():
     driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASSWORD))
@@ -13,181 +23,162 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
     with driver.session() as session:
 
         if node_type == "Technique":
-            result = session.run("""
+            result = run_query(session, """
                 MATCH (t:Technique {id: $id})
-                OPTIONAL MATCH (t)-[:BELONGS_TO_TACTIC]->(tac:Tactic)
-                OPTIONAL MATCH (m:Mitigation)-[:MITIGATES]->(t)
-                OPTIONAL MATCH (a:Actor)-[:USES]->(t)
-                OPTIONAL MATCH (mal:Malware)-[:USES]->(t)
-                OPTIONAL MATCH (tool:Tool)-[:USES]->(t)
-                OPTIONAL MATCH (c:Campaign)-[:USES]->(t)
-                OPTIONAL MATCH (ds:DetectionStrategy)-[:DETECTS]->(t)
-                OPTIONAL MATCH (ds)-[:HAS_ANALYTIC]->(an:Analytic)-[:USES_DATA_COMPONENT]->(dc:DataComponent)
-                OPTIONAL MATCH (t)-[:SUBTECHNIQUE_OF]->(parent:Technique)
-                OPTIONAL MATCH (sub:Technique)-[:SUBTECHNIQUE_OF]->(t)
+                CALL { WITH t OPTIONAL MATCH (t)-[:BELONGS_TO_TACTIC]->(n:Tactic) RETURN collect(DISTINCT n.name) AS tactics }
+                CALL { WITH t OPTIONAL MATCH (n:Mitigation)-[:MITIGATES]->(t) RETURN collect(DISTINCT n.name) AS mitigations }
+                CALL { WITH t OPTIONAL MATCH (n:Actor)-[:USES]->(t) RETURN collect(DISTINCT n.name) AS actors }
+                CALL { WITH t OPTIONAL MATCH (n:Malware)-[:USES]->(t) RETURN collect(DISTINCT n.name) AS malware }
+                CALL { WITH t OPTIONAL MATCH (n:Tool)-[:USES]->(t) RETURN collect(DISTINCT n.name) AS tools }
+                CALL { WITH t OPTIONAL MATCH (n:Campaign)-[:USES]->(t) RETURN collect(DISTINCT n.name) AS campaigns }
+                CALL { WITH t OPTIONAL MATCH (n:DetectionStrategy)-[:DETECTS]->(t) RETURN collect(DISTINCT n.name) AS detections }
+                CALL { WITH t OPTIONAL MATCH (ds:DetectionStrategy)-[:DETECTS]->(t) OPTIONAL MATCH (ds)-[:HAS_ANALYTIC]->(n:Analytic) RETURN collect(DISTINCT n.description) AS analytics }
+                CALL { WITH t OPTIONAL MATCH (ds:DetectionStrategy)-[:DETECTS]->(t) OPTIONAL MATCH (ds)-[:HAS_ANALYTIC]->(:Analytic)-[:USES_DATA_COMPONENT]->(n:DataComponent) RETURN collect(DISTINCT n.name) AS log_sources }
+                CALL { WITH t OPTIONAL MATCH (t)-[:SUBTECHNIQUE_OF]->(n:Technique) RETURN head(collect(DISTINCT n.name)) AS parent_technique }
+                CALL { WITH t OPTIONAL MATCH (n:Technique)-[:SUBTECHNIQUE_OF]->(t) RETURN collect(DISTINCT n.name) AS subtechniques }
                 RETURN t.name as name, t.external_id as id, 
                        t.description as description,
                        t.platforms as platforms,
                        t.is_subtechnique as is_subtechnique,
-                       collect(DISTINCT tac.name) as tactics,
-                       collect(DISTINCT m.name) as mitigations,
-                       collect(DISTINCT a.name) as actors,
-                       collect(DISTINCT mal.name) as malware,
-                       collect(DISTINCT tool.name) as tools,
-                       collect(DISTINCT c.name) as campaigns,
-                       collect(DISTINCT ds.name) as detections,
-                       collect(DISTINCT an.description) as analytics,
-                       collect(DISTINCT dc.name) as log_sources,
-                       parent.name as parent_technique,
-                       collect(DISTINCT sub.name) as subtechniques
+                       tactics, mitigations, actors, malware, tools, campaigns,
+                       detections, analytics, log_sources, parent_technique,
+                       subtechniques
             """, id=node_id)
 
         elif node_type == "Actor":
-            result = session.run("""
+            result = run_query(session, """
                 MATCH (a:Actor {id: $id})
-                OPTIONAL MATCH (a)-[:USES]->(t:Technique)
-                OPTIONAL MATCH (a)-[:USES]->(mal:Malware)
-                OPTIONAL MATCH (a)-[:USES]->(tool:Tool)
-                OPTIONAL MATCH (c:Campaign)-[:ATTRIBUTED_TO]->(a)
-                OPTIONAL MATCH (a)-[:USES]->(t2:Technique)-[:BELONGS_TO_TACTIC]->(tac:Tactic)
+                CALL { WITH a
+                    OPTIONAL MATCH (a)-[:USES]->(t:Technique)
+                    RETURN collect(DISTINCT t.name) AS techniques
+                }
+                CALL { WITH a
+                    OPTIONAL MATCH (a)-[:USES]->(mal:Malware)
+                    RETURN collect(DISTINCT mal.name) AS malware
+                }
+                CALL { WITH a
+                    OPTIONAL MATCH (a)-[:USES]->(tool:Tool)
+                    RETURN collect(DISTINCT tool.name) AS tools
+                }
+                CALL { WITH a
+                    OPTIONAL MATCH (c:Campaign)-[:ATTRIBUTED_TO]->(a)
+                    RETURN collect(DISTINCT c.name) AS campaigns
+                }
+                CALL { WITH a
+                    OPTIONAL MATCH (a)-[:USES]->(:Technique)-[:BELONGS_TO_TACTIC]->(tac:Tactic)
+                    RETURN collect(DISTINCT tac.name) AS tactics
+                }
                 RETURN a.name as name, a.external_id as id, 
                        a.description as description,
                        a.aliases as aliases,
-                       collect(DISTINCT t.name) as techniques,
-                       collect(DISTINCT mal.name) as malware,
-                       collect(DISTINCT tool.name) as tools,
-                       collect(DISTINCT c.name) as campaigns,
-                       collect(DISTINCT tac.name) as tactics
+                       techniques, malware, tools, campaigns, tactics
             """, id=node_id)
 
         elif node_type == "Malware":
-            result = session.run("""
+            result = run_query(session, """
                 MATCH (mal:Malware {id: $id})
-                OPTIONAL MATCH (mal)-[:USES]->(t:Technique)
-                OPTIONAL MATCH (a:Actor)-[:USES]->(mal)
-                OPTIONAL MATCH (c:Campaign)-[:USES]->(mal)
-                OPTIONAL MATCH (t)-[:BELONGS_TO_TACTIC]->(tac:Tactic)
-                OPTIONAL MATCH (m:Mitigation)-[:MITIGATES]->(t)
+                CALL { WITH mal OPTIONAL MATCH (mal)-[:USES]->(n:Technique) RETURN collect(DISTINCT n.name) AS techniques }
+                CALL { WITH mal OPTIONAL MATCH (n:Actor)-[:USES]->(mal) RETURN collect(DISTINCT n.name) AS actors }
+                CALL { WITH mal OPTIONAL MATCH (n:Campaign)-[:USES]->(mal) RETURN collect(DISTINCT n.name) AS campaigns }
+                CALL { WITH mal OPTIONAL MATCH (mal)-[:USES]->(:Technique)-[:BELONGS_TO_TACTIC]->(n:Tactic) RETURN collect(DISTINCT n.name) AS tactics }
+                CALL { WITH mal OPTIONAL MATCH (mal)-[:USES]->(t:Technique) OPTIONAL MATCH (n:Mitigation)-[:MITIGATES]->(t) RETURN collect(DISTINCT n.name) AS mitigations }
                 RETURN mal.name as name, mal.external_id as id, 
                        mal.description as description,
                        mal.platforms as platforms,
                        mal.aliases as aliases,
-                       collect(DISTINCT t.name) as techniques,
-                       collect(DISTINCT a.name) as actors,
-                       collect(DISTINCT c.name) as campaigns,
-                       collect(DISTINCT tac.name) as tactics,
-                       collect(DISTINCT m.name) as mitigations
+                       techniques, actors, campaigns, tactics, mitigations
             """, id=node_id)
 
         elif node_type == "Tool":
-            result = session.run("""
+            result = run_query(session, """
                 MATCH (tool:Tool {id: $id})
-                OPTIONAL MATCH (tool)-[:USES]->(t:Technique)
-                OPTIONAL MATCH (a:Actor)-[:USES]->(tool)
-                OPTIONAL MATCH (c:Campaign)-[:USES]->(tool)
-                OPTIONAL MATCH (t)-[:BELONGS_TO_TACTIC]->(tac:Tactic)
-                OPTIONAL MATCH (m:Mitigation)-[:MITIGATES]->(t)
+                CALL { WITH tool OPTIONAL MATCH (tool)-[:USES]->(n:Technique) RETURN collect(DISTINCT n.name) AS techniques }
+                CALL { WITH tool OPTIONAL MATCH (n:Actor)-[:USES]->(tool) RETURN collect(DISTINCT n.name) AS actors }
+                CALL { WITH tool OPTIONAL MATCH (n:Campaign)-[:USES]->(tool) RETURN collect(DISTINCT n.name) AS campaigns }
+                CALL { WITH tool OPTIONAL MATCH (tool)-[:USES]->(:Technique)-[:BELONGS_TO_TACTIC]->(n:Tactic) RETURN collect(DISTINCT n.name) AS tactics }
+                CALL { WITH tool OPTIONAL MATCH (tool)-[:USES]->(t:Technique) OPTIONAL MATCH (n:Mitigation)-[:MITIGATES]->(t) RETURN collect(DISTINCT n.name) AS mitigations }
                 RETURN tool.name as name, tool.external_id as id, 
                        tool.description as description,
                        tool.platforms as platforms,
                        tool.aliases as aliases,
-                       collect(DISTINCT t.name) as techniques,
-                       collect(DISTINCT a.name) as actors,
-                       collect(DISTINCT c.name) as campaigns,
-                       collect(DISTINCT tac.name) as tactics,
-                       collect(DISTINCT m.name) as mitigations
+                       techniques, actors, campaigns, tactics, mitigations
             """, id=node_id)
 
         elif node_type == "Mitigation":
-            result = session.run("""
+            result = run_query(session, """
                 MATCH (m:Mitigation {id: $id})
-                OPTIONAL MATCH (m)-[:MITIGATES]->(t:Technique)
-                OPTIONAL MATCH (t)-[:BELONGS_TO_TACTIC]->(tac:Tactic)
-                OPTIONAL MATCH (a:Actor)-[:USES]->(t)
+                CALL { WITH m OPTIONAL MATCH (m)-[:MITIGATES]->(n:Technique) RETURN collect(DISTINCT n.name) AS techniques }
+                CALL { WITH m OPTIONAL MATCH (m)-[:MITIGATES]->(:Technique)-[:BELONGS_TO_TACTIC]->(n:Tactic) RETURN collect(DISTINCT n.name) AS tactics }
+                CALL { WITH m OPTIONAL MATCH (m)-[:MITIGATES]->(t:Technique) OPTIONAL MATCH (n:Actor)-[:USES]->(t) RETURN collect(DISTINCT n.name) AS actors }
                 RETURN m.name as name, m.external_id as id, 
                        m.description as description,
-                       collect(DISTINCT t.name) as techniques,
-                       collect(DISTINCT tac.name) as tactics,
-                       collect(DISTINCT a.name) as actors
+                       techniques, tactics, actors
             """, id=node_id)
 
         elif node_type == "Tactic":
-            result = session.run("""
+            result = run_query(session, """
                 MATCH (tac:Tactic {id: $id})
-                OPTIONAL MATCH (t:Technique)-[:BELONGS_TO_TACTIC]->(tac)
-                OPTIONAL MATCH (a:Actor)-[:USES]->(t)
-                OPTIONAL MATCH (m:Mitigation)-[:MITIGATES]->(t)
+                CALL { WITH tac OPTIONAL MATCH (n:Technique)-[:BELONGS_TO_TACTIC]->(tac) RETURN collect(DISTINCT n.name) AS techniques }
+                CALL { WITH tac OPTIONAL MATCH (t:Technique)-[:BELONGS_TO_TACTIC]->(tac) OPTIONAL MATCH (n:Actor)-[:USES]->(t) RETURN collect(DISTINCT n.name) AS actors }
+                CALL { WITH tac OPTIONAL MATCH (t:Technique)-[:BELONGS_TO_TACTIC]->(tac) OPTIONAL MATCH (n:Mitigation)-[:MITIGATES]->(t) RETURN collect(DISTINCT n.name) AS mitigations }
                 RETURN tac.name as name, tac.external_id as id, 
                        tac.description as description,
                        tac.shortname as shortname,
-                       collect(DISTINCT t.name) as techniques,
-                       collect(DISTINCT a.name) as actors,
-                       collect(DISTINCT m.name) as mitigations
+                       techniques, actors, mitigations
             """, id=node_id)
 
         elif node_type == "Campaign":
-            result = session.run("""
+            result = run_query(session, """
                 MATCH (c:Campaign {id: $id})
-                OPTIONAL MATCH (c)-[:USES]->(t:Technique)
-                OPTIONAL MATCH (c)-[:ATTRIBUTED_TO]->(a:Actor)
-                OPTIONAL MATCH (c)-[:USES]->(mal:Malware)
-                OPTIONAL MATCH (c)-[:USES]->(tool:Tool)
-                OPTIONAL MATCH (t)-[:BELONGS_TO_TACTIC]->(tac:Tactic)
+                CALL { WITH c OPTIONAL MATCH (c)-[:USES]->(n:Technique) RETURN collect(DISTINCT n.name) AS techniques }
+                CALL { WITH c OPTIONAL MATCH (c)-[:ATTRIBUTED_TO]->(n:Actor) RETURN collect(DISTINCT n.name) AS actors }
+                CALL { WITH c OPTIONAL MATCH (c)-[:USES]->(n:Malware) RETURN collect(DISTINCT n.name) AS malware }
+                CALL { WITH c OPTIONAL MATCH (c)-[:USES]->(n:Tool) RETURN collect(DISTINCT n.name) AS tools }
+                CALL { WITH c OPTIONAL MATCH (c)-[:USES]->(:Technique)-[:BELONGS_TO_TACTIC]->(n:Tactic) RETURN collect(DISTINCT n.name) AS tactics }
                 RETURN c.name as name, c.external_id as id, 
                        c.description as description,
                        c.first_seen as first_seen, 
                        c.last_seen as last_seen,
-                       collect(DISTINCT t.name) as techniques,
-                       collect(DISTINCT a.name) as actors,
-                       collect(DISTINCT mal.name) as malware,
-                       collect(DISTINCT tool.name) as tools,
-                       collect(DISTINCT tac.name) as tactics
+                       techniques, actors, malware, tools, tactics
             """, id=node_id)
 
         elif node_type == "DetectionStrategy":
-            result = session.run("""
+            result = run_query(session, """
                 MATCH (ds:DetectionStrategy {id: $id})
-                OPTIONAL MATCH (ds)-[:DETECTS]->(t:Technique)
-                OPTIONAL MATCH (ds)-[:HAS_ANALYTIC]->(an:Analytic)
-                OPTIONAL MATCH (an)-[:USES_DATA_COMPONENT]->(dc:DataComponent)
-                OPTIONAL MATCH (t)-[:BELONGS_TO_TACTIC]->(tac:Tactic)
+                CALL { WITH ds OPTIONAL MATCH (ds)-[:DETECTS]->(n:Technique) RETURN collect(DISTINCT n.name) AS techniques }
+                CALL { WITH ds OPTIONAL MATCH (ds)-[:DETECTS]->(:Technique)-[:BELONGS_TO_TACTIC]->(n:Tactic) RETURN collect(DISTINCT n.name) AS tactics }
+                CALL { WITH ds OPTIONAL MATCH (ds)-[:HAS_ANALYTIC]->(n:Analytic) RETURN collect(DISTINCT n.description) AS analytics }
+                CALL { WITH ds OPTIONAL MATCH (ds)-[:HAS_ANALYTIC]->(:Analytic)-[:USES_DATA_COMPONENT]->(n:DataComponent) RETURN collect(DISTINCT n.name) AS log_sources }
                 RETURN ds.name as name, ds.external_id as id,
-                       collect(DISTINCT t.name) as techniques,
-                       collect(DISTINCT tac.name) as tactics,
-                       collect(DISTINCT an.description) as analytics,
-                       collect(DISTINCT dc.name) as log_sources
+                       techniques, tactics, analytics, log_sources
             """, id=node_id)
 
         elif node_type == "Analytic":
-            result = session.run("""
+            result = run_query(session, """
                 MATCH (an:Analytic {id: $id})
-                OPTIONAL MATCH (an)-[:USES_DATA_COMPONENT]->(dc:DataComponent)
-                OPTIONAL MATCH (ds:DetectionStrategy)-[:HAS_ANALYTIC]->(an)
-                OPTIONAL MATCH (ds)-[:DETECTS]->(t:Technique)
+                CALL { WITH an OPTIONAL MATCH (an)-[:USES_DATA_COMPONENT]->(n:DataComponent) RETURN collect(DISTINCT n.name) AS log_sources }
+                CALL { WITH an OPTIONAL MATCH (n:DetectionStrategy)-[:HAS_ANALYTIC]->(an) RETURN collect(DISTINCT n.name) AS detection_strategies }
+                CALL { WITH an OPTIONAL MATCH (ds:DetectionStrategy)-[:HAS_ANALYTIC]->(an) OPTIONAL MATCH (ds)-[:DETECTS]->(n:Technique) RETURN collect(DISTINCT n.name) AS techniques }
                 RETURN an.name as name, an.external_id as id, 
                        an.description as description,
                        an.platforms as platforms,
-                       collect(DISTINCT dc.name) as log_sources,
-                       collect(DISTINCT ds.name) as detection_strategies,
-                       collect(DISTINCT t.name) as techniques
+                       log_sources, detection_strategies, techniques
             """, id=node_id)
 
         elif node_type == "DataComponent":
-            result = session.run("""
+            result = run_query(session, """
                 MATCH (dc:DataComponent {id: $id})
-                OPTIONAL MATCH (an:Analytic)-[:USES_DATA_COMPONENT]->(dc)
-                OPTIONAL MATCH (ds:DetectionStrategy)-[:HAS_ANALYTIC]->(an)
-                OPTIONAL MATCH (ds)-[:DETECTS]->(t:Technique)
+                CALL { WITH dc OPTIONAL MATCH (n:Analytic)-[:USES_DATA_COMPONENT]->(dc) RETURN collect(DISTINCT n.name) AS analytics }
+                CALL { WITH dc OPTIONAL MATCH (an:Analytic)-[:USES_DATA_COMPONENT]->(dc) OPTIONAL MATCH (n:DetectionStrategy)-[:HAS_ANALYTIC]->(an) RETURN collect(DISTINCT n.name) AS detection_strategies }
+                CALL { WITH dc OPTIONAL MATCH (an:Analytic)-[:USES_DATA_COMPONENT]->(dc) OPTIONAL MATCH (ds:DetectionStrategy)-[:HAS_ANALYTIC]->(an) OPTIONAL MATCH (ds)-[:DETECTS]->(n:Technique) RETURN collect(DISTINCT n.name) AS techniques }
                 RETURN dc.name as name, dc.external_id as id, 
                        dc.description as description,
                        dc.log_sources as log_sources,
-                       collect(DISTINCT an.name) as analytics,
-                       collect(DISTINCT ds.name) as detection_strategies,
-                       collect(DISTINCT t.name) as techniques
+                       analytics, detection_strategies, techniques
             """, id=node_id)
 
         else:
-            result = session.run("""
+            result = run_query(session, """
                 MATCH (n {id: $id})
                 RETURN n.name as name, n.external_id as id, 
                        n.description as description

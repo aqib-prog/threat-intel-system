@@ -1,15 +1,16 @@
-import json
 import os
 import re
 import sys
+from functools import lru_cache
 from typing import Any
-
-import ollama
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 
 MITRE_ID_RE = re.compile(r"\b[GMSTC]A?\d{4}(?:\.\d{3})?\b", re.IGNORECASE)
+DEFAULT_CROSS_ENCODER_MODEL = "BAAI/bge-reranker-v2-m3"
+CROSS_ENCODER_WEIGHT = 0.8
+DETERMINISTIC_WEIGHT = 0.2
 
 RELATION_FIELDS = {
     "threat_actor": ["actors", "threat_actors"],
@@ -168,6 +169,29 @@ def deterministic_score(query: str, node: dict, filters: dict | None = None) -> 
     return score, reasons
 
 
+def hard_match_priority(node: dict, filters: dict | None = None) -> int:
+    """Protect exact validated entities from lexical near-match displacement."""
+    filters = filters or {}
+    current_type = node_type(node)
+    requested_types = as_list(filters.get("node_type"))
+
+    external_id = node_external_id(node)
+    if external_id and any_exact_match(as_list(filters.get("mitre_id")), [external_id]):
+        return 3
+
+    names = node_names(node)
+    for filter_field, expected_type in SELF_TYPE_BY_FILTER.items():
+        if (
+            current_type == expected_type
+            and any_exact_match(as_list(filters.get(filter_field)), names)
+        ):
+            return 2
+
+    if requested_types and any_exact_match(requested_types, [current_type]):
+        return 1
+    return 0
+
+
 def clipped_score(value: float) -> float:
     return min(max(value, 0.0), 10.0)
 
@@ -216,71 +240,65 @@ def build_node_context(node: dict, index: int | None = None) -> str:
     return "\n".join(lines)
 
 
-def extract_json_object(text: str) -> dict:
-    cleaned = text.strip().replace("```json", "").replace("```", "").strip()
+def _resolve_device(torch_module) -> str:
+    configured = os.getenv("RERANKER_DEVICE", "auto").strip().lower()
+    if configured != "auto":
+        return configured
+    if torch_module.cuda.is_available():
+        return "cuda"
+    if getattr(torch_module.backends, "mps", None) and torch_module.backends.mps.is_available():
+        return "mps"
+    return "cpu"
+
+
+@lru_cache(maxsize=1)
+def load_cross_encoder():
+    """Load the production reranker once and reuse it for all requests."""
     try:
-        return json.loads(cleaned)
-    except json.JSONDecodeError:
-        pass
+        import torch
+        from transformers import AutoModelForSequenceClassification, AutoTokenizer
+    except ImportError as exc:
+        raise RuntimeError(
+            "Cross-encoder dependencies are missing. Install torch and transformers "
+            "inside the backend virtual environment."
+        ) from exc
 
-    match = re.search(r"\{.*\}", cleaned, re.DOTALL)
-    if not match:
-        return {}
+    model_name = os.getenv("RERANKER_MODEL", DEFAULT_CROSS_ENCODER_MODEL)
+    device = _resolve_device(torch)
+    tokenizer = AutoTokenizer.from_pretrained(model_name)
+    model = AutoModelForSequenceClassification.from_pretrained(model_name)
+    model.to(device)
+    model.eval()
+    return tokenizer, model, device, torch
 
-    try:
-        return json.loads(match.group(0))
-    except json.JSONDecodeError:
-        return {}
 
-
-def batch_llm_scores(query: str, candidates: list[dict], filters: dict | None = None) -> dict[int, float]:
+def batch_cross_encoder_scores(query: str, candidates: list[dict]) -> list[float]:
+    """Return normalized query-to-candidate relevance scores in the range 0..1."""
     if not candidates:
-        return {}
+        return []
 
-    candidate_blocks = [
-        build_node_context(node, index=i)
-        for i, node in enumerate(candidates)
-    ]
+    tokenizer, model, device, torch = load_cross_encoder()
+    contexts = [build_node_context(node) for node in candidates]
+    batch_size = max(1, int(os.getenv("RERANKER_BATCH_SIZE", "8")))
+    max_length = max(128, int(os.getenv("RERANKER_MAX_LENGTH", "512")))
+    scores: list[float] = []
 
-    response = ollama.chat(
-        model="llama3.1",
-        messages=[{
-            "role": "user",
-            "content": f"""You are a relevance reranker for a cybersecurity MITRE ATT&CK RAG system.
+    for start in range(0, len(contexts), batch_size):
+        passages = contexts[start:start + batch_size]
+        encoded = tokenizer(
+            [query] * len(passages),
+            passages,
+            padding=True,
+            truncation=True,
+            max_length=max_length,
+            return_tensors="pt",
+        )
+        encoded = {key: value.to(device) for key, value in encoded.items()}
+        with torch.inference_mode():
+            logits = model(**encoded).logits.reshape(-1).float()
+            batch_scores = torch.sigmoid(logits).cpu().tolist()
+        scores.extend(float(score) for score in batch_scores)
 
-Score each candidate from 0 to 10 for how well it answers the user query.
-
-User query:
-{query}
-
-Validated filters:
-{json.dumps(filters or {}, indent=2)}
-
-Candidates:
-{chr(10).join('---\\n' + block for block in candidate_blocks)}
-
-Rules:
-- Prefer candidates matching the validated filters.
-- Prefer exact MITRE IDs, node types, platforms, and explicit relationships.
-- Penalize entities that are only generally cybersecurity-related.
-- Return ONLY valid JSON in this shape:
-{{"scores": [{{"index": 0, "score": 8.5}}, {{"index": 1, "score": 3.0}}]}}
-"""
-        }],
-        options={"temperature": 0}
-    )
-
-    raw = response.get("message", {}).get("content", "")
-    parsed = extract_json_object(raw)
-    scores = {}
-    for item in parsed.get("scores", []):
-        try:
-            index = int(item["index"])
-            score = clipped_score(float(item["score"]))
-        except (KeyError, TypeError, ValueError):
-            continue
-        if 0 <= index < len(candidates):
-            scores[index] = score
     return scores
 
 
@@ -290,11 +308,8 @@ def rerank(
     top_k: int = 5,
     filters: dict | None = None,
     candidate_k: int = 20,
-    use_llm: bool = True,
-    deterministic_weight: float = 0.6,
-    llm_weight: float = 0.4,
-    max_llm_boost: float = 2.0,
-    max_llm_penalty: float = 2.0,
+    cross_encoder_weight: float = CROSS_ENCODER_WEIGHT,
+    deterministic_weight: float = DETERMINISTIC_WEIGHT,
 ) -> list[dict]:
     if not nodes:
         return []
@@ -305,38 +320,50 @@ def rerank(
         raw_score, reasons = deterministic_score(query, scored, filters)
         scored["deterministic_score"] = clipped_score(raw_score)
         scored["deterministic_reasons"] = reasons
+        scored["hard_match_priority"] = hard_match_priority(scored, filters)
         scored_nodes.append(scored)
 
-    scored_nodes.sort(key=lambda item: item["deterministic_score"], reverse=True)
+    scored_nodes.sort(
+        key=lambda item: (item["hard_match_priority"], item["deterministic_score"]),
+        reverse=True,
+    )
     candidates = scored_nodes[:max(top_k, min(candidate_k, len(scored_nodes)))]
 
-    llm_scores = batch_llm_scores(query, candidates, filters) if use_llm else {}
-    for index, node in enumerate(candidates):
-        llm_score = llm_scores.get(index)
-        node["llm_score"] = llm_score
-        if llm_score is None:
-            effective_llm_score = node["deterministic_score"]
-        else:
-            effective_llm_score = max(
-                node["deterministic_score"] - max_llm_penalty,
-                min(llm_score, node["deterministic_score"] + max_llm_boost)
-            )
-        node["relevance_score"] = clipped_score(
-            deterministic_weight * node["deterministic_score"]
-            + llm_weight * effective_llm_score
-        )
+    if cross_encoder_weight < 0 or deterministic_weight < 0:
+        raise ValueError("Reranker weights cannot be negative")
+    total_weight = cross_encoder_weight + deterministic_weight
+    if total_weight <= 0:
+        raise ValueError("At least one reranker weight must be positive")
 
-    candidates.sort(key=lambda item: item["relevance_score"], reverse=True)
+    cross_encoder_scores = batch_cross_encoder_scores(query, candidates)
+    if len(cross_encoder_scores) != len(candidates):
+        raise RuntimeError(
+            "Cross-encoder returned an unexpected number of relevance scores"
+        )
+    for node, cross_encoder_score in zip(candidates, cross_encoder_scores):
+        deterministic_normalized = node["deterministic_score"] / 10.0
+        combined = (
+            cross_encoder_weight * cross_encoder_score
+            + deterministic_weight * deterministic_normalized
+        ) / total_weight
+        node["cross_encoder_score"] = cross_encoder_score
+        combined_score = combined * 10.0
+        if node["hard_match_priority"] >= 2:
+            combined_score = max(
+                combined_score,
+                9.5 + 0.25 * (node["hard_match_priority"] - 2),
+            )
+        node["relevance_score"] = clipped_score(combined_score)
+
+    candidates.sort(
+        key=lambda item: (item["hard_match_priority"], item["relevance_score"]),
+        reverse=True,
+    )
     return candidates[:top_k]
 
 
-def score_node(query: str, node: dict, filters: dict | None = None,
-               use_llm: bool = False) -> float:
-    if not use_llm:
-        score, _ = deterministic_score(query, node, filters)
-        return clipped_score(score)
-
-    result = rerank(query, [node], top_k=1, filters=filters, candidate_k=1, use_llm=True)
+def score_node(query: str, node: dict, filters: dict | None = None) -> float:
+    result = rerank(query, [node], top_k=1, filters=filters, candidate_k=1)
     return result[0]["relevance_score"] if result else 0.0
 
 
@@ -376,5 +403,5 @@ if __name__ == "__main__":
         }
     ]
 
-    for rank, node in enumerate(rerank(query, mock_nodes, top_k=3, filters=filters, use_llm=False), 1):
+    for rank, node in enumerate(rerank(query, mock_nodes, top_k=3, filters=filters), 1):
         print(f"{rank}. {node['name']} -> {node['relevance_score']:.2f} {node['deterministic_reasons']}")

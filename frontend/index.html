@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#050508" />
+    <meta name="description" content="Threat Intel AI — Graph RAG threat intelligence over the MITRE ATT&CK knowledge graph." />
+
+    <!--
+      Open Graph / Twitter Card preview (link unfurl in Slack, X, LinkedIn,
+      iMessage, etc). og:image and og:url should be absolute (https://...)
+      once a real domain exists - most platforms require it, relative paths
+      are unreliable. Update both when you deploy.
+    -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="THREAT INTEL AI" />
+    <meta property="og:description" content="Graph RAG threat intelligence over the MITRE ATT&CK knowledge graph." />
+    <meta property="og:image" content="/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="THREAT INTEL AI" />
+    <meta name="twitter:description" content="Graph RAG threat intelligence over the MITRE ATT&CK knowledge graph." />
+    <meta name="twitter:image" content="/og-image.png" />
+
+    <!--
+      Baseline CSP as defense-in-depth for static hosting. connect-src must
+      match VITE_API_BASE (see .env.example) - update it if that changes.
+      style-src needs 'unsafe-inline' because Framer Motion and React's
+      style={{}} prop both write inline style attributes.
+      Production should also set this (and frame-ancestors, which meta CSP
+      cannot express) as an HTTP response header at the hosting/proxy layer -
+      this tag is a floor, not a replacement for that.
+    -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' http://localhost:8000 https://localhost:8000; object-src 'none'; base-uri 'self'; form-action 'self';"
+    />
+    <title>THREAT INTEL AI</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

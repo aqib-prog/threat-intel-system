@@ -1,0 +1,105 @@
+.glitch-title {
+  position: relative;
+  text-shadow: 0 0 24px rgba(0, 245, 255, 0.25);
+}
+
+.glitch-title::before,
+.glitch-title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  background: inherit;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .glitch-title::before {
+    color: #ff3366;
+    clip-path: inset(0 0 60% 0);
+    animation: glitch-shift-1 4.5s infinite steps(1);
+  }
+  .glitch-title::after {
+    color: #00f5ff;
+    clip-path: inset(60% 0 0 0);
+    animation: glitch-shift-2 4.5s infinite steps(1);
+  }
+}
+
+@keyframes glitch-shift-1 {
+  0%, 92%, 100% { transform: translate(0, 0); opacity: 0; }
+  93% { transform: translate(-3px, -1px); opacity: 0.85; }
+  95% { transform: translate(3px, 1px); opacity: 0.7; }
+  97% { transform: translate(-2px, 0); opacity: 0.5; }
+}
+
+@keyframes glitch-shift-2 {
+  0%, 92%, 100% { transform: translate(0, 0); opacity: 0; }
+  93% { transform: translate(3px, 1px); opacity: 0.85; }
+  95% { transform: translate(-3px, -1px); opacity: 0.7; }
+  97% { transform: translate(2px, 0); opacity: 0.5; }
+}
+
+.holo-card {
+  position: relative;
+  border: 1px solid var(--color-border-glow);
+  background:
+    linear-gradient(160deg, rgba(0, 245, 255, 0.07), rgba(124, 58, 237, 0.04) 60%, transparent);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+}
+
+.holo-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 40%, rgba(0, 245, 255, 0.12) 50%, transparent 60%);
+  transform: translateX(-120%);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .holo-card::before {
+    animation: holo-sweep 5s ease-in-out infinite;
+  }
+}
+
+@keyframes holo-sweep {
+  0%, 20% { transform: translateX(-120%); }
+  60%, 100% { transform: translateX(120%); }
+}
+
+.corner-brackets::before,
+.corner-brackets::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--color-cyan);
+  opacity: 0.6;
+}
+.corner-brackets::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+.corner-brackets::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+}
+
+.text-glow-cyan {
+  text-shadow: 0 0 12px rgba(0, 245, 255, 0.55);
+}
+.text-glow-green {
+  text-shadow: 0 0 12px rgba(0, 255, 136, 0.55);
+}
+
+@keyframes answer-section-flash {
+  0% { box-shadow: 0 0 0 0 rgba(0, 245, 255, 0.55); }
+  60% { box-shadow: 0 0 0 8px rgba(0, 245, 255, 0.12); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 245, 255, 0); }
+}
+.answer-section-flash {
+  animation: answer-section-flash 0.9s ease-out;
+}
