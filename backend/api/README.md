@@ -1,37 +1,23 @@
 # Backend API
 
-This is the FastAPI service used by the frontend.
+The backend API powers the Threat Intel GraphRAG assistant.
 
-It receives user questions, runs the threat intelligence pipeline, and returns
-the answer with source nodes.
+It receives user questions, runs the retrieval and generation pipeline, and
+returns grounded answers with source nodes from the threat intelligence graph.
 
-## Run locally
+## What it provides
 
-From the `backend` folder:
+- Question answering over MITRE ATT&CK data
+- Guardrails for irrelevant or unsupported requests
+- Entity and filter extraction
+- Semantic retrieval and graph traversal
+- Reranking for more relevant context
+- Grounded answer generation
+- Security-log analysis and ATT&CK mapping
+- API responses for the frontend
 
-```bash
-cp .env.example .env
-uvicorn api.app:app --reload --host 127.0.0.1 --port 8000
-```
+## Role in the project
 
-## Main routes
-
-- `GET /health` — checks if the API is running
-- `GET /stats` — returns graph statistics for the frontend
-- `GET /filters` — returns detected filters for a query
-- `POST /query` — runs the full question-answering pipeline
-
-## Example query
-
-```bash
-curl -X POST http://localhost:8000/query \
-  -H "Content-Type: application/json" \
-  -H "X-API-Key: YOUR_API_KEY" \
-  -d '{"query":"Tell me about T1078"}'
-```
-
-## Environment
-
-Use `.env.example` as the template.
-
-Do not commit real secrets, passwords, or API keys.
+The backend is responsible for the core intelligence workflow. It connects the
+knowledge graph, retrieval logic, log-analysis rules, and response generation
+into one API that the frontend can use.

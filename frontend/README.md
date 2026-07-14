@@ -1,40 +1,23 @@
 # Frontend
 
-This is the web interface for the Threat Intel GraphRAG assistant.
+The frontend is the web interface for Threat Intel GraphRAG.
 
-Users can open the chat page, ask cyber threat intelligence questions, and view
-answers with source cards and visual sections.
+It allows users to ask cybersecurity questions, review AI-generated answers,
+inspect source nodes, and view visual breakdowns of the retrieved threat
+intelligence.
 
-## Run locally
+## What it provides
 
-```bash
-npm install
-cp .env.example .env
-npm run dev
-```
+- Chat interface for threat intelligence questions
+- Visual category breakdowns for answers
+- Source cards showing where the answer came from
+- MITRE ATT&CK ID highlighting
+- Security-log analysis display
+- Clean session behavior for browser refreshes
 
-Open the URL shown in the terminal, usually:
+## Role in the project
 
-```text
-http://localhost:5174/chat
-```
-
-## Settings
-
-Set these in `frontend/.env`:
-
-```text
-VITE_API_BASE=http://localhost:8000
-VITE_API_KEY=
-```
-
-`VITE_API_KEY` must match the backend API key if backend authentication is enabled.
-
-## Checks
-
-```bash
-npm run lint
-npm run build
-```
-
-Do not commit real `.env` files or build output.
+The frontend is focused on presenting the intelligence clearly. It does not
+store secrets or perform the core retrieval logic. Questions are sent to the
+backend API, and the frontend displays the returned answer, sources, and
+visual context.
