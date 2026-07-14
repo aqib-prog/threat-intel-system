@@ -29,6 +29,7 @@ backend/data/mitre_raw.json
 .DS_Store
 *.log
 HANDOFF.md
+CARD*.md
 
 .claude/
 frontend/.claude/
