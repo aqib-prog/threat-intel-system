@@ -72,7 +72,9 @@ def load_settings() -> ApiSettings:
         default_candidate_k=default_candidate_k,
         max_top_k=max_top_k,
         max_candidate_k=max_candidate_k,
-        max_query_chars=env_int("MAX_QUERY_CHARS", 8000, minimum=1),
+        # 100k accommodates a genuine multi-event raw-log paste (Card 3's
+        # log-analysis branch); short questions never approach this.
+        max_query_chars=env_int("MAX_QUERY_CHARS", 100_000, minimum=1),
         # LLM- and Neo4j-backed endpoints get tighter limits than the
         # read-only stats endpoint.
         rate_limit_query=env_str("RATE_LIMIT_QUERY", "20/minute"),
@@ -80,4 +82,3 @@ def load_settings() -> ApiSettings:
         rate_limit_stats=env_str("RATE_LIMIT_STATS", "60/minute"),
         stats_cache_seconds=env_int("STATS_CACHE_SECONDS", 60, minimum=0),
     )
-

@@ -897,24 +897,60 @@ OFF_TOPIC_BLACKLIST = {
         r")\b",
         re.IGNORECASE
     ),
-    # Catches explicit structural bypasses without restricting standard security queries
+    # Structural patterns, not literal phrases - built to generalize across
+    # rewordings of the same underlying bypass attempt rather than the exact
+    # strings seen during testing (e.g. "ignore ALL prior instructions" and
+    # "please disregard your previous rules" both match the same clause).
     "jailbreak": re.compile(
         r"(?:"
-        r"\b(?:ignore|1gn0r3)\s+(?:all\s+)?(?:rules|instructions|guidelines)\b|"
-        r"\bforget\s+(?:all\s+)?(?:rules|instructions)\b|"
+        # verb ... (any short qualifier run) ... target noun - bounded gap
+        # instead of enumerated adjective slots, so word order/combinations
+        # ("your previous", "all prior", "any of your") don't need their
+        # own alternative branch.
+        r"\b(?:ignore|disregard|forget|1gn0r3)\b.{0,20}\b"
+        r"(?:rules|instructions|guidelines|prompts?|restrictions|constraints)\b|"
         r"\bj[a4][i1]lb[r]?[e3][a4]k\b|"
-        r"\bdan\s+mode\b|"
-        r"ignore[-\s]+all[-\s]+instructions|"
+        r"\b(?:dan|stan|dude)\s+mode\b|"
+        r"\byou\s+are\s+now\s+(?:dan|stan)\b|"
+        r"\bdo\s+anything\s+now\b|"
+        r"\b(?:act|pretend|behave)\b.{0,15}\byou\b.{0,15}"
+        r"(?:no|not\s+bound\s+by|without\s+any)\b.{0,15}"
+        r"(?:rules|restrictions|guidelines|limits)\b|"
+        # "your"/"these" required here (not just "bypass ... filters") -
+        # filter/rule bypass is a legitimate SOC topic on its own (WAF
+        # bypass, EDR evasion); only block when it's self-referential,
+        # i.e. aimed at this assistant's own rules, not a third party's.
+        r"\bbypass\s+(?:your|these)\b.{0,15}(?:rules|restrictions|guidelines|safety)\b|"
+        r"\b(?:reveal|show|print|display|tell\s+me)\b.{0,15}"
+        r"(?:system\s+prompt|hidden\s+instructions|internal\s+instructions)\b|"
         r"\bunjailbreak\b"
         r")",
         re.IGNORECASE
-    )
+    ),
+    # Structural "how to make/build/create a <dangerous thing>" pattern
+    # generalized across weapon/explosive types, not just the literal
+    # "bomb" phrase seen during testing. Requests for harmful real-world
+    # content have zero cybersecurity relevance and should never depend on
+    # the LLM layer's mood - unlike "clearly_offtopic" above (pure
+    # lifestyle/consumer topics), this is specifically about physical harm.
+    # Not exhaustive by design - a regex blacklist can't be a complete harm
+    # classifier; this is a deterministic first line, with the LLM layer
+    # (and the base model's own safety training) as the backstop for
+    # anything phrased outside these patterns.
+    "dangerous_content": re.compile(
+        r"\b(?:how\s+(?:do\s+i|to)|instructions?\s+(?:for|to)|steps?\s+(?:for|to))\s+"
+        r"(?:build|make|create|construct|assemble)\s+(?:a\s+|an\s+)?"
+        r"(?:bomb|explosive\w*|pipe\s*bomb|firearm|gun|weapon|grenade|"
+        r"molotov|detonator|landmine|biological\s+weapon|chemical\s+weapon)\b",
+        re.IGNORECASE
+    ),
 }
 
 
 FALLBACK_MESSAGES = {
     "clearly_offtopic": "I'm a cybersecurity assistant focused on threat intelligence and MITRE ATT&CK. I can't help with general topics.",
-    "jailbreak": "This request has been blocked. I only assist with cybersecurity analysis."
+    "jailbreak": "This request has been blocked. I only assist with cybersecurity analysis.",
+    "dangerous_content": "I'm a cybersecurity assistant and can't help with that request.",
 }
 
 CYBERSECURITY_SIGNAL_RE = re.compile(
@@ -943,6 +979,13 @@ def check_blacklist(query: str) -> dict:
             "message": FALLBACK_MESSAGES["jailbreak"],
         }
 
+    if OFF_TOPIC_BLACKLIST["dangerous_content"].search(query):
+        return {
+            "allowed": False,
+            "category": "dangerous_content",
+            "message": FALLBACK_MESSAGES["dangerous_content"],
+        }
+
     if (
         OFF_TOPIC_BLACKLIST["clearly_offtopic"].search(query)
         and not has_cybersecurity_signal(query)
@@ -956,11 +999,23 @@ def check_blacklist(query: str) -> dict:
 
 
 def check_llm_guardrail(query: str) -> dict:
-    response = ollama.chat(
-        model='llama3.1',
-        messages=[{
-            'role': 'user',
-            'content': f"""You are a guardrail for a cybersecurity threat intelligence system.
+    # Fail open, always, no matter which step below breaks: an ollama.chat
+    # network/timeout error, a non-JSON response, valid JSON that isn't an
+    # object (e.g. a bare list), or an object missing/mistyping "allowed" -
+    # every one of these must degrade to the same safe default rather than
+    # let a malformed or missing model response propagate into guardrail()'s
+    # `llm_result["allowed"]`/`llm_result['reason']` lookups as a KeyError or
+    # TypeError. This became reachable in production once large raw-log
+    # pastes started reaching this layer (see log_analysis/detector.py) -
+    # a big, log-shaped prompt is exactly the input most likely to push the
+    # model off its expected JSON-only response format.
+    default_result = {"allowed": True, "reason": "Could not parse, allowing by default"}
+    try:
+        response = ollama.chat(
+            model='llama3.1',
+            messages=[{
+                'role': 'user',
+                'content': f"""You are a guardrail for a cybersecurity threat intelligence system.
 
 Your ONLY job is to block queries that have ABSOLUTELY ZERO connection to cybersecurity.
 
@@ -979,12 +1034,23 @@ Query: {query}
 
 Respond ONLY with valid JSON:
 {{"allowed": true/false, "reason": "one line reason"}}"""
-        }]
-    )
-    try:
-        return json.loads(response['message']['content'].strip())
-    except:
-        return {"allowed": True, "reason": "Could not parse, allowing by default"}
+            }],
+            # This is a binary classification, not creative generation -
+            # temperature 0 (greedy decoding) instead of Ollama's sampling
+            # default (~0.8) removes the actual root cause of this layer's
+            # non-determinism (confirmed: the exact same query returned
+            # different allowed/blocked verdicts across repeated calls
+            # before this change).
+            options={"temperature": 0},
+        )
+        parsed = json.loads(response['message']['content'].strip())
+    except Exception:
+        return default_result
+
+    if not isinstance(parsed, dict) or not isinstance(parsed.get("allowed"), bool):
+        return default_result
+    parsed.setdefault("reason", "No reason provided")
+    return parsed
 
 
 def guardrail(query: str) -> dict:

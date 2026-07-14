@@ -9,15 +9,19 @@ import json
 import os
 import re
 import sys
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, field
 from typing import Any
 
 from neo4j import GraphDatabase
 
 from config import NEO4J_PASSWORD, NEO4J_URI, NEO4J_USER
 from generation.generate import generate
+from log_analysis import detector as log_analysis_detector
+from log_analysis.analyzer import analyze as analyze_log_evidence
+from log_analysis.formatter import format_log_analysis_answer
+from log_analysis.parser import parse_log
 from retrieval.graph_traversal import traverse_nodes
-from retrieval.guardrail import extract_filters, guardrail
+from retrieval.guardrail import check_blacklist, extract_filters, guardrail
 from retrieval.reranker import rerank
 from retrieval.semantic_search import is_low_signal_query, search
 
@@ -415,6 +419,12 @@ class PipelineResult:
     sources: list[Source]
     retrieved_count: int
     context_count: int
+    # "rag" (default) is the existing question-answering path this whole
+    # module already implemented; "log_analysis" marks a response produced
+    # by the deterministic raw-log branch below instead. Additive fields
+    # only - every existing call site keeps working unchanged.
+    answer_source: str = "rag"
+    log_evidence: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -447,6 +457,124 @@ def fallback_result(
     )
 
 
+def fetch_nodes_by_names(driver, matches: list) -> list[dict]:
+    """Resolve exact Neo4j Technique nodes by name for the log-analysis
+    branch - deliberately by name, not by a hardcoded technique_id, so the
+    live graph (not this code) is always the source of truth for the
+    current external_id (see this card's research notes on ATT&CK v19's
+    technique renumbering). A few sub-technique names are reused under more
+    than one parent technique (e.g. "Cloud Account" under both Account
+    Discovery and Create Account) - matches.parent_hint disambiguates those
+    via the SUBTECHNIQUE_OF relationship instead of guessing from name alone."""
+    if not matches:
+        return []
+    items = [{"name": match.technique_name, "parent": match.parent_hint} for match in matches]
+    with driver.session() as session:
+        records = session.run(
+            """
+            UNWIND $items AS item
+            MATCH (n:Technique {name: item.name})
+            OPTIONAL MATCH (n)-[:SUBTECHNIQUE_OF]->(p:Technique)
+            WITH n, item, p.name AS parent_name
+            WHERE item.parent IS NULL OR parent_name = item.parent
+            RETURN DISTINCT n.id AS id, n.name AS name, n.external_id AS external_id
+            """,
+            items=items,
+        )
+        return [
+            {
+                "id": record["id"],
+                "name": record["name"],
+                "external_id": record["external_id"],
+                "type": "Technique",
+                "score": 10.0,
+                "source": "log_analysis",
+            }
+            for record in records
+        ]
+
+
+def run_log_analysis_pipeline(query: str, driver, platform: str | None) -> PipelineResult:
+    """Isolated branch for genuinely large raw-log pastes (see
+    backend/log_analysis/detector.py) - deterministic parsing and mapping
+    instead of semantic search. Reuses traverse_nodes/Source from the
+    existing RAG path but otherwise shares no code with it, so the
+    question-answering path above is untouched by this branch's presence."""
+    events = parse_log(query, platform)
+    matches = analyze_log_evidence(events, platform)
+    if not matches:
+        # Distinct from the generic FALLBACK used for unrelated/unanswerable
+        # questions - this tells the user their input WAS recognized as raw
+        # telemetry, it just didn't match any of the current deterministic
+        # rules (a coverage gap, not "this isn't a security question").
+        return PipelineResult(
+            query=query,
+            answer=(
+                "This looks like raw log/telemetry data, but none of it matched a "
+                "known deterministic ATT&CK mapping rule in this system yet. No "
+                "technique is being guessed - this is a coverage gap, not a "
+                "negative result about the log itself."
+            ),
+            allowed=True,
+            guardrail_category=None,
+            filters={},
+            sources=[],
+            retrieved_count=0,
+            context_count=0,
+            answer_source="log_analysis",
+        )
+
+    seed_nodes = fetch_nodes_by_names(driver, matches)
+    if not seed_nodes:
+        return fallback_result(query)
+
+    try:
+        contexts = traverse_nodes(driver, seed_nodes)
+    except Exception as exc:
+        raise PipelineError("graph_traversal", exc) from exc
+    if not contexts:
+        return fallback_result(query)
+
+    answer = format_log_analysis_answer(matches, contexts)
+    match_by_name = {match.technique_name.lower(): match for match in matches}
+
+    sources: list[Source] = []
+    log_evidence: list[dict[str, Any]] = []
+    for node in contexts:
+        name = str(node.get("name") or "")
+        match = match_by_name.get(name.lower())
+        if not match:
+            continue
+        external_id = node.get("external_id") or node.get("id")
+        sources.append(
+            Source(
+                name=name or "Unknown",
+                external_id=external_id,
+                node_type=str(node.get("node_type") or node.get("type") or "Technique"),
+                relevance_score=10.0,
+            )
+        )
+        log_evidence.append({
+            "technique_id": external_id or "",
+            "technique_name": name,
+            "matched_line": match.matched_line,
+            "confidence": match.confidence,
+        })
+
+    return PipelineResult(
+        query=query,
+        answer=answer,
+        allowed=True,
+        guardrail_category=None,
+        filters={},
+        sources=sources,
+        retrieved_count=len(seed_nodes),
+        context_count=len(contexts),
+        answer_source="log_analysis",
+        log_evidence=log_evidence,
+    )
+
+
 def run_pipeline(
     query: str,
     *,
@@ -462,12 +590,48 @@ def run_pipeline(
     if top_k < 1 or candidate_k < top_k:
         raise ValueError("candidate_k must be greater than or equal to top_k >= 1")
 
+    # Isolated branch: genuinely large raw-log pastes skip the
+    # question-answering path entirely (see log_analysis/detector.py's
+    # stricter, multi-signal bar - a short question that merely mentions a
+    # field name never crosses it and falls through to the code below
+    # exactly as it did before this branch existed).
+    #
+    # Detection runs BEFORE guardrail() deliberately: raw telemetry is
+    # unconditionally cybersecurity-relevant, so only the deterministic
+    # layer-1 blacklist (jailbreak/injection strings) applies to it -
+    # guardrail()'s layer-2 LLM topic classifier asks "is this even about
+    # cybersecurity?", a question that's both unnecessary for confirmed log
+    # data and, being LLM-based, non-deterministic - reproduced directly
+    # during testing: 1 of 15 identical calls got a false "not allowed" from
+    # the LLM layer alone, which would otherwise make an entirely
+    # deterministic analysis path randomly fail with no code-level cause.
+    log_detection = log_analysis_detector.detect(query)
+    if log_detection.is_raw_log:
+        try:
+            blacklist_result = check_blacklist(query)
+        except Exception as exc:
+            raise PipelineError("guardrail", exc) from exc
+        if not blacklist_result.get("allowed", True):
+            return fallback_result(query, category=blacklist_result.get("category", "blocked"))
+
+        driver = None
+        try:
+            try:
+                driver = get_driver()
+            except Exception as exc:
+                raise PipelineError("database_connection", exc) from exc
+            return run_log_analysis_pipeline(query, driver, log_detection.platform)
+        finally:
+            if driver is not None:
+                driver.close()
+
     try:
         guardrail_result = guardrail(query)
     except Exception as exc:
         raise PipelineError("guardrail", exc) from exc
     if not guardrail_result.get("allowed", True):
         return fallback_result(query, category=guardrail_result.get("category", "blocked"))
+
     focused_query = focus_security_query(query)
     if is_low_signal_query(focused_query):
         return fallback_result(query)

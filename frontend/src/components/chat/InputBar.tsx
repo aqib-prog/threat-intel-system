@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { clsx } from "clsx";
-import { Lightning, PaperPlaneTilt } from "@phosphor-icons/react";
+import { Lightning, PaperPlaneTilt, Terminal } from "@phosphor-icons/react";
+import { isLogShaped } from "../../lib/logDetection";
 
 const EXAMPLE_QUERIES = [
   "What techniques does APT29 use?",
@@ -10,11 +11,9 @@ const EXAMPLE_QUERIES = [
   "Detection strategies for TA0006",
 ];
 
-// This pipeline answers natural-language questions, not raw log dumps -
-// capped well below "paste a log file" territory so oversized input fails
-// fast and visibly instead of silently truncating context downstream.
-const MAX_LENGTH = 800;
-const WARN_AT = MAX_LENGTH * 0.8;
+// Single cap for both questions and log pastes - 1500 chars is enough
+// headroom for either case without needing a dynamic, detection-driven limit.
+const MAX_LENGTH = 1500;
 const SHOW_COUNT_AT = 30; // switch the send button's icon for an exact countdown this close to the cap
 
 const RING_SIZE = 34;
@@ -40,9 +39,13 @@ export function InputBar({ onSend, disabled, showChips }: InputBarProps) {
     textarea.style.height = `${Math.min(textarea.scrollHeight, 192)}px`;
   }, [value]);
 
+  const detectedAsLog = useMemo(() => isLogShaped(value), [value]);
+  const maxLength = MAX_LENGTH;
+  const warnAt = maxLength * 0.8;
+
   const submit = () => {
     const trimmed = value.trim();
-    if (!trimmed || disabled || trimmed.length > MAX_LENGTH) return;
+    if (!trimmed || disabled || trimmed.length > maxLength) return;
     onSend(trimmed);
     setValue("");
   };
@@ -59,9 +62,9 @@ export function InputBar({ onSend, disabled, showChips }: InputBarProps) {
     }
   };
 
-  const pct = Math.min(1, value.length / MAX_LENGTH);
-  const nearLimit = value.length >= WARN_AT;
-  const atLimit = value.length >= MAX_LENGTH;
+  const pct = Math.min(1, value.length / maxLength);
+  const nearLimit = value.length >= warnAt;
+  const atLimit = value.length >= maxLength;
 
   return (
     <div className="relative shrink-0 border-t border-border-dim bg-void-raised/80 px-4 pb-4 pt-3 backdrop-blur-sm sm:px-6">
@@ -87,6 +90,21 @@ export function InputBar({ onSend, disabled, showChips }: InputBarProps) {
         </div>
       )}
 
+      <AnimatePresence initial={false}>
+        {detectedAsLog && (
+          <motion.div
+            initial={{ opacity: 0, y: 4, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: "auto" }}
+            exit={{ opacity: 0, y: 4, height: 0 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
+            className="mb-2 flex w-fit items-center gap-1.5 overflow-hidden rounded border border-green/30 bg-green/10 px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-green"
+          >
+            <Terminal size={12} weight="bold" aria-hidden="true" />
+            Log input detected
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <form onSubmit={handleSubmit} className="relative">
         <div
           className={clsx(
@@ -102,7 +120,7 @@ export function InputBar({ onSend, disabled, showChips }: InputBarProps) {
             onBlur={() => setFocused(false)}
             onKeyDown={handleKeyDown}
             rows={1}
-            maxLength={MAX_LENGTH}
+            maxLength={maxLength}
             placeholder="Query the knowledge graph…"
             disabled={disabled}
             className="max-h-48 min-h-9 flex-1 resize-none overflow-y-auto whitespace-pre-wrap break-words bg-transparent py-2 font-mono text-sm leading-5 text-white placeholder:text-text-dim focus:outline-none"
@@ -154,7 +172,7 @@ export function InputBar({ onSend, disabled, showChips }: InputBarProps) {
               )}
             >
               <AnimatePresence initial={false}>
-                {value.length >= MAX_LENGTH - SHOW_COUNT_AT ? (
+                {value.length >= maxLength - SHOW_COUNT_AT ? (
                   <motion.span
                     key="count"
                     initial={{ opacity: 0, scale: 0.7 }}
@@ -163,7 +181,7 @@ export function InputBar({ onSend, disabled, showChips }: InputBarProps) {
                     transition={{ duration: 0.15 }}
                     className={clsx("font-mono text-[10px] font-semibold tabular-nums", atLimit ? "text-red" : "text-amber")}
                   >
-                    {MAX_LENGTH - value.length}
+                    {maxLength - value.length}
                   </motion.span>
                 ) : (
                   <motion.span

@@ -93,6 +93,13 @@ class NodeSource(BaseModel):
     relevance_score: float | None = None
 
 
+class LogEvidenceEntry(BaseModel):
+    technique_id: str
+    technique_name: str
+    matched_line: str
+    confidence: str
+
+
 class QueryResponse(BaseModel):
     query: str
     response: str
@@ -105,6 +112,11 @@ class QueryResponse(BaseModel):
     retrieved_count: int
     context_count: int
     latency_ms: int
+    # "rag" (default) vs "log_analysis" - see orchestration/pipeline.py's
+    # PipelineResult. Additive fields; existing clients that ignore them
+    # keep working unchanged.
+    answer_source: str = "rag"
+    log_evidence: list[LogEvidenceEntry] = []
 
 
 class HealthResponse(BaseModel):
@@ -274,4 +286,6 @@ async def query(request: Request, payload: QueryRequest) -> QueryResponse:
         retrieved_count=result.retrieved_count,
         context_count=result.context_count,
         latency_ms=latency_ms,
+        answer_source=result.answer_source,
+        log_evidence=[LogEvidenceEntry(**entry) for entry in result.log_evidence],
     )

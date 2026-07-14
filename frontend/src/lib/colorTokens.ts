@@ -1,4 +1,17 @@
-export type AccentColor = "cyan" | "green" | "purple" | "amber" | "red";
+export type AccentColor =
+  | "cyan"
+  | "green"
+  | "purple"
+  | "amber"
+  | "red"
+  | "blue"
+  | "pink"
+  | "teal"
+  | "orange"
+  | "violet"
+  | "rose"
+  | "lime"
+  | "indigo";
 
 interface AccentClasses {
   text: string;
@@ -14,6 +27,14 @@ export const ACCENT_HEX: Record<AccentColor, string> = {
   purple: "#7c3aed",
   amber: "#ffd700",
   red: "#ff3366",
+  blue: "#3b82f6",
+  pink: "#ff4fd8",
+  teal: "#14f1c3",
+  orange: "#ff9f1c",
+  violet: "#a855f7",
+  rose: "#fb7185",
+  lime: "#bef264",
+  indigo: "#818cf8",
 };
 
 export function hexToRgba(hex: string, alpha: number): string {
@@ -59,6 +80,62 @@ export const ACCENT_CLASSES: Record<AccentColor, AccentClasses> = {
     dot: "bg-red",
     bar: "bg-red",
   },
+  blue: {
+    text: "text-blue",
+    border: "border-blue/35",
+    bg: "bg-blue/10",
+    dot: "bg-blue",
+    bar: "bg-blue",
+  },
+  pink: {
+    text: "text-pink",
+    border: "border-pink/35",
+    bg: "bg-pink/10",
+    dot: "bg-pink",
+    bar: "bg-pink",
+  },
+  teal: {
+    text: "text-teal",
+    border: "border-teal/35",
+    bg: "bg-teal/10",
+    dot: "bg-teal",
+    bar: "bg-teal",
+  },
+  orange: {
+    text: "text-orange",
+    border: "border-orange/35",
+    bg: "bg-orange/10",
+    dot: "bg-orange",
+    bar: "bg-orange",
+  },
+  violet: {
+    text: "text-violet",
+    border: "border-violet/35",
+    bg: "bg-violet/10",
+    dot: "bg-violet",
+    bar: "bg-violet",
+  },
+  rose: {
+    text: "text-rose",
+    border: "border-rose/35",
+    bg: "bg-rose/10",
+    dot: "bg-rose",
+    bar: "bg-rose",
+  },
+  lime: {
+    text: "text-lime",
+    border: "border-lime/35",
+    bg: "bg-lime/10",
+    dot: "bg-lime",
+    bar: "bg-lime",
+  },
+  indigo: {
+    text: "text-indigo",
+    border: "border-indigo/35",
+    bg: "bg-indigo/10",
+    dot: "bg-indigo",
+    bar: "bg-indigo",
+  },
 };
 
 // Keys are normalized (lowercased, non-alphanumeric stripped) so both
@@ -70,14 +147,14 @@ const NODE_TYPE_ACCENT: Record<string, AccentColor> = {
   actor: "cyan",
   campaign: "cyan",
   tactic: "green",
-  detectionstrategy: "green",
-  datacomponent: "green",
-  platform: "purple",
-  tool: "purple",
-  mitigation: "purple",
+  detectionstrategy: "teal",
+  datacomponent: "lime",
+  platform: "indigo",
+  tool: "orange",
+  mitigation: "violet",
   technique: "amber",
   mitreid: "amber",
-  analytic: "amber",
+  analytic: "rose",
   malware: "red",
   cveid: "red",
   cve: "red",

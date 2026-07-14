@@ -103,6 +103,38 @@ export function AnswerVisualization({
       </div>
 
       <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-center">
+        {n === 2 && (
+          <div className="flex w-full shrink-0 flex-col gap-1.5 sm:w-[180px]">
+            <div className="flex h-9 w-full overflow-hidden rounded-md border border-border-glow divide-x divide-border-glow">
+              {vertices.map((v) => {
+                const totalCount = sections.reduce((sum, s) => sum + s.count, 0);
+                const pct = totalCount > 0 ? (v.count / totalCount) * 100 : 50;
+                const hex = ACCENT_HEX[v.accent];
+                const isHovered = hovered === v.label;
+                return (
+                  <button
+                    type="button"
+                    key={v.label}
+                    style={{
+                      width: `${pct}%`,
+                      background: hexToRgba(hex, isHovered ? 0.55 : 0.28),
+                    }}
+                    className="flex min-w-0 cursor-pointer items-center justify-center font-mono text-[11px] font-semibold text-white outline-none transition-colors focus-visible:ring-2 focus-visible:ring-cyan/30"
+                    aria-label={`${v.label}: ${v.count} items. Jump to section.`}
+                    onMouseEnter={(e) => showTooltip(v.label, e.currentTarget)}
+                    onMouseLeave={hideTooltip}
+                    onFocus={(e) => showTooltip(v.label, e.currentTarget)}
+                    onBlur={hideTooltip}
+                    onClick={() => jumpToAnswerSection(messageId, v.label)}
+                  >
+                    {v.count}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
         {n >= 3 && (
           <svg
             viewBox={`0 0 ${SIZE} ${SIZE}`}

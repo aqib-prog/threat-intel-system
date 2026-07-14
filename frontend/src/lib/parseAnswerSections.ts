@@ -1,6 +1,6 @@
 import type { Icon } from "@phosphor-icons/react";
 import { canonicalSectionLabel, categoryMetaFor } from "./answerSections";
-import type { AccentColor } from "./colorTokens";
+import { humanizeLabel, type AccentColor } from "./colorTokens";
 import type { NodeSource } from "./types";
 
 export interface AnswerSectionCount {
@@ -157,23 +157,47 @@ export function parseAnswerSectionCounts(text: string): AnswerSectionCount[] {
   return results;
 }
 
+/** Resolves a raw backend node_type ("DetectionStrategy", "DataComponent") to
+ * its category metadata + a display label, sharing the same two-tier lookup
+ * (direct CATEGORY_META match, then the broader CANONICAL_LABELS regex
+ * fallback) the markdown-header path already gets via canonicalSectionLabel.
+ * Without the humanize step first, PascalCase node_type strings never match
+ * CATEGORY_META's space-separated keys and silently vanish from the chart/
+ * sections even though the Sources Panel/graph render them fine (they use
+ * colorTokens.ts's normalizeKey, a different and more forgiving comparison). */
+function resolveNodeTypeMeta(nodeType: string): { label: string; meta: ReturnType<typeof categoryMetaFor> } {
+  const humanized = humanizeLabel(nodeType);
+  const direct = categoryMetaFor(humanized);
+  if (direct) return { label: titleCase(humanized), meta: direct };
+
+  const canonical = canonicalSectionLabel(humanized);
+  if (canonical) {
+    const meta = categoryMetaFor(canonical);
+    if (meta) return { label: canonical, meta };
+  }
+  return { label: titleCase(humanized), meta: null };
+}
+
 export function parseNodeSectionCounts(nodes: NodeSource[] | undefined): AnswerSectionCount[] {
   if (!nodes?.length) return [];
 
-  const counts = new Map<string, number>();
+  const counts = new Map<string, { count: number; label: string; meta: NonNullable<ReturnType<typeof categoryMetaFor>> }>();
   for (const node of nodes) {
-    const label = node.node_type?.trim();
-    if (!label || !categoryMetaFor(label)) continue;
-    counts.set(label, (counts.get(label) ?? 0) + 1);
+    const rawType = node.node_type?.trim();
+    if (!rawType) continue;
+    const { label, meta } = resolveNodeTypeMeta(rawType);
+    if (!meta) continue;
+    const existing = counts.get(label);
+    if (existing) existing.count += 1;
+    else counts.set(label, { count: 1, label, meta });
   }
 
-  const results: AnswerSectionCount[] = [];
-  for (const [label, count] of counts) {
-    const meta = categoryMetaFor(label);
-    if (!meta) continue;
-    results.push({ label: titleCase(label), count, accent: meta.accent, icon: meta.icon });
-  }
-  return results;
+  return [...counts.values()].map(({ label, count, meta }) => ({
+    label,
+    count,
+    accent: meta.accent,
+    icon: meta.icon,
+  }));
 }
 
 /**

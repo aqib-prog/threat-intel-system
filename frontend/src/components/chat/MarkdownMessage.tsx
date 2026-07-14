@@ -4,7 +4,7 @@ import ReactMarkdown, { type Components } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { rehypeMitreHighlight } from "../../lib/rehypeMitreHighlight";
 import { rehypeAnswerSections } from "../../lib/rehypeAnswerSections";
-import { categoryMetaFor, sectionId } from "../../lib/answerSections";
+import { canonicalSectionLabel, categoryMetaFor, sectionId } from "../../lib/answerSections";
 import { ACCENT_CLASSES } from "../../lib/colorTokens";
 import { MitreId } from "./MitreId";
 
@@ -64,7 +64,53 @@ const baseComponents: Components = {
   "mitre-id": ({ id }: { id: string }) => <MitreId id={id} />,
 };
 
+const PLAIN_LABEL_LINE_RE = /^(\s*)([A-Za-z][A-Za-z /-]{1,60}):\s+(.+)$/;
+// A standalone line that is just "Name:" with nothing after it - e.g. the
+// LLM enumerates items one per line instead of a single comma-joined line.
+// Recognized category headings (canonicalSectionLabel matches) are left
+// alone since their trailing colon is meaningful there; anything else has
+// no value coming and the colon is a dangling artifact.
+const BARE_LABEL_LINE_RE = /^(\s*)([A-Za-z][A-Za-z /-]{1,60}):\s*$/;
+
+function normalizePlainLabeledLines(text: string): string {
+  const output: string[] = [];
+  let inFence = false;
+
+  for (const line of text.split(/\r?\n/)) {
+    if (/^\s*```/.test(line)) {
+      inFence = !inFence;
+      output.push(line);
+      continue;
+    }
+
+    if (inFence || /^\s*(?:[-*]|\d+\.)\s+/.test(line)) {
+      output.push(line);
+      continue;
+    }
+
+    const match = line.match(PLAIN_LABEL_LINE_RE);
+    const label = match ? canonicalSectionLabel(match[2]) : null;
+    if (!match || !label) {
+      const bareMatch = line.match(BARE_LABEL_LINE_RE);
+      if (bareMatch && !canonicalSectionLabel(bareMatch[2])) {
+        output.push(`${bareMatch[1]}${bareMatch[2]}`);
+        continue;
+      }
+      output.push(line);
+      continue;
+    }
+
+    const previous = output[output.length - 1];
+    if (previous && previous.trim()) output.push("");
+    output.push(`${match[1]}**${label}:** ${match[3].trim()}`);
+    output.push("");
+  }
+
+  return output.join("\n").replace(/\n{3,}/g, "\n\n");
+}
+
 export function MarkdownMessage({ text, messageId }: { text: string; messageId: string }) {
+  const normalizedText = useMemo(() => normalizePlainLabeledLines(text), [text]);
   const components = useMemo<Components>(
     () => ({
       ...baseComponents,
@@ -104,7 +150,7 @@ export function MarkdownMessage({ text, messageId }: { text: string; messageId: 
         rehypePlugins={[rehypeAnswerSections, rehypeMitreHighlight]}
         components={components}
       >
-        {text}
+        {normalizedText}
       </ReactMarkdown>
     </div>
   );

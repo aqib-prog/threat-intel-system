@@ -1,12 +1,13 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { clsx } from "clsx";
-import { Robot, ShieldWarning, UserCircle } from "@phosphor-icons/react";
+import { Robot, ShieldWarning, Terminal, UserCircle } from "@phosphor-icons/react";
 import type { ChatMessage } from "../../lib/types";
 import { MarkdownMessage } from "./MarkdownMessage";
 import { AnswerVisualization } from "./AnswerVisualization";
 import { SingleCategoryGauge } from "./SingleCategoryGauge";
 import { SourcesPanel } from "./SourcesPanel";
+import { LogEvidencePanel } from "./LogEvidencePanel";
 import { useTypewriter } from "../../hooks/useTypewriter";
 import {
   parseAnswerSectionCounts,
@@ -89,6 +90,12 @@ export function MessageBubble({ message, typewrite }: { message: ChatMessage; ty
             Guardrail blocked{message.guardrailCategory ? ` · ${message.guardrailCategory}` : ""}
           </div>
         )}
+        {!blocked && message.answerSource === "log_analysis" && (
+          <div className="relative mb-2 flex w-fit items-center gap-1.5 rounded border border-green/30 bg-green/10 px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-green">
+            <Terminal size={13} weight="bold" aria-hidden="true" />
+            Log Analysis
+          </div>
+        )}
         {!blocked && done && chartSections.length >= 2 && (
           <div className="relative">
             <AnswerVisualization sections={chartSections} messageId={message.id} />
@@ -115,6 +122,12 @@ export function MessageBubble({ message, typewrite }: { message: ChatMessage; ty
         {done && message.nodes && (
           <div className="relative">
             <SourcesPanel nodes={message.nodes} />
+          </div>
+        )}
+
+        {done && message.logEvidence && message.logEvidence.length > 0 && (
+          <div className="relative">
+            <LogEvidencePanel entries={message.logEvidence} />
           </div>
         )}
 

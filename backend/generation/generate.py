@@ -64,7 +64,15 @@ Rules:
 - Treat comma-separated relationship lists as evidence of membership only, not as quantitative datasets
 - Do not count items in relationship lists
 - Do not report numeric counts, totals, or "broader/narrower range" comparisons unless the context explicitly provides a written count
-- Do not use absence as evidence; avoid phrases like "not explicitly excluded" """
+- Do not use absence as evidence; avoid phrases like "not explicitly excluded"
+
+Response formatting:
+- Prefer stable labeled sections so the UI can render them consistently.
+- Use only relevant labels from this set when they apply: Summary, Description, Type, MITRE ID, Tactics, Techniques, Subtechniques, Parent Technique, Procedure, Platforms, Tools, Malware, Campaigns, Mitigations, Detection Strategies, Data Sources, Analytics, Strongest Evidence.
+- For labeled facts, write each as `Label: value` on its own line.
+- For lists, write `Label:` followed by markdown bullets.
+- For explanatory comparisons, use bullets with bold labels, e.g. `- **Tactic:** ...`, `- **Technique:** ...`, `- **Procedure:** ...`.
+- Do not invent a section just to satisfy formatting; only include sections supported by context. """
 
 
 def query_mentions(value: str, query: str) -> bool:
@@ -1145,6 +1153,10 @@ Critical answer constraints:
 - Do not count comma-separated relationship-list items.
 - For comparisons, compare explicit facts and examples only; do not use broader/narrower range wording unless the context provides written counts.
 - Do not group techniques by tactic unless the question explicitly asks for that grouping.
+- Format using stable labels when applicable:
+  - Single item: `Description: ...`, `Type: ...`, `Platforms: ...`, `Tactics: ...`, etc.
+  - Lists: `Techniques:` then markdown bullets.
+  - Explanations/comparisons: bullets like `- **Tactic:** ...`, `- **Technique:** ...`, `- **Procedure:** ...`.
 
 Answer:""",
             },
