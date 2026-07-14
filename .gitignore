@@ -30,6 +30,7 @@ backend/data/mitre_raw.json
 *.log
 HANDOFF.md
 CARD*.md
+DEPLOYMENT.md
 
 .claude/
 frontend/.claude/
