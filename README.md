@@ -116,19 +116,4 @@ Git whitespace check:
 git diff --check
 ```
 
-## Git hygiene
-
-The repository ignores local/runtime artifacts including:
-
-- `.env` files
-- virtual environments
-- `node_modules`
-- frontend build output
-- Python `__pycache__`
-- `.DS_Store`
-- local handoff notes
-- local Claude/IDE artifacts
-
-Do not commit secrets, local database dumps, generated build output, or virtual
-environment files.
 
