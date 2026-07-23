@@ -1,5 +1,7 @@
 venv/
 backend/venv/
+.ragas_venv/
+tools/rag_accuracy/.ragas_venv/
 node_modules/
 frontend/node_modules/
 
@@ -29,6 +31,7 @@ backend/data/mitre_raw.json
 .DS_Store
 *.log
 HANDOFF.md
+HANDOVER*.md
 CARD*.md
 DEPLOYMENT.md
 

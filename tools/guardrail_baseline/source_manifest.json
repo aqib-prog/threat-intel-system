@@ -1,0 +1,22 @@
+{
+  "harmbench": {
+    "repository": "https://github.com/centerforaisafety/HarmBench.git",
+    "commit": "8e1604d1171fe8a48d8febecd22f600e462bdcdd",
+    "path": "data/behavior_datasets/harmbench_behaviors_text_all.csv",
+    "sha256": "8d81accedd38eaaf8b760618622bb888417d1fd0c86eba65c427a16f1cbb4afc",
+    "expected_rows": 400
+  },
+  "jailbreakbench_code": {
+    "repository": "https://github.com/JailbreakBench/jailbreakbench.git",
+    "commit": "23dbdf6b19650521604456229bc1d9c4156c85c1"
+  },
+  "jailbreakbench_behaviors": {
+    "repository": "https://huggingface.co/datasets/JailbreakBench/JBB-Behaviors",
+    "commit": "886acc352a31533ffbcf4ef22c744658688086fc",
+    "harmful_path": "data/harmful-behaviors.csv",
+    "harmful_sha256": "4a8ec6832056b631eb092dccc60d37a61c3d441268268888b3d006288afeffa1",
+    "benign_path": "data/benign-behaviors.csv",
+    "benign_sha256": "3cda234d21a991fa309bbfea4b6d9dae31ccdf8e9d452424b6a983e4fdc33468",
+    "expected_rows_per_split": 100
+  }
+}

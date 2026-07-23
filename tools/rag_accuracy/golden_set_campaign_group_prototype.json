@@ -1,0 +1,880 @@
+{
+  "extraction_audit": {
+    "bundle_attributed_to_relationship_count": 26,
+    "inactive_or_dangling_attributed_to_relationship_count": 0,
+    "selected_path_count": 5
+  },
+  "global_coverage": {
+    "active_attributed_to_relationship_count": 26,
+    "active_campaign_count": 56,
+    "active_group_count": 174,
+    "campaigns_with_multiple_attributed_groups": 1,
+    "campaigns_with_one_attributed_group": 24,
+    "campaigns_with_zero_attributed_groups": 31
+  },
+  "pairs": [
+    {
+      "campaign": {
+        "external_id": "C0023",
+        "first_seen": "2013-09-01T04:00:00.000Z",
+        "last_seen": "2019-10-01T04:00:00.000Z",
+        "name": "Operation Ghost",
+        "stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0023 (Operation Ghost) is attributed to G0016 (APT29) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "APT29",
+            "IRON RITUAL",
+            "IRON HEMLOCK",
+            "NobleBaron",
+            "Dark Halo",
+            "NOBELIUM",
+            "UNC2452",
+            "YTTRIUM",
+            "The Dukes",
+            "Cozy Bear",
+            "CozyDuke",
+            "SolarStorm",
+            "Blue Kitsune",
+            "UNC3524",
+            "Midnight Blizzard"
+          ],
+          "external_id": "G0016",
+          "name": "APT29",
+          "stix_id": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0023",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--a3adcf1b-a48a-4fab-bc61-5e0b0aeaaca6"
+        ],
+        "campaign_stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+        "group_stix_ids": [
+          "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--a3adcf1b-a48a-4fab-bc61-5e0b0aeaaca6",
+            "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+            "group_ref": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0023 (Operation Ghost)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0024",
+        "first_seen": "2019-08-01T05:00:00.000Z",
+        "last_seen": "2021-01-01T06:00:00.000Z",
+        "name": "SolarWinds Compromise",
+        "stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0024 (SolarWinds Compromise) is attributed to G0016 (APT29) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "APT29",
+            "IRON RITUAL",
+            "IRON HEMLOCK",
+            "NobleBaron",
+            "Dark Halo",
+            "NOBELIUM",
+            "UNC2452",
+            "YTTRIUM",
+            "The Dukes",
+            "Cozy Bear",
+            "CozyDuke",
+            "SolarStorm",
+            "Blue Kitsune",
+            "UNC3524",
+            "Midnight Blizzard"
+          ],
+          "external_id": "G0016",
+          "name": "APT29",
+          "stix_id": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0024",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--3b2680f0-aa69-4766-ab41-9123373ffa4e"
+        ],
+        "campaign_stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+        "group_stix_ids": [
+          "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--3b2680f0-aa69-4766-ab41-9123373ffa4e",
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "group_ref": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0024 (SolarWinds Compromise)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0034",
+        "first_seen": "2022-06-01T04:00:00.000Z",
+        "last_seen": "2022-10-01T04:00:00.000Z",
+        "name": "2022 Ukraine Electric Power Attack",
+        "stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0034 (2022 Ukraine Electric Power Attack) is attributed to G0034 (Sandworm Team) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "Sandworm Team",
+            "ELECTRUM",
+            "Telebots",
+            "IRON VIKING",
+            "BlackEnergy (Group)",
+            "Quedagh",
+            "Voodoo Bear",
+            "IRIDIUM",
+            "Seashell Blizzard",
+            "FROZENBARENTS",
+            "APT44"
+          ],
+          "external_id": "G0034",
+          "name": "Sandworm Team",
+          "stix_id": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0034",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--d3717846-eaab-4fde-99f6-a972dec9323b"
+        ],
+        "campaign_stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+        "group_stix_ids": [
+          "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--d3717846-eaab-4fde-99f6-a972dec9323b",
+            "campaign_ref": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+            "group_ref": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0034 (2022 Ukraine Electric Power Attack)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0038",
+        "first_seen": "2021-05-01T04:00:00.000Z",
+        "last_seen": "2022-09-01T04:00:00.000Z",
+        "name": "HomeLand Justice",
+        "stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0038 (HomeLand Justice) is attributed to G1055 (VOID MANTICORE) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "VOID MANTICORE",
+            "COBALT MYSTIQUE",
+            "Handala Hack",
+            "Homeland Justice",
+            "Karma",
+            "Karmabelow80",
+            "BANISHED KITTEN",
+            "Red Sandstorm"
+          ],
+          "external_id": "G1055",
+          "name": "VOID MANTICORE",
+          "stix_id": "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0038",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--0dd04e16-ad64-4b7d-af2f-12ad644cfe3e"
+        ],
+        "campaign_stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+        "group_stix_ids": [
+          "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--0dd04e16-ad64-4b7d-af2f-12ad644cfe3e",
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "group_ref": "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0038 (HomeLand Justice)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0049",
+        "first_seen": "2022-04-01T06:00:00.000Z",
+        "last_seen": "2022-09-01T06:00:00.000Z",
+        "name": "Leviathan Australian Intrusions",
+        "stix_id": "campaign--b66bc597-399c-4e4d-828a-1ed4a7f1fb15"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0049 (Leviathan Australian Intrusions) is attributed to G0065 (Leviathan) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "Leviathan",
+            "MUDCARP",
+            "Kryptonite Panda",
+            "Gadolinium",
+            "BRONZE MOHAWK",
+            "TEMP.Jumper",
+            "APT40",
+            "TEMP.Periscope",
+            "Gingham Typhoon"
+          ],
+          "external_id": "G0065",
+          "name": "Leviathan",
+          "stix_id": "intrusion-set--7113eaa5-ba79-4fb3-b68a-398ee9cd698e"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0049",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--920874f2-f1e1-4981-9469-4ee45b6218a7"
+        ],
+        "campaign_stix_id": "campaign--b66bc597-399c-4e4d-828a-1ed4a7f1fb15",
+        "group_stix_ids": [
+          "intrusion-set--7113eaa5-ba79-4fb3-b68a-398ee9cd698e"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--920874f2-f1e1-4981-9469-4ee45b6218a7",
+            "campaign_ref": "campaign--b66bc597-399c-4e4d-828a-1ed4a7f1fb15",
+            "group_ref": "intrusion-set--7113eaa5-ba79-4fb3-b68a-398ee9cd698e"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0049 (Leviathan Australian Intrusions)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0023",
+        "first_seen": "2013-09-01T04:00:00.000Z",
+        "last_seen": "2019-10-01T04:00:00.000Z",
+        "name": "Operation Ghost",
+        "stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05"
+      },
+      "case_type": "focused_campaign_group",
+      "expected_answer": "Yes. C0023 (Operation Ghost) is attributed to G0016 (APT29) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "APT29",
+            "IRON RITUAL",
+            "IRON HEMLOCK",
+            "NobleBaron",
+            "Dark Halo",
+            "NOBELIUM",
+            "UNC2452",
+            "YTTRIUM",
+            "The Dukes",
+            "Cozy Bear",
+            "CozyDuke",
+            "SolarStorm",
+            "Blue Kitsune",
+            "UNC3524",
+            "Midnight Blizzard"
+          ],
+          "external_id": "G0016",
+          "name": "APT29",
+          "stix_id": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        }
+      ],
+      "id": "campaign-attributed-group-c0023-g0016",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--a3adcf1b-a48a-4fab-bc61-5e0b0aeaaca6"
+        ],
+        "campaign_stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+        "group_stix_ids": [
+          "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "queried_group_stix_id": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--a3adcf1b-a48a-4fab-bc61-5e0b0aeaaca6",
+            "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+            "group_ref": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "queried_group": {
+        "aliases": [
+          "APT29",
+          "IRON RITUAL",
+          "IRON HEMLOCK",
+          "NobleBaron",
+          "Dark Halo",
+          "NOBELIUM",
+          "UNC2452",
+          "YTTRIUM",
+          "The Dukes",
+          "Cozy Bear",
+          "CozyDuke",
+          "SolarStorm",
+          "Blue Kitsune",
+          "UNC3524",
+          "Midnight Blizzard"
+        ],
+        "external_id": "G0016",
+        "name": "APT29",
+        "stix_id": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+      },
+      "question": "Is C0023 (Operation Ghost) attributed to G0016 (APT29)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0024",
+        "first_seen": "2019-08-01T05:00:00.000Z",
+        "last_seen": "2021-01-01T06:00:00.000Z",
+        "name": "SolarWinds Compromise",
+        "stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650"
+      },
+      "case_type": "focused_campaign_group",
+      "expected_answer": "Yes. C0024 (SolarWinds Compromise) is attributed to G0016 (APT29) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "APT29",
+            "IRON RITUAL",
+            "IRON HEMLOCK",
+            "NobleBaron",
+            "Dark Halo",
+            "NOBELIUM",
+            "UNC2452",
+            "YTTRIUM",
+            "The Dukes",
+            "Cozy Bear",
+            "CozyDuke",
+            "SolarStorm",
+            "Blue Kitsune",
+            "UNC3524",
+            "Midnight Blizzard"
+          ],
+          "external_id": "G0016",
+          "name": "APT29",
+          "stix_id": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        }
+      ],
+      "id": "campaign-attributed-group-c0024-g0016",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--3b2680f0-aa69-4766-ab41-9123373ffa4e"
+        ],
+        "campaign_stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+        "group_stix_ids": [
+          "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "queried_group_stix_id": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--3b2680f0-aa69-4766-ab41-9123373ffa4e",
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "group_ref": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "queried_group": {
+        "aliases": [
+          "APT29",
+          "IRON RITUAL",
+          "IRON HEMLOCK",
+          "NobleBaron",
+          "Dark Halo",
+          "NOBELIUM",
+          "UNC2452",
+          "YTTRIUM",
+          "The Dukes",
+          "Cozy Bear",
+          "CozyDuke",
+          "SolarStorm",
+          "Blue Kitsune",
+          "UNC3524",
+          "Midnight Blizzard"
+        ],
+        "external_id": "G0016",
+        "name": "APT29",
+        "stix_id": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+      },
+      "question": "Is C0024 (SolarWinds Compromise) attributed to G0016 (APT29)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0034",
+        "first_seen": "2022-06-01T04:00:00.000Z",
+        "last_seen": "2022-10-01T04:00:00.000Z",
+        "name": "2022 Ukraine Electric Power Attack",
+        "stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d"
+      },
+      "case_type": "focused_campaign_group",
+      "expected_answer": "Yes. C0034 (2022 Ukraine Electric Power Attack) is attributed to G0034 (Sandworm Team) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "Sandworm Team",
+            "ELECTRUM",
+            "Telebots",
+            "IRON VIKING",
+            "BlackEnergy (Group)",
+            "Quedagh",
+            "Voodoo Bear",
+            "IRIDIUM",
+            "Seashell Blizzard",
+            "FROZENBARENTS",
+            "APT44"
+          ],
+          "external_id": "G0034",
+          "name": "Sandworm Team",
+          "stix_id": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        }
+      ],
+      "id": "campaign-attributed-group-c0034-g0034",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--d3717846-eaab-4fde-99f6-a972dec9323b"
+        ],
+        "campaign_stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+        "group_stix_ids": [
+          "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "queried_group_stix_id": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--d3717846-eaab-4fde-99f6-a972dec9323b",
+            "campaign_ref": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+            "group_ref": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "queried_group": {
+        "aliases": [
+          "Sandworm Team",
+          "ELECTRUM",
+          "Telebots",
+          "IRON VIKING",
+          "BlackEnergy (Group)",
+          "Quedagh",
+          "Voodoo Bear",
+          "IRIDIUM",
+          "Seashell Blizzard",
+          "FROZENBARENTS",
+          "APT44"
+        ],
+        "external_id": "G0034",
+        "name": "Sandworm Team",
+        "stix_id": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+      },
+      "question": "Is C0034 (2022 Ukraine Electric Power Attack) attributed to G0034 (Sandworm Team)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0038",
+        "first_seen": "2021-05-01T04:00:00.000Z",
+        "last_seen": "2022-09-01T04:00:00.000Z",
+        "name": "HomeLand Justice",
+        "stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526"
+      },
+      "case_type": "focused_campaign_group",
+      "expected_answer": "Yes. C0038 (HomeLand Justice) is attributed to G1055 (VOID MANTICORE) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "VOID MANTICORE",
+            "COBALT MYSTIQUE",
+            "Handala Hack",
+            "Homeland Justice",
+            "Karma",
+            "Karmabelow80",
+            "BANISHED KITTEN",
+            "Red Sandstorm"
+          ],
+          "external_id": "G1055",
+          "name": "VOID MANTICORE",
+          "stix_id": "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559"
+        }
+      ],
+      "id": "campaign-attributed-group-c0038-g1055",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--0dd04e16-ad64-4b7d-af2f-12ad644cfe3e"
+        ],
+        "campaign_stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+        "group_stix_ids": [
+          "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "queried_group_stix_id": "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--0dd04e16-ad64-4b7d-af2f-12ad644cfe3e",
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "group_ref": "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "queried_group": {
+        "aliases": [
+          "VOID MANTICORE",
+          "COBALT MYSTIQUE",
+          "Handala Hack",
+          "Homeland Justice",
+          "Karma",
+          "Karmabelow80",
+          "BANISHED KITTEN",
+          "Red Sandstorm"
+        ],
+        "external_id": "G1055",
+        "name": "VOID MANTICORE",
+        "stix_id": "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559"
+      },
+      "question": "Is C0038 (HomeLand Justice) attributed to G1055 (VOID MANTICORE)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0024",
+        "first_seen": "2019-08-01T05:00:00.000Z",
+        "last_seen": "2021-01-01T06:00:00.000Z",
+        "name": "SolarWinds Compromise",
+        "stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650"
+      },
+      "case_type": "negative_campaign_group",
+      "expected_answer": "No active attributed-to relationship exists from C0024 (SolarWinds Compromise) to G0007 (APT28) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-not-attributed-group-c0024-g0007",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "queried_group_stix_id": "intrusion-set--bef4c620-0787-42a8-a96d-b7eb6e85917c",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "queried_group": {
+        "aliases": [
+          "APT28",
+          "IRON TWILIGHT",
+          "SNAKEMACKEREL",
+          "Swallowtail",
+          "Group 74",
+          "Sednit",
+          "Sofacy",
+          "Pawn Storm",
+          "Fancy Bear",
+          "STRONTIUM",
+          "Tsar Team",
+          "Threat Group-4127",
+          "TG-4127",
+          "Forest Blizzard",
+          "FROZENLAKE",
+          "GruesomeLarch"
+        ],
+        "external_id": "G0007",
+        "name": "APT28",
+        "stix_id": "intrusion-set--bef4c620-0787-42a8-a96d-b7eb6e85917c"
+      },
+      "question": "Is C0024 (SolarWinds Compromise) attributed to G0007 (APT28)?",
+      "relationship_type": "campaign_attributed_to_group"
+    }
+  ],
+  "parsed_data": {
+    "C0023": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "APT29",
+            "IRON RITUAL",
+            "IRON HEMLOCK",
+            "NobleBaron",
+            "Dark Halo",
+            "NOBELIUM",
+            "UNC2452",
+            "YTTRIUM",
+            "The Dukes",
+            "Cozy Bear",
+            "CozyDuke",
+            "SolarStorm",
+            "Blue Kitsune",
+            "UNC3524",
+            "Midnight Blizzard"
+          ],
+          "external_id": "G0016",
+          "name": "APT29",
+          "stix_id": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0023",
+        "first_seen": "2013-09-01T04:00:00.000Z",
+        "last_seen": "2019-10-01T04:00:00.000Z",
+        "name": "Operation Ghost",
+        "stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--a3adcf1b-a48a-4fab-bc61-5e0b0aeaaca6",
+          "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+          "group_ref": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        }
+      ]
+    },
+    "C0024": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "APT29",
+            "IRON RITUAL",
+            "IRON HEMLOCK",
+            "NobleBaron",
+            "Dark Halo",
+            "NOBELIUM",
+            "UNC2452",
+            "YTTRIUM",
+            "The Dukes",
+            "Cozy Bear",
+            "CozyDuke",
+            "SolarStorm",
+            "Blue Kitsune",
+            "UNC3524",
+            "Midnight Blizzard"
+          ],
+          "external_id": "G0016",
+          "name": "APT29",
+          "stix_id": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0024",
+        "first_seen": "2019-08-01T05:00:00.000Z",
+        "last_seen": "2021-01-01T06:00:00.000Z",
+        "name": "SolarWinds Compromise",
+        "stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--3b2680f0-aa69-4766-ab41-9123373ffa4e",
+          "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+          "group_ref": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        }
+      ]
+    },
+    "C0034": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "Sandworm Team",
+            "ELECTRUM",
+            "Telebots",
+            "IRON VIKING",
+            "BlackEnergy (Group)",
+            "Quedagh",
+            "Voodoo Bear",
+            "IRIDIUM",
+            "Seashell Blizzard",
+            "FROZENBARENTS",
+            "APT44"
+          ],
+          "external_id": "G0034",
+          "name": "Sandworm Team",
+          "stix_id": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0034",
+        "first_seen": "2022-06-01T04:00:00.000Z",
+        "last_seen": "2022-10-01T04:00:00.000Z",
+        "name": "2022 Ukraine Electric Power Attack",
+        "stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--d3717846-eaab-4fde-99f6-a972dec9323b",
+          "campaign_ref": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+          "group_ref": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        }
+      ]
+    },
+    "C0038": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "VOID MANTICORE",
+            "COBALT MYSTIQUE",
+            "Handala Hack",
+            "Homeland Justice",
+            "Karma",
+            "Karmabelow80",
+            "BANISHED KITTEN",
+            "Red Sandstorm"
+          ],
+          "external_id": "G1055",
+          "name": "VOID MANTICORE",
+          "stix_id": "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0038",
+        "first_seen": "2021-05-01T04:00:00.000Z",
+        "last_seen": "2022-09-01T04:00:00.000Z",
+        "name": "HomeLand Justice",
+        "stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--0dd04e16-ad64-4b7d-af2f-12ad644cfe3e",
+          "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+          "group_ref": "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559"
+        }
+      ]
+    },
+    "C0049": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "Leviathan",
+            "MUDCARP",
+            "Kryptonite Panda",
+            "Gadolinium",
+            "BRONZE MOHAWK",
+            "TEMP.Jumper",
+            "APT40",
+            "TEMP.Periscope",
+            "Gingham Typhoon"
+          ],
+          "external_id": "G0065",
+          "name": "Leviathan",
+          "stix_id": "intrusion-set--7113eaa5-ba79-4fb3-b68a-398ee9cd698e"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0049",
+        "first_seen": "2022-04-01T06:00:00.000Z",
+        "last_seen": "2022-09-01T06:00:00.000Z",
+        "name": "Leviathan Australian Intrusions",
+        "stix_id": "campaign--b66bc597-399c-4e4d-828a-1ed4a7f1fb15"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--920874f2-f1e1-4981-9469-4ee45b6218a7",
+          "campaign_ref": "campaign--b66bc597-399c-4e4d-828a-1ed4a7f1fb15",
+          "group_ref": "intrusion-set--7113eaa5-ba79-4fb3-b68a-398ee9cd698e"
+        }
+      ]
+    }
+  },
+  "phase": "card6_part_b_step_7a_campaign_group_prototype",
+  "schema_version": "1.0",
+  "scope": {
+    "answer_scope": "active_campaign_attributed_to_active_intrusion_set",
+    "domain": "enterprise-attack",
+    "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+    "prototype_only": true,
+    "relationship_type": "attributed-to",
+    "revoked_and_deprecated_excluded": true,
+    "source_type": "campaign",
+    "target_type": "intrusion-set"
+  },
+  "selection": {
+    "aggregate_pairs": 5,
+    "campaign_count": 5,
+    "campaign_external_ids": [
+      "C0023",
+      "C0024",
+      "C0034",
+      "C0038",
+      "C0049"
+    ],
+    "focused_positive_pairs": 4,
+    "negative_existence_pairs": 1,
+    "pair_count": 10
+  },
+  "source": {
+    "commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+    "domain": "enterprise-attack",
+    "path": "enterprise-attack/enterprise-attack.json",
+    "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+    "sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+    "stix_version": "2.1"
+  }
+}

@@ -1,0 +1,199 @@
+{
+  "benchmark": "Card 5 log-analysis runtime integration",
+  "host": {
+    "python": "3.13.11",
+    "system": "Darwin",
+    "machine": "arm64"
+  },
+  "protocol": {
+    "repetitions": 9,
+    "warmups": 2,
+    "event_counts": [
+      10,
+      50,
+      250
+    ],
+    "api_character_limit": 100000,
+    "platform": "aws",
+    "corpus": "complete CloudTrail NDJSON records; one ECS CreateService positive event per scenario"
+  },
+  "variants": {
+    "legacy": {
+      "variant": "legacy",
+      "platform": "aws",
+      "runtime_inventory": {
+        "aws_rule_count": 35,
+        "structured_rule_count": 0,
+        "raw_only_rule_count": 35
+      },
+      "scenarios": [
+        {
+          "event_count": 10,
+          "parsed_event_count": 23,
+          "input_bytes": 2711,
+          "matched_technique_count": 0,
+          "rule_evaluations": 805,
+          "evaluation_modes": {
+            "raw": 805
+          },
+          "parse_ms": {
+            "median": 0.326,
+            "p95": 0.489
+          },
+          "analysis_ms": {
+            "median": 245.241,
+            "p95": 245.948
+          },
+          "end_to_end_ms": {
+            "median": 245.081,
+            "p95": 245.776
+          }
+        },
+        {
+          "event_count": 50,
+          "parsed_event_count": 117,
+          "input_bytes": 13391,
+          "matched_technique_count": 0,
+          "rule_evaluations": 4095,
+          "evaluation_modes": {
+            "raw": 4095
+          },
+          "parse_ms": {
+            "median": 1.782,
+            "p95": 3.129
+          },
+          "analysis_ms": {
+            "median": 1492.063,
+            "p95": 1523.811
+          },
+          "end_to_end_ms": {
+            "median": 1494.703,
+            "p95": 1500.944
+          }
+        },
+        {
+          "event_count": 250,
+          "parsed_event_count": 583,
+          "input_bytes": 66941,
+          "matched_technique_count": 0,
+          "rule_evaluations": 20405,
+          "evaluation_modes": {
+            "raw": 20405
+          },
+          "parse_ms": {
+            "median": 9.012,
+            "p95": 9.356
+          },
+          "analysis_ms": {
+            "median": 7675.042,
+            "p95": 7812.098
+          },
+          "end_to_end_ms": {
+            "median": 7689.101,
+            "p95": 7738.884
+          }
+        }
+      ]
+    },
+    "integrated": {
+      "variant": "integrated",
+      "platform": "aws",
+      "runtime_inventory": {
+        "aws_rule_count": 46,
+        "structured_rule_count": 0,
+        "raw_only_rule_count": 46
+      },
+      "scenarios": [
+        {
+          "event_count": 10,
+          "parsed_event_count": 23,
+          "input_bytes": 2711,
+          "matched_technique_count": 1,
+          "rule_evaluations": 808,
+          "evaluation_modes": {
+            "raw": 808
+          },
+          "parse_ms": {
+            "median": 0.355,
+            "p95": 0.599
+          },
+          "analysis_ms": {
+            "median": 243.307,
+            "p95": 243.838
+          },
+          "end_to_end_ms": {
+            "median": 244.22,
+            "p95": 246.315
+          }
+        },
+        {
+          "event_count": 50,
+          "parsed_event_count": 117,
+          "input_bytes": 13391,
+          "matched_technique_count": 1,
+          "rule_evaluations": 4099,
+          "evaluation_modes": {
+            "raw": 4099
+          },
+          "parse_ms": {
+            "median": 1.859,
+            "p95": 2.098
+          },
+          "analysis_ms": {
+            "median": 1482.511,
+            "p95": 1487.063
+          },
+          "end_to_end_ms": {
+            "median": 1484.174,
+            "p95": 1485.928
+          }
+        },
+        {
+          "event_count": 250,
+          "parsed_event_count": 583,
+          "input_bytes": 66941,
+          "matched_technique_count": 1,
+          "rule_evaluations": 20408,
+          "evaluation_modes": {
+            "raw": 20408
+          },
+          "parse_ms": {
+            "median": 9.294,
+            "p95": 9.865
+          },
+          "analysis_ms": {
+            "median": 7681.586,
+            "p95": 7725.947
+          },
+          "end_to_end_ms": {
+            "median": 7691.494,
+            "p95": 7732.45
+          }
+        }
+      ]
+    }
+  },
+  "comparison": [
+    {
+      "event_count": 10,
+      "median_end_to_end_delta_ms": -0.861,
+      "median_end_to_end_change_percent": -0.35,
+      "raw_regex_evaluation_delta": 3,
+      "structured_evaluation_delta": 0
+    },
+    {
+      "event_count": 50,
+      "median_end_to_end_delta_ms": -10.529,
+      "median_end_to_end_change_percent": -0.7,
+      "raw_regex_evaluation_delta": 4,
+      "structured_evaluation_delta": 0
+    },
+    {
+      "event_count": 250,
+      "median_end_to_end_delta_ms": 2.393,
+      "median_end_to_end_change_percent": 0.03,
+      "raw_regex_evaluation_delta": 3,
+      "structured_evaluation_delta": 0
+    }
+  ]
+}

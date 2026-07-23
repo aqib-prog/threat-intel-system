@@ -1,0 +1,195 @@
+{
+  "benchmark": "Card 5 log-analysis runtime integration",
+  "host": {
+    "python": "3.13.11",
+    "system": "Darwin",
+    "machine": "arm64"
+  },
+  "protocol": {
+    "repetitions": 9,
+    "warmups": 2,
+    "event_counts": [
+      10,
+      50,
+      250
+    ],
+    "api_character_limit": 100000,
+    "corpus": "complete Windows Sysmon-style JSON records; one positive event per scenario"
+  },
+  "variants": {
+    "legacy": {
+      "variant": "legacy",
+      "platform": "windows",
+      "runtime_inventory": {
+        "windows_rule_count": 144,
+        "structured_rule_count": 0,
+        "raw_only_rule_count": 144
+      },
+      "scenarios": [
+        {
+          "event_count": 10,
+          "input_bytes": 3865,
+          "matched_technique_count": 0,
+          "rule_evaluations": 1440,
+          "evaluation_modes": {
+            "raw": 1440
+          },
+          "parse_ms": {
+            "median": 0.954,
+            "p95": 1.233
+          },
+          "analysis_ms": {
+            "median": 123.893,
+            "p95": 124.085
+          },
+          "end_to_end_ms": {
+            "median": 125.077,
+            "p95": 125.652
+          }
+        },
+        {
+          "event_count": 50,
+          "input_bytes": 19425,
+          "matched_technique_count": 0,
+          "rule_evaluations": 7200,
+          "evaluation_modes": {
+            "raw": 7200
+          },
+          "parse_ms": {
+            "median": 4.742,
+            "p95": 5.047
+          },
+          "analysis_ms": {
+            "median": 626.864,
+            "p95": 628.777
+          },
+          "end_to_end_ms": {
+            "median": 630.977,
+            "p95": 638.791
+          }
+        },
+        {
+          "event_count": 250,
+          "input_bytes": 97225,
+          "matched_technique_count": 0,
+          "rule_evaluations": 36000,
+          "evaluation_modes": {
+            "raw": 36000
+          },
+          "parse_ms": {
+            "median": 24.528,
+            "p95": 25.177
+          },
+          "analysis_ms": {
+            "median": 3143.543,
+            "p95": 3170.575
+          },
+          "end_to_end_ms": {
+            "median": 3182.542,
+            "p95": 3219.377
+          }
+        }
+      ]
+    },
+    "integrated": {
+      "variant": "integrated",
+      "platform": "windows",
+      "runtime_inventory": {
+        "windows_rule_count": 1682,
+        "structured_rule_count": 1587,
+        "raw_only_rule_count": 95
+      },
+      "scenarios": [
+        {
+          "event_count": 10,
+          "input_bytes": 3865,
+          "matched_technique_count": 2,
+          "rule_evaluations": 16820,
+          "evaluation_modes": {
+            "raw": 950,
+            "structured": 15870
+          },
+          "parse_ms": {
+            "median": 0.936,
+            "p95": 1.004
+          },
+          "analysis_ms": {
+            "median": 113.711,
+            "p95": 114.638
+          },
+          "end_to_end_ms": {
+            "median": 114.375,
+            "p95": 115.647
+          }
+        },
+        {
+          "event_count": 50,
+          "input_bytes": 19425,
+          "matched_technique_count": 2,
+          "rule_evaluations": 84100,
+          "evaluation_modes": {
+            "raw": 4750,
+            "structured": 79350
+          },
+          "parse_ms": {
+            "median": 4.931,
+            "p95": 5.482
+          },
+          "analysis_ms": {
+            "median": 568.973,
+            "p95": 570.591
+          },
+          "end_to_end_ms": {
+            "median": 576.849,
+            "p95": 582.074
+          }
+        },
+        {
+          "event_count": 250,
+          "input_bytes": 97225,
+          "matched_technique_count": 2,
+          "rule_evaluations": 420500,
+          "evaluation_modes": {
+            "raw": 23750,
+            "structured": 396750
+          },
+          "parse_ms": {
+            "median": 24.808,
+            "p95": 25.062
+          },
+          "analysis_ms": {
+            "median": 2876.002,
+            "p95": 2880.869
+          },
+          "end_to_end_ms": {
+            "median": 2901.811,
+            "p95": 2920.916
+          }
+        }
+      ]
+    }
+  },
+  "comparison": [
+    {
+      "event_count": 10,
+      "median_end_to_end_delta_ms": -10.702,
+      "median_end_to_end_change_percent": -8.56,
+      "raw_regex_evaluation_delta": -490,
+      "structured_evaluation_delta": 15870
+    },
+    {
+      "event_count": 50,
+      "median_end_to_end_delta_ms": -54.128,
+      "median_end_to_end_change_percent": -8.58,
+      "raw_regex_evaluation_delta": -2450,
+      "structured_evaluation_delta": 79350
+    },
+    {
+      "event_count": 250,
+      "median_end_to_end_delta_ms": -280.731,
+      "median_end_to_end_change_percent": -8.82,
+      "raw_regex_evaluation_delta": -12250,
+      "structured_evaluation_delta": 396750
+    }
+  ]
+}

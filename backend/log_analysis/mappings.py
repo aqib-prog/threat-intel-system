@@ -12,6 +12,10 @@ from so a reviewer can re-verify it later.
 
 import re
 from dataclasses import dataclass
+from typing import Any, Mapping, Sequence
+
+from log_analysis.runtime_rules import load_runtime_rule_records
+from log_analysis.structured import StructuredCondition
 
 
 @dataclass(frozen=True)
@@ -22,6 +26,10 @@ class MappingRule:
     confidence: str
     reason: str
     source: str
+    structured_condition: StructuredCondition | None = None
+    # A semantics-preserving fast path for offline-compiled raw rules. At
+    # least one alternative term must occur before regex evaluation.
+    prefilter_terms: tuple[str, ...] = ()
     # Only set for the handful of sub-technique names that MITRE reuses
     # under more than one parent (e.g. "Cloud Account" exists under both
     # Account Discovery and Create Account) - lets fetch_nodes_by_names
@@ -38,6 +46,8 @@ def _rule(
     reason: str,
     source: str,
     parent_hint: str | None = None,
+    structured_condition: Mapping[str, Any] | None = None,
+    prefilter_terms: Sequence[str] | None = None,
 ) -> MappingRule:
     return MappingRule(
         pattern=re.compile(pattern, re.IGNORECASE),
@@ -46,6 +56,12 @@ def _rule(
         confidence=confidence,
         reason=reason,
         source=source,
+        structured_condition=(
+            StructuredCondition.from_dict(structured_condition)
+            if structured_condition is not None
+            else None
+        ),
+        prefilter_terms=tuple(term.casefold() for term in (prefilter_terms or ())),
         parent_hint=parent_hint,
     )
 
@@ -982,18 +998,68 @@ _rule('(?=.*(?:/Library/StartupItems/|/System/Library/StartupItems))(?=.*(?:\\.p
           'Sigma: file_event_macos_susp_startup_item_created.yml'),
 ]
 
+def _runtime_rule_key(rule: MappingRule) -> tuple[str, str, str | None]:
+    return rule.source, rule.technique_name, rule.parent_hint
+
+
+def _merge_compiled_runtime_rules(
+    existing: list[MappingRule], platform: str
+) -> list[MappingRule]:
+    """Replace reviewed overlaps and append the remaining compiled rules.
+
+    Replacing exact source/technique overlaps is essential: retaining the old
+    raw-only entry beside its field-aware equivalent would reintroduce the raw
+    false positives that the authoritative hybrid policy removes.
+    """
+
+    compiled = [
+        _rule(
+            **item["rule_kwargs"],
+            structured_condition=item.get("structured_condition"),
+            prefilter_terms=item.get("prefilter_terms"),
+        )
+        for item in load_runtime_rule_records(platform)
+    ]
+    compiled_keys = {_runtime_rule_key(rule) for rule in compiled}
+    if len(compiled_keys) != len(compiled):
+        raise RuntimeError(f"duplicate {platform} compiled runtime rule")
+    return [rule for rule in existing if _runtime_rule_key(rule) not in compiled_keys] + compiled
+
+
+WINDOWS_RUNTIME_RULES = _merge_compiled_runtime_rules(
+    WINDOWS_RULES + WINDOWS_SIGMA_RULES + WINDOWS_SIGMA_EXPANSION_RULES,
+    "windows",
+)
+LINUX_RUNTIME_RULES = _merge_compiled_runtime_rules(
+    LINUX_RULES + LINUX_SIGMA_RULES,
+    "linux",
+)
+MACOS_RUNTIME_RULES = _merge_compiled_runtime_rules(
+    MACOS_RULES + MACOS_SIGMA_RULES + MACOS_SIGMA_EXPANSION_RULES,
+    "macos",
+)
+AWS_RUNTIME_RULES = _merge_compiled_runtime_rules(
+    AWS_RULES + AWS_SIGMA_RULES,
+    "aws",
+)
+KUBERNETES_RUNTIME_RULES = _merge_compiled_runtime_rules(
+    KUBERNETES_RULES,
+    "kubernetes",
+)
+
+
 ALL_RULES: list[MappingRule] = [
-    *WINDOWS_RULES, *WINDOWS_SIGMA_RULES, *WINDOWS_SIGMA_EXPANSION_RULES,
-    *LINUX_RULES, *LINUX_SIGMA_RULES,
-    *AWS_RULES, *AWS_SIGMA_RULES,
-    *KUBERNETES_RULES,
-    *MACOS_RULES, *MACOS_SIGMA_RULES, *MACOS_SIGMA_EXPANSION_RULES,
+    *WINDOWS_RUNTIME_RULES,
+    *LINUX_RUNTIME_RULES,
+    *AWS_RUNTIME_RULES,
+    *KUBERNETES_RUNTIME_RULES,
+    *MACOS_RUNTIME_RULES,
 ]
 
 RULES_BY_PLATFORM: dict[str, list[MappingRule]] = {
-    "windows": WINDOWS_RULES + WINDOWS_SIGMA_RULES + WINDOWS_SIGMA_EXPANSION_RULES,
-    "linux": LINUX_RULES + LINUX_SIGMA_RULES,
-    "aws": AWS_RULES + AWS_SIGMA_RULES,
-    "kubernetes": KUBERNETES_RULES,
-    "macos": MACOS_RULES + MACOS_SIGMA_RULES + MACOS_SIGMA_EXPANSION_RULES,
+    "windows": WINDOWS_RUNTIME_RULES,
+    "linux": LINUX_RUNTIME_RULES,
+    "aws": AWS_RUNTIME_RULES,
+    "kubernetes": KUBERNETES_RUNTIME_RULES,
+    "macos": MACOS_RUNTIME_RULES,
 }

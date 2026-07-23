@@ -1,0 +1,588 @@
+{
+  "fixture_role": "phase_1_live_verified_persistence_prototype",
+  "pairs": [
+    {
+      "expected_answer": "T1037.001 (Logon Script (Windows)) is mitigated by M1024 (Restrict Registry Permissions).",
+      "expected_mitigations": [
+        {
+          "external_id": "M1024",
+          "name": "Restrict Registry Permissions",
+          "stix_id": "course-of-action--a2c36a5d-4058-475e-8e77-fff75e50d3b9"
+        }
+      ],
+      "id": "persistence-mitigations-t1037.001",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "mitigates_edges": [
+          {
+            "mitigation_stix_id": "course-of-action--a2c36a5d-4058-475e-8e77-fff75e50d3b9",
+            "relationship_stix_id": "relationship--0f7dd352-4e6b-4852-a995-7b22c98b4fd2",
+            "technique_stix_id": "attack-pattern--eb125d40-0b2d-41ac-a71a-3229241c2cd3"
+          }
+        ],
+        "mitigation_stix_ids": [
+          "course-of-action--a2c36a5d-4058-475e-8e77-fff75e50d3b9"
+        ],
+        "relationship_stix_ids": [
+          "relationship--0f7dd352-4e6b-4852-a995-7b22c98b4fd2"
+        ],
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+        "technique_stix_id": "attack-pattern--eb125d40-0b2d-41ac-a71a-3229241c2cd3"
+      },
+      "question": "What mitigates T1037.001 (Logon Script (Windows))?",
+      "relationship_type": "technique_to_mitigation"
+    },
+    {
+      "expected_answer": "T1112 (Modify Registry) is mitigated by M1024 (Restrict Registry Permissions).",
+      "expected_mitigations": [
+        {
+          "external_id": "M1024",
+          "name": "Restrict Registry Permissions",
+          "stix_id": "course-of-action--a2c36a5d-4058-475e-8e77-fff75e50d3b9"
+        }
+      ],
+      "id": "persistence-mitigations-t1112",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "mitigates_edges": [
+          {
+            "mitigation_stix_id": "course-of-action--a2c36a5d-4058-475e-8e77-fff75e50d3b9",
+            "relationship_stix_id": "relationship--81bb4898-aaa2-4dff-9af8-a97e6b69a95a",
+            "technique_stix_id": "attack-pattern--57340c81-c025-4189-8fa0-fc7ede51bae4"
+          }
+        ],
+        "mitigation_stix_ids": [
+          "course-of-action--a2c36a5d-4058-475e-8e77-fff75e50d3b9"
+        ],
+        "relationship_stix_ids": [
+          "relationship--81bb4898-aaa2-4dff-9af8-a97e6b69a95a"
+        ],
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+        "technique_stix_id": "attack-pattern--57340c81-c025-4189-8fa0-fc7ede51bae4"
+      },
+      "question": "What mitigates T1112 (Modify Registry)?",
+      "relationship_type": "technique_to_mitigation"
+    },
+    {
+      "expected_answer": "T1205.001 (Port Knocking) is mitigated by M1037 (Filter Network Traffic).",
+      "expected_mitigations": [
+        {
+          "external_id": "M1037",
+          "name": "Filter Network Traffic",
+          "stix_id": "course-of-action--20f6a9df-37c4-4e20-9e47-025983b1b39d"
+        }
+      ],
+      "id": "persistence-mitigations-t1205.001",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "mitigates_edges": [
+          {
+            "mitigation_stix_id": "course-of-action--20f6a9df-37c4-4e20-9e47-025983b1b39d",
+            "relationship_stix_id": "relationship--0058d5dd-bf42-4a09-94ff-dfb024b949df",
+            "technique_stix_id": "attack-pattern--8868cb5b-d575-4a60-acb2-07d37389a2fd"
+          }
+        ],
+        "mitigation_stix_ids": [
+          "course-of-action--20f6a9df-37c4-4e20-9e47-025983b1b39d"
+        ],
+        "relationship_stix_ids": [
+          "relationship--0058d5dd-bf42-4a09-94ff-dfb024b949df"
+        ],
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+        "technique_stix_id": "attack-pattern--8868cb5b-d575-4a60-acb2-07d37389a2fd"
+      },
+      "question": "What mitigates T1205.001 (Port Knocking)?",
+      "relationship_type": "technique_to_mitigation"
+    },
+    {
+      "expected_answer": "T1543.001 (Launch Agent) is mitigated by M1022 (Restrict File and Directory Permissions).",
+      "expected_mitigations": [
+        {
+          "external_id": "M1022",
+          "name": "Restrict File and Directory Permissions",
+          "stix_id": "course-of-action--987988f0-cf86-4680-a875-2f6456ab2448"
+        }
+      ],
+      "id": "persistence-mitigations-t1543.001",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "mitigates_edges": [
+          {
+            "mitigation_stix_id": "course-of-action--987988f0-cf86-4680-a875-2f6456ab2448",
+            "relationship_stix_id": "relationship--68146568-bc1f-49b6-9477-c6c06b0fa39c",
+            "technique_stix_id": "attack-pattern--d10cbd34-42e3-45c0-84d2-535a09849584"
+          }
+        ],
+        "mitigation_stix_ids": [
+          "course-of-action--987988f0-cf86-4680-a875-2f6456ab2448"
+        ],
+        "relationship_stix_ids": [
+          "relationship--68146568-bc1f-49b6-9477-c6c06b0fa39c"
+        ],
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+        "technique_stix_id": "attack-pattern--d10cbd34-42e3-45c0-84d2-535a09849584"
+      },
+      "question": "What mitigates T1543.001 (Launch Agent)?",
+      "relationship_type": "technique_to_mitigation"
+    },
+    {
+      "expected_answer": "T1653 (Power Settings) is mitigated by M1047 (Audit).",
+      "expected_mitigations": [
+        {
+          "external_id": "M1047",
+          "name": "Audit",
+          "stix_id": "course-of-action--cc2399fd-3cd3-4319-8d0a-fbd6420cdaf8"
+        }
+      ],
+      "id": "persistence-mitigations-t1653",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "mitigates_edges": [
+          {
+            "mitigation_stix_id": "course-of-action--cc2399fd-3cd3-4319-8d0a-fbd6420cdaf8",
+            "relationship_stix_id": "relationship--c9ca3f00-925f-4bce-9aeb-df41fb9b5eb0",
+            "technique_stix_id": "attack-pattern--ea071aa0-8f17-416f-ab0d-2bab7e79003d"
+          }
+        ],
+        "mitigation_stix_ids": [
+          "course-of-action--cc2399fd-3cd3-4319-8d0a-fbd6420cdaf8"
+        ],
+        "relationship_stix_ids": [
+          "relationship--c9ca3f00-925f-4bce-9aeb-df41fb9b5eb0"
+        ],
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+        "technique_stix_id": "attack-pattern--ea071aa0-8f17-416f-ab0d-2bab7e79003d"
+      },
+      "question": "What mitigates T1653 (Power Settings)?",
+      "relationship_type": "technique_to_mitigation"
+    },
+    {
+      "expected_answer": "T1037 (Boot or Logon Initialization Scripts) is mitigated by M1022 (Restrict File and Directory Permissions) and M1024 (Restrict Registry Permissions).",
+      "expected_mitigations": [
+        {
+          "external_id": "M1022",
+          "name": "Restrict File and Directory Permissions",
+          "stix_id": "course-of-action--987988f0-cf86-4680-a875-2f6456ab2448"
+        },
+        {
+          "external_id": "M1024",
+          "name": "Restrict Registry Permissions",
+          "stix_id": "course-of-action--a2c36a5d-4058-475e-8e77-fff75e50d3b9"
+        }
+      ],
+      "id": "persistence-mitigations-t1037",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "mitigates_edges": [
+          {
+            "mitigation_stix_id": "course-of-action--987988f0-cf86-4680-a875-2f6456ab2448",
+            "relationship_stix_id": "relationship--d32467b1-8d30-4134-ac6d-541cb623f8c2",
+            "technique_stix_id": "attack-pattern--03259939-0b57-482f-8eb5-87c0e0d54334"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--a2c36a5d-4058-475e-8e77-fff75e50d3b9",
+            "relationship_stix_id": "relationship--9e755287-a238-485c-83c3-7afeac5a9243",
+            "technique_stix_id": "attack-pattern--03259939-0b57-482f-8eb5-87c0e0d54334"
+          }
+        ],
+        "mitigation_stix_ids": [
+          "course-of-action--987988f0-cf86-4680-a875-2f6456ab2448",
+          "course-of-action--a2c36a5d-4058-475e-8e77-fff75e50d3b9"
+        ],
+        "relationship_stix_ids": [
+          "relationship--d32467b1-8d30-4134-ac6d-541cb623f8c2",
+          "relationship--9e755287-a238-485c-83c3-7afeac5a9243"
+        ],
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+        "technique_stix_id": "attack-pattern--03259939-0b57-482f-8eb5-87c0e0d54334"
+      },
+      "question": "What mitigates T1037 (Boot or Logon Initialization Scripts)?",
+      "relationship_type": "technique_to_mitigation"
+    },
+    {
+      "expected_answer": "T1053 (Scheduled Task/Job) is mitigated by M1018 (User Account Management), M1022 (Restrict File and Directory Permissions), M1026 (Privileged Account Management), M1028 (Operating System Configuration), and M1047 (Audit).",
+      "expected_mitigations": [
+        {
+          "external_id": "M1018",
+          "name": "User Account Management",
+          "stix_id": "course-of-action--93e7968a-9074-4eac-8ae9-9f5200ec3317"
+        },
+        {
+          "external_id": "M1022",
+          "name": "Restrict File and Directory Permissions",
+          "stix_id": "course-of-action--987988f0-cf86-4680-a875-2f6456ab2448"
+        },
+        {
+          "external_id": "M1026",
+          "name": "Privileged Account Management",
+          "stix_id": "course-of-action--9bb9e696-bff8-4ae1-9454-961fc7d91d5f"
+        },
+        {
+          "external_id": "M1028",
+          "name": "Operating System Configuration",
+          "stix_id": "course-of-action--2f316f6c-ae42-44fe-adf8-150989e0f6d3"
+        },
+        {
+          "external_id": "M1047",
+          "name": "Audit",
+          "stix_id": "course-of-action--cc2399fd-3cd3-4319-8d0a-fbd6420cdaf8"
+        }
+      ],
+      "id": "persistence-mitigations-t1053",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "mitigates_edges": [
+          {
+            "mitigation_stix_id": "course-of-action--93e7968a-9074-4eac-8ae9-9f5200ec3317",
+            "relationship_stix_id": "relationship--1d50b715-96a2-4fd6-bf92-603ad90730fd",
+            "technique_stix_id": "attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--987988f0-cf86-4680-a875-2f6456ab2448",
+            "relationship_stix_id": "relationship--7a0efacc-7005-4f1e-9fb8-047d8b703cf8",
+            "technique_stix_id": "attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--9bb9e696-bff8-4ae1-9454-961fc7d91d5f",
+            "relationship_stix_id": "relationship--8f09085f-c1cf-4321-89c4-17d93e774f6f",
+            "technique_stix_id": "attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--2f316f6c-ae42-44fe-adf8-150989e0f6d3",
+            "relationship_stix_id": "relationship--63c9cdd8-0e64-46dd-9459-3d64828b0cc7",
+            "technique_stix_id": "attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--cc2399fd-3cd3-4319-8d0a-fbd6420cdaf8",
+            "relationship_stix_id": "relationship--9d4e8b44-90f8-4a10-8419-8187d4babf24",
+            "technique_stix_id": "attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9"
+          }
+        ],
+        "mitigation_stix_ids": [
+          "course-of-action--93e7968a-9074-4eac-8ae9-9f5200ec3317",
+          "course-of-action--987988f0-cf86-4680-a875-2f6456ab2448",
+          "course-of-action--9bb9e696-bff8-4ae1-9454-961fc7d91d5f",
+          "course-of-action--2f316f6c-ae42-44fe-adf8-150989e0f6d3",
+          "course-of-action--cc2399fd-3cd3-4319-8d0a-fbd6420cdaf8"
+        ],
+        "relationship_stix_ids": [
+          "relationship--1d50b715-96a2-4fd6-bf92-603ad90730fd",
+          "relationship--7a0efacc-7005-4f1e-9fb8-047d8b703cf8",
+          "relationship--8f09085f-c1cf-4321-89c4-17d93e774f6f",
+          "relationship--63c9cdd8-0e64-46dd-9459-3d64828b0cc7",
+          "relationship--9d4e8b44-90f8-4a10-8419-8187d4babf24"
+        ],
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+        "technique_stix_id": "attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9"
+      },
+      "question": "What mitigates T1053 (Scheduled Task/Job)?",
+      "relationship_type": "technique_to_mitigation"
+    },
+    {
+      "expected_answer": "T1078 (Valid Accounts) is mitigated by M1013 (Application Developer Guidance), M1015 (Active Directory Configuration), M1017 (User Training), M1018 (User Account Management), M1026 (Privileged Account Management), M1027 (Password Policies), M1032 (Multi-factor Authentication), and M1036 (Account Use Policies).",
+      "expected_mitigations": [
+        {
+          "external_id": "M1013",
+          "name": "Application Developer Guidance",
+          "stix_id": "course-of-action--25dc1ce8-eb55-4333-ae30-a7cb4f5894a1"
+        },
+        {
+          "external_id": "M1015",
+          "name": "Active Directory Configuration",
+          "stix_id": "course-of-action--e3388c78-2a8d-47c2-8422-c1398b324462"
+        },
+        {
+          "external_id": "M1017",
+          "name": "User Training",
+          "stix_id": "course-of-action--2a4f6c11-a4a7-4cb9-b0ef-6ae1bb3a718a"
+        },
+        {
+          "external_id": "M1018",
+          "name": "User Account Management",
+          "stix_id": "course-of-action--93e7968a-9074-4eac-8ae9-9f5200ec3317"
+        },
+        {
+          "external_id": "M1026",
+          "name": "Privileged Account Management",
+          "stix_id": "course-of-action--9bb9e696-bff8-4ae1-9454-961fc7d91d5f"
+        },
+        {
+          "external_id": "M1027",
+          "name": "Password Policies",
+          "stix_id": "course-of-action--90c218c3-fbf8-4830-98a7-e8cfb7eaa485"
+        },
+        {
+          "external_id": "M1032",
+          "name": "Multi-factor Authentication",
+          "stix_id": "course-of-action--b045d015-6bed-4490-bd38-56b41ece59a0"
+        },
+        {
+          "external_id": "M1036",
+          "name": "Account Use Policies",
+          "stix_id": "course-of-action--f9f9e6ef-bc0a-41ad-ba11-0924e5e84c4c"
+        }
+      ],
+      "id": "persistence-mitigations-t1078",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "mitigates_edges": [
+          {
+            "mitigation_stix_id": "course-of-action--25dc1ce8-eb55-4333-ae30-a7cb4f5894a1",
+            "relationship_stix_id": "relationship--c8acdf40-8237-487f-8255-91afa327705d",
+            "technique_stix_id": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--e3388c78-2a8d-47c2-8422-c1398b324462",
+            "relationship_stix_id": "relationship--eed29e0f-59c1-4fab-8268-3f0571e90748",
+            "technique_stix_id": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--2a4f6c11-a4a7-4cb9-b0ef-6ae1bb3a718a",
+            "relationship_stix_id": "relationship--edaeb27a-9226-4805-ae45-87312a2dc013",
+            "technique_stix_id": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--93e7968a-9074-4eac-8ae9-9f5200ec3317",
+            "relationship_stix_id": "relationship--555abf76-531f-4d35-9783-ed7c2a3f213b",
+            "technique_stix_id": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--9bb9e696-bff8-4ae1-9454-961fc7d91d5f",
+            "relationship_stix_id": "relationship--89887815-acfc-42f9-9172-81437cf9ff69",
+            "technique_stix_id": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--90c218c3-fbf8-4830-98a7-e8cfb7eaa485",
+            "relationship_stix_id": "relationship--4f24d075-4d6c-49d2-a213-306e4af2083d",
+            "technique_stix_id": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--b045d015-6bed-4490-bd38-56b41ece59a0",
+            "relationship_stix_id": "relationship--98167cc6-96de-4f02-83b1-78d7633c4106",
+            "technique_stix_id": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--f9f9e6ef-bc0a-41ad-ba11-0924e5e84c4c",
+            "relationship_stix_id": "relationship--f2d01f19-b4e7-417a-a936-11af9386b867",
+            "technique_stix_id": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81"
+          }
+        ],
+        "mitigation_stix_ids": [
+          "course-of-action--25dc1ce8-eb55-4333-ae30-a7cb4f5894a1",
+          "course-of-action--e3388c78-2a8d-47c2-8422-c1398b324462",
+          "course-of-action--2a4f6c11-a4a7-4cb9-b0ef-6ae1bb3a718a",
+          "course-of-action--93e7968a-9074-4eac-8ae9-9f5200ec3317",
+          "course-of-action--9bb9e696-bff8-4ae1-9454-961fc7d91d5f",
+          "course-of-action--90c218c3-fbf8-4830-98a7-e8cfb7eaa485",
+          "course-of-action--b045d015-6bed-4490-bd38-56b41ece59a0",
+          "course-of-action--f9f9e6ef-bc0a-41ad-ba11-0924e5e84c4c"
+        ],
+        "relationship_stix_ids": [
+          "relationship--c8acdf40-8237-487f-8255-91afa327705d",
+          "relationship--eed29e0f-59c1-4fab-8268-3f0571e90748",
+          "relationship--edaeb27a-9226-4805-ae45-87312a2dc013",
+          "relationship--555abf76-531f-4d35-9783-ed7c2a3f213b",
+          "relationship--89887815-acfc-42f9-9172-81437cf9ff69",
+          "relationship--4f24d075-4d6c-49d2-a213-306e4af2083d",
+          "relationship--98167cc6-96de-4f02-83b1-78d7633c4106",
+          "relationship--f2d01f19-b4e7-417a-a936-11af9386b867"
+        ],
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+        "technique_stix_id": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81"
+      },
+      "question": "What mitigates T1078 (Valid Accounts)?",
+      "relationship_type": "technique_to_mitigation"
+    },
+    {
+      "expected_answer": "T1098.003 (Additional Cloud Roles) is mitigated by M1018 (User Account Management), M1026 (Privileged Account Management), and M1032 (Multi-factor Authentication).",
+      "expected_mitigations": [
+        {
+          "external_id": "M1018",
+          "name": "User Account Management",
+          "stix_id": "course-of-action--93e7968a-9074-4eac-8ae9-9f5200ec3317"
+        },
+        {
+          "external_id": "M1026",
+          "name": "Privileged Account Management",
+          "stix_id": "course-of-action--9bb9e696-bff8-4ae1-9454-961fc7d91d5f"
+        },
+        {
+          "external_id": "M1032",
+          "name": "Multi-factor Authentication",
+          "stix_id": "course-of-action--b045d015-6bed-4490-bd38-56b41ece59a0"
+        }
+      ],
+      "id": "persistence-mitigations-t1098.003",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "mitigates_edges": [
+          {
+            "mitigation_stix_id": "course-of-action--93e7968a-9074-4eac-8ae9-9f5200ec3317",
+            "relationship_stix_id": "relationship--f9a0a532-21a6-47a2-83f8-4abb61cb3fc7",
+            "technique_stix_id": "attack-pattern--2dbbdcd5-92cf-44c0-aea2-fe24783a6bc3"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--9bb9e696-bff8-4ae1-9454-961fc7d91d5f",
+            "relationship_stix_id": "relationship--2606e684-b69d-47fc-822f-279d197a1e7a",
+            "technique_stix_id": "attack-pattern--2dbbdcd5-92cf-44c0-aea2-fe24783a6bc3"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--b045d015-6bed-4490-bd38-56b41ece59a0",
+            "relationship_stix_id": "relationship--7dfb4403-9368-4fed-aac0-a968e7761c4a",
+            "technique_stix_id": "attack-pattern--2dbbdcd5-92cf-44c0-aea2-fe24783a6bc3"
+          }
+        ],
+        "mitigation_stix_ids": [
+          "course-of-action--93e7968a-9074-4eac-8ae9-9f5200ec3317",
+          "course-of-action--9bb9e696-bff8-4ae1-9454-961fc7d91d5f",
+          "course-of-action--b045d015-6bed-4490-bd38-56b41ece59a0"
+        ],
+        "relationship_stix_ids": [
+          "relationship--f9a0a532-21a6-47a2-83f8-4abb61cb3fc7",
+          "relationship--2606e684-b69d-47fc-822f-279d197a1e7a",
+          "relationship--7dfb4403-9368-4fed-aac0-a968e7761c4a"
+        ],
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+        "technique_stix_id": "attack-pattern--2dbbdcd5-92cf-44c0-aea2-fe24783a6bc3"
+      },
+      "question": "What mitigates T1098.003 (Additional Cloud Roles)?",
+      "relationship_type": "technique_to_mitigation"
+    },
+    {
+      "expected_answer": "T1543.003 (Windows Service) is mitigated by M1018 (User Account Management), M1028 (Operating System Configuration), M1040 (Behavior Prevention on Endpoint), M1045 (Code Signing), and M1047 (Audit).",
+      "expected_mitigations": [
+        {
+          "external_id": "M1018",
+          "name": "User Account Management",
+          "stix_id": "course-of-action--93e7968a-9074-4eac-8ae9-9f5200ec3317"
+        },
+        {
+          "external_id": "M1028",
+          "name": "Operating System Configuration",
+          "stix_id": "course-of-action--2f316f6c-ae42-44fe-adf8-150989e0f6d3"
+        },
+        {
+          "external_id": "M1040",
+          "name": "Behavior Prevention on Endpoint",
+          "stix_id": "course-of-action--90f39ee1-d5a3-4aaa-9f28-3b42815b0d46"
+        },
+        {
+          "external_id": "M1045",
+          "name": "Code Signing",
+          "stix_id": "course-of-action--590777b3-b475-4c7c-aaf8-f4a73b140312"
+        },
+        {
+          "external_id": "M1047",
+          "name": "Audit",
+          "stix_id": "course-of-action--cc2399fd-3cd3-4319-8d0a-fbd6420cdaf8"
+        }
+      ],
+      "id": "persistence-mitigations-t1543.003",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "mitigates_edges": [
+          {
+            "mitigation_stix_id": "course-of-action--93e7968a-9074-4eac-8ae9-9f5200ec3317",
+            "relationship_stix_id": "relationship--d1667060-2bbe-41df-94eb-ce8b68fb084d",
+            "technique_stix_id": "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--2f316f6c-ae42-44fe-adf8-150989e0f6d3",
+            "relationship_stix_id": "relationship--33aebe8f-cc59-4953-9648-ba6bf1654cda",
+            "technique_stix_id": "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--90f39ee1-d5a3-4aaa-9f28-3b42815b0d46",
+            "relationship_stix_id": "relationship--0a28651c-ea35-4f05-a483-d9a60b06cbaf",
+            "technique_stix_id": "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--590777b3-b475-4c7c-aaf8-f4a73b140312",
+            "relationship_stix_id": "relationship--875ed563-004f-4541-99e4-21a556e5400c",
+            "technique_stix_id": "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32"
+          },
+          {
+            "mitigation_stix_id": "course-of-action--cc2399fd-3cd3-4319-8d0a-fbd6420cdaf8",
+            "relationship_stix_id": "relationship--40f51fdc-cd3c-4e93-9593-e1ee7cf2211e",
+            "technique_stix_id": "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32"
+          }
+        ],
+        "mitigation_stix_ids": [
+          "course-of-action--93e7968a-9074-4eac-8ae9-9f5200ec3317",
+          "course-of-action--2f316f6c-ae42-44fe-adf8-150989e0f6d3",
+          "course-of-action--90f39ee1-d5a3-4aaa-9f28-3b42815b0d46",
+          "course-of-action--590777b3-b475-4c7c-aaf8-f4a73b140312",
+          "course-of-action--cc2399fd-3cd3-4319-8d0a-fbd6420cdaf8"
+        ],
+        "relationship_stix_ids": [
+          "relationship--d1667060-2bbe-41df-94eb-ce8b68fb084d",
+          "relationship--33aebe8f-cc59-4953-9648-ba6bf1654cda",
+          "relationship--0a28651c-ea35-4f05-a483-d9a60b06cbaf",
+          "relationship--875ed563-004f-4541-99e4-21a556e5400c",
+          "relationship--40f51fdc-cd3c-4e93-9593-e1ee7cf2211e"
+        ],
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+        "technique_stix_id": "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32"
+      },
+      "question": "What mitigates T1543.003 (Windows Service)?",
+      "relationship_type": "technique_to_mitigation"
+    }
+  ],
+  "phase": "card6_part_b_phase_1_persistence_prototype",
+  "schema_version": "1.0",
+  "scope": {
+    "domain": "enterprise-attack",
+    "relationship_type": "technique_to_mitigation",
+    "revoked_and_deprecated_excluded": true,
+    "tactic": {
+      "external_id": "TA0003",
+      "name": "Persistence",
+      "shortname": "persistence",
+      "stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92"
+    }
+  },
+  "selection": {
+    "method": "fixed_representative_ids_resolved_from_pinned_stix",
+    "multiple_mitigation_pairs": 5,
+    "pair_count": 10,
+    "single_mitigation_pairs": 5
+  },
+  "source": {
+    "commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+    "domain": "enterprise-attack",
+    "path": "enterprise-attack/enterprise-attack.json",
+    "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+    "sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+    "stix_version": "2.1"
+  }
+}

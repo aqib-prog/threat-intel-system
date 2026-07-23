@@ -7,6 +7,7 @@ from dataclasses import dataclass
 
 from log_analysis.mappings import ALL_RULES, RULES_BY_PLATFORM
 from log_analysis.parser import LogEvent
+from log_analysis.structured import hybrid_rule_matches
 
 
 CONFIDENCE_RANK = {"high": 3, "medium": 2, "low": 1}
@@ -27,9 +28,17 @@ def analyze(events: list[LogEvent], platform: str | None) -> list[TechniqueMatch
     matches: dict[tuple[str, str | None], TechniqueMatch] = {}
 
     for event in events:
-        haystack = event.normalized_line
+        folded_line: str | None = None
         for rule in rules:
-            if not rule.pattern.search(haystack):
+            if rule.prefilter_terms:
+                if folded_line is None:
+                    folded_line = event.normalized_line.casefold()
+                if not any(term in folded_line for term in rule.prefilter_terms):
+                    continue
+            matched, _mode = hybrid_rule_matches(
+                event, rule.pattern, rule.structured_condition
+            )
+            if not matched:
                 continue
             key = (rule.technique_name, rule.parent_hint)
             existing = matches.get(key)

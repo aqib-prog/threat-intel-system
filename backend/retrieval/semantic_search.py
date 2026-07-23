@@ -6,7 +6,7 @@ import os
 from rapidfuzz import fuzz
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD
+from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, OLLAMA_CLIENT
 from neo4j import GraphDatabase
 
 def get_driver():
@@ -168,7 +168,7 @@ def is_partial_entity_reference_match(query: str, node: dict) -> bool:
 
 
 def vector_search(driver, query: str, k: int = 10) -> list[dict]:
-    embedding = ollama.embeddings(
+    embedding = OLLAMA_CLIENT.embeddings(
         model='nomic-embed-text', prompt=query)['embedding']
     with driver.session() as session:
         try:
@@ -341,7 +341,7 @@ def deterministic_query_expansions(query: str) -> list[str]:
 
 def expand_query(query: str) -> list[str]:
     try:
-        response = ollama.chat(
+        response = OLLAMA_CLIENT.chat(
             model='llama3.1',
             messages=[{
                 'role': 'user',

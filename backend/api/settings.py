@@ -48,6 +48,7 @@ class ApiSettings:
     rate_limit_filters: str
     rate_limit_stats: str
     stats_cache_seconds: int
+    citation_cache_seconds: int
 
 
 def load_settings() -> ApiSettings:
@@ -81,4 +82,5 @@ def load_settings() -> ApiSettings:
         rate_limit_filters=env_str("RATE_LIMIT_FILTERS", "30/minute"),
         rate_limit_stats=env_str("RATE_LIMIT_STATS", "60/minute"),
         stats_cache_seconds=env_int("STATS_CACHE_SECONDS", 60, minimum=0),
+        citation_cache_seconds=env_int("CITATION_CACHE_SECONDS", 60, minimum=0),
     )

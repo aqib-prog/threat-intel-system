@@ -1,0 +1,49 @@
+{
+  "samples": [
+    {
+      "rule": "Create Sensitive Mount Pod",
+      "positive": {"stage": "ResponseComplete", "verb": "create", "objectRef": {"resource": "pods"}, "requestObject": {"spec": {"containers": [{"image": "alpine:3.20"}], "volumes": [{"hostPath": {"path": "/proc"}}]}}},
+      "negative": {"stage": "ResponseComplete", "verb": "create", "objectRef": {"resource": "pods"}, "requestObject": {"spec": {"containers": [{"image": "alpine:3.20"}], "volumes": [{"hostPath": {"path": "/data"}}]}}}
+    },
+    {
+      "rule": "Create HostNetwork Pod",
+      "positive": {"stage": "ResponseComplete", "verb": "create", "objectRef": {"resource": "pods"}, "requestObject": {"spec": {"hostNetwork": true, "containers": [{"image": "alpine:3.20"}]}}},
+      "negative": {"stage": "ResponseComplete", "verb": "create", "objectRef": {"resource": "pods"}, "requestObject": {"spec": {"hostNetwork": false, "containers": [{"image": "alpine:3.20"}]}}}
+    },
+    {
+      "rule": "Create/Modify Configmap With Private Credentials",
+      "positive": {"stage": "ResponseComplete", "verb": "create", "objectRef": {"resource": "configmaps"}, "requestObject": {"data": {"password": "correct-horse-battery-staple"}}},
+      "negative": {"stage": "ResponseComplete", "verb": "create", "objectRef": {"resource": "configmaps"}, "requestObject": {"data": {"endpoint": "https://service.example"}}}
+    },
+    {
+      "rule": "K8s Secret Get Successfully",
+      "positive": {"stage": "ResponseComplete", "verb": "get", "objectRef": {"resource": "secrets", "name": "db"}, "responseStatus": {"code": 200}},
+      "negative": {"stage": "ResponseComplete", "verb": "get", "objectRef": {"resource": "secrets", "name": "db"}, "responseStatus": {"code": 403}}
+    },
+    {
+      "rule": "K8s Secret Get Unsuccessfully Tried",
+      "positive": {"stage": "ResponseComplete", "verb": "get", "objectRef": {"resource": "secrets", "name": "db"}, "responseStatus": {"code": 403}},
+      "negative": {"stage": "ResponseComplete", "verb": "get", "objectRef": {"resource": "secrets", "name": "db"}, "responseStatus": {"code": 200}}
+    },
+    {
+      "rule": "Deactivate MFA for Root User",
+      "positive": {"eventName": "DeactivateMFADevice", "userIdentity": {"type": "Root"}, "requestParameters": {"userName": "AWS ROOT USER"}},
+      "negative": {"eventName": "DeactivateMFADevice", "userIdentity": {"type": "IAMUser"}, "requestParameters": {"userName": "alice"}}
+    },
+    {
+      "rule": "Run Instances in Non-approved Region",
+      "positive": {"eventName": "RunInstances", "awsRegion": "us-west-2"},
+      "negative": {"eventName": "RunInstances", "awsRegion": "us-east-0"}
+    },
+    {
+      "rule": "Delete Bucket Public Access Block",
+      "positive": {"eventName": "PutBucketPublicAccessBlock", "requestParameters": {"publicAccessBlock": "", "PublicAccessBlockConfiguration": {"RestrictPublicBuckets": false, "BlockPublicPolicy": true, "BlockPublicAcls": true, "IgnorePublicAcls": true}}},
+      "negative": {"eventName": "PutBucketPublicAccessBlock", "requestParameters": {"publicAccessBlock": "", "PublicAccessBlockConfiguration": {"RestrictPublicBuckets": true, "BlockPublicPolicy": true, "BlockPublicAcls": true, "IgnorePublicAcls": true}}}
+    },
+    {
+      "rule": "CloudTrail Logging Disabled",
+      "positive": {"eventName": "StopLogging", "eventSource": "cloudtrail.amazonaws.com"},
+      "negative": {"eventName": "StopLogging", "eventSource": "cloudtrail.amazonaws.com", "errorCode": "AccessDenied"}
+    }
+  ]
+}

@@ -1,6 +1,7 @@
 import ollama
 import re
 
+from config import OLLAMA_CLIENT
 
 MAX_FIELD_CHARS = 1600
 MAX_COMPARISON_FIELD_ITEMS = 5
@@ -229,6 +230,23 @@ def explicit_reference_status(query: str, nodes: list[dict]) -> tuple[list[str],
 def query_platforms(query: str) -> set[str]:
     query_lower = query.lower()
     return {platform for platform in PLATFORM_TERMS if platform in query_lower}
+
+
+# Shared by every profile-style renderer (actor/campaign/software/tactic/
+# mitigation overview) so a broad, keyword-free question ("What does RIPTIDE
+# do?", "Tell me about APT29") gets the same deterministic all-fields answer
+# as an explicit "everything" request, instead of falling through to
+# unstable free-form LLM synthesis. One shared trigger kept in sync here
+# rather than each renderer maintaining its own ad hoc broad-phrasing regex.
+BROAD_OVERVIEW_RE = re.compile(
+    r"\b(?:tell\s+me\s+about|what\s+does\b.*\bdo\b|what\s+is\b|describe|"
+    r"overview|everything|analysis|summary|profile)\b",
+    re.IGNORECASE,
+)
+
+
+def is_broad_overview_query(query: str) -> bool:
+    return bool(BROAD_OVERVIEW_RE.search(query.strip()))
 
 
 def is_comparison_query(query: str) -> bool:
@@ -592,14 +610,141 @@ def generate_actor_relationship_list(query: str, nodes: list[dict]) -> str | Non
                 lines.append(f"{label}: {', '.join(str(value) for value in values if value)}")
         return "\n".join(lines) if len(lines) > 1 else None
 
-    if re.search(r"\bwhat\s+does\b", query, re.IGNORECASE):
+    if is_broad_overview_query(query):
         lines = [heading]
         if actor.get("description"):
             lines.append(f"Description: {actor['description'][:400]}")
         aliases = actor.get("aliases") or []
         if isinstance(aliases, list) and aliases:
             lines.append(f"Aliases: {', '.join(str(value) for value in aliases if value)}")
+        for label, key in (
+            ("Techniques", "techniques"),
+            ("Malware", "malware"),
+            ("Tools", "tools"),
+            ("Campaigns", "campaigns"),
+            ("Tactics", "tactics"),
+        ):
+            values = actor.get(key) or []
+            if isinstance(values, list) and values:
+                lines.append(f"\n{label} explicitly connected to {heading}:")
+                lines.extend(f"- {value}" for value in values if value)
         return "\n".join(lines)
+
+    return None
+
+
+def generate_software_relationship_list(query: str, nodes: list[dict]) -> str | None:
+    """Render a malware or tool's explicit relationship field without LLM drift."""
+    if not nodes or (nodes[0].get("node_type") or nodes[0].get("type")) not in {"Malware", "Tool"}:
+        return None
+    if query_platforms(query):
+        return None
+    if re.search(r"\b(?:compare|versus)\b", query, re.IGNORECASE):
+        return None
+
+    patterns = (
+        (r"\b(?:techniques?|techniqes?)\b", "Techniques", "techniques"),
+        (r"\bactors?\b", "Actors", "actors"),
+        (r"\b(?:campaigns?|campains?)\b", "Campaigns", "campaigns"),
+        (r"\b(?:tactics?|movment|movement)\b", "Tactics", "tactics"),
+        (r"\bmitigations?\b", "Mitigations", "mitigations"),
+    )
+    software = nodes[0]
+    name = software.get("name") or "Unknown software"
+    external_id = software.get("external_id") or software.get("id")
+    heading = f"{name} ({external_id})" if external_id else name
+
+    for pattern, label, key in patterns:
+        if not re.search(pattern, query, re.IGNORECASE):
+            continue
+        values = software.get(key) or []
+        if isinstance(values, list) and values:
+            return "\n".join([
+                f"{label} explicitly connected to {heading}:",
+                *(f"- {value}" for value in values if value),
+            ])
+
+    if is_broad_overview_query(query):
+        lines = [heading]
+        if software.get("description"):
+            lines.append(f"Description: {software['description'][:400]}")
+        for _, label, key in patterns:
+            values = software.get(key) or []
+            if isinstance(values, list) and values:
+                lines.append(f"\n{label} explicitly connected to {heading}:")
+                lines.extend(f"- {value}" for value in values if value)
+        if len(lines) > 1:
+            return "\n".join(lines)
+
+    return None
+
+
+def generate_tactic_relationship_list(query: str, nodes: list[dict]) -> str | None:
+    """Render a tactic's explicit techniques field without LLM drift."""
+    if not nodes or (nodes[0].get("node_type") or nodes[0].get("type")) != "Tactic":
+        return None
+    if not re.search(r"\b(?:techniques?|techniqes?)\b", query, re.IGNORECASE) and not is_broad_overview_query(query):
+        return None
+    if re.search(r"\b(?:compare|versus)\b", query, re.IGNORECASE):
+        return None
+
+    tactic = nodes[0]
+    techniques = tactic.get("techniques") or []
+    if not isinstance(techniques, list) or not techniques:
+        return None
+
+    name = tactic.get("name") or "Unknown tactic"
+    external_id = tactic.get("external_id") or tactic.get("id")
+    heading = f"{name} ({external_id})" if external_id else name
+    return "\n".join([
+        f"Techniques explicitly connected to {heading}:",
+        *(f"- {value}" for value in techniques if value),
+    ])
+
+
+def generate_mitigation_relationship_list(query: str, nodes: list[dict]) -> str | None:
+    """Render a mitigation's explicit relationship fields without LLM drift."""
+    if not nodes or (nodes[0].get("node_type") or nodes[0].get("type")) != "Mitigation":
+        return None
+    if re.search(r"\b(?:compare|versus)\b", query, re.IGNORECASE):
+        return None
+
+    # A Mitigation relates to Techniques only, via MITIGATES - so the verb
+    # "mitigate(s/d)" is synonymous with "its techniques" ("What does X
+    # mitigate?" == "What techniques does X mitigate?"). Fold it into the
+    # techniques trigger so the canonical phrasing resolves deterministically
+    # instead of falling through to free-form synthesis.
+    patterns = (
+        (r"\b(?:techniques?|techniqes?|mitigates?|mitigated|mitigation)\b", "Techniques", "techniques"),
+        (r"\b(?:actors?|groups?)\b", "Actors", "actors"),
+        (r"\b(?:tactics?|movment|movement)\b", "Tactics", "tactics"),
+    )
+    mitigation = nodes[0]
+    name = mitigation.get("name") or "Unknown mitigation"
+    external_id = mitigation.get("external_id") or mitigation.get("id")
+    heading = f"{name} ({external_id})" if external_id else name
+
+    for pattern, label, key in patterns:
+        if not re.search(pattern, query, re.IGNORECASE):
+            continue
+        values = mitigation.get(key) or []
+        if isinstance(values, list) and values:
+            return "\n".join([
+                f"{label} explicitly connected to {heading}:",
+                *(f"- {value}" for value in values if value),
+            ])
+
+    if is_broad_overview_query(query):
+        lines = [heading]
+        if mitigation.get("description"):
+            lines.append(f"Description: {mitigation['description'][:400]}")
+        for _, label, key in patterns:
+            values = mitigation.get(key) or []
+            if isinstance(values, list) and values:
+                lines.append(f"\n{label} explicitly connected to {heading}:")
+                lines.extend(f"- {value}" for value in values if value)
+        if len(lines) > 1:
+            return "\n".join(lines)
 
     return None
 
@@ -622,12 +767,23 @@ def generate_actor_overview(
         )
         if re.search(pattern, query, re.IGNORECASE)
     }
-    if "everything" not in query.lower() and len(requested_fields) < 3:
+    if not is_broad_overview_query(query) and len(requested_fields) < 3:
         return None
 
     requested_actors = {
         str(value).lower() for value in (filters or {}).get("threat_actor", [])
     }
+    # A broad, entity-agnostic phrase ("what does X do") matches regardless
+    # of what X actually is - without an explicit actor filter, only trust
+    # it here when the query's own primary/seed node is an Actor. Otherwise
+    # a Malware/Tool question that happens to retrieve a related Actor as
+    # secondary context (e.g. "What does RIPTIDE do?" pulling in the actor
+    # that uses it) would wrongly answer about that unrelated actor instead
+    # of falling through to the Software renderer.
+    primary_type = (nodes[0].get("node_type") or nodes[0].get("type")) if nodes else None
+    if not requested_actors and primary_type != "Actor":
+        return None
+
     actor = next(
         (
             node
@@ -657,14 +813,14 @@ def generate_actor_overview(
         "campaigns": "Campaigns",
     }
     for key in ("tactics", "techniques", "malware", "tools", "campaigns"):
-        if requested_fields and key not in requested_fields and "everything" not in query.lower():
+        if requested_fields and key not in requested_fields and not is_broad_overview_query(query):
             continue
         values = actor.get(key) or []
         if isinstance(values, list) and values:
             lines.append(f"\n{labels[key]} explicitly connected to {name}:")
             lines.extend(f"- {value}" for value in values if value)
 
-    if "mitigations" in requested_fields or "everything" in query.lower():
+    if "mitigations" in requested_fields or is_broad_overview_query(query):
         mitigations = []
         for node in nodes:
             actors = node.get("actors") or []
@@ -708,13 +864,11 @@ def generate_campaign_overview(
         return None
 
     asks_for_relationships = re.search(
-        r"\b(?:techniques?|malware|tools?|actors?|detections?|strategies|logs?|data\s+sources?)\b",
+        r"\b(?:techniques?|malware|tools?|actors?|groups?|detections?|strategies|logs?|data\s+sources?)\b",
         query,
         re.IGNORECASE,
     )
-    if not asks_for_relationships and not re.search(
-        r"\b(?:tell\s+me\s+about|everything|analysis)\b", query, re.IGNORECASE
-    ):
+    if not asks_for_relationships and not is_broad_overview_query(query):
         return None
 
     name = str(campaign.get("name") or "Unknown campaign")
@@ -727,9 +881,9 @@ def generate_campaign_overview(
         ("Techniques", "techniques", r"\btechniques?\b"),
         ("Malware", "malware", r"\bmalware\b"),
         ("Tools", "tools", r"\btools?\b"),
-        ("Actors", "actors", r"\bactors?\b"),
+        ("Actors", "actors", r"\b(?:actors?|groups?)\b"),
     )
-    broad = bool(re.search(r"\b(?:tell\s+me\s+about|everything|analysis)\b", query, re.IGNORECASE))
+    broad = is_broad_overview_query(query)
     for label, key, pattern in requested_fields:
         if not broad and not re.search(pattern, query, re.IGNORECASE):
             continue
@@ -818,6 +972,11 @@ def generate_exact_id_summary(query: str, nodes: list[dict]) -> str | None:
         for label, key in (
             ("Platforms", "platforms"),
             ("Tactics", "tactics"),
+            ("Techniques", "techniques"),
+            ("Actors", "actors"),
+            ("Malware", "malware"),
+            ("Tools", "tools"),
+            ("Campaigns", "campaigns"),
             ("Mitigations", "mitigations"),
             ("Subtechniques", "subtechniques"),
         ):
@@ -1117,6 +1276,18 @@ def _build_answer(query: str, nodes: list[dict], filters: dict | None = None) ->
     if actor_relationships:
         return actor_relationships
 
+    software_relationships = generate_software_relationship_list(query, nodes)
+    if software_relationships:
+        return software_relationships
+
+    tactic_relationships = generate_tactic_relationship_list(query, nodes)
+    if tactic_relationships:
+        return tactic_relationships
+
+    mitigation_relationships = generate_mitigation_relationship_list(query, nodes)
+    if mitigation_relationships:
+        return mitigation_relationships
+
     actor_usage = generate_actor_usage_list(query, nodes)
     if actor_usage:
         return actor_usage
@@ -1130,7 +1301,7 @@ def _build_answer(query: str, nodes: list[dict], filters: dict | None = None) ->
     if filters:
         filter_text = f"\nFilters applied: {filters}\n"
 
-    response = ollama.chat(
+    response = OLLAMA_CLIENT.chat(
         model="llama3.1",
         messages=[
             {

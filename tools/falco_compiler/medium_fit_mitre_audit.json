@@ -1,0 +1,119 @@
+{
+  "checkpoint": "Card 5 Part 1 roadmap step 4 medium-fit MITRE cross-check",
+  "audit_date": "2026-07-15",
+  "scope_note": "The scope is the 13 originally medium-confidence candidates plus Update Lambda Function Configuration, which shared the same T1578.005 reasoning but had been incorrectly labeled high-confidence.",
+  "rows": [
+    {
+      "rule": "Disallowed K8s User",
+      "technique_id": "T1078",
+      "mitre_url": "https://attack.mitre.org/techniques/T1078/",
+      "direct_mitre_finding": "T1078 covers abuse of existing valid credentials and explicitly includes Containers; its current detection guidance includes anomalous container service-account or kubeconfig use.",
+      "outcome": "retain_candidate",
+      "limitation": "The Falco event establishes use by an unexpected authenticated identity, but operational context is still required to distinguish compromise from an incomplete allowlist."
+    },
+    {
+      "rule": "Create HostIPC Pod",
+      "technique_id": "T1610",
+      "mitre_url": "https://attack.mitre.org/techniques/T1610/",
+      "direct_mitre_finding": "T1610 covers deploying a container, including containers configured without normal isolation or defensive restrictions.",
+      "outcome": "retain_candidate",
+      "limitation": "The event proves the risky deployment, not a subsequent host escape."
+    },
+    {
+      "rule": "Anonymous Request Allowed",
+      "technique_id": "T1133",
+      "mitre_url": "https://attack.mitre.org/techniques/T1133/",
+      "direct_mitre_finding": "T1133 explicitly includes access through an exposed Kubernetes API that does not require authentication.",
+      "outcome": "retain_candidate",
+      "limitation": "Health, live, and readiness endpoints are excluded by the Falco condition."
+    },
+    {
+      "rule": "port-forward",
+      "technique_id": "T1609",
+      "mitre_url": "https://attack.mitre.org/techniques/T1609/",
+      "direct_mitre_finding": "T1609 is scoped to executing commands inside containers through administration services; port-forward creates a network tunnel without command execution.",
+      "outcome": "move_to_needs_review",
+      "limitation": "No current ATT&CK Containers technique cleanly covers this event alone."
+    },
+    {
+      "rule": "Pod Created in Kube Namespace",
+      "technique_id": "T1036.005",
+      "mitre_url": "https://attack.mitre.org/techniques/T1036/005/",
+      "direct_mitre_finding": "T1036.005 explicitly describes creating a resource in a trusted namespace or matching a container pod or cluster naming convention.",
+      "outcome": "retain_candidate",
+      "limitation": "The Falco allowlist exclusion is necessary because legitimate system pods also use these namespaces."
+    },
+    {
+      "rule": "Service Account Created in Kube Namespace",
+      "technique_id": "T1136",
+      "mitre_url": "https://attack.mitre.org/techniques/T1136/",
+      "direct_mitre_finding": "T1136 covers creation of an account for persistent access and lists Containers as a supported platform.",
+      "outcome": "retain_candidate",
+      "limitation": "The event proves account creation; malicious persistence intent remains contextual."
+    },
+    {
+      "rule": "K8s Deployment Deleted",
+      "technique_id": "T1485",
+      "mitre_url": "https://attack.mitre.org/techniques/T1485/",
+      "direct_mitre_finding": "T1485 includes deletion of cloud infrastructure crucial to operations to damage availability and supports Containers.",
+      "outcome": "retain_candidate",
+      "limitation": "A single successful deployment deletion is a medium-confidence signal; intent and operational criticality remain contextual."
+    },
+    {
+      "rule": "K8s ConfigMap Deleted",
+      "technique_id": "T1485",
+      "mitre_url": "https://attack.mitre.org/techniques/T1485/",
+      "direct_mitre_finding": "T1485 covers destruction of data or files to interrupt availability and supports Containers.",
+      "outcome": "retain_candidate",
+      "limitation": "The successful deletion destroys stored configuration data, but impact and adversarial intent remain contextual."
+    },
+    {
+      "rule": "K8s Namespace Deleted",
+      "technique_id": "T1485",
+      "mitre_url": "https://attack.mitre.org/techniques/T1485/",
+      "direct_mitre_finding": "T1485 includes deletion of cloud infrastructure crucial to operations and supports Containers.",
+      "outcome": "retain_candidate",
+      "limitation": "Namespace deletion can cascade across resources; whether the affected namespace is operationally critical remains contextual."
+    },
+    {
+      "rule": "K8s Serviceaccount Created",
+      "technique_id": "T1136",
+      "mitre_url": "https://attack.mitre.org/techniques/T1136/",
+      "direct_mitre_finding": "T1136 covers creation of accounts for persistent access and supports Containers.",
+      "outcome": "retain_candidate",
+      "limitation": "The generic creation event requires context to distinguish adversary persistence from normal administration."
+    },
+    {
+      "rule": "K8s Secret Deleted",
+      "technique_id": "T1485",
+      "mitre_url": "https://attack.mitre.org/techniques/T1485/",
+      "direct_mitre_finding": "T1485 covers destruction of stored data to interrupt services and supports Containers.",
+      "outcome": "retain_candidate",
+      "limitation": "The rule excludes service-account tokens and kube-system; impact and adversarial intent remain contextual."
+    },
+    {
+      "rule": "ECS Service Created",
+      "technique_id": "T1610",
+      "mitre_url": "https://attack.mitre.org/techniques/T1610/",
+      "direct_mitre_finding": "T1610 covers deploying containers through container management APIs; an ECS service is the orchestration object that deploys and maintains ECS tasks.",
+      "outcome": "retain_candidate",
+      "limitation": "The event is retained at medium confidence because the compiled Falco predicate does not inspect desired task count or image content."
+    },
+    {
+      "rule": "Update Lambda Function Code",
+      "technique_id": "T1578.005",
+      "mitre_url": "https://attack.mitre.org/techniques/T1578/005/",
+      "direct_mitre_finding": "T1578.005 covers infrastructure-level settings such as quotas, subscriptions, tenant-wide policies, and deployment regions, not application code in an existing function.",
+      "outcome": "move_to_needs_review",
+      "limitation": "T1648 does not cleanly establish this update event as serverless execution without execution context."
+    },
+    {
+      "rule": "Update Lambda Function Configuration",
+      "technique_id": "T1578.005",
+      "mitre_url": "https://attack.mitre.org/techniques/T1578/005/",
+      "direct_mitre_finding": "T1578.005 covers infrastructure-level compute settings, not an existing Lambda function's application or runtime configuration.",
+      "outcome": "move_to_needs_review",
+      "limitation": "No current ATT&CK technique cleanly covers the generic configuration update event by itself."
+    }
+  ]
+}

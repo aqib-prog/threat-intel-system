@@ -1,0 +1,196 @@
+{
+  "benchmark": "Card 5 log-analysis runtime integration",
+  "host": {
+    "python": "3.13.11",
+    "system": "Darwin",
+    "machine": "arm64"
+  },
+  "protocol": {
+    "repetitions": 9,
+    "warmups": 2,
+    "event_counts": [
+      10,
+      50,
+      250
+    ],
+    "api_character_limit": 100000,
+    "platform": "linux",
+    "corpus": "grouped Linux auditd SYSCALL/EXECVE/CWD records; one arp -a positive event per scenario"
+  },
+  "variants": {
+    "legacy": {
+      "variant": "legacy",
+      "platform": "linux",
+      "runtime_inventory": {
+        "linux_rule_count": 54,
+        "structured_rule_count": 0,
+        "raw_only_rule_count": 54
+      },
+      "scenarios": [
+        {
+          "event_count": 10,
+          "input_bytes": 3445,
+          "matched_technique_count": 0,
+          "rule_evaluations": 540,
+          "evaluation_modes": {
+            "raw": 540
+          },
+          "parse_ms": {
+            "median": 0.764,
+            "p95": 1.178
+          },
+          "analysis_ms": {
+            "median": 32.589,
+            "p95": 32.902
+          },
+          "end_to_end_ms": {
+            "median": 33.383,
+            "p95": 33.474
+          }
+        },
+        {
+          "event_count": 50,
+          "input_bytes": 17405,
+          "matched_technique_count": 0,
+          "rule_evaluations": 2700,
+          "evaluation_modes": {
+            "raw": 2700
+          },
+          "parse_ms": {
+            "median": 4.359,
+            "p95": 5.449
+          },
+          "analysis_ms": {
+            "median": 166.074,
+            "p95": 166.478
+          },
+          "end_to_end_ms": {
+            "median": 170.857,
+            "p95": 171.554
+          }
+        },
+        {
+          "event_count": 250,
+          "input_bytes": 87205,
+          "matched_technique_count": 0,
+          "rule_evaluations": 13500,
+          "evaluation_modes": {
+            "raw": 13500
+          },
+          "parse_ms": {
+            "median": 21.478,
+            "p95": 22.659
+          },
+          "analysis_ms": {
+            "median": 837.396,
+            "p95": 838.832
+          },
+          "end_to_end_ms": {
+            "median": 860.257,
+            "p95": 883.352
+          }
+        }
+      ]
+    },
+    "integrated": {
+      "variant": "integrated",
+      "platform": "linux",
+      "runtime_inventory": {
+        "linux_rule_count": 189,
+        "structured_rule_count": 131,
+        "raw_only_rule_count": 58
+      },
+      "scenarios": [
+        {
+          "event_count": 10,
+          "input_bytes": 3445,
+          "matched_technique_count": 1,
+          "rule_evaluations": 1890,
+          "evaluation_modes": {
+            "raw": 840,
+            "structured": 1050
+          },
+          "parse_ms": {
+            "median": 0.765,
+            "p95": 1.072
+          },
+          "analysis_ms": {
+            "median": 26.119,
+            "p95": 26.435
+          },
+          "end_to_end_ms": {
+            "median": 27.225,
+            "p95": 28.02
+          }
+        },
+        {
+          "event_count": 50,
+          "input_bytes": 17405,
+          "matched_technique_count": 1,
+          "rule_evaluations": 9450,
+          "evaluation_modes": {
+            "raw": 4200,
+            "structured": 5250
+          },
+          "parse_ms": {
+            "median": 4.237,
+            "p95": 4.698
+          },
+          "analysis_ms": {
+            "median": 133.861,
+            "p95": 134.792
+          },
+          "end_to_end_ms": {
+            "median": 137.642,
+            "p95": 138.2
+          }
+        },
+        {
+          "event_count": 250,
+          "input_bytes": 87205,
+          "matched_technique_count": 1,
+          "rule_evaluations": 47250,
+          "evaluation_modes": {
+            "raw": 21000,
+            "structured": 26250
+          },
+          "parse_ms": {
+            "median": 21.31,
+            "p95": 22.531
+          },
+          "analysis_ms": {
+            "median": 668.754,
+            "p95": 699.023
+          },
+          "end_to_end_ms": {
+            "median": 691.42,
+            "p95": 712.86
+          }
+        }
+      ]
+    }
+  },
+  "comparison": [
+    {
+      "event_count": 10,
+      "median_end_to_end_delta_ms": -6.158,
+      "median_end_to_end_change_percent": -18.45,
+      "raw_regex_evaluation_delta": 300,
+      "structured_evaluation_delta": 1050
+    },
+    {
+      "event_count": 50,
+      "median_end_to_end_delta_ms": -33.215,
+      "median_end_to_end_change_percent": -19.44,
+      "raw_regex_evaluation_delta": 1500,
+      "structured_evaluation_delta": 5250
+    },
+    {
+      "event_count": 250,
+      "median_end_to_end_delta_ms": -168.837,
+      "median_end_to_end_change_percent": -19.63,
+      "raw_regex_evaluation_delta": 7500,
+      "structured_evaluation_delta": 26250
+    }
+  ]
+}

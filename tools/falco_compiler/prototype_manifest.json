@@ -1,0 +1,168 @@
+{
+  "falco_commit": "819918d43a743de78398d0a6ecb75305beeacaaa",
+  "rules": [
+    {
+      "source_file": "plugins/k8saudit/rules/k8s_audit_rules.yaml",
+      "rule": "Create Privileged Pod",
+      "platform": "kubernetes",
+      "positive_samples": [
+        {
+          "stage": "ResponseComplete",
+          "verb": "create",
+          "user": {"username": "alice"},
+          "objectRef": {"resource": "pods", "namespace": "default", "name": "shell"},
+          "requestObject": {
+            "spec": {
+              "containers": [
+                {"name": "shell", "image": "alpine:3.20", "securityContext": {"privileged": true}}
+              ]
+            }
+          }
+        },
+        {
+          "stage": "ResponseComplete",
+          "verb": "create",
+          "objectRef": {"resource": "pods"},
+          "requestObject": {
+            "spec": {
+              "containers": [
+                {"name": "falco", "image": "falcosecurity/falco:0.42.0", "securityContext": {"privileged": true}},
+                {"name": "backdoor", "image": "evil.example/backdoor:latest", "securityContext": {"privileged": true}}
+              ]
+            }
+          }
+        }
+      ],
+      "negative_samples": [
+        {
+          "stage": "ResponseComplete",
+          "verb": "create",
+          "objectRef": {"resource": "pods"},
+          "requestObject": {
+            "spec": {
+              "containers": [
+                {"name": "app", "image": "alpine:3.20", "securityContext": {"privileged": false}}
+              ]
+            }
+          }
+        },
+        {
+          "stage": "ResponseComplete",
+          "verb": "create",
+          "objectRef": {"resource": "pods"},
+          "requestObject": {
+            "spec": {
+              "containers": [
+                {"name": "falco", "image": "falcosecurity/falco:0.42.0", "securityContext": {"privileged": true}}
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "source_file": "plugins/k8saudit/rules/k8s_audit_rules.yaml",
+      "rule": "Anonymous Request Allowed",
+      "platform": "kubernetes",
+      "positive_samples": [
+        {
+          "stage": "ResponseComplete",
+          "verb": "get",
+          "user": {"username": "system:anonymous"},
+          "requestURI": "/api/v1/namespaces/default/secrets",
+          "annotations": {"authorization.k8s.io/decision": "allow"}
+        }
+      ],
+      "negative_samples": [
+        {
+          "stage": "ResponseComplete",
+          "verb": "get",
+          "user": {"username": "system:anonymous"},
+          "requestURI": "/healthz?verbose=1",
+          "annotations": {"authorization.k8s.io/decision": "allow"}
+        },
+        {
+          "stage": "ResponseComplete",
+          "verb": "get",
+          "user": {"username": "system:anonymous"},
+          "requestURI": "/api/v1/secrets",
+          "annotations": {"authorization.k8s.io/decision": "forbid"}
+        }
+      ]
+    },
+    {
+      "source_file": "plugins/k8saudit/rules/k8s_audit_rules.yaml",
+      "rule": "ClusterRole With Wildcard Created",
+      "platform": "kubernetes",
+      "positive_samples": [
+        {
+          "stage": "ResponseComplete",
+          "verb": "create",
+          "objectRef": {"resource": "clusterroles", "name": "wildcard-reader"},
+          "requestObject": {"rules": [{"apiGroups": [""], "resources": ["*"], "verbs": ["get"]}]}
+        },
+        {
+          "stage": "ResponseComplete",
+          "verb": "create",
+          "objectRef": {"resource": "roles", "name": "wildcard-writer"},
+          "requestObject": {"rules": [{"apiGroups": [""], "resources": ["pods"], "verbs": ["*"]}]}
+        }
+      ],
+      "negative_samples": [
+        {
+          "stage": "ResponseComplete",
+          "verb": "create",
+          "objectRef": {"resource": "clusterroles", "name": "pod-reader"},
+          "requestObject": {"rules": [{"apiGroups": [""], "resources": ["pods"], "verbs": ["get", "list"]}]}
+        }
+      ]
+    },
+    {
+      "source_file": "plugins/cloudtrail/rules/aws_cloudtrail_rules.yaml",
+      "rule": "Console Login Without MFA",
+      "platform": "aws",
+      "positive_samples": [
+        {
+          "eventName": "ConsoleLogin",
+          "userIdentity": {"type": "IAMUser", "userName": "alice"},
+          "responseElements": {"ConsoleLogin": "Success"},
+          "additionalEventData": {"MFAUsed": "No"}
+        }
+      ],
+      "negative_samples": [
+        {
+          "eventName": "ConsoleLogin",
+          "userIdentity": {"type": "AssumedRole"},
+          "responseElements": {"ConsoleLogin": "Success"},
+          "additionalEventData": {"MFAUsed": "No"}
+        },
+        {
+          "eventName": "ConsoleLogin",
+          "errorCode": "AccessDenied",
+          "userIdentity": {"type": "IAMUser"},
+          "responseElements": {"ConsoleLogin": "Success"},
+          "additionalEventData": {"MFAUsed": "No"}
+        },
+        {
+          "eventName": "ConsoleLogin",
+          "userIdentity": {"type": "IAMUser"},
+          "responseElements": {"ConsoleLogin": "Success"},
+          "additionalEventData": {"MFAUsed": "Yes"}
+        }
+      ]
+    },
+    {
+      "source_file": "plugins/cloudtrail/rules/aws_cloudtrail_rules.yaml",
+      "rule": "ECS Task Run or Started",
+      "platform": "aws",
+      "positive_samples": [
+        {"eventSource": "ecs.amazonaws.com", "eventName": "RunTask", "awsRegion": "us-east-1"},
+        {"eventSource": "ecs.amazonaws.com", "eventName": "StartTask", "awsRegion": "us-east-1"}
+      ],
+      "negative_samples": [
+        {"eventSource": "ecs.amazonaws.com", "eventName": "CreateTask", "awsRegion": "us-east-1"},
+        {"eventSource": "ecs.amazonaws.com", "eventName": "RunTask", "errorCode": "AccessDenied"}
+      ]
+    }
+  ]
+}

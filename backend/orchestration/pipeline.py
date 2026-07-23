@@ -15,13 +15,13 @@ from typing import Any
 from neo4j import GraphDatabase
 
 from config import NEO4J_PASSWORD, NEO4J_URI, NEO4J_USER
-from generation.generate import generate
+from generation.generate import format_context, generate
 from log_analysis import detector as log_analysis_detector
 from log_analysis.analyzer import analyze as analyze_log_evidence
 from log_analysis.formatter import format_log_analysis_answer
 from log_analysis.parser import parse_log
 from retrieval.graph_traversal import traverse_nodes
-from retrieval.guardrail import check_blacklist, extract_filters, guardrail
+from retrieval.guardrail import check_blacklist, check_llm_guardrail, extract_filters, guardrail
 from retrieval.reranker import rerank
 from retrieval.semantic_search import is_low_signal_query, search
 
@@ -172,6 +172,7 @@ def should_limit_to_exact_id_nodes(filters: dict[str, Any]) -> bool:
         "tool",
         "campaign",
         "tactic",
+        "mitigation",
         "platform",
         "cve_id",
     )
@@ -205,6 +206,7 @@ def fetch_filter_seed_nodes(driver, filters: dict[str, Any]) -> list[dict]:
         "tools": filters.get("tool", []),
         "campaigns": filters.get("campaign", []),
         "tactics": filters.get("tactic", []),
+        "mitigations": filters.get("mitigation", []),
         "ids": filters.get("mitre_id", []),
     }
     if not any(parameters.values()):
@@ -219,6 +221,7 @@ def fetch_filter_seed_nodes(driver, filters: dict[str, Any]) -> list[dict]:
                OR (n:Tool AND n.name IN $tools)
                OR (n:Campaign AND n.name IN $campaigns)
                OR (n:Tactic AND n.name IN $tactics)
+               OR (n:Mitigation AND n.name IN $mitigations)
                OR n.external_id IN $ids
             RETURN n.id AS id, n.name AS name, n.external_id AS external_id,
                    CASE
@@ -381,6 +384,8 @@ def should_skip_semantic_search(
         return True
     if filters.get("campaign"):
         return True
+    if filters.get("mitigation"):
+        return True
     if filters.get("tactic") and re.search(
         r"\b(?:what\s+is|tell\s+me\s+about|show\s+me)\b",
         query,
@@ -407,6 +412,7 @@ class Source:
     external_id: str | None
     node_type: str
     relevance_score: float | None
+    url: str | None = None
 
 
 @dataclass
@@ -425,6 +431,7 @@ class PipelineResult:
     # only - every existing call site keeps working unchanged.
     answer_source: str = "rag"
     log_evidence: list[dict[str, Any]] = field(default_factory=list)
+    retrieved_contexts: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -454,6 +461,7 @@ def fallback_result(
         sources=[],
         retrieved_count=0,
         context_count=0,
+        retrieved_contexts=[],
     )
 
 
@@ -494,7 +502,13 @@ def fetch_nodes_by_names(driver, matches: list) -> list[dict]:
         ]
 
 
-def run_log_analysis_pipeline(query: str, driver, platform: str | None) -> PipelineResult:
+def run_log_analysis_pipeline(
+    query: str,
+    driver,
+    platform: str | None,
+    *,
+    include_contexts: bool = False,
+) -> PipelineResult:
     """Isolated branch for genuinely large raw-log pastes (see
     backend/log_analysis/detector.py) - deterministic parsing and mapping
     instead of semantic search. Reuses traverse_nodes/Source from the
@@ -522,6 +536,7 @@ def run_log_analysis_pipeline(query: str, driver, platform: str | None) -> Pipel
             retrieved_count=0,
             context_count=0,
             answer_source="log_analysis",
+            retrieved_contexts=[],
         )
 
     seed_nodes = fetch_nodes_by_names(driver, matches)
@@ -540,6 +555,7 @@ def run_log_analysis_pipeline(query: str, driver, platform: str | None) -> Pipel
 
     sources: list[Source] = []
     log_evidence: list[dict[str, Any]] = []
+    retrieved_contexts: list[str] = []
     for node in contexts:
         name = str(node.get("name") or "")
         match = match_by_name.get(name.lower())
@@ -550,6 +566,7 @@ def run_log_analysis_pipeline(query: str, driver, platform: str | None) -> Pipel
             Source(
                 name=name or "Unknown",
                 external_id=external_id,
+                url=node.get("url"),
                 node_type=str(node.get("node_type") or node.get("type") or "Technique"),
                 relevance_score=10.0,
             )
@@ -560,6 +577,17 @@ def run_log_analysis_pipeline(query: str, driver, platform: str | None) -> Pipel
             "matched_line": match.matched_line,
             "confidence": match.confidence,
         })
+        if include_contexts:
+            retrieved_contexts.append(
+                "\n".join(
+                    (
+                        format_context([node], query),
+                        f"Matched Line: {match.matched_line}",
+                        f"Match Reason: {match.reason}",
+                        f"Confidence: {match.confidence}",
+                    )
+                )
+            )
 
     return PipelineResult(
         query=query,
@@ -572,6 +600,7 @@ def run_log_analysis_pipeline(query: str, driver, platform: str | None) -> Pipel
         context_count=len(contexts),
         answer_source="log_analysis",
         log_evidence=log_evidence,
+        retrieved_contexts=retrieved_contexts,
     )
 
 
@@ -580,8 +609,14 @@ def run_pipeline(
     *,
     top_k: int = 8,
     candidate_k: int = 30,
+    include_contexts: bool = False,
 ) -> PipelineResult:
-    """Run one query through the complete grounded GraphRAG pipeline."""
+    """Run one query through the complete grounded GraphRAG pipeline.
+
+    ``include_contexts`` is an evaluation-only opt-in. When enabled, the
+    result carries the same formatted node facts supplied to generation;
+    the production default performs no context serialization.
+    """
     query = normalize_spaced_attack_ids(str(query or "").strip())
     if not query:
         return fallback_result(query)
@@ -614,13 +649,25 @@ def run_pipeline(
         if not blacklist_result.get("allowed", True):
             return fallback_result(query, category=blacklist_result.get("category", "blocked"))
 
+        try:
+            harm_result = check_llm_guardrail(query)
+        except Exception as exc:
+            raise PipelineError("guardrail", exc) from exc
+        if not harm_result.get("allowed", True):
+            return fallback_result(query, category="llm_harm_blocked")
+
         driver = None
         try:
             try:
                 driver = get_driver()
             except Exception as exc:
                 raise PipelineError("database_connection", exc) from exc
-            return run_log_analysis_pipeline(query, driver, log_detection.platform)
+            return run_log_analysis_pipeline(
+                query,
+                driver,
+                log_detection.platform,
+                include_contexts=include_contexts,
+            )
         finally:
             if driver is not None:
                 driver.close()
@@ -736,6 +783,7 @@ def run_pipeline(
             Source(
                 name=str(node.get("name") or "Unknown"),
                 external_id=node.get("external_id") or node.get("id"),
+                url=node.get("url"),
                 node_type=str(node.get("node_type") or node.get("type") or "Unknown"),
                 relevance_score=node.get("relevance_score"),
             )
@@ -750,6 +798,11 @@ def run_pipeline(
             sources=sources,
             retrieved_count=len(retrieved),
             context_count=len(contexts),
+            retrieved_contexts=(
+                [format_context([node], focused_query) for node in ranked]
+                if include_contexts
+                else []
+            ),
         )
     finally:
         if driver is not None:

@@ -11,7 +11,9 @@ falls back to treating the body model as a query param. Python 3.10+'s
 native `X | None` and `dict[str, Any]` syntax don't need the future import.
 """
 
+import re
 import sys
+import time
 from pathlib import Path
 from time import perf_counter
 from typing import Any
@@ -89,6 +91,7 @@ class QueryRequest(BaseModel):
 class NodeSource(BaseModel):
     name: str
     external_id: str | None = None
+    url: str | None = None
     node_type: str
     relevance_score: float | None = None
 
@@ -117,6 +120,62 @@ class QueryResponse(BaseModel):
     # keep working unchanged.
     answer_source: str = "rag"
     log_evidence: list[LogEvidenceEntry] = []
+    # MITRE ATT&CK ids appearing in `answer` that ACTUALLY EXIST in our graph.
+    # The frontend only renders a citation/link for an id in this list, so a
+    # hallucinated or unknown id (e.g. a fabricated "G9999") is never shown as
+    # a clickable source. Grounds every citation in our real knowledge base.
+    grounded_ids: list[str] = []
+
+
+# Same prefix set as the frontend MITRE_ID_PATTERN (longer prefixes first).
+_MITRE_ID_RE = re.compile(
+    r"\b(?:TA|DET|DC|DS|AN|T|G|S|M|C)\d{4}(?:\.\d{3})?\b", re.IGNORECASE
+)
+_ALL_EXTERNAL_IDS: set[str] | None = None
+_ALL_EXTERNAL_IDS_EXPIRES_AT = 0.0
+
+
+def _all_external_ids() -> set[str]:
+    """Return graph external IDs from a short-lived in-process cache.
+
+    A refresh failure returns an empty set for the current response so an
+    unverified ID can never become a citation. The expired cache remains
+    expired, allowing the next request to retry the database lookup.
+    """
+    global _ALL_EXTERNAL_IDS, _ALL_EXTERNAL_IDS_EXPIRES_AT
+    now = time.time()
+    if _ALL_EXTERNAL_IDS is not None and now < _ALL_EXTERNAL_IDS_EXPIRES_AT:
+        return _ALL_EXTERNAL_IDS
+
+    try:
+        driver = get_driver()
+        try:
+            with driver.session() as session:
+                record = session.run(
+                    "MATCH (n) WHERE n.external_id IS NOT NULL "
+                    "RETURN collect(DISTINCT n.external_id) AS ids"
+                ).single()
+                refreshed_ids = {
+                    str(value).upper() for value in (record["ids"] or [])
+                }
+        finally:
+            driver.close()
+    except Exception as exc:
+        log_and_sanitize(exc, stage="citation grounding refresh")
+        return set()
+
+    _ALL_EXTERNAL_IDS = refreshed_ids
+    _ALL_EXTERNAL_IDS_EXPIRES_AT = now + SETTINGS.citation_cache_seconds
+    return _ALL_EXTERNAL_IDS
+
+
+def grounded_mitre_ids(answer: str) -> list[str]:
+    """Ids mentioned in the answer (bare or inside embedded links) that exist
+    in the graph. Anything else is dropped so no ungrounded citation renders."""
+    mentioned = {match.group(0).upper() for match in _MITRE_ID_RE.finditer(answer or "")}
+    if not mentioned:
+        return []
+    return sorted(mentioned & _all_external_ids())
 
 
 class HealthResponse(BaseModel):
@@ -273,6 +332,7 @@ async def query(request: Request, payload: QueryRequest) -> QueryResponse:
     )
     latency_ms = int((perf_counter() - started) * 1000)
     nodes = [NodeSource(**source.__dict__) for source in result.sources]
+    grounded = await run_in_threadpool(grounded_mitre_ids, result.answer)
 
     return QueryResponse(
         query=result.query,
@@ -288,4 +348,5 @@ async def query(request: Request, payload: QueryRequest) -> QueryResponse:
         latency_ms=latency_ms,
         answer_source=result.answer_source,
         log_evidence=[LogEvidenceEntry(**entry) for entry in result.log_evidence],
+        grounded_ids=grounded,
     )

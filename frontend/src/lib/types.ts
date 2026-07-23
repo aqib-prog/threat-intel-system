@@ -5,6 +5,7 @@ export const MAX_RELEVANCE_SCORE = 10;
 export interface NodeSource {
   name: string;
   external_id: string | null;
+  url: string | null;
   node_type: string;
   relevance_score: number | null;
 }
@@ -46,6 +47,8 @@ export interface QueryResponse {
   latency_ms: number;
   answer_source?: AnswerSource;
   log_evidence?: LogEvidenceEntry[];
+  /** MITRE ids in `answer` that exist in our graph - only these get citations. */
+  grounded_ids?: string[];
 }
 
 export type ChatRole = "user" | "assistant";
@@ -64,6 +67,8 @@ export interface ChatMessage {
   pending?: boolean;
   answerSource?: AnswerSource;
   logEvidence?: LogEvidenceEntry[];
+  /** MITRE ids validated to exist in our graph; gates citation rendering. */
+  groundedIds?: string[];
 }
 
 export type ConnectionState = "checking" | "online" | "offline";

@@ -1,0 +1,490 @@
+{
+  "checkpoint": "Card 5 Part 1 roadmap step 3 only",
+  "falco_commit": "819918d43a743de78398d0a6ecb75305beeacaaa",
+  "sample_rule_count": 5,
+  "sample_by_platform": {
+    "kubernetes": 3,
+    "aws": 2
+  },
+  "projection_notes": [
+    "No prototype rule is imported by the runtime or merged into mappings.py.",
+    "The parser supports only constructs exercised by these five rules and fails closed elsewhere.",
+    "Macros and lists are expanded from the pinned Falco files before regex generation.",
+    "Falco string comparisons remain case-sensitive inside the runtime's IGNORECASE wrapper.",
+    "Raw-JSON field projection is a Layer-1 approximation; canonical structured field matching remains Card 5 Layer 2.",
+    "No MITRE mappings are assigned in step 3; that review starts with roadmap step 4."
+  ],
+  "source_field_audit": {
+    "cloudtrail": {
+      "ct.name": "eventName",
+      "ct.src": "eventSource",
+      "ct.error": "errorCode",
+      "ct.user.identitytype": "userIdentity.type"
+    },
+    "k8saudit": {
+      "ka.auth.decision": "annotations[\"authorization.k8s.io/decision\"]",
+      "ka.target.resource": "objectRef.resource",
+      "ka.target.subresource": "objectRef.subresource",
+      "ka.uri": "requestURI",
+      "ka.req.pod.containers.image.repository": "requestObject.spec.containers[*].image, repository portion",
+      "ka.req.pod.*Containers.privileged": "requestObject.spec.*Containers[*].securityContext.privileged"
+    }
+  },
+  "rules": [
+    {
+      "source_file": "plugins/k8saudit/rules/k8s_audit_rules.yaml",
+      "rule": "Create Privileged Pod",
+      "description": "Detect an attempt to start a pod with a privileged container",
+      "platform": "kubernetes",
+      "priority": "WARNING",
+      "source": "k8s_audit",
+      "original_condition": "kevt and pod and kcreate and any_container_privileged and not ka.req.pod.containers.image.repository in (k8s_audit_privileged_images)",
+      "expanded_condition_tree": {
+        "type": "and",
+        "children": [
+          {
+            "type": "predicate",
+            "field": "jevt.value[/stage]",
+            "operator": "in",
+            "values": [
+              "ResponseComplete"
+            ]
+          },
+          {
+            "type": "and",
+            "children": [
+              {
+                "type": "predicate",
+                "field": "ka.target.resource",
+                "operator": "=",
+                "values": [
+                  "pods"
+                ]
+              },
+              {
+                "type": "not",
+                "child": {
+                  "type": "predicate",
+                  "field": "ka.target.subresource",
+                  "operator": "exists",
+                  "values": []
+                }
+              }
+            ]
+          },
+          {
+            "type": "predicate",
+            "field": "ka.verb",
+            "operator": "=",
+            "values": [
+              "create"
+            ]
+          },
+          {
+            "type": "or",
+            "children": [
+              {
+                "type": "predicate",
+                "field": "ka.req.pod.containers.privileged",
+                "operator": "intersects",
+                "values": [
+                  true
+                ]
+              },
+              {
+                "type": "predicate",
+                "field": "ka.req.pod.initContainers.privileged",
+                "operator": "intersects",
+                "values": [
+                  true
+                ]
+              },
+              {
+                "type": "predicate",
+                "field": "ka.req.pod.ephemeralContainers.privileged",
+                "operator": "intersects",
+                "values": [
+                  true
+                ]
+              }
+            ]
+          },
+          {
+            "type": "not",
+            "child": {
+              "type": "predicate",
+              "field": "ka.req.pod.containers.image.repository",
+              "operator": "in",
+              "values": [
+                "falcosecurity/falco",
+                "docker.io/falcosecurity/falco",
+                "public.ecr.aws/falcosecurity/falco",
+                "docker.io/calico/node",
+                "calico/node",
+                "docker.io/cloudnativelabs/kube-router",
+                "docker.io/docker/ucp-agent",
+                "docker.io/mesosphere/mesos-slave",
+                "docker.io/rook/toolbox",
+                "docker.io/sysdig/sysdig",
+                "gcr.io/google_containers/kube-proxy",
+                "gcr.io/google-containers/startup-script",
+                "gcr.io/projectcalico-org/node",
+                "gke.gcr.io/kube-proxy",
+                "gke.gcr.io/gke-metadata-server",
+                "gke.gcr.io/netd-amd64",
+                "gke.gcr.io/watcher-daemonset",
+                "gcr.io/google-containers/prometheus-to-sd",
+                "registry.k8s.io/ip-masq-agent-amd64",
+                "registry.k8s.io/kube-proxy",
+                "registry.k8s.io/prometheus-to-sd",
+                "quay.io/calico/node",
+                "sysdig/sysdig",
+                "registry.k8s.io/dns/k8s-dns-node-cache",
+                "mcr.microsoft.com/oss/kubernetes/kube-proxy"
+              ]
+            }
+          }
+        ]
+      },
+      "pattern": "\\A(?=[\\s\\S]*(?:(?-i:\"stage\")\\s*:\\s*(?-i:\")(?-i:ResponseComplete)(?-i:\")))(?=[\\s\\S]*(?:(?-i:\"objectRef\")\\s*:\\s*\\{[^{}]{0,2000}?(?-i:\"resource\")\\s*:\\s*(?-i:\")(?-i:pods)(?-i:\")))(?!(?=[\\s\\S]*(?:(?-i:\"objectRef\")\\s*:\\s*\\{[^{}]{0,2000}?(?-i:\"subresource\")\\s*:\\s*)))(?=[\\s\\S]*(?:(?-i:\"verb\")\\s*:\\s*(?-i:\")(?-i:create)(?-i:\")))(?:(?=[\\s\\S]*(?:(?-i:\"privileged\")\\s*:\\s*(?-i:true)))|(?=[\\s\\S]*(?:(?-i:\"privileged\")\\s*:\\s*(?-i:true)))|(?=[\\s\\S]*(?:(?-i:\"privileged\")\\s*:\\s*(?-i:true))))(?!(?=[\\s\\S]*(?:(?-i:\"image\")\\s*:\\s*(?-i:\")[^\"\\\\]+(?-i:\")))(?!(?=[\\s\\S]*(?:(?-i:\"image\")\\s*:\\s*(?-i:\")(?!(?:(?-i:falcosecurity/falco)(?=(?-i::|@|\\\"))|(?-i:docker\\.io/falcosecurity/falco)(?=(?-i::|@|\\\"))|(?-i:public\\.ecr\\.aws/falcosecurity/falco)(?=(?-i::|@|\\\"))|(?-i:docker\\.io/calico/node)(?=(?-i::|@|\\\"))|(?-i:calico/node)(?=(?-i::|@|\\\"))|(?-i:docker\\.io/cloudnativelabs/kube\\-router)(?=(?-i::|@|\\\"))|(?-i:docker\\.io/docker/ucp\\-agent)(?=(?-i::|@|\\\"))|(?-i:docker\\.io/mesosphere/mesos\\-slave)(?=(?-i::|@|\\\"))|(?-i:docker\\.io/rook/toolbox)(?=(?-i::|@|\\\"))|(?-i:docker\\.io/sysdig/sysdig)(?=(?-i::|@|\\\"))|(?-i:gcr\\.io/google_containers/kube\\-proxy)(?=(?-i::|@|\\\"))|(?-i:gcr\\.io/google\\-containers/startup\\-script)(?=(?-i::|@|\\\"))|(?-i:gcr\\.io/projectcalico\\-org/node)(?=(?-i::|@|\\\"))|(?-i:gke\\.gcr\\.io/kube\\-proxy)(?=(?-i::|@|\\\"))|(?-i:gke\\.gcr\\.io/gke\\-metadata\\-server)(?=(?-i::|@|\\\"))|(?-i:gke\\.gcr\\.io/netd\\-amd64)(?=(?-i::|@|\\\"))|(?-i:gke\\.gcr\\.io/watcher\\-daemonset)(?=(?-i::|@|\\\"))|(?-i:gcr\\.io/google\\-containers/prometheus\\-to\\-sd)(?=(?-i::|@|\\\"))|(?-i:registry\\.k8s\\.io/ip\\-masq\\-agent\\-amd64)(?=(?-i::|@|\\\"))|(?-i:registry\\.k8s\\.io/kube\\-proxy)(?=(?-i::|@|\\\"))|(?-i:registry\\.k8s\\.io/prometheus\\-to\\-sd)(?=(?-i::|@|\\\"))|(?-i:quay\\.io/calico/node)(?=(?-i::|@|\\\"))|(?-i:sysdig/sysdig)(?=(?-i::|@|\\\"))|(?-i:registry\\.k8s\\.io/dns/k8s\\-dns\\-node\\-cache)(?=(?-i::|@|\\\"))|(?-i:mcr\\.microsoft\\.com/oss/kubernetes/kube\\-proxy)(?=(?-i::|@|\\\"))))[^\"\\\\]+(?-i:\")))))[\\s\\S]*\\Z"
+    },
+    {
+      "source_file": "plugins/k8saudit/rules/k8s_audit_rules.yaml",
+      "rule": "Anonymous Request Allowed",
+      "description": "Detect any request made by the anonymous user that was allowed",
+      "platform": "kubernetes",
+      "priority": "WARNING",
+      "source": "k8s_audit",
+      "original_condition": "kevt and ka.user.name=system:anonymous and ka.auth.decision=\"allow\" and not health_endpoint and not live_endpoint and not ready_endpoint",
+      "expanded_condition_tree": {
+        "type": "and",
+        "children": [
+          {
+            "type": "predicate",
+            "field": "jevt.value[/stage]",
+            "operator": "in",
+            "values": [
+              "ResponseComplete"
+            ]
+          },
+          {
+            "type": "predicate",
+            "field": "ka.user.name",
+            "operator": "=",
+            "values": [
+              "system:anonymous"
+            ]
+          },
+          {
+            "type": "predicate",
+            "field": "ka.auth.decision",
+            "operator": "=",
+            "values": [
+              "allow"
+            ]
+          },
+          {
+            "type": "not",
+            "child": {
+              "type": "or",
+              "children": [
+                {
+                  "type": "predicate",
+                  "field": "ka.uri",
+                  "operator": "=",
+                  "values": [
+                    "/healthz"
+                  ]
+                },
+                {
+                  "type": "predicate",
+                  "field": "ka.uri",
+                  "operator": "startswith",
+                  "values": [
+                    "/healthz?"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "type": "not",
+            "child": {
+              "type": "or",
+              "children": [
+                {
+                  "type": "predicate",
+                  "field": "ka.uri",
+                  "operator": "=",
+                  "values": [
+                    "/livez"
+                  ]
+                },
+                {
+                  "type": "predicate",
+                  "field": "ka.uri",
+                  "operator": "startswith",
+                  "values": [
+                    "/livez?"
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "type": "not",
+            "child": {
+              "type": "or",
+              "children": [
+                {
+                  "type": "predicate",
+                  "field": "ka.uri",
+                  "operator": "=",
+                  "values": [
+                    "/readyz"
+                  ]
+                },
+                {
+                  "type": "predicate",
+                  "field": "ka.uri",
+                  "operator": "startswith",
+                  "values": [
+                    "/readyz?"
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      },
+      "pattern": "\\A(?=[\\s\\S]*(?:(?-i:\"stage\")\\s*:\\s*(?-i:\")(?-i:ResponseComplete)(?-i:\")))(?=[\\s\\S]*(?:(?-i:\"user\")\\s*:\\s*\\{[^{}]{0,2000}?(?-i:\"username\")\\s*:\\s*(?-i:\")(?-i:system:anonymous)(?-i:\")))(?=[\\s\\S]*(?:(?-i:\"authorization\\.k8s\\.io/decision\")\\s*:\\s*(?-i:\")(?-i:allow)(?-i:\")))(?!(?:(?=[\\s\\S]*(?:(?-i:\"requestURI\")\\s*:\\s*(?-i:\")(?-i:/healthz)(?-i:\")))|(?=[\\s\\S]*(?:(?-i:\"requestURI\")\\s*:\\s*(?-i:\")(?-i:/healthz\\?)[^\"\\\\]*(?-i:\")))))(?!(?:(?=[\\s\\S]*(?:(?-i:\"requestURI\")\\s*:\\s*(?-i:\")(?-i:/livez)(?-i:\")))|(?=[\\s\\S]*(?:(?-i:\"requestURI\")\\s*:\\s*(?-i:\")(?-i:/livez\\?)[^\"\\\\]*(?-i:\")))))(?!(?:(?=[\\s\\S]*(?:(?-i:\"requestURI\")\\s*:\\s*(?-i:\")(?-i:/readyz)(?-i:\")))|(?=[\\s\\S]*(?:(?-i:\"requestURI\")\\s*:\\s*(?-i:\")(?-i:/readyz\\?)[^\"\\\\]*(?-i:\")))))[\\s\\S]*\\Z"
+    },
+    {
+      "source_file": "plugins/k8saudit/rules/k8s_audit_rules.yaml",
+      "rule": "ClusterRole With Wildcard Created",
+      "description": "Detect any attempt to create a Role/ClusterRole with wildcard resources or verbs",
+      "platform": "kubernetes",
+      "priority": "WARNING",
+      "source": "k8s_audit",
+      "original_condition": "kevt and (role or clusterrole) and kcreate and (ka.req.role.rules.resources intersects (\"*\") or ka.req.role.rules.verbs intersects (\"*\"))",
+      "expanded_condition_tree": {
+        "type": "and",
+        "children": [
+          {
+            "type": "predicate",
+            "field": "jevt.value[/stage]",
+            "operator": "in",
+            "values": [
+              "ResponseComplete"
+            ]
+          },
+          {
+            "type": "or",
+            "children": [
+              {
+                "type": "predicate",
+                "field": "ka.target.resource",
+                "operator": "=",
+                "values": [
+                  "roles"
+                ]
+              },
+              {
+                "type": "predicate",
+                "field": "ka.target.resource",
+                "operator": "=",
+                "values": [
+                  "clusterroles"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "predicate",
+            "field": "ka.verb",
+            "operator": "=",
+            "values": [
+              "create"
+            ]
+          },
+          {
+            "type": "or",
+            "children": [
+              {
+                "type": "predicate",
+                "field": "ka.req.role.rules.resources",
+                "operator": "intersects",
+                "values": [
+                  "*"
+                ]
+              },
+              {
+                "type": "predicate",
+                "field": "ka.req.role.rules.verbs",
+                "operator": "intersects",
+                "values": [
+                  "*"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "pattern": "\\A(?=[\\s\\S]*(?:(?-i:\"stage\")\\s*:\\s*(?-i:\")(?-i:ResponseComplete)(?-i:\")))(?:(?=[\\s\\S]*(?:(?-i:\"objectRef\")\\s*:\\s*\\{[^{}]{0,2000}?(?-i:\"resource\")\\s*:\\s*(?-i:\")(?-i:roles)(?-i:\")))|(?=[\\s\\S]*(?:(?-i:\"objectRef\")\\s*:\\s*\\{[^{}]{0,2000}?(?-i:\"resource\")\\s*:\\s*(?-i:\")(?-i:clusterroles)(?-i:\"))))(?=[\\s\\S]*(?:(?-i:\"verb\")\\s*:\\s*(?-i:\")(?-i:create)(?-i:\")))(?:(?=[\\s\\S]*(?:(?-i:\"resources\")\\s*:\\s*\\[[^\\]]*(?-i:\")(?-i:\\*)(?-i:\")[^\\]]*\\]))|(?=[\\s\\S]*(?:(?-i:\"verbs\")\\s*:\\s*\\[[^\\]]*(?-i:\")(?-i:\\*)(?-i:\")[^\\]]*\\])))[\\s\\S]*\\Z"
+    },
+    {
+      "source_file": "plugins/cloudtrail/rules/aws_cloudtrail_rules.yaml",
+      "rule": "Console Login Without MFA",
+      "description": "Detect a console login without MFA.",
+      "platform": "aws",
+      "priority": "CRITICAL",
+      "source": "aws_cloudtrail",
+      "original_condition": "ct.name=\"ConsoleLogin\" and not ct.error exists and ct.user.identitytype!=\"AssumedRole\" and json.value[/responseElements/ConsoleLogin]=\"Success\" and json.value[/additionalEventData/MFAUsed]=\"No\"",
+      "expanded_condition_tree": {
+        "type": "and",
+        "children": [
+          {
+            "type": "predicate",
+            "field": "ct.name",
+            "operator": "=",
+            "values": [
+              "ConsoleLogin"
+            ]
+          },
+          {
+            "type": "not",
+            "child": {
+              "type": "predicate",
+              "field": "ct.error",
+              "operator": "exists",
+              "values": []
+            }
+          },
+          {
+            "type": "not",
+            "child": {
+              "type": "predicate",
+              "field": "ct.user.identitytype",
+              "operator": "=",
+              "values": [
+                "AssumedRole"
+              ]
+            }
+          },
+          {
+            "type": "predicate",
+            "field": "json.value[/responseElements/ConsoleLogin]",
+            "operator": "=",
+            "values": [
+              "Success"
+            ]
+          },
+          {
+            "type": "predicate",
+            "field": "json.value[/additionalEventData/MFAUsed]",
+            "operator": "=",
+            "values": [
+              "No"
+            ]
+          }
+        ]
+      },
+      "pattern": "\\A(?=[\\s\\S]*(?:(?-i:\"eventName\")\\s*:\\s*(?-i:\")(?-i:ConsoleLogin)(?-i:\")))(?!(?=[\\s\\S]*(?:(?-i:\"errorCode\")\\s*:\\s*)))(?!(?=[\\s\\S]*(?:(?-i:\"userIdentity\")\\s*:\\s*\\{[^{}]{0,2000}?(?-i:\"type\")\\s*:\\s*(?-i:\")(?-i:AssumedRole)(?-i:\"))))(?=[\\s\\S]*(?:(?-i:\"responseElements\")\\s*:\\s*\\{[^{}]{0,2000}?(?-i:\"ConsoleLogin\")\\s*:\\s*(?-i:\")(?-i:Success)(?-i:\")))(?=[\\s\\S]*(?:(?-i:\"additionalEventData\")\\s*:\\s*\\{[^{}]{0,2000}?(?-i:\"MFAUsed\")\\s*:\\s*(?-i:\")(?-i:No)(?-i:\")))[\\s\\S]*\\Z"
+    },
+    {
+      "source_file": "plugins/cloudtrail/rules/aws_cloudtrail_rules.yaml",
+      "rule": "ECS Task Run or Started",
+      "description": "Detect a new task is started in ECS.",
+      "platform": "aws",
+      "priority": "WARNING",
+      "source": "aws_cloudtrail",
+      "original_condition": "ct.src=\"ecs.amazonaws.com\" and (ct.name=\"RunTask\" or ct.name=\"StartTask\") and not ct.error exists",
+      "expanded_condition_tree": {
+        "type": "and",
+        "children": [
+          {
+            "type": "predicate",
+            "field": "ct.src",
+            "operator": "=",
+            "values": [
+              "ecs.amazonaws.com"
+            ]
+          },
+          {
+            "type": "or",
+            "children": [
+              {
+                "type": "predicate",
+                "field": "ct.name",
+                "operator": "=",
+                "values": [
+                  "RunTask"
+                ]
+              },
+              {
+                "type": "predicate",
+                "field": "ct.name",
+                "operator": "=",
+                "values": [
+                  "StartTask"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "not",
+            "child": {
+              "type": "predicate",
+              "field": "ct.error",
+              "operator": "exists",
+              "values": []
+            }
+          }
+        ]
+      },
+      "pattern": "\\A(?=[\\s\\S]*(?:(?-i:\"eventSource\")\\s*:\\s*(?-i:\")(?-i:ecs\\.amazonaws\\.com)(?-i:\")))(?:(?=[\\s\\S]*(?:(?-i:\"eventName\")\\s*:\\s*(?-i:\")(?-i:RunTask)(?-i:\")))|(?=[\\s\\S]*(?:(?-i:\"eventName\")\\s*:\\s*(?-i:\")(?-i:StartTask)(?-i:\"))))(?!(?=[\\s\\S]*(?:(?-i:\"errorCode\")\\s*:\\s*)))[\\s\\S]*\\Z"
+    }
+  ],
+  "validation": [
+    {
+      "rule": "Create Privileged Pod",
+      "positive_samples": 2,
+      "positive_passed": 2,
+      "negative_samples": 2,
+      "negative_passed": 2,
+      "status": "pass"
+    },
+    {
+      "rule": "Anonymous Request Allowed",
+      "positive_samples": 1,
+      "positive_passed": 1,
+      "negative_samples": 2,
+      "negative_passed": 2,
+      "status": "pass"
+    },
+    {
+      "rule": "ClusterRole With Wildcard Created",
+      "positive_samples": 2,
+      "positive_passed": 2,
+      "negative_samples": 1,
+      "negative_passed": 1,
+      "status": "pass"
+    },
+    {
+      "rule": "Console Login Without MFA",
+      "positive_samples": 1,
+      "positive_passed": 1,
+      "negative_samples": 3,
+      "negative_passed": 3,
+      "status": "pass"
+    },
+    {
+      "rule": "ECS Task Run or Started",
+      "positive_samples": 2,
+      "positive_passed": 2,
+      "negative_samples": 2,
+      "negative_passed": 2,
+      "status": "pass"
+    }
+  ]
+}

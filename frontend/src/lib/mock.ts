@@ -13,24 +13,28 @@ export function buildMockResponse(query: string): QueryResponse {
     {
       name: "Valid Accounts",
       external_id: "T1078",
+      url: "https://attack.mitre.org/techniques/T1078",
       node_type: "Technique",
       relevance_score: 0.94 * MAX_RELEVANCE_SCORE,
     },
     {
       name: "APT29",
       external_id: "G0016",
+      url: "https://attack.mitre.org/groups/G0016",
       node_type: "Actor",
       relevance_score: 0.88 * MAX_RELEVANCE_SCORE,
     },
     {
       name: "Credential Access",
       external_id: "TA0006",
+      url: "https://attack.mitre.org/tactics/TA0006",
       node_type: "Tactic",
       relevance_score: 0.81 * MAX_RELEVANCE_SCORE,
     },
     {
       name: "Mimikatz",
       external_id: "S0002",
+      url: "https://attack.mitre.org/software/S0002",
       node_type: "Malware",
       relevance_score: 0.74 * MAX_RELEVANCE_SCORE,
     },

@@ -1,0 +1,522 @@
+{
+  "pairs": [
+    {
+      "case_type": "single_tactic",
+      "expected_answer": "T1001 (Data Obfuscation) belongs to the TA0011 (Command and Control) tactic.",
+      "expected_tactics": [
+        {
+          "external_id": "TA0011",
+          "name": "Command and Control",
+          "shortname": "command-and-control",
+          "stix_id": "x-mitre-tactic--f72804c5-f15a-449e-a5da-2eecd181f813"
+        }
+      ],
+      "id": "enterprise-tactics-t1001",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "link_source": "attack-pattern.kill_chain_phases",
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_ids": [
+          "x-mitre-tactic--f72804c5-f15a-449e-a5da-2eecd181f813"
+        ],
+        "technique_stix_id": "attack-pattern--ad255bfe-a9e6-4b52-a258-8d3462abe842",
+        "technique_tactic_links": [
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "command-and-control",
+            "tactic_stix_id": "x-mitre-tactic--f72804c5-f15a-449e-a5da-2eecd181f813",
+            "technique_stix_id": "attack-pattern--ad255bfe-a9e6-4b52-a258-8d3462abe842"
+          }
+        ]
+      },
+      "question": "Which tactics does T1001 (Data Obfuscation) belong to?",
+      "relationship_type": "technique_to_tactic"
+    },
+    {
+      "case_type": "single_tactic",
+      "expected_answer": "T1005 (Data from Local System) belongs to the TA0009 (Collection) tactic.",
+      "expected_tactics": [
+        {
+          "external_id": "TA0009",
+          "name": "Collection",
+          "shortname": "collection",
+          "stix_id": "x-mitre-tactic--d108ce10-2419-4cf9-a774-46161d6c6cfe"
+        }
+      ],
+      "id": "enterprise-tactics-t1005",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "link_source": "attack-pattern.kill_chain_phases",
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_ids": [
+          "x-mitre-tactic--d108ce10-2419-4cf9-a774-46161d6c6cfe"
+        ],
+        "technique_stix_id": "attack-pattern--3c4a2599-71ee-4405-ba1e-0e28414b4bc5",
+        "technique_tactic_links": [
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "collection",
+            "tactic_stix_id": "x-mitre-tactic--d108ce10-2419-4cf9-a774-46161d6c6cfe",
+            "technique_stix_id": "attack-pattern--3c4a2599-71ee-4405-ba1e-0e28414b4bc5"
+          }
+        ]
+      },
+      "question": "Which tactics does T1005 (Data from Local System) belong to?",
+      "relationship_type": "technique_to_tactic"
+    },
+    {
+      "case_type": "single_tactic",
+      "expected_answer": "T1059.004 (Unix Shell) belongs to the TA0002 (Execution) tactic.",
+      "expected_tactics": [
+        {
+          "external_id": "TA0002",
+          "name": "Execution",
+          "shortname": "execution",
+          "stix_id": "x-mitre-tactic--4ca45d45-df4d-4613-8980-bac22d278fa5"
+        }
+      ],
+      "id": "enterprise-tactics-t1059.004",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "link_source": "attack-pattern.kill_chain_phases",
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_ids": [
+          "x-mitre-tactic--4ca45d45-df4d-4613-8980-bac22d278fa5"
+        ],
+        "technique_stix_id": "attack-pattern--a9d4b653-6915-42af-98b2-5758c4ceee56",
+        "technique_tactic_links": [
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "execution",
+            "tactic_stix_id": "x-mitre-tactic--4ca45d45-df4d-4613-8980-bac22d278fa5",
+            "technique_stix_id": "attack-pattern--a9d4b653-6915-42af-98b2-5758c4ceee56"
+          }
+        ]
+      },
+      "question": "Which tactics does T1059.004 (Unix Shell) belong to?",
+      "relationship_type": "technique_to_tactic"
+    },
+    {
+      "case_type": "single_tactic",
+      "expected_answer": "T1491 (Defacement) belongs to the TA0040 (Impact) tactic.",
+      "expected_tactics": [
+        {
+          "external_id": "TA0040",
+          "name": "Impact",
+          "shortname": "impact",
+          "stix_id": "x-mitre-tactic--5569339b-94c2-49ee-afb3-2222936582c8"
+        }
+      ],
+      "id": "enterprise-tactics-t1491",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "link_source": "attack-pattern.kill_chain_phases",
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_ids": [
+          "x-mitre-tactic--5569339b-94c2-49ee-afb3-2222936582c8"
+        ],
+        "technique_stix_id": "attack-pattern--5909f20f-3c39-4795-be06-ef1ea40d350b",
+        "technique_tactic_links": [
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "impact",
+            "tactic_stix_id": "x-mitre-tactic--5569339b-94c2-49ee-afb3-2222936582c8",
+            "technique_stix_id": "attack-pattern--5909f20f-3c39-4795-be06-ef1ea40d350b"
+          }
+        ]
+      },
+      "question": "Which tactics does T1491 (Defacement) belong to?",
+      "relationship_type": "technique_to_tactic"
+    },
+    {
+      "case_type": "single_tactic",
+      "expected_answer": "T1583.007 (Serverless) belongs to the TA0042 (Resource Development) tactic.",
+      "expected_tactics": [
+        {
+          "external_id": "TA0042",
+          "name": "Resource Development",
+          "shortname": "resource-development",
+          "stix_id": "x-mitre-tactic--d679bca2-e57d-4935-8650-8031c87a4400"
+        }
+      ],
+      "id": "enterprise-tactics-t1583.007",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "link_source": "attack-pattern.kill_chain_phases",
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_ids": [
+          "x-mitre-tactic--d679bca2-e57d-4935-8650-8031c87a4400"
+        ],
+        "technique_stix_id": "attack-pattern--04a5a8ab-3bc8-4c83-95c9-55274a89786d",
+        "technique_tactic_links": [
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "resource-development",
+            "tactic_stix_id": "x-mitre-tactic--d679bca2-e57d-4935-8650-8031c87a4400",
+            "technique_stix_id": "attack-pattern--04a5a8ab-3bc8-4c83-95c9-55274a89786d"
+          }
+        ]
+      },
+      "question": "Which tactics does T1583.007 (Serverless) belong to?",
+      "relationship_type": "technique_to_tactic"
+    },
+    {
+      "case_type": "multi_tactic",
+      "expected_answer": "T1053 (Scheduled Task/Job) belongs to the TA0002 (Execution), TA0003 (Persistence), and TA0004 (Privilege Escalation) tactics.",
+      "expected_tactics": [
+        {
+          "external_id": "TA0002",
+          "name": "Execution",
+          "shortname": "execution",
+          "stix_id": "x-mitre-tactic--4ca45d45-df4d-4613-8980-bac22d278fa5"
+        },
+        {
+          "external_id": "TA0003",
+          "name": "Persistence",
+          "shortname": "persistence",
+          "stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92"
+        },
+        {
+          "external_id": "TA0004",
+          "name": "Privilege Escalation",
+          "shortname": "privilege-escalation",
+          "stix_id": "x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd"
+        }
+      ],
+      "id": "enterprise-tactics-t1053",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "link_source": "attack-pattern.kill_chain_phases",
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_ids": [
+          "x-mitre-tactic--4ca45d45-df4d-4613-8980-bac22d278fa5",
+          "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+          "x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd"
+        ],
+        "technique_stix_id": "attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9",
+        "technique_tactic_links": [
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "execution",
+            "tactic_stix_id": "x-mitre-tactic--4ca45d45-df4d-4613-8980-bac22d278fa5",
+            "technique_stix_id": "attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9"
+          },
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "persistence",
+            "tactic_stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+            "technique_stix_id": "attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9"
+          },
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "privilege-escalation",
+            "tactic_stix_id": "x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd",
+            "technique_stix_id": "attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9"
+          }
+        ]
+      },
+      "question": "Which tactics does T1053 (Scheduled Task/Job) belong to?",
+      "relationship_type": "technique_to_tactic"
+    },
+    {
+      "case_type": "multi_tactic",
+      "expected_answer": "T1078 (Valid Accounts) belongs to the TA0001 (Initial Access), TA0003 (Persistence), TA0004 (Privilege Escalation), and TA0005 (Stealth) tactics.",
+      "expected_tactics": [
+        {
+          "external_id": "TA0001",
+          "name": "Initial Access",
+          "shortname": "initial-access",
+          "stix_id": "x-mitre-tactic--ffd5bcee-6e16-4dd2-8eca-7b3beedf33ca"
+        },
+        {
+          "external_id": "TA0003",
+          "name": "Persistence",
+          "shortname": "persistence",
+          "stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92"
+        },
+        {
+          "external_id": "TA0004",
+          "name": "Privilege Escalation",
+          "shortname": "privilege-escalation",
+          "stix_id": "x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd"
+        },
+        {
+          "external_id": "TA0005",
+          "name": "Stealth",
+          "shortname": "stealth",
+          "stix_id": "x-mitre-tactic--78b23412-0651-46d7-a540-170a1ce8bd5a"
+        }
+      ],
+      "id": "enterprise-tactics-t1078",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "link_source": "attack-pattern.kill_chain_phases",
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_ids": [
+          "x-mitre-tactic--ffd5bcee-6e16-4dd2-8eca-7b3beedf33ca",
+          "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+          "x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd",
+          "x-mitre-tactic--78b23412-0651-46d7-a540-170a1ce8bd5a"
+        ],
+        "technique_stix_id": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81",
+        "technique_tactic_links": [
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "initial-access",
+            "tactic_stix_id": "x-mitre-tactic--ffd5bcee-6e16-4dd2-8eca-7b3beedf33ca",
+            "technique_stix_id": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81"
+          },
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "persistence",
+            "tactic_stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+            "technique_stix_id": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81"
+          },
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "privilege-escalation",
+            "tactic_stix_id": "x-mitre-tactic--5e29b093-294e-49e9-a803-dab3d73b77dd",
+            "technique_stix_id": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81"
+          },
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "stealth",
+            "tactic_stix_id": "x-mitre-tactic--78b23412-0651-46d7-a540-170a1ce8bd5a",
+            "technique_stix_id": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81"
+          }
+        ]
+      },
+      "question": "Which tactics does T1078 (Valid Accounts) belong to?",
+      "relationship_type": "technique_to_tactic"
+    },
+    {
+      "case_type": "multi_tactic",
+      "expected_answer": "T1197 (BITS Jobs) belongs to the TA0002 (Execution), TA0003 (Persistence), and TA0005 (Stealth) tactics.",
+      "expected_tactics": [
+        {
+          "external_id": "TA0002",
+          "name": "Execution",
+          "shortname": "execution",
+          "stix_id": "x-mitre-tactic--4ca45d45-df4d-4613-8980-bac22d278fa5"
+        },
+        {
+          "external_id": "TA0003",
+          "name": "Persistence",
+          "shortname": "persistence",
+          "stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92"
+        },
+        {
+          "external_id": "TA0005",
+          "name": "Stealth",
+          "shortname": "stealth",
+          "stix_id": "x-mitre-tactic--78b23412-0651-46d7-a540-170a1ce8bd5a"
+        }
+      ],
+      "id": "enterprise-tactics-t1197",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "link_source": "attack-pattern.kill_chain_phases",
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_ids": [
+          "x-mitre-tactic--4ca45d45-df4d-4613-8980-bac22d278fa5",
+          "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+          "x-mitre-tactic--78b23412-0651-46d7-a540-170a1ce8bd5a"
+        ],
+        "technique_stix_id": "attack-pattern--c8e87b83-edbb-48d4-9295-4974897525b7",
+        "technique_tactic_links": [
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "execution",
+            "tactic_stix_id": "x-mitre-tactic--4ca45d45-df4d-4613-8980-bac22d278fa5",
+            "technique_stix_id": "attack-pattern--c8e87b83-edbb-48d4-9295-4974897525b7"
+          },
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "persistence",
+            "tactic_stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+            "technique_stix_id": "attack-pattern--c8e87b83-edbb-48d4-9295-4974897525b7"
+          },
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "stealth",
+            "tactic_stix_id": "x-mitre-tactic--78b23412-0651-46d7-a540-170a1ce8bd5a",
+            "technique_stix_id": "attack-pattern--c8e87b83-edbb-48d4-9295-4974897525b7"
+          }
+        ]
+      },
+      "question": "Which tactics does T1197 (BITS Jobs) belong to?",
+      "relationship_type": "technique_to_tactic"
+    },
+    {
+      "case_type": "multi_tactic",
+      "expected_answer": "T1205 (Traffic Signaling) belongs to the TA0003 (Persistence), TA0005 (Stealth), and TA0011 (Command and Control) tactics.",
+      "expected_tactics": [
+        {
+          "external_id": "TA0003",
+          "name": "Persistence",
+          "shortname": "persistence",
+          "stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92"
+        },
+        {
+          "external_id": "TA0005",
+          "name": "Stealth",
+          "shortname": "stealth",
+          "stix_id": "x-mitre-tactic--78b23412-0651-46d7-a540-170a1ce8bd5a"
+        },
+        {
+          "external_id": "TA0011",
+          "name": "Command and Control",
+          "shortname": "command-and-control",
+          "stix_id": "x-mitre-tactic--f72804c5-f15a-449e-a5da-2eecd181f813"
+        }
+      ],
+      "id": "enterprise-tactics-t1205",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "link_source": "attack-pattern.kill_chain_phases",
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_ids": [
+          "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+          "x-mitre-tactic--78b23412-0651-46d7-a540-170a1ce8bd5a",
+          "x-mitre-tactic--f72804c5-f15a-449e-a5da-2eecd181f813"
+        ],
+        "technique_stix_id": "attack-pattern--451a9977-d255-43c9-b431-66de80130c8c",
+        "technique_tactic_links": [
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "persistence",
+            "tactic_stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+            "technique_stix_id": "attack-pattern--451a9977-d255-43c9-b431-66de80130c8c"
+          },
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "stealth",
+            "tactic_stix_id": "x-mitre-tactic--78b23412-0651-46d7-a540-170a1ce8bd5a",
+            "technique_stix_id": "attack-pattern--451a9977-d255-43c9-b431-66de80130c8c"
+          },
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "command-and-control",
+            "tactic_stix_id": "x-mitre-tactic--f72804c5-f15a-449e-a5da-2eecd181f813",
+            "technique_stix_id": "attack-pattern--451a9977-d255-43c9-b431-66de80130c8c"
+          }
+        ]
+      },
+      "question": "Which tactics does T1205 (Traffic Signaling) belong to?",
+      "relationship_type": "technique_to_tactic"
+    },
+    {
+      "case_type": "multi_tactic",
+      "expected_answer": "T1556 (Modify Authentication Process) belongs to the TA0003 (Persistence), TA0006 (Credential Access), and TA0112 (Defense Impairment) tactics.",
+      "expected_tactics": [
+        {
+          "external_id": "TA0003",
+          "name": "Persistence",
+          "shortname": "persistence",
+          "stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92"
+        },
+        {
+          "external_id": "TA0006",
+          "name": "Credential Access",
+          "shortname": "credential-access",
+          "stix_id": "x-mitre-tactic--2558fd61-8c75-4730-94c4-11926db2a263"
+        },
+        {
+          "external_id": "TA0112",
+          "name": "Defense Impairment",
+          "shortname": "defense-impairment",
+          "stix_id": "x-mitre-tactic--43c49635-f2fa-44f2-92b9-0ee980bbf4ef"
+        }
+      ],
+      "id": "enterprise-tactics-t1556",
+      "provenance": {
+        "bundle_path": "enterprise-attack/enterprise-attack.json",
+        "bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "link_source": "attack-pattern.kill_chain_phases",
+        "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "stix_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "tactic_stix_ids": [
+          "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+          "x-mitre-tactic--2558fd61-8c75-4730-94c4-11926db2a263",
+          "x-mitre-tactic--43c49635-f2fa-44f2-92b9-0ee980bbf4ef"
+        ],
+        "technique_stix_id": "attack-pattern--f4c1826f-a322-41cd-9557-562100848c84",
+        "technique_tactic_links": [
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "persistence",
+            "tactic_stix_id": "x-mitre-tactic--5bc1d813-693e-4823-9961-abf9af4b0e92",
+            "technique_stix_id": "attack-pattern--f4c1826f-a322-41cd-9557-562100848c84"
+          },
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "credential-access",
+            "tactic_stix_id": "x-mitre-tactic--2558fd61-8c75-4730-94c4-11926db2a263",
+            "technique_stix_id": "attack-pattern--f4c1826f-a322-41cd-9557-562100848c84"
+          },
+          {
+            "kill_chain_name": "mitre-attack",
+            "phase_name": "defense-impairment",
+            "tactic_stix_id": "x-mitre-tactic--43c49635-f2fa-44f2-92b9-0ee980bbf4ef",
+            "technique_stix_id": "attack-pattern--f4c1826f-a322-41cd-9557-562100848c84"
+          }
+        ]
+      },
+      "question": "Which tactics does T1556 (Modify Authentication Process) belong to?",
+      "relationship_type": "technique_to_tactic"
+    }
+  ],
+  "phase": "card6_part_b_phase_2_technique_tactic_prototype",
+  "schema_version": "1.0",
+  "scope": {
+    "domain": "enterprise-attack",
+    "link_source": "attack-pattern.kill_chain_phases",
+    "prototype_only": true,
+    "relationship_type": "technique_to_tactic",
+    "revoked_and_deprecated_excluded": true
+  },
+  "selection": {
+    "method": "fixed_representative_ids_resolved_from_pinned_stix",
+    "multi_tactic_pairs": 5,
+    "pair_count": 10,
+    "single_tactic_pairs": 5,
+    "technique_external_ids": [
+      "T1001",
+      "T1005",
+      "T1059.004",
+      "T1491",
+      "T1583.007",
+      "T1053",
+      "T1078",
+      "T1197",
+      "T1205",
+      "T1556"
+    ]
+  },
+  "source": {
+    "commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+    "domain": "enterprise-attack",
+    "path": "enterprise-attack/enterprise-attack.json",
+    "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+    "sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+    "stix_version": "2.1"
+  }
+}

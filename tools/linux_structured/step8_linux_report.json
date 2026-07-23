@@ -1,0 +1,526 @@
+{
+  "checkpoint": "Card 5 Part 1 roadmap step 8 Linux pilot only",
+  "security_datasets_commit": "d9d40ef123d2c87d5d3df28c96bcab4f0faccc87",
+  "platform": "linux",
+  "selection_policy": "Use every labeled Linux host capture present at the pinned Security-Datasets commit. The repository contains only two: one defense-evasion case and one discovery case. Selection was made from repository inventory without inspecting detector results.",
+  "license_observation": "At the pinned commit LICENSE contains the MIT License, while README.md still says GPL-3.0. Captures stay in an external sparse checkout and are not redistributed here.",
+  "rule_inventory": {
+    "total": 2156,
+    "by_origin": {
+      "falco_preview": 38,
+      "runtime": 288,
+      "sigma_preview": 1830
+    },
+    "by_platform": {
+      "aws": 76,
+      "kubernetes": 50,
+      "linux": 209,
+      "macos": 79,
+      "windows": 1742
+    },
+    "sigma_commit": "65b39fa48afc2739ed01df03ef61c68be995bb36",
+    "pysigma_version": "1.4.0",
+    "falco_commit": "819918d43a743de78398d0a6ecb75305beeacaaa",
+    "windows_structured_rule_count": 0,
+    "linux_structured_rule_count": 131,
+    "aws_structured_rule_count": 0,
+    "kubernetes_structured_rule_count": 0,
+    "macos_structured_rule_count": 0
+  },
+  "comparison_step5_baseline": {
+    "artifact": "tools/linux_structured/baseline_report.json",
+    "layer1_micro_strict_exact_id": {
+      "tp": 2,
+      "fp": 7,
+      "fn": 0,
+      "precision": 0.2222222222222222,
+      "recall": 1.0,
+      "f1": 0.3636363636363636
+    }
+  },
+  "corpus": {
+    "sample_count": 2,
+    "by_tactic": {
+      "defense_evasion": 1,
+      "discovery": 1
+    },
+    "uncompressed_bytes": 2879,
+    "parsed_event_count": 3,
+    "detector_gate_pass_count": 2
+  },
+  "metrics": {
+    "runtime_current": {
+      "sample_count": 2,
+      "micro_strict_exact_id": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 2,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "macro_strict_exact_id": {
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "family_aware_diagnostic": {
+        "tp": 0,
+        "fp": 0,
+        "fn": 2,
+        "precision": 0.0,
+        "recall": 0.0,
+        "f1": 0.0
+      },
+      "samples_with_any_correct_prediction": 0,
+      "samples_with_exact_prediction_set": 0,
+      "confidence_buckets_disjoint": {
+        "high": {
+          "tp": 0,
+          "fp": 0,
+          "prediction_count": 0,
+          "precision": 0.0,
+          "recall_contribution": 0.0
+        },
+        "medium": {
+          "tp": 0,
+          "fp": 0,
+          "prediction_count": 0,
+          "precision": 0.0,
+          "recall_contribution": 0.0
+        },
+        "low": {
+          "tp": 0,
+          "fp": 0,
+          "prediction_count": 0,
+          "precision": 0.0,
+          "recall_contribution": 0.0
+        }
+      },
+      "confidence_thresholds_cumulative": {
+        "high_only": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "high_and_medium": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        },
+        "all_confidences": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0
+        }
+      },
+      "by_tactic": {
+        "defense_evasion": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "sample_count": 1
+        },
+        "discovery": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 1,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "sample_count": 1
+        }
+      }
+    },
+    "layer1_preview": {
+      "sample_count": 2,
+      "micro_strict_exact_id": {
+        "tp": 2,
+        "fp": 7,
+        "fn": 0,
+        "precision": 0.2222222222222222,
+        "recall": 1.0,
+        "f1": 0.3636363636363636
+      },
+      "macro_strict_exact_id": {
+        "precision": 0.225,
+        "recall": 1.0,
+        "f1": 0.3666666666666667
+      },
+      "family_aware_diagnostic": {
+        "tp": 2,
+        "fp": 7,
+        "fn": 0,
+        "precision": 0.2222222222222222,
+        "recall": 1.0,
+        "f1": 0.3636363636363636
+      },
+      "samples_with_any_correct_prediction": 2,
+      "samples_with_exact_prediction_set": 0,
+      "confidence_buckets_disjoint": {
+        "high": {
+          "tp": 1,
+          "fp": 2,
+          "prediction_count": 3,
+          "precision": 0.3333333333333333,
+          "recall_contribution": 0.5
+        },
+        "medium": {
+          "tp": 0,
+          "fp": 0,
+          "prediction_count": 0,
+          "precision": 0.0,
+          "recall_contribution": 0.0
+        },
+        "low": {
+          "tp": 1,
+          "fp": 5,
+          "prediction_count": 6,
+          "precision": 0.16666666666666666,
+          "recall_contribution": 0.5
+        }
+      },
+      "confidence_thresholds_cumulative": {
+        "high_only": {
+          "tp": 1,
+          "fp": 2,
+          "fn": 1,
+          "precision": 0.3333333333333333,
+          "recall": 0.5,
+          "f1": 0.4
+        },
+        "high_and_medium": {
+          "tp": 1,
+          "fp": 2,
+          "fn": 1,
+          "precision": 0.3333333333333333,
+          "recall": 0.5,
+          "f1": 0.4
+        },
+        "all_confidences": {
+          "tp": 2,
+          "fp": 7,
+          "fn": 0,
+          "precision": 0.2222222222222222,
+          "recall": 1.0,
+          "f1": 0.3636363636363636
+        }
+      },
+      "by_tactic": {
+        "defense_evasion": {
+          "tp": 1,
+          "fp": 4,
+          "fn": 0,
+          "precision": 0.2,
+          "recall": 1.0,
+          "f1": 0.33333333333333337,
+          "sample_count": 1
+        },
+        "discovery": {
+          "tp": 1,
+          "fp": 3,
+          "fn": 0,
+          "precision": 0.25,
+          "recall": 1.0,
+          "f1": 0.4,
+          "sample_count": 1
+        }
+      }
+    },
+    "layer2_linux_preview": {
+      "sample_count": 2,
+      "micro_strict_exact_id": {
+        "tp": 2,
+        "fp": 1,
+        "fn": 0,
+        "precision": 0.6666666666666666,
+        "recall": 1.0,
+        "f1": 0.8
+      },
+      "macro_strict_exact_id": {
+        "precision": 0.75,
+        "recall": 1.0,
+        "f1": 0.8333333333333333
+      },
+      "family_aware_diagnostic": {
+        "tp": 2,
+        "fp": 1,
+        "fn": 0,
+        "precision": 0.6666666666666666,
+        "recall": 1.0,
+        "f1": 0.8
+      },
+      "samples_with_any_correct_prediction": 2,
+      "samples_with_exact_prediction_set": 1,
+      "confidence_buckets_disjoint": {
+        "high": {
+          "tp": 1,
+          "fp": 0,
+          "prediction_count": 1,
+          "precision": 1.0,
+          "recall_contribution": 0.5
+        },
+        "medium": {
+          "tp": 0,
+          "fp": 0,
+          "prediction_count": 0,
+          "precision": 0.0,
+          "recall_contribution": 0.0
+        },
+        "low": {
+          "tp": 1,
+          "fp": 1,
+          "prediction_count": 2,
+          "precision": 0.5,
+          "recall_contribution": 0.5
+        }
+      },
+      "confidence_thresholds_cumulative": {
+        "high_only": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666
+        },
+        "high_and_medium": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.5,
+          "f1": 0.6666666666666666
+        },
+        "all_confidences": {
+          "tp": 2,
+          "fp": 1,
+          "fn": 0,
+          "precision": 0.6666666666666666,
+          "recall": 1.0,
+          "f1": 0.8
+        }
+      },
+      "by_tactic": {
+        "defense_evasion": {
+          "tp": 1,
+          "fp": 1,
+          "fn": 0,
+          "precision": 0.5,
+          "recall": 1.0,
+          "f1": 0.6666666666666666,
+          "sample_count": 1
+        },
+        "discovery": {
+          "tp": 1,
+          "fp": 0,
+          "fn": 0,
+          "precision": 1.0,
+          "recall": 1.0,
+          "f1": 1.0,
+          "sample_count": 1
+        }
+      }
+    }
+  },
+  "performance": {
+    "workers": 1,
+    "sum_case_elapsed_seconds": 0.04,
+    "prefilter_rejections": 599,
+    "regex_searches": 12,
+    "structured_evaluations": 368,
+    "raw_fallback_searches": 3
+  },
+  "cases": [
+    {
+      "metadata_id": "SDLIN-201110081941",
+      "title": "DD Binary Padding Hash Change",
+      "tactic": "defense_evasion",
+      "capture": "datasets/atomic/linux/defense_evasion/host/sh_binary_padding_dd.zip",
+      "archive_member": "sh_binary_padding_dd_2020-11-10081941.log",
+      "uncompressed_bytes": 995,
+      "ground_truth": [
+        "T1027.001"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 7,
+        "platform": "linux",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "platform_linux": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 209,
+      "unique_pattern_count": 205,
+      "prefilter_rejections": 199,
+      "regex_searches": 6,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1027.001": {
+          "confidence": "high",
+          "sources": [
+            "Sigma: lnx_auditd_binary_padding.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1033": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: lnx_auditd_user_discovery.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1049": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_lnx_system_network_connections_discovery.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1485": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: lnx_auditd_dd_delete_file.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1505.003": {
+          "confidence": "high",
+          "sources": [
+            "Sigma: lnx_auditd_web_rce.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1027.001": {
+          "confidence": "high",
+          "sources": [
+            "Sigma: lnx_auditd_binary_padding.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1485": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: lnx_auditd_dd_delete_file.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "structured_rule_count": 131,
+      "structured_evaluations": 123,
+      "raw_fallback_searches": 1,
+      "elapsed_seconds": 0.035
+    },
+    {
+      "metadata_id": "SDLIN-201110074812",
+      "title": "Arp Cache Discovery",
+      "tactic": "discovery",
+      "capture": "datasets/atomic/linux/discovery/host/sh_arp_cache.zip",
+      "archive_member": "sh_arp_cache_2020-11-10074812.log",
+      "uncompressed_bytes": 1884,
+      "ground_truth": [
+        "T1018"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 7,
+        "platform": "linux",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "platform_linux": 3
+        }
+      },
+      "parsed_event_count": 2,
+      "eligible_rule_count": 209,
+      "unique_pattern_count": 205,
+      "prefilter_rejections": 400,
+      "regex_searches": 6,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1018": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_lnx_remote_system_discovery.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1033": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: lnx_auditd_user_discovery.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1049": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_lnx_system_network_connections_discovery.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1505.003": {
+          "confidence": "high",
+          "sources": [
+            "Sigma: lnx_auditd_web_rce.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1018": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_lnx_remote_system_discovery.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "structured_rule_count": 131,
+      "structured_evaluations": 245,
+      "raw_fallback_searches": 2,
+      "elapsed_seconds": 0.005
+    }
+  ]
+}

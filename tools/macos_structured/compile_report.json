@@ -1,0 +1,19 @@
+{
+  "checkpoint": "Card 5 Part 1 roadmap step 8 macOS pilot only",
+  "sigma_commit": "65b39fa48afc2739ed01df03ef61c68be995bb36",
+  "hybrid_policy": "A structured condition is authoritative for a complete macOS ECS JSON record; malformed/non-JSON records retain per-rule raw fallback.",
+  "inventory": {
+    "approved_macos_sigma_candidates": 47,
+    "structured_macos_candidates": 47,
+    "raw_fallback_only_candidates": 0,
+    "canonical_macos_field_count": 4,
+    "distinct_sigma_source_fields": 4,
+    "sigma_source_field_references": {
+      "image": 41,
+      "commandline": 40,
+      "parentimage": 4,
+      "targetfilename": 2
+    }
+  },
+  "raw_fallback_only": []
+}

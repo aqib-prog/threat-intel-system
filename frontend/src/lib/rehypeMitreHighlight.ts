@@ -1,7 +1,11 @@
 import type { Root, RootContent, Element } from "hast";
 import { MITRE_ID_PATTERN } from "./mitre";
 
-function highlightChildren(children: RootContent[], insideLink: boolean): RootContent[] {
+function highlightChildren(
+  children: RootContent[],
+  insideLink: boolean,
+  grounded: Set<string> | undefined,
+): RootContent[] {
   const result: RootContent[] = [];
 
   for (const node of children) {
@@ -14,7 +18,12 @@ function highlightChildren(children: RootContent[], insideLink: boolean): RootCo
       }
       parts.forEach((part, i) => {
         if (part === "") return;
-        if (i % 2 === 1) {
+        // Odd indices are captured ids. Only linkify an id that our graph
+        // actually contains (grounded); an unknown/hallucinated id stays plain
+        // text so it never becomes a clickable dead link. When no grounded set
+        // is supplied (e.g. mock/offline), fall back to highlighting all.
+        const isId = i % 2 === 1;
+        if (isId && (!grounded || grounded.has(part.toUpperCase()))) {
           const mitreEl: Element = {
             type: "element",
             tagName: "mitre-id",
@@ -29,7 +38,11 @@ function highlightChildren(children: RootContent[], insideLink: boolean): RootCo
     } else if (node.type === "element") {
       result.push({
         ...node,
-        children: highlightChildren(node.children as RootContent[], insideLink || node.tagName === "a"),
+        children: highlightChildren(
+          node.children as RootContent[],
+          insideLink || node.tagName === "a",
+          grounded,
+        ),
       } as Element);
     } else {
       result.push(node);
@@ -42,8 +55,8 @@ function highlightChildren(children: RootContent[], insideLink: boolean): RootCo
 // Wraps bare MITRE IDs (T1078, TA0006, G0016, ...) in <mitre-id> elements so
 // MarkdownMessage can render them as tooltipped links - but never inside an
 // existing <a>, since nested anchors are invalid HTML and break hydration.
-export function rehypeMitreHighlight() {
+export function rehypeMitreHighlight(grounded?: Set<string>) {
   return (tree: Root) => {
-    tree.children = highlightChildren(tree.children, false) as Root["children"];
+    tree.children = highlightChildren(tree.children, false, grounded) as Root["children"];
   };
 }

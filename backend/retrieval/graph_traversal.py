@@ -36,7 +36,7 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
                 CALL { WITH t OPTIONAL MATCH (ds:DetectionStrategy)-[:DETECTS]->(t) OPTIONAL MATCH (ds)-[:HAS_ANALYTIC]->(:Analytic)-[:USES_DATA_COMPONENT]->(n:DataComponent) RETURN collect(DISTINCT n.name) AS log_sources }
                 CALL { WITH t OPTIONAL MATCH (t)-[:SUBTECHNIQUE_OF]->(n:Technique) RETURN head(collect(DISTINCT n.name)) AS parent_technique }
                 CALL { WITH t OPTIONAL MATCH (n:Technique)-[:SUBTECHNIQUE_OF]->(t) RETURN collect(DISTINCT n.name) AS subtechniques }
-                RETURN t.name as name, t.external_id as id, 
+                RETURN t.name as name, t.external_id as id, t.url as url,
                        t.description as description,
                        t.platforms as platforms,
                        t.is_subtechnique as is_subtechnique,
@@ -68,7 +68,7 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
                     OPTIONAL MATCH (a)-[:USES]->(:Technique)-[:BELONGS_TO_TACTIC]->(tac:Tactic)
                     RETURN collect(DISTINCT tac.name) AS tactics
                 }
-                RETURN a.name as name, a.external_id as id, 
+                RETURN a.name as name, a.external_id as id, a.url as url,
                        a.description as description,
                        a.aliases as aliases,
                        techniques, malware, tools, campaigns, tactics
@@ -82,7 +82,7 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
                 CALL { WITH mal OPTIONAL MATCH (n:Campaign)-[:USES]->(mal) RETURN collect(DISTINCT n.name) AS campaigns }
                 CALL { WITH mal OPTIONAL MATCH (mal)-[:USES]->(:Technique)-[:BELONGS_TO_TACTIC]->(n:Tactic) RETURN collect(DISTINCT n.name) AS tactics }
                 CALL { WITH mal OPTIONAL MATCH (mal)-[:USES]->(t:Technique) OPTIONAL MATCH (n:Mitigation)-[:MITIGATES]->(t) RETURN collect(DISTINCT n.name) AS mitigations }
-                RETURN mal.name as name, mal.external_id as id, 
+                RETURN mal.name as name, mal.external_id as id, mal.url as url,
                        mal.description as description,
                        mal.platforms as platforms,
                        mal.aliases as aliases,
@@ -97,7 +97,7 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
                 CALL { WITH tool OPTIONAL MATCH (n:Campaign)-[:USES]->(tool) RETURN collect(DISTINCT n.name) AS campaigns }
                 CALL { WITH tool OPTIONAL MATCH (tool)-[:USES]->(:Technique)-[:BELONGS_TO_TACTIC]->(n:Tactic) RETURN collect(DISTINCT n.name) AS tactics }
                 CALL { WITH tool OPTIONAL MATCH (tool)-[:USES]->(t:Technique) OPTIONAL MATCH (n:Mitigation)-[:MITIGATES]->(t) RETURN collect(DISTINCT n.name) AS mitigations }
-                RETURN tool.name as name, tool.external_id as id, 
+                RETURN tool.name as name, tool.external_id as id, tool.url as url,
                        tool.description as description,
                        tool.platforms as platforms,
                        tool.aliases as aliases,
@@ -110,7 +110,7 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
                 CALL { WITH m OPTIONAL MATCH (m)-[:MITIGATES]->(n:Technique) RETURN collect(DISTINCT n.name) AS techniques }
                 CALL { WITH m OPTIONAL MATCH (m)-[:MITIGATES]->(:Technique)-[:BELONGS_TO_TACTIC]->(n:Tactic) RETURN collect(DISTINCT n.name) AS tactics }
                 CALL { WITH m OPTIONAL MATCH (m)-[:MITIGATES]->(t:Technique) OPTIONAL MATCH (n:Actor)-[:USES]->(t) RETURN collect(DISTINCT n.name) AS actors }
-                RETURN m.name as name, m.external_id as id, 
+                RETURN m.name as name, m.external_id as id, m.url as url,
                        m.description as description,
                        techniques, tactics, actors
             """, id=node_id)
@@ -121,7 +121,7 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
                 CALL { WITH tac OPTIONAL MATCH (n:Technique)-[:BELONGS_TO_TACTIC]->(tac) RETURN collect(DISTINCT n.name) AS techniques }
                 CALL { WITH tac OPTIONAL MATCH (t:Technique)-[:BELONGS_TO_TACTIC]->(tac) OPTIONAL MATCH (n:Actor)-[:USES]->(t) RETURN collect(DISTINCT n.name) AS actors }
                 CALL { WITH tac OPTIONAL MATCH (t:Technique)-[:BELONGS_TO_TACTIC]->(tac) OPTIONAL MATCH (n:Mitigation)-[:MITIGATES]->(t) RETURN collect(DISTINCT n.name) AS mitigations }
-                RETURN tac.name as name, tac.external_id as id, 
+                RETURN tac.name as name, tac.external_id as id, tac.url as url,
                        tac.description as description,
                        tac.shortname as shortname,
                        techniques, actors, mitigations
@@ -135,7 +135,7 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
                 CALL { WITH c OPTIONAL MATCH (c)-[:USES]->(n:Malware) RETURN collect(DISTINCT n.name) AS malware }
                 CALL { WITH c OPTIONAL MATCH (c)-[:USES]->(n:Tool) RETURN collect(DISTINCT n.name) AS tools }
                 CALL { WITH c OPTIONAL MATCH (c)-[:USES]->(:Technique)-[:BELONGS_TO_TACTIC]->(n:Tactic) RETURN collect(DISTINCT n.name) AS tactics }
-                RETURN c.name as name, c.external_id as id, 
+                RETURN c.name as name, c.external_id as id, c.url as url,
                        c.description as description,
                        c.first_seen as first_seen, 
                        c.last_seen as last_seen,
@@ -149,7 +149,7 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
                 CALL { WITH ds OPTIONAL MATCH (ds)-[:DETECTS]->(:Technique)-[:BELONGS_TO_TACTIC]->(n:Tactic) RETURN collect(DISTINCT n.name) AS tactics }
                 CALL { WITH ds OPTIONAL MATCH (ds)-[:HAS_ANALYTIC]->(n:Analytic) RETURN collect(DISTINCT n.description) AS analytics }
                 CALL { WITH ds OPTIONAL MATCH (ds)-[:HAS_ANALYTIC]->(:Analytic)-[:USES_DATA_COMPONENT]->(n:DataComponent) RETURN collect(DISTINCT n.name) AS log_sources }
-                RETURN ds.name as name, ds.external_id as id,
+                RETURN ds.name as name, ds.external_id as id, ds.url as url,
                        techniques, tactics, analytics, log_sources
             """, id=node_id)
 
@@ -159,7 +159,7 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
                 CALL { WITH an OPTIONAL MATCH (an)-[:USES_DATA_COMPONENT]->(n:DataComponent) RETURN collect(DISTINCT n.name) AS log_sources }
                 CALL { WITH an OPTIONAL MATCH (n:DetectionStrategy)-[:HAS_ANALYTIC]->(an) RETURN collect(DISTINCT n.name) AS detection_strategies }
                 CALL { WITH an OPTIONAL MATCH (ds:DetectionStrategy)-[:HAS_ANALYTIC]->(an) OPTIONAL MATCH (ds)-[:DETECTS]->(n:Technique) RETURN collect(DISTINCT n.name) AS techniques }
-                RETURN an.name as name, an.external_id as id, 
+                RETURN an.name as name, an.external_id as id, an.url as url,
                        an.description as description,
                        an.platforms as platforms,
                        log_sources, detection_strategies, techniques
@@ -171,7 +171,7 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
                 CALL { WITH dc OPTIONAL MATCH (n:Analytic)-[:USES_DATA_COMPONENT]->(dc) RETURN collect(DISTINCT n.name) AS analytics }
                 CALL { WITH dc OPTIONAL MATCH (an:Analytic)-[:USES_DATA_COMPONENT]->(dc) OPTIONAL MATCH (n:DetectionStrategy)-[:HAS_ANALYTIC]->(an) RETURN collect(DISTINCT n.name) AS detection_strategies }
                 CALL { WITH dc OPTIONAL MATCH (an:Analytic)-[:USES_DATA_COMPONENT]->(dc) OPTIONAL MATCH (ds:DetectionStrategy)-[:HAS_ANALYTIC]->(an) OPTIONAL MATCH (ds)-[:DETECTS]->(n:Technique) RETURN collect(DISTINCT n.name) AS techniques }
-                RETURN dc.name as name, dc.external_id as id, 
+                RETURN dc.name as name, dc.external_id as id, dc.url as url,
                        dc.description as description,
                        dc.log_sources as log_sources,
                        analytics, detection_strategies, techniques
@@ -180,7 +180,7 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
         else:
             result = run_query(session, """
                 MATCH (n {id: $id})
-                RETURN n.name as name, n.external_id as id, 
+                RETURN n.name as name, n.external_id as id, n.url as url,
                        n.description as description
             """, id=node_id)
         

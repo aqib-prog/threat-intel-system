@@ -1,0 +1,513 @@
+{
+  "schema_version": 1,
+  "status": "review_checkpoint",
+  "dataset": {
+    "repository": "https://github.com/sbousseaden/macOS-ATTACK-DATASET",
+    "commit": "0315ec88d1f4b338c07315223bc6a53619465472",
+    "file_count": 66,
+    "telemetry": "Elastic Endpoint Security ECS events for macOS",
+    "redistribution": "External fetch-on-demand only; corpus telemetry is not committed here."
+  },
+  "reviewed_against": {
+    "source_events": true,
+    "mitre_attack_live_pages_checked_on": "2026-07-16",
+    "policy": "A mapping candidate must describe behavior actually present in the file and support macOS. Ambiguous mappings remain needs_review and are excluded from scoring. Multi-technique mappings are retained only when the file contains distinct, explicit behaviors. Mapping candidates remain pending until the user approves this checkpoint and parse eligibility is validated."
+  },
+  "mappings": [
+    {
+      "file": "Collection/collection_clipboard_osascript_pbpast.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1115", "name": "Clipboard Data"}],
+      "confidence": "high",
+      "rationale": "The captured osascript and pbpaste commands directly read clipboard contents."
+    },
+    {
+      "file": "Collection/collection_discovery_bash_history_procexec.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1552.003", "name": "Shell History"}],
+      "confidence": "high",
+      "rationale": "The capture reads .bash_history and searches it for network and remote-access strings."
+    },
+    {
+      "file": "Collection/collection_screencapture_command_proc_file.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1113", "name": "Screen Capture"}],
+      "confidence": "high",
+      "rationale": "The captured screencapture command writes a screenshot to disk."
+    },
+    {
+      "file": "Credential Access/credaccess_browsers_cookies_access.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1539", "name": "Steal Web Session Cookie"}],
+      "confidence": "high",
+      "rationale": "The capture copies Chrome and Safari cookie databases from their on-disk locations."
+    },
+    {
+      "file": "Credential Access/credaccess_cookies_crimes_chrome_debugging.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1539", "name": "Steal Web Session Cookie"}],
+      "confidence": "medium",
+      "rationale": "The attack procedure starts Chrome against the victim profile with a remote debugging port for cookie extraction; the launch event establishes the procedure but not the later cookie read by itself."
+    },
+    {
+      "file": "Credential Access/credaccess_kerberos_credcache_kcc.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1558.005", "name": "Ccache Files"}],
+      "confidence": "high",
+      "rationale": "kcc copy_cred_cache exports the macOS in-memory Kerberos credential cache to a ccache file."
+    },
+    {
+      "file": "Credential Access/credaccess_keychain_dumping_security.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1555.001", "name": "Keychain"}],
+      "confidence": "high",
+      "rationale": "security dump-keychain directly dumps the macOS Keychain."
+    },
+    {
+      "file": "Credential Access/credaccess_keychain_pwd_retrieval_security.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1555.001", "name": "Keychain"}],
+      "confidence": "high",
+      "rationale": "security find-generic-password -w requests a stored password from the macOS Keychain."
+    },
+    {
+      "file": "Credential Access/credaccess_phish_input_capture_applescript.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1056.002", "name": "GUI Input Capture"}],
+      "confidence": "high",
+      "rationale": "AppleScript presents a deceptive App Store password dialog with hidden input."
+    },
+    {
+      "file": "Credential Access/credaccess_systemkey_hexdump.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1003", "name": "OS Credential Dumping"}],
+      "confidence": "medium",
+      "rationale": "The capture reads /private/var/db/SystemKey, credential material used in macOS password-hash recovery; no current macOS sub-technique is narrower than the parent."
+    },
+    {
+      "file": "Credential Access/credaccess_tcc_bypass_sshd_scp_safari_cookies.json",
+      "decision": "mapping_candidate",
+      "techniques": [
+        {"id": "T1548.006", "name": "TCC Manipulation"},
+        {"id": "T1539", "name": "Steal Web Session Cookie"}
+      ],
+      "confidence": "medium",
+      "rationale": "The procedure deliberately uses loopback SSH/SCP to read a TCC-protected Safari cookie store, so both the TCC bypass and cookie acquisition are explicit.",
+      "multi_technique": true
+    },
+    {
+      "file": "Credential Access/credential_access_account_pwd_hash_read.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1003", "name": "OS Credential Dumping"}],
+      "confidence": "high",
+      "rationale": "defaults reads ShadowHashData from a local macOS account record. T1003.008 is not used because MITRE limits that sub-technique to Linux."
+    },
+    {
+      "file": "Defense Evasion/evasion_ads_safari_enable_develop_mode_and_allow_js_from_applevents.json",
+      "decision": "needs_review",
+      "techniques": [],
+      "confidence": null,
+      "rationale": "Enabling Safari's Develop menu and JavaScript from Apple Events is risky preparation, but it is not itself JXA execution, TCC manipulation, or a precise current ATT&CK behavior."
+    },
+    {
+      "file": "Defense Evasion/evasion_credaccess_set_webproxy_to_localhost.json",
+      "decision": "needs_review",
+      "techniques": [],
+      "confidence": null,
+      "rationale": "Setting a secure web proxy to localhost may support interception, but the configuration event alone does not prove Proxy or Adversary-in-the-Middle behavior."
+    },
+    {
+      "file": "Defense Evasion/evasion_deletion_quarantine_xattr.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1553.001", "name": "Gatekeeper Bypass"}],
+      "confidence": "high",
+      "rationale": "xattr -d com.apple.quarantine is an exact behavior listed by MITRE for Gatekeeper Bypass."
+    },
+    {
+      "file": "Defense Evasion/evasion_disable_securityupdates.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1685", "name": "Disable or Modify Tools"}],
+      "confidence": "high",
+      "rationale": "The command disables automatic installation of critical security updates; current MITRE T1685 explicitly includes preventing tools from updating and disrupting update mechanisms."
+    },
+    {
+      "file": "Defense Evasion/evasion_envar_modif_launchctl_dylib_home.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1574.006", "name": "Dynamic Linker Hijacking"}],
+      "confidence": "high",
+      "rationale": "launchctl sets DYLD_INSERT_LIBRARIES to an attacker-controlled dylib; MITRE explicitly identifies that macOS environment variable."
+    },
+    {
+      "file": "Defense Evasion/evasion_execution_electron_tcc_bypass_nodejs_childproc_osascript_apfell.json",
+      "decision": "mapping_candidate",
+      "techniques": [
+        {"id": "T1548.006", "name": "TCC Manipulation"},
+        {"id": "T1059.007", "name": "JavaScript"}
+      ],
+      "confidence": "high",
+      "rationale": "Slack/Electron is abused to inherit an already-approved application's TCC access and spawns osascript in JavaScript mode to execute downloaded JXA.",
+      "multi_technique": true
+    },
+    {
+      "file": "Defense Evasion/evasion_install_root_trust_certificate.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1553.004", "name": "Install Root Certificate"}],
+      "confidence": "high",
+      "rationale": "security add-trusted-cert installs a certificate as a trusted root in the system Keychain."
+    },
+    {
+      "file": "Defense Evasion/evasion_privesc_credaccess__persis_auth_modules_modif.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1556.003", "name": "Pluggable Authentication Modules"}],
+      "confidence": "high",
+      "rationale": "The telemetry records modification of /etc/pam.d/login, a PAM authentication configuration file."
+    },
+    {
+      "file": "Defense Evasion/evasion_remove_codesign.json",
+      "decision": "needs_review",
+      "techniques": [],
+      "confidence": null,
+      "rationale": "codesign --remove-signature removes a signature; it does not create or mimic a valid signature as Code Signing or Invalid Code Signature requires."
+    },
+    {
+      "file": "Defense Evasion/evasion_susp_zip_file_launchagent_for_office_sandbox_evasion.json",
+      "decision": "needs_review",
+      "techniques": [],
+      "confidence": null,
+      "rationale": "The capture only proves copies of suspicious ZIP files with Office-style names. It does not contain enough behavior to select a sandbox-evasion, masquerading, or Launch Agent technique safely."
+    },
+    {
+      "file": "Defense Evasion/evasion_tcc_bypass_tccdb_direct_modif_sqlite.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1548.006", "name": "TCC Manipulation"}],
+      "confidence": "high",
+      "rationale": "sqlite3 directly inserts an allow record into the user's TCC.db."
+    },
+    {
+      "file": "Defense Evasion/evasion_unloading_kext_kextunload.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1685", "name": "Disable or Modify Tools"}],
+      "confidence": "high",
+      "rationale": "kextunload explicitly unloads EndpointSecurity.kext, disabling an endpoint security component."
+    },
+    {
+      "file": "Discovery/discovery_memory_vmmap.json",
+      "decision": "needs_review",
+      "techniques": [],
+      "confidence": null,
+      "rationale": "vmmap inspects one known process's virtual-memory layout; this does not cleanly establish Process Discovery or credential access without additional context."
+    },
+    {
+      "file": "Discovery/discovery_security_sw_little_snitch.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1518.001", "name": "Security Software Discovery"}],
+      "confidence": "high",
+      "rationale": "The procedure searches for Little Snitch, a macOS host firewall and security product."
+    },
+    {
+      "file": "Discovery/discovery_system_profile_sw_vers.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1082", "name": "System Information Discovery"}],
+      "confidence": "high",
+      "rationale": "sw_vers and system_profiler collect operating-system and hardware profile information."
+    },
+    {
+      "file": "Discovery/discovery_users_and_groups_dscl.json",
+      "decision": "mapping_candidate",
+      "techniques": [
+        {"id": "T1087.001", "name": "Local Account"},
+        {"id": "T1069.002", "name": "Domain Groups"}
+      ],
+      "confidence": "high",
+      "rationale": "Separate dscl commands enumerate local users and read the domain's Domain Admins group.",
+      "multi_technique": true
+    },
+    {
+      "file": "Execution/execution_automator_workflow_template_jxa.json",
+      "decision": "mapping_candidate",
+      "techniques": [
+        {"id": "T1059.007", "name": "JavaScript"},
+        {"id": "T1059.004", "name": "Unix Shell"},
+        {"id": "T1105", "name": "Ingress Tool Transfer"}
+      ],
+      "confidence": "high",
+      "rationale": "The Automator JXA workflow launches a Unix shell that downloads remote content with curl and pipes it to bash.",
+      "multi_technique": true
+    },
+    {
+      "file": "Execution/execution_eggshell_default_tmp_path_base64_c2.json",
+      "decision": "needs_review",
+      "techniques": [],
+      "confidence": null,
+      "rationale": "The EggShell argument is base64-encoded C2 configuration. It is not transmitted data for T1132 and the single encoded configuration value is insufficient to assert T1027 without over-labeling."
+    },
+    {
+      "file": "Execution/execution_evasion_masquerading_and_hidden_file.json",
+      "decision": "mapping_candidate",
+      "techniques": [
+        {"id": "T1036", "name": "Masquerading"},
+        {"id": "T1564.001", "name": "Hidden Files and Directories"}
+      ],
+      "confidence": "high",
+      "rationale": "The executable /tmp/.xpcproxy uses a hidden dot-file name while imitating the legitimate macOS xpcproxy process name.",
+      "multi_technique": true
+    },
+    {
+      "file": "Execution/execution_pkg_preinstall_shell_script_file_proc.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1546.016", "name": "Installer Packages"}],
+      "confidence": "high",
+      "rationale": "A macOS Installer package triggers a preinstall shell script, the exact installer-script behavior covered by MITRE."
+    },
+    {
+      "file": "Execution/execution_scripting_jxa_osascript_apfell_dwnld.json",
+      "decision": "mapping_candidate",
+      "techniques": [
+        {"id": "T1059.007", "name": "JavaScript"},
+        {"id": "T1105", "name": "Ingress Tool Transfer"}
+      ],
+      "confidence": "high",
+      "rationale": "osascript runs JavaScript for Automation that downloads and evaluates a remote JavaScript payload.",
+      "multi_technique": true
+    },
+    {
+      "file": "Execution/execution_scripting_python.json",
+      "decision": "mapping_candidate",
+      "techniques": [
+        {"id": "T1059.006", "name": "Python"},
+        {"id": "T1027", "name": "Obfuscated Files or Information"}
+      ],
+      "confidence": "high",
+      "rationale": "Python executes a base64-encoded script supplied directly on the command line.",
+      "multi_technique": true
+    },
+    {
+      "file": "Execution/execution_suspicious_path_masquerading.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1036", "name": "Masquerading"}],
+      "confidence": "high",
+      "rationale": "An executable named ReportCrash runs from /Library/Logs rather than the legitimate system location."
+    },
+    {
+      "file": "Lateral Movement/lateral_movement_credaccess_kerberos_bifrost_procexec.json",
+      "decision": "needs_review",
+      "techniques": [],
+      "confidence": null,
+      "rationale": "The file mixes Bifrost ptt, ticket/cache dumping, askhash, and asktgt actions. T1558.005 supports the macOS ccache behaviors, but current MITRE limits T1550.003 Pass the Ticket to Windows; one file-level label would therefore be incomplete or platform-invalid."
+    },
+    {
+      "file": "Lateral Movement/lateral_movement_execution_reverse_shell.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1059.004", "name": "Unix Shell"}],
+      "confidence": "high",
+      "rationale": "sh launches a bash reverse shell using /dev/tcp. The folder's lateral-movement label does not justify adding a remote-services technique."
+    },
+    {
+      "file": "Lateral Movement/lateral_movement_prep_ssh_enabled.json",
+      "decision": "needs_review",
+      "techniques": [],
+      "confidence": null,
+      "rationale": "systemsetup enables Remote Login, but no SSH session or adversary use of the service is captured."
+    },
+    {
+      "file": "Lateral Movement/lateral_movement_ssh_from_python_procexec.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1021.004", "name": "SSH"}],
+      "confidence": "high",
+      "rationale": "The captured ssh command opens an SSH connection to another host."
+    },
+    {
+      "file": "Lateral Movement/lateral_movement_vpn_connection_cmdline.json",
+      "decision": "needs_review",
+      "techniques": [],
+      "confidence": null,
+      "rationale": "networksetup initiates a configured VPN connection from the host, but T1133 requires adversary use of an external-facing service to access or persist in the victim network. The event does not establish that direction or purpose."
+    },
+    {
+      "file": "Persistence/persistence_bashprofile_modify.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1546.004", "name": "Unix Shell Configuration Modification"}],
+      "confidence": "high",
+      "rationale": "The event modifies .zshenv, a shell startup configuration file used for triggered execution."
+    },
+    {
+      "file": "Persistence/persistence_calendar_event_action_procedure.json",
+      "decision": "needs_review",
+      "techniques": [],
+      "confidence": null,
+      "rationale": "The capture modifies Calendar event and plist files, but no current ATT&CK sub-technique precisely covers Calendar-triggered execution and the file events do not prove the trigger payload."
+    },
+    {
+      "file": "Persistence/persistence_create_local_account_hidden_logon.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1564.002", "name": "Hidden Users"}],
+      "confidence": "high",
+      "rationale": "dscl sets IsHidden=1 for the backdoor local user. The capture does not separately prove account creation."
+    },
+    {
+      "file": "Persistence/persistence_crontab_creation.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1053.003", "name": "Cron"}],
+      "confidence": "high",
+      "rationale": "crontab installs the attacker-controlled persistJob schedule."
+    },
+    {
+      "file": "Persistence/persistence_crontab_runtime.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1053.003", "name": "Cron"}],
+      "confidence": "high",
+      "rationale": "The sample captures the shell command executed by the cron persistence established for this procedure."
+    },
+    {
+      "file": "Persistence/persistence_docker_pref_modif_persistjxa.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1647", "name": "Plist File Modification"}],
+      "confidence": "high",
+      "rationale": "The event modifies com.apple.dock.plist; MITRE explicitly cites Dock plist modification as this technique."
+    },
+    {
+      "file": "Persistence/persistence_emond_process_execution.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1546.014", "name": "Emond"}],
+      "confidence": "high",
+      "rationale": "The capture records the command execution triggered by an emond persistence rule."
+    },
+    {
+      "file": "Persistence/persistence_emond_rules_filemod.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1546.014", "name": "Emond"}],
+      "confidence": "high",
+      "rationale": "The sample captures modification of files used to establish an emond rule."
+    },
+    {
+      "file": "Persistence/persistence_execution_hidden_launchd_childproc.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1564.001", "name": "Hidden Files and Directories"}],
+      "confidence": "high",
+      "rationale": "launchd executes /private/tmp/.xpcproxy, whose dot-prefixed filename is explicitly hidden. The capture does not distinguish Launch Agent from Launch Daemon configuration, so neither is added."
+    },
+    {
+      "file": "Persistence/persistence_execution_hidden_loginitem_creation_osascript.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1547.015", "name": "Login Items"}],
+      "confidence": "high",
+      "rationale": "AppleScript creates a login item with hidden:true, an exact Login Items persistence action."
+    },
+    {
+      "file": "Persistence/persistence_finder_plugin_sequence.json",
+      "decision": "needs_review",
+      "techniques": [],
+      "confidence": null,
+      "rationale": "pluginkit registers and enables a Finder-related plugin, but current ATT&CK has no precise Finder-plugin persistence sub-technique and Login Items does not cover plugin registration."
+    },
+    {
+      "file": "Persistence/persistence_launchagent_hidden_file.json",
+      "decision": "mapping_candidate",
+      "techniques": [
+        {"id": "T1543.001", "name": "Launch Agent"},
+        {"id": "T1564.001", "name": "Hidden Files and Directories"}
+      ],
+      "confidence": "high",
+      "rationale": "A dot-prefixed .espl.plist is created in the user's LaunchAgents directory, establishing both Launch Agent persistence and a hidden file.",
+      "multi_technique": true
+    },
+    {
+      "file": "Persistence/persistence_launchdaemon_file_creation.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1543.004", "name": "Launch Daemon"}],
+      "confidence": "high",
+      "rationale": "A plist is written to /Library/LaunchDaemons with elevated privileges."
+    },
+    {
+      "file": "Persistence/persistence_login_hook_process_execution.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1037.002", "name": "Login Hook"}],
+      "confidence": "high",
+      "rationale": "defaults writes a LoginHook script path into com.apple.loginwindow."
+    },
+    {
+      "file": "Persistence/persistence_login_plist_script_filemod.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1037.002", "name": "Login Hook"}],
+      "confidence": "medium",
+      "rationale": "The procedure captures modification of the root user's com.apple.loginwindow.plist for a login script; unlike the companion process sample, the file event does not expose the LoginHook key itself."
+    },
+    {
+      "file": "Persistence/persistence_periodic_job_fimemod.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1053", "name": "Scheduled Task/Job"}],
+      "confidence": "medium",
+      "rationale": "The event creates a script in /etc/periodic/daily, a recurring macOS scheduling mechanism. It is not labeled Cron because no crontab behavior is present."
+    },
+    {
+      "file": "Persistence/persistence_ssh_authorized_keys_filemod.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1098.004", "name": "SSH Authorized Keys"}],
+      "confidence": "high",
+      "rationale": "The sample modifies the user's .ssh/authorized_keys file."
+    },
+    {
+      "file": "Persistence/persistence_vim_plugin_filemod.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1546", "name": "Event Triggered Execution"}],
+      "confidence": "medium",
+      "rationale": "A malicious Vim plugin file is placed so code executes when Vim loads it; current ATT&CK has no narrower Vim startup sub-technique."
+    },
+    {
+      "file": "Privileges Elevation/privesc_evasion_CVE-2020-9934_fake_tccdb_home_envar_manip.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1548.006", "name": "TCC Manipulation"}],
+      "confidence": "high",
+      "rationale": "The procedure redirects HOME with launchctl, stops tccd, and edits an attacker-controlled TCC.db to grant access."
+    },
+    {
+      "file": "Privileges Elevation/privesc_evasion_sudoers_modification.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1548.003", "name": "Sudo and Sudo Caching"}],
+      "confidence": "high",
+      "rationale": "The sample modifies /etc/sudoers to change sudo authorization."
+    },
+    {
+      "file": "Privileges Elevation/privesc_evasion_tccp_bypass_apfs_mount_cve-2020-9771.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1548.006", "name": "TCC Manipulation"}],
+      "confidence": "high",
+      "rationale": "mount_apfs is used in a captured procedure that bypasses TCC protections through an APFS snapshot mount."
+    },
+    {
+      "file": "Privileges Elevation/privesc_execution_enable_root_account.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1098", "name": "Account Manipulation"}],
+      "confidence": "medium",
+      "rationale": "dsenableroot enables and sets credentials for the existing macOS root account. It manipulates an account rather than creating a new one."
+    },
+    {
+      "file": "Privileges Elevation/privesc_execution_setuid_chmod.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1548.001", "name": "Setuid and Setgid"}],
+      "confidence": "high",
+      "rationale": "chmod u+s directly adds the setuid bit to an executable."
+    },
+    {
+      "file": "Privileges Elevation/privesc_runas_admin_applescript.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1548.004", "name": "Elevated Execution with Prompt"}],
+      "confidence": "high",
+      "rationale": "AppleScript runs a shell command with administrator privileges, triggering the macOS elevation prompt."
+    },
+    {
+      "file": "Privileges Elevation/privesc_seauthtrampoline_authorizationexecutewith_privs.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1548.004", "name": "Elevated Execution with Prompt"}],
+      "confidence": "high",
+      "rationale": "security_authtrampoline invokes AuthorizationExecuteWithPrivileges-style prompted elevation to load a Launch Agent."
+    },
+    {
+      "file": "Privileges Elevation/privesc_user_added_to_admin_group.json",
+      "decision": "mapping_candidate",
+      "techniques": [{"id": "T1098.007", "name": "Additional Local or Domain Groups"}],
+      "confidence": "high",
+      "rationale": "dseditgroup adds the backdoor user to the local admin group."
+    }
+  ]
+}

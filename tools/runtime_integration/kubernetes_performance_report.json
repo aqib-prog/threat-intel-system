@@ -1,0 +1,199 @@
+{
+  "benchmark": "Card 5 log-analysis runtime integration",
+  "host": {
+    "python": "3.13.11",
+    "system": "Darwin",
+    "machine": "arm64"
+  },
+  "protocol": {
+    "repetitions": 9,
+    "warmups": 2,
+    "event_counts": [
+      10,
+      50,
+      250
+    ],
+    "api_character_limit": 100000,
+    "platform": "kubernetes",
+    "corpus": "complete Kubernetes audit NDJSON records; one ClusterRole create positive event per scenario"
+  },
+  "variants": {
+    "legacy": {
+      "variant": "legacy",
+      "platform": "kubernetes",
+      "runtime_inventory": {
+        "kubernetes_rule_count": 23,
+        "structured_rule_count": 0,
+        "raw_only_rule_count": 23
+      },
+      "scenarios": [
+        {
+          "event_count": 10,
+          "parsed_event_count": 23,
+          "input_bytes": 2674,
+          "matched_technique_count": 0,
+          "rule_evaluations": 529,
+          "evaluation_modes": {
+            "raw": 529
+          },
+          "parse_ms": {
+            "median": 0.364,
+            "p95": 0.529
+          },
+          "analysis_ms": {
+            "median": 0.452,
+            "p95": 0.469
+          },
+          "end_to_end_ms": {
+            "median": 0.832,
+            "p95": 1.068
+          }
+        },
+        {
+          "event_count": 50,
+          "parsed_event_count": 117,
+          "input_bytes": 13194,
+          "matched_technique_count": 0,
+          "rule_evaluations": 2691,
+          "evaluation_modes": {
+            "raw": 2691
+          },
+          "parse_ms": {
+            "median": 1.856,
+            "p95": 3.137
+          },
+          "analysis_ms": {
+            "median": 2.418,
+            "p95": 2.541
+          },
+          "end_to_end_ms": {
+            "median": 4.446,
+            "p95": 4.675
+          }
+        },
+        {
+          "event_count": 250,
+          "parsed_event_count": 583,
+          "input_bytes": 65944,
+          "matched_technique_count": 0,
+          "rule_evaluations": 13409,
+          "evaluation_modes": {
+            "raw": 13409
+          },
+          "parse_ms": {
+            "median": 9.62,
+            "p95": 10.011
+          },
+          "analysis_ms": {
+            "median": 12.73,
+            "p95": 13.101
+          },
+          "end_to_end_ms": {
+            "median": 22.295,
+            "p95": 33.162
+          }
+        }
+      ]
+    },
+    "integrated": {
+      "variant": "integrated",
+      "platform": "kubernetes",
+      "runtime_inventory": {
+        "kubernetes_rule_count": 50,
+        "structured_rule_count": 0,
+        "raw_only_rule_count": 50
+      },
+      "scenarios": [
+        {
+          "event_count": 10,
+          "parsed_event_count": 23,
+          "input_bytes": 2674,
+          "matched_technique_count": 1,
+          "rule_evaluations": 585,
+          "evaluation_modes": {
+            "raw": 585
+          },
+          "parse_ms": {
+            "median": 0.337,
+            "p95": 0.63
+          },
+          "analysis_ms": {
+            "median": 1.136,
+            "p95": 1.178
+          },
+          "end_to_end_ms": {
+            "median": 1.51,
+            "p95": 1.853
+          }
+        },
+        {
+          "event_count": 50,
+          "parsed_event_count": 117,
+          "input_bytes": 13194,
+          "matched_technique_count": 1,
+          "rule_evaluations": 2939,
+          "evaluation_modes": {
+            "raw": 2939
+          },
+          "parse_ms": {
+            "median": 1.896,
+            "p95": 2.037
+          },
+          "analysis_ms": {
+            "median": 5.271,
+            "p95": 5.374
+          },
+          "end_to_end_ms": {
+            "median": 7.193,
+            "p95": 7.538
+          }
+        },
+        {
+          "event_count": 250,
+          "parsed_event_count": 583,
+          "input_bytes": 65944,
+          "matched_technique_count": 1,
+          "rule_evaluations": 14585,
+          "evaluation_modes": {
+            "raw": 14585
+          },
+          "parse_ms": {
+            "median": 9.534,
+            "p95": 10.098
+          },
+          "analysis_ms": {
+            "median": 24.989,
+            "p95": 25.284
+          },
+          "end_to_end_ms": {
+            "median": 34.798,
+            "p95": 35.213
+          }
+        }
+      ]
+    }
+  },
+  "comparison": [
+    {
+      "event_count": 10,
+      "median_end_to_end_delta_ms": 0.678,
+      "median_end_to_end_change_percent": 81.49,
+      "raw_regex_evaluation_delta": 56,
+      "structured_evaluation_delta": 0
+    },
+    {
+      "event_count": 50,
+      "median_end_to_end_delta_ms": 2.747,
+      "median_end_to_end_change_percent": 61.79,
+      "raw_regex_evaluation_delta": 248,
+      "structured_evaluation_delta": 0
+    },
+    {
+      "event_count": 250,
+      "median_end_to_end_delta_ms": 12.503,
+      "median_end_to_end_change_percent": 56.08,
+      "raw_regex_evaluation_delta": 1176,
+      "structured_evaluation_delta": 0
+    }
+  ]
+}

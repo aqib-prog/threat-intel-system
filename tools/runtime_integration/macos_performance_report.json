@@ -1,0 +1,196 @@
+{
+  "benchmark": "Card 5 log-analysis runtime integration",
+  "host": {
+    "python": "3.13.11",
+    "system": "Darwin",
+    "machine": "arm64"
+  },
+  "protocol": {
+    "repetitions": 9,
+    "warmups": 2,
+    "event_counts": [
+      10,
+      50,
+      250
+    ],
+    "api_character_limit": 100000,
+    "platform": "macos",
+    "corpus": "complete macOS Elastic ECS process records; one /usr/bin/base64 -d positive event per scenario"
+  },
+  "variants": {
+    "legacy": {
+      "variant": "legacy",
+      "platform": "macos",
+      "runtime_inventory": {
+        "macos_rule_count": 32,
+        "structured_rule_count": 0,
+        "raw_only_rule_count": 32
+      },
+      "scenarios": [
+        {
+          "event_count": 10,
+          "input_bytes": 2998,
+          "matched_technique_count": 1,
+          "rule_evaluations": 320,
+          "evaluation_modes": {
+            "raw": 320
+          },
+          "parse_ms": {
+            "median": 0.434,
+            "p95": 0.657
+          },
+          "analysis_ms": {
+            "median": 10.175,
+            "p95": 10.312
+          },
+          "end_to_end_ms": {
+            "median": 10.769,
+            "p95": 10.889
+          }
+        },
+        {
+          "event_count": 50,
+          "input_bytes": 14958,
+          "matched_technique_count": 1,
+          "rule_evaluations": 1600,
+          "evaluation_modes": {
+            "raw": 1600
+          },
+          "parse_ms": {
+            "median": 2.35,
+            "p95": 3.263
+          },
+          "analysis_ms": {
+            "median": 50.842,
+            "p95": 51.345
+          },
+          "end_to_end_ms": {
+            "median": 53.269,
+            "p95": 53.641
+          }
+        },
+        {
+          "event_count": 250,
+          "input_bytes": 74758,
+          "matched_technique_count": 1,
+          "rule_evaluations": 8000,
+          "evaluation_modes": {
+            "raw": 8000
+          },
+          "parse_ms": {
+            "median": 12.245,
+            "p95": 12.8
+          },
+          "analysis_ms": {
+            "median": 253.322,
+            "p95": 253.966
+          },
+          "end_to_end_ms": {
+            "median": 267.05,
+            "p95": 279.298
+          }
+        }
+      ]
+    },
+    "integrated": {
+      "variant": "integrated",
+      "platform": "macos",
+      "runtime_inventory": {
+        "macos_rule_count": 67,
+        "structured_rule_count": 47,
+        "raw_only_rule_count": 20
+      },
+      "scenarios": [
+        {
+          "event_count": 10,
+          "input_bytes": 2998,
+          "matched_technique_count": 1,
+          "rule_evaluations": 670,
+          "evaluation_modes": {
+            "raw": 200,
+            "structured": 470
+          },
+          "parse_ms": {
+            "median": 0.43,
+            "p95": 0.71
+          },
+          "analysis_ms": {
+            "median": 8.01,
+            "p95": 8.199
+          },
+          "end_to_end_ms": {
+            "median": 8.538,
+            "p95": 8.915
+          }
+        },
+        {
+          "event_count": 50,
+          "input_bytes": 14958,
+          "matched_technique_count": 1,
+          "rule_evaluations": 3350,
+          "evaluation_modes": {
+            "raw": 1000,
+            "structured": 2350
+          },
+          "parse_ms": {
+            "median": 2.438,
+            "p95": 2.81
+          },
+          "analysis_ms": {
+            "median": 39.757,
+            "p95": 39.957
+          },
+          "end_to_end_ms": {
+            "median": 42.267,
+            "p95": 42.819
+          }
+        },
+        {
+          "event_count": 250,
+          "input_bytes": 74758,
+          "matched_technique_count": 1,
+          "rule_evaluations": 16750,
+          "evaluation_modes": {
+            "raw": 5000,
+            "structured": 11750
+          },
+          "parse_ms": {
+            "median": 12.417,
+            "p95": 12.939
+          },
+          "analysis_ms": {
+            "median": 198.59,
+            "p95": 198.971
+          },
+          "end_to_end_ms": {
+            "median": 211.314,
+            "p95": 212.296
+          }
+        }
+      ]
+    }
+  },
+  "comparison": [
+    {
+      "event_count": 10,
+      "median_end_to_end_delta_ms": -2.231,
+      "median_end_to_end_change_percent": -20.72,
+      "raw_regex_evaluation_delta": -120,
+      "structured_evaluation_delta": 470
+    },
+    {
+      "event_count": 50,
+      "median_end_to_end_delta_ms": -11.002,
+      "median_end_to_end_change_percent": -20.65,
+      "raw_regex_evaluation_delta": -600,
+      "structured_evaluation_delta": 2350
+    },
+    {
+      "event_count": 250,
+      "median_end_to_end_delta_ms": -55.736,
+      "median_end_to_end_change_percent": -20.87,
+      "raw_regex_evaluation_delta": -3000,
+      "structured_evaluation_delta": 11750
+    }
+  ]
+}

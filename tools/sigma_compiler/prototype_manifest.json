@@ -1,0 +1,55 @@
+{
+  "sigma_commit": "65b39fa48afc2739ed01df03ef61c68be995bb36",
+  "security_datasets_commit": "d9d40ef123d2c87d5d3df28c96bcab4f0faccc87",
+  "rules": [
+    "rules/windows/process_creation/proc_creation_win_regsvr32_network_pattern.yml",
+    "rules/windows/process_creation/proc_creation_win_instalutil_no_log_execution.yml",
+    "rules/windows/process_creation/proc_creation_win_uac_bypass_cmstp.yml",
+    "rules/windows/process_creation/proc_creation_win_ntdsutil_usage.yml",
+    "rules/windows/process_creation/proc_creation_win_auditpol_susp_execution.yml",
+    "rules/windows/process_creation/proc_creation_win_susp_eventlog_clear.yml",
+    "rules/windows/process_creation/proc_creation_win_bitsadmin_download.yml",
+    "rules/windows/process_creation/proc_creation_win_netsh_fw_add_rule.yml",
+    "rules/windows/process_creation/proc_creation_win_rundll32_process_dump_via_comsvcs.yml",
+    "rules/windows/process_creation/proc_creation_win_registry_logon_script.yml",
+    "rules/windows/process_creation/proc_creation_win_mshta_javascript.yml",
+    "rules/windows/process_creation/proc_creation_win_schtasks_creation.yml",
+    "rules/windows/process_creation/proc_creation_win_powershell_download_iex.yml",
+    "rules/windows/process_creation/proc_creation_win_wmic_susp_process_creation.yml",
+    "rules/windows/process_creation/proc_creation_win_ping_hex_ip.yml",
+    "rules/windows/process_creation/proc_creation_win_esentutl_params.yml"
+  ],
+  "validation_cases": [
+    {
+      "metadata": "datasets/atomic/_metadata/SDWIN-200721232741.yaml",
+      "rule": "proc_creation_win_regsvr32_network_pattern.yml",
+      "capture": "datasets/atomic/windows/defense_evasion/host/empire_launcher_sct_regsvr32.zip"
+    },
+    {
+      "metadata": "datasets/atomic/_metadata/SDWIN-191027223020.yaml",
+      "rule": "proc_creation_win_instalutil_no_log_execution.yml",
+      "capture": "datasets/atomic/windows/defense_evasion/host/covenant_installutil.zip"
+    },
+    {
+      "metadata": "datasets/atomic/_metadata/SDWIN-201018195009.yaml",
+      "rule": "proc_creation_win_rundll32_process_dump_via_comsvcs.yml",
+      "capture": "datasets/atomic/windows/credential_access/host/psh_lsass_memory_dump_comsvcs.zip"
+    },
+    {
+      "metadata": "datasets/atomic/_metadata/SDWIN-220705170038.yaml",
+      "rule": "proc_creation_win_susp_eventlog_clear.yml",
+      "capture": "datasets/atomic/windows/defense_evasion/host/cmd_wevtutil_modify_security_eventlog_path.zip"
+    },
+    {
+      "metadata": "datasets/atomic/_metadata/SDWIN-220630130349.yaml",
+      "rule": "proc_creation_win_auditpol_susp_execution.yml",
+      "capture": "datasets/atomic/windows/defense_evasion/host/auditpol_system_user_auditpolicy_modification.zip"
+    },
+    {
+      "metadata": "datasets/atomic/_metadata/SDWIN-230718151900.yaml",
+      "rule": "proc_creation_win_ntdsutil_usage.yml",
+      "capture": "datasets/atomic/windows/credential_access/host/cmd_dumping_ntds_dit_file_ntdsutil.zip"
+    }
+  ]
+}
+

@@ -1,0 +1,22 @@
+{
+  "security_datasets_commit": "d9d40ef123d2c87d5d3df28c96bcab4f0faccc87",
+  "platform": "linux",
+  "selection_policy": "Use every labeled Linux host capture present at the pinned Security-Datasets commit. The repository contains only two: one defense-evasion case and one discovery case. Selection was made from repository inventory without inspecting detector results.",
+  "tactic_quotas": {
+    "defense_evasion": 1,
+    "discovery": 1
+  },
+  "license_observation": "At the pinned commit LICENSE contains the MIT License, while README.md still says GPL-3.0. Captures stay in an external sparse checkout and are not redistributed here.",
+  "cases": [
+    {
+      "metadata": "datasets/atomic/_metadata/SDLIN-201110081941.yaml",
+      "capture": "datasets/atomic/linux/defense_evasion/host/sh_binary_padding_dd.zip",
+      "tactic": "defense_evasion"
+    },
+    {
+      "metadata": "datasets/atomic/_metadata/SDLIN-201110074812.yaml",
+      "capture": "datasets/atomic/linux/discovery/host/sh_arp_cache.zip",
+      "tactic": "discovery"
+    }
+  ]
+}

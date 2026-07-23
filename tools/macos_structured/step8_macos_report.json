@@ -1,0 +1,3912 @@
+{
+  "checkpoint": "Card 5 Part 1 roadmap step 8 Macos pilot only",
+  "corpus_name": "sbousseaden/macOS-ATTACK-DATASET",
+  "corpus_commit": "0315ec88d1f4b338c07315223bc6a53619465472",
+  "platform": "macos",
+  "selection_policy": "Use every review-approved mapping candidate that passes the deterministic macOS export parser. needs_review mappings and unparseable source files are listed but excluded from scoring. Selection occurs before detector results.",
+  "license_observation": "The upstream README links GNU GPL v3. Corpus telemetry remains in the external pinned checkout and is not redistributed in this repository.",
+  "rule_inventory": {
+    "total": 2156,
+    "by_origin": {
+      "falco_preview": 38,
+      "runtime": 288,
+      "sigma_preview": 1830
+    },
+    "by_platform": {
+      "aws": 76,
+      "kubernetes": 50,
+      "linux": 209,
+      "macos": 79,
+      "windows": 1742
+    },
+    "sigma_commit": "65b39fa48afc2739ed01df03ef61c68be995bb36",
+    "pysigma_version": "1.4.0",
+    "falco_commit": "819918d43a743de78398d0a6ecb75305beeacaaa",
+    "windows_structured_rule_count": 0,
+    "linux_structured_rule_count": 0,
+    "aws_structured_rule_count": 0,
+    "kubernetes_structured_rule_count": 0,
+    "macos_structured_rule_count": 47
+  },
+  "comparison_step5_baseline": {
+    "artifact": "tools/macos_structured/baseline_report.json",
+    "layer1_micro_strict_exact_id": {
+      "tp": 14,
+      "fp": 83,
+      "fn": 49,
+      "precision": 0.14432989690721648,
+      "recall": 0.2222222222222222,
+      "f1": 0.175
+    }
+  },
+  "corpus": {
+    "sample_count": 54,
+    "by_tactic": {
+      "collection": 3,
+      "credential_access": 9,
+      "defense_evasion": 8,
+      "discovery": 2,
+      "execution": 6,
+      "lateral_movement": 2,
+      "persistence": 16,
+      "privileges_elevation": 8
+    },
+    "uncompressed_bytes": 308652,
+    "parsed_event_count": 88,
+    "detector_gate_pass_count": 54
+  },
+  "metrics": {
+    "runtime_current": {
+      "sample_count": 54,
+      "micro_strict_exact_id": {
+        "tp": 8,
+        "fp": 12,
+        "fn": 55,
+        "precision": 0.4,
+        "recall": 0.12698412698412698,
+        "f1": 0.19277108433734938
+      },
+      "macro_strict_exact_id": {
+        "precision": 0.14814814814814814,
+        "recall": 0.12654320987654322,
+        "f1": 0.13271604938271606
+      },
+      "family_aware_diagnostic": {
+        "tp": 8,
+        "fp": 12,
+        "fn": 54,
+        "precision": 0.4,
+        "recall": 0.12903225806451613,
+        "f1": 0.1951219512195122
+      },
+      "samples_with_any_correct_prediction": 8,
+      "samples_with_exact_prediction_set": 6,
+      "confidence_buckets_disjoint": {
+        "high": {
+          "tp": 6,
+          "fp": 8,
+          "prediction_count": 14,
+          "precision": 0.42857142857142855,
+          "recall_contribution": 0.09523809523809523
+        },
+        "medium": {
+          "tp": 1,
+          "fp": 4,
+          "prediction_count": 5,
+          "precision": 0.2,
+          "recall_contribution": 0.015873015873015872
+        },
+        "low": {
+          "tp": 1,
+          "fp": 0,
+          "prediction_count": 1,
+          "precision": 1.0,
+          "recall_contribution": 0.015873015873015872
+        }
+      },
+      "confidence_thresholds_cumulative": {
+        "high_only": {
+          "tp": 6,
+          "fp": 8,
+          "fn": 57,
+          "precision": 0.42857142857142855,
+          "recall": 0.09523809523809523,
+          "f1": 0.15584415584415587
+        },
+        "high_and_medium": {
+          "tp": 7,
+          "fp": 12,
+          "fn": 56,
+          "precision": 0.3684210526315789,
+          "recall": 0.1111111111111111,
+          "f1": 0.17073170731707318
+        },
+        "all_confidences": {
+          "tp": 8,
+          "fp": 12,
+          "fn": 55,
+          "precision": 0.4,
+          "recall": 0.12698412698412698,
+          "f1": 0.19277108433734938
+        }
+      },
+      "by_tactic": {
+        "collection": {
+          "tp": 2,
+          "fp": 1,
+          "fn": 1,
+          "precision": 0.6666666666666666,
+          "recall": 0.6666666666666666,
+          "f1": 0.6666666666666666,
+          "sample_count": 3
+        },
+        "credential_access": {
+          "tp": 2,
+          "fp": 1,
+          "fn": 8,
+          "precision": 0.6666666666666666,
+          "recall": 0.2,
+          "f1": 0.30769230769230765,
+          "sample_count": 9
+        },
+        "defense_evasion": {
+          "tp": 1,
+          "fp": 2,
+          "fn": 8,
+          "precision": 0.3333333333333333,
+          "recall": 0.1111111111111111,
+          "f1": 0.16666666666666666,
+          "sample_count": 8
+        },
+        "discovery": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 3,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "sample_count": 2
+        },
+        "execution": {
+          "tp": 1,
+          "fp": 1,
+          "fn": 10,
+          "precision": 0.5,
+          "recall": 0.09090909090909091,
+          "f1": 0.15384615384615385,
+          "sample_count": 6
+        },
+        "lateral_movement": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "sample_count": 2
+        },
+        "persistence": {
+          "tp": 2,
+          "fp": 2,
+          "fn": 15,
+          "precision": 0.5,
+          "recall": 0.11764705882352941,
+          "f1": 0.19047619047619047,
+          "sample_count": 16
+        },
+        "privileges_elevation": {
+          "tp": 0,
+          "fp": 5,
+          "fn": 8,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "sample_count": 8
+        }
+      }
+    },
+    "layer1_preview": {
+      "sample_count": 54,
+      "micro_strict_exact_id": {
+        "tp": 14,
+        "fp": 83,
+        "fn": 49,
+        "precision": 0.14432989690721648,
+        "recall": 0.2222222222222222,
+        "f1": 0.175
+      },
+      "macro_strict_exact_id": {
+        "precision": 0.11265432098765432,
+        "recall": 0.22839506172839505,
+        "f1": 0.14691358024691362
+      },
+      "family_aware_diagnostic": {
+        "tp": 17,
+        "fp": 80,
+        "fn": 45,
+        "precision": 0.17525773195876287,
+        "recall": 0.27419354838709675,
+        "f1": 0.21383647798742136
+      },
+      "samples_with_any_correct_prediction": 14,
+      "samples_with_exact_prediction_set": 0,
+      "confidence_buckets_disjoint": {
+        "high": {
+          "tp": 6,
+          "fp": 8,
+          "prediction_count": 14,
+          "precision": 0.42857142857142855,
+          "recall_contribution": 0.09523809523809523
+        },
+        "medium": {
+          "tp": 5,
+          "fp": 5,
+          "prediction_count": 10,
+          "precision": 0.5,
+          "recall_contribution": 0.07936507936507936
+        },
+        "low": {
+          "tp": 3,
+          "fp": 70,
+          "prediction_count": 73,
+          "precision": 0.0410958904109589,
+          "recall_contribution": 0.047619047619047616
+        }
+      },
+      "confidence_thresholds_cumulative": {
+        "high_only": {
+          "tp": 6,
+          "fp": 8,
+          "fn": 57,
+          "precision": 0.42857142857142855,
+          "recall": 0.09523809523809523,
+          "f1": 0.15584415584415587
+        },
+        "high_and_medium": {
+          "tp": 11,
+          "fp": 13,
+          "fn": 52,
+          "precision": 0.4583333333333333,
+          "recall": 0.1746031746031746,
+          "f1": 0.2528735632183908
+        },
+        "all_confidences": {
+          "tp": 14,
+          "fp": 83,
+          "fn": 49,
+          "precision": 0.14432989690721648,
+          "recall": 0.2222222222222222,
+          "f1": 0.175
+        }
+      },
+      "by_tactic": {
+        "collection": {
+          "tp": 2,
+          "fp": 5,
+          "fn": 1,
+          "precision": 0.2857142857142857,
+          "recall": 0.6666666666666666,
+          "f1": 0.4,
+          "sample_count": 3
+        },
+        "credential_access": {
+          "tp": 3,
+          "fp": 14,
+          "fn": 7,
+          "precision": 0.17647058823529413,
+          "recall": 0.3,
+          "f1": 0.22222222222222224,
+          "sample_count": 9
+        },
+        "defense_evasion": {
+          "tp": 1,
+          "fp": 11,
+          "fn": 8,
+          "precision": 0.08333333333333333,
+          "recall": 0.1111111111111111,
+          "f1": 0.09523809523809525,
+          "sample_count": 8
+        },
+        "discovery": {
+          "tp": 2,
+          "fp": 3,
+          "fn": 1,
+          "precision": 0.4,
+          "recall": 0.6666666666666666,
+          "f1": 0.5,
+          "sample_count": 2
+        },
+        "execution": {
+          "tp": 1,
+          "fp": 8,
+          "fn": 10,
+          "precision": 0.1111111111111111,
+          "recall": 0.09090909090909091,
+          "f1": 0.09999999999999999,
+          "sample_count": 6
+        },
+        "lateral_movement": {
+          "tp": 0,
+          "fp": 2,
+          "fn": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "sample_count": 2
+        },
+        "persistence": {
+          "tp": 5,
+          "fp": 26,
+          "fn": 12,
+          "precision": 0.16129032258064516,
+          "recall": 0.29411764705882354,
+          "f1": 0.20833333333333331,
+          "sample_count": 16
+        },
+        "privileges_elevation": {
+          "tp": 0,
+          "fp": 14,
+          "fn": 8,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "sample_count": 8
+        }
+      }
+    },
+    "layer2_macos_preview": {
+      "sample_count": 54,
+      "micro_strict_exact_id": {
+        "tp": 14,
+        "fp": 16,
+        "fn": 49,
+        "precision": 0.4666666666666667,
+        "recall": 0.2222222222222222,
+        "f1": 0.3010752688172043
+      },
+      "macro_strict_exact_id": {
+        "precision": 0.24074074074074073,
+        "recall": 0.22839506172839505,
+        "f1": 0.22530864197530864
+      },
+      "family_aware_diagnostic": {
+        "tp": 15,
+        "fp": 15,
+        "fn": 47,
+        "precision": 0.5,
+        "recall": 0.24193548387096775,
+        "f1": 0.32608695652173914
+      },
+      "samples_with_any_correct_prediction": 14,
+      "samples_with_exact_prediction_set": 9,
+      "confidence_buckets_disjoint": {
+        "high": {
+          "tp": 6,
+          "fp": 8,
+          "prediction_count": 14,
+          "precision": 0.42857142857142855,
+          "recall_contribution": 0.09523809523809523
+        },
+        "medium": {
+          "tp": 5,
+          "fp": 5,
+          "prediction_count": 10,
+          "precision": 0.5,
+          "recall_contribution": 0.07936507936507936
+        },
+        "low": {
+          "tp": 3,
+          "fp": 3,
+          "prediction_count": 6,
+          "precision": 0.5,
+          "recall_contribution": 0.047619047619047616
+        }
+      },
+      "confidence_thresholds_cumulative": {
+        "high_only": {
+          "tp": 6,
+          "fp": 8,
+          "fn": 57,
+          "precision": 0.42857142857142855,
+          "recall": 0.09523809523809523,
+          "f1": 0.15584415584415587
+        },
+        "high_and_medium": {
+          "tp": 11,
+          "fp": 13,
+          "fn": 52,
+          "precision": 0.4583333333333333,
+          "recall": 0.1746031746031746,
+          "f1": 0.2528735632183908
+        },
+        "all_confidences": {
+          "tp": 14,
+          "fp": 16,
+          "fn": 49,
+          "precision": 0.4666666666666667,
+          "recall": 0.2222222222222222,
+          "f1": 0.3010752688172043
+        }
+      },
+      "by_tactic": {
+        "collection": {
+          "tp": 2,
+          "fp": 1,
+          "fn": 1,
+          "precision": 0.6666666666666666,
+          "recall": 0.6666666666666666,
+          "f1": 0.6666666666666666,
+          "sample_count": 3
+        },
+        "credential_access": {
+          "tp": 3,
+          "fp": 1,
+          "fn": 7,
+          "precision": 0.75,
+          "recall": 0.3,
+          "f1": 0.4285714285714285,
+          "sample_count": 9
+        },
+        "defense_evasion": {
+          "tp": 1,
+          "fp": 2,
+          "fn": 8,
+          "precision": 0.3333333333333333,
+          "recall": 0.1111111111111111,
+          "f1": 0.16666666666666666,
+          "sample_count": 8
+        },
+        "discovery": {
+          "tp": 2,
+          "fp": 0,
+          "fn": 1,
+          "precision": 1.0,
+          "recall": 0.6666666666666666,
+          "f1": 0.8,
+          "sample_count": 2
+        },
+        "execution": {
+          "tp": 1,
+          "fp": 2,
+          "fn": 10,
+          "precision": 0.3333333333333333,
+          "recall": 0.09090909090909091,
+          "f1": 0.14285714285714288,
+          "sample_count": 6
+        },
+        "lateral_movement": {
+          "tp": 0,
+          "fp": 0,
+          "fn": 2,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "sample_count": 2
+        },
+        "persistence": {
+          "tp": 5,
+          "fp": 5,
+          "fn": 12,
+          "precision": 0.5,
+          "recall": 0.29411764705882354,
+          "f1": 0.37037037037037035,
+          "sample_count": 16
+        },
+        "privileges_elevation": {
+          "tp": 0,
+          "fp": 5,
+          "fn": 8,
+          "precision": 0.0,
+          "recall": 0.0,
+          "f1": 0.0,
+          "sample_count": 8
+        }
+      }
+    }
+  },
+  "performance": {
+    "workers": 1,
+    "sum_case_elapsed_seconds": 0.138,
+    "prefilter_rejections": 6427,
+    "regex_searches": 202,
+    "structured_evaluations": 3884,
+    "raw_fallback_searches": 0
+  },
+  "cases": [
+    {
+      "metadata_id": "MACOS-ATTACK-001",
+      "title": "collection_clipboard_osascript_pbpast",
+      "tactic": "collection",
+      "capture": "Collection/collection_clipboard_osascript_pbpast.json",
+      "archive_member": "collection_clipboard_osascript_pbpast.json",
+      "uncompressed_bytes": 5038,
+      "ground_truth": [
+        "T1115"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 14,
+        "platform": "macos",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 3,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 2,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 144,
+      "regex_searches": 5,
+      "runtime_predictions": {
+        "T1059.002": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1059.002"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1059.002": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1059.002"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1059.002": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1059.002"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 89,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.01
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-002",
+      "title": "collection_discovery_bash_history_procexec",
+      "tactic": "collection",
+      "capture": "Collection/collection_discovery_bash_history_procexec.json",
+      "archive_member": "collection_discovery_bash_history_procexec.json",
+      "uncompressed_bytes": 7396,
+      "ground_truth": [
+        "T1552.003"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 12,
+        "platform": "macos",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "length": 2,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 2,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 142,
+      "regex_searches": 6,
+      "runtime_predictions": {
+        "T1552.003": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: proc_creation_macos_susp_histfile_operations.yml"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1552.003": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: proc_creation_macos_susp_histfile_operations.yml"
+          ],
+          "origins": [
+            "runtime",
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1552.003": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: proc_creation_macos_susp_histfile_operations.yml"
+          ],
+          "origins": [
+            "runtime",
+            "sigma_preview"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 89,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.004
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-003",
+      "title": "collection_screencapture_command_proc_file",
+      "tactic": "collection",
+      "capture": "Collection/collection_screencapture_command_proc_file.json",
+      "archive_member": "collection_screencapture_command_proc_file.json",
+      "uncompressed_bytes": 6418,
+      "ground_truth": [
+        "T1113"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 11,
+        "platform": "macos",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 2,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 144,
+      "regex_searches": 5,
+      "runtime_predictions": {
+        "T1113": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_screencapture.yml"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1113": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_screencapture.yml"
+          ],
+          "origins": [
+            "runtime",
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1113": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_screencapture.yml"
+          ],
+          "origins": [
+            "runtime",
+            "sigma_preview"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 87,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-004",
+      "title": "credaccess_browsers_cookies_access",
+      "tactic": "credential_access",
+      "capture": "Credential Access/credaccess_browsers_cookies_access.json",
+      "archive_member": "credaccess_browsers_cookies_access.json",
+      "uncompressed_bytes": 8579,
+      "ground_truth": [
+        "T1539"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 12,
+        "platform": "macos",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "length": 2,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 2,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 146,
+      "regex_searches": 4,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 90,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.003
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-005",
+      "title": "credaccess_cookies_crimes_chrome_debugging",
+      "tactic": "credential_access",
+      "capture": "Credential Access/credaccess_cookies_crimes_chrome_debugging.json",
+      "archive_member": "credaccess_cookies_crimes_chrome_debugging.json",
+      "uncompressed_bytes": 8710,
+      "ground_truth": [
+        "T1539"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 12,
+        "platform": "macos",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "length": 2,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 2,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 146,
+      "regex_searches": 4,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 90,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.003
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-006",
+      "title": "credaccess_kerberos_credcache_kcc",
+      "tactic": "credential_access",
+      "capture": "Credential Access/credaccess_kerberos_credcache_kcc.json",
+      "archive_member": "credaccess_kerberos_credcache_kcc.json",
+      "uncompressed_bytes": 3368,
+      "ground_truth": [
+        "T1558.005"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 74,
+      "regex_searches": 2,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-007",
+      "title": "credaccess_keychain_dumping_security",
+      "tactic": "credential_access",
+      "capture": "Credential Access/credaccess_keychain_dumping_security.json",
+      "archive_member": "credaccess_keychain_dumping_security.json",
+      "uncompressed_bytes": 2515,
+      "ground_truth": [
+        "T1555.001"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 1,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 72,
+      "regex_searches": 4,
+      "runtime_predictions": {
+        "T1555.001": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1555.001"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1555.001": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1555.001"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1555.001": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1555.001"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-008",
+      "title": "credaccess_keychain_pwd_retrieval_security",
+      "tactic": "credential_access",
+      "capture": "Credential Access/credaccess_keychain_pwd_retrieval_security.json",
+      "archive_member": "credaccess_keychain_pwd_retrieval_security.json",
+      "uncompressed_bytes": 3556,
+      "ground_truth": [
+        "T1555.001"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 10,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 1,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 73,
+      "regex_searches": 3,
+      "runtime_predictions": {
+        "T1555.001": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1555.001"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1555.001": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1555.001"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1555.001": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1555.001"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-009",
+      "title": "credaccess_phish_input_capture_applescript",
+      "tactic": "credential_access",
+      "capture": "Credential Access/credaccess_phish_input_capture_applescript.json",
+      "archive_member": "credaccess_phish_input_capture_applescript.json",
+      "uncompressed_bytes": 3740,
+      "ground_truth": [
+        "T1056.002"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 12,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 3,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 71,
+      "regex_searches": 5,
+      "runtime_predictions": {
+        "T1059.002": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1059.002"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1056.002": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_gui_input_capture.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1059.002": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1059.002"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1056.002": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_gui_input_capture.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1059.002": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1059.002"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-010",
+      "title": "credaccess_systemkey_hexdump",
+      "tactic": "credential_access",
+      "capture": "Credential Access/credaccess_systemkey_hexdump.json",
+      "archive_member": "credaccess_systemkey_hexdump.json",
+      "uncompressed_bytes": 4031,
+      "ground_truth": [
+        "T1003"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 74,
+      "regex_searches": 2,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-011",
+      "title": "credaccess_tcc_bypass_sshd_scp_safari_cookies",
+      "tactic": "credential_access",
+      "capture": "Credential Access/credaccess_tcc_bypass_sshd_scp_safari_cookies.json",
+      "archive_member": "credaccess_tcc_bypass_sshd_scp_safari_cookies.json",
+      "uncompressed_bytes": 7245,
+      "ground_truth": [
+        "T1539",
+        "T1548.006"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 12,
+        "platform": "macos",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "length": 2,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 2,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 146,
+      "regex_searches": 4,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 90,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.003
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-012",
+      "title": "credential_access_account_pwd_hash_read",
+      "tactic": "credential_access",
+      "capture": "Credential Access/credential_access_account_pwd_hash_read.json",
+      "archive_member": "credential_access_account_pwd_hash_read.json",
+      "uncompressed_bytes": 3243,
+      "ground_truth": [
+        "T1003"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 73,
+      "regex_searches": 3,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-013",
+      "title": "evasion_deletion_quarantine_xattr",
+      "tactic": "defense_evasion",
+      "capture": "Defense Evasion/evasion_deletion_quarantine_xattr.json",
+      "archive_member": "evasion_deletion_quarantine_xattr.json",
+      "uncompressed_bytes": 2628,
+      "ground_truth": [
+        "T1553.001"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 12,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 3,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 72,
+      "regex_searches": 4,
+      "runtime_predictions": {
+        "T1553.001": {
+          "confidence": "high",
+          "sources": [
+            "Sigma: macos_gatekeeper_bypass"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1553.001": {
+          "confidence": "high",
+          "sources": [
+            "Sigma: macos_gatekeeper_bypass"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1553.001": {
+          "confidence": "high",
+          "sources": [
+            "Sigma: macos_gatekeeper_bypass"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-014",
+      "title": "evasion_disable_securityupdates",
+      "tactic": "defense_evasion",
+      "capture": "Defense Evasion/evasion_disable_securityupdates.json",
+      "archive_member": "evasion_disable_securityupdates.json",
+      "uncompressed_bytes": 2752,
+      "ground_truth": [
+        "T1685"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 72,
+      "regex_searches": 4,
+      "runtime_predictions": {
+        "T1647": {
+          "confidence": "medium",
+          "sources": [
+            "MITRE ATT&CK T1647"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1647": {
+          "confidence": "medium",
+          "sources": [
+            "MITRE ATT&CK T1647"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1647": {
+          "confidence": "medium",
+          "sources": [
+            "MITRE ATT&CK T1647"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-015",
+      "title": "evasion_envar_modif_launchctl_dylib_home",
+      "tactic": "defense_evasion",
+      "capture": "Defense Evasion/evasion_envar_modif_launchctl_dylib_home.json",
+      "archive_member": "evasion_envar_modif_launchctl_dylib_home.json",
+      "uncompressed_bytes": 10530,
+      "ground_truth": [
+        "T1574.006"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 15,
+        "platform": "macos",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "length": 2,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 3,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 3,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 222,
+      "regex_searches": 4,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 135,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.004
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-016",
+      "title": "evasion_execution_electron_tcc_bypass_nodejs_childproc_osascript_apfell",
+      "tactic": "defense_evasion",
+      "capture": "Defense Evasion/evasion_execution_electron_tcc_bypass_nodejs_childproc_osascript_apfell.json",
+      "archive_member": "evasion_execution_electron_tcc_bypass_nodejs_childproc_osascript_apfell.json",
+      "uncompressed_bytes": 4872,
+      "ground_truth": [
+        "T1059.007",
+        "T1548.006"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 12,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 2,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 73,
+      "regex_searches": 3,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-017",
+      "title": "evasion_install_root_trust_certificate",
+      "tactic": "defense_evasion",
+      "capture": "Defense Evasion/evasion_install_root_trust_certificate.json",
+      "archive_member": "evasion_install_root_trust_certificate.json",
+      "uncompressed_bytes": 2773,
+      "ground_truth": [
+        "T1553.004"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 74,
+      "regex_searches": 2,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.001
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-018",
+      "title": "evasion_privesc_credaccess__persis_auth_modules_modif",
+      "tactic": "defense_evasion",
+      "capture": "Defense Evasion/evasion_privesc_credaccess__persis_auth_modules_modif.json",
+      "archive_member": "evasion_privesc_credaccess__persis_auth_modules_modif.json",
+      "uncompressed_bytes": 3355,
+      "ground_truth": [
+        "T1556.003"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 8,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 74,
+      "regex_searches": 2,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 43,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.001
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-019",
+      "title": "evasion_tcc_bypass_tccdb_direct_modif_sqlite",
+      "tactic": "defense_evasion",
+      "capture": "Defense Evasion/evasion_tcc_bypass_tccdb_direct_modif_sqlite.json",
+      "archive_member": "evasion_tcc_bypass_tccdb_direct_modif_sqlite.json",
+      "uncompressed_bytes": 2812,
+      "ground_truth": [
+        "T1548.006"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 11,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 72,
+      "regex_searches": 4,
+      "runtime_predictions": {
+        "T1685": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: macos_tcc_database_tampering"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1685": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: macos_tcc_database_tampering"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1685": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: macos_tcc_database_tampering"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-020",
+      "title": "evasion_unloading_kext_kextunload",
+      "tactic": "defense_evasion",
+      "capture": "Defense Evasion/evasion_unloading_kext_kextunload.json",
+      "archive_member": "evasion_unloading_kext_kextunload.json",
+      "uncompressed_bytes": 3703,
+      "ground_truth": [
+        "T1685"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 74,
+      "regex_searches": 2,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-021",
+      "title": "discovery_security_sw_little_snitch",
+      "tactic": "discovery",
+      "capture": "Discovery/discovery_security_sw_little_snitch.json",
+      "archive_member": "discovery_security_sw_little_snitch.json",
+      "uncompressed_bytes": 3120,
+      "ground_truth": [
+        "T1518.001"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 73,
+      "regex_searches": 3,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1518.001": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: proc_creation_macos_security_software_discovery.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1518.001": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: proc_creation_macos_security_software_discovery.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-022",
+      "title": "discovery_users_and_groups_dscl",
+      "tactic": "discovery",
+      "capture": "Discovery/discovery_users_and_groups_dscl.json",
+      "archive_member": "discovery_users_and_groups_dscl.json",
+      "uncompressed_bytes": 8452,
+      "ground_truth": [
+        "T1069.002",
+        "T1087.001"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 14,
+        "platform": "macos",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 3,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 2,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 145,
+      "regex_searches": 5,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1136.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_create_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 90,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.003
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-023",
+      "title": "execution_automator_workflow_template_jxa",
+      "tactic": "execution",
+      "capture": "Execution/execution_automator_workflow_template_jxa.json",
+      "archive_member": "execution_automator_workflow_template_jxa.json",
+      "uncompressed_bytes": 11748,
+      "ground_truth": [
+        "T1059.004",
+        "T1059.007",
+        "T1105"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 12,
+        "platform": "macos",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "length": 2,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 4,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 295,
+      "regex_searches": 6,
+      "runtime_predictions": {
+        "T1105": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1105"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1105": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1105"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1105": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1105"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 176,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.005
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-024",
+      "title": "execution_evasion_masquerading_and_hidden_file",
+      "tactic": "execution",
+      "capture": "Execution/execution_evasion_masquerading_and_hidden_file.json",
+      "archive_member": "execution_evasion_masquerading_and_hidden_file.json",
+      "uncompressed_bytes": 3222,
+      "ground_truth": [
+        "T1036",
+        "T1564.001"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 74,
+      "regex_searches": 2,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-025",
+      "title": "execution_pkg_preinstall_shell_script_file_proc",
+      "tactic": "execution",
+      "capture": "Execution/execution_pkg_preinstall_shell_script_file_proc.json",
+      "archive_member": "execution_pkg_preinstall_shell_script_file_proc.json",
+      "uncompressed_bytes": 13157,
+      "ground_truth": [
+        "T1546.016"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 15,
+        "platform": "macos",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "length": 2,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 3,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 4,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 294,
+      "regex_searches": 7,
+      "runtime_predictions": {
+        "T1059.002": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1059.002"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1059.002": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1059.002"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1059.002": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1059.002"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 178,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.005
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-026",
+      "title": "execution_scripting_jxa_osascript_apfell_dwnld",
+      "tactic": "execution",
+      "capture": "Execution/execution_scripting_jxa_osascript_apfell_dwnld.json",
+      "archive_member": "execution_scripting_jxa_osascript_apfell_dwnld.json",
+      "uncompressed_bytes": 3637,
+      "ground_truth": [
+        "T1059.007",
+        "T1105"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 13,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 2,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 3,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 72,
+      "regex_searches": 4,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1059.002": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: proc_creation_macos_applescript.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1059.002": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: proc_creation_macos_applescript.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-027",
+      "title": "execution_scripting_python",
+      "tactic": "execution",
+      "capture": "Execution/execution_scripting_python.json",
+      "archive_member": "execution_scripting_python.json",
+      "uncompressed_bytes": 10880,
+      "ground_truth": [
+        "T1027",
+        "T1059.006"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 12,
+        "platform": "macos",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "length": 2,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 2,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 147,
+      "regex_searches": 4,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 90,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.005
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-028",
+      "title": "execution_suspicious_path_masquerading",
+      "tactic": "execution",
+      "capture": "Execution/execution_suspicious_path_masquerading.json",
+      "archive_member": "execution_suspicious_path_masquerading.json",
+      "uncompressed_bytes": 2703,
+      "ground_truth": [
+        "T1036"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 74,
+      "regex_searches": 2,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.001
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-029",
+      "title": "lateral_movement_execution_reverse_shell",
+      "tactic": "lateral_movement",
+      "capture": "Lateral Movement/lateral_movement_execution_reverse_shell.json",
+      "archive_member": "lateral_movement_execution_reverse_shell.json",
+      "uncompressed_bytes": 2557,
+      "ground_truth": [
+        "T1059.004"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 74,
+      "regex_searches": 2,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.001
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-030",
+      "title": "lateral_movement_ssh_from_python_procexec",
+      "tactic": "lateral_movement",
+      "capture": "Lateral Movement/lateral_movement_ssh_from_python_procexec.json",
+      "archive_member": "lateral_movement_ssh_from_python_procexec.json",
+      "uncompressed_bytes": 3683,
+      "ground_truth": [
+        "T1021.004"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 74,
+      "regex_searches": 2,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-031",
+      "title": "persistence_bashprofile_modify",
+      "tactic": "persistence",
+      "capture": "Persistence/persistence_bashprofile_modify.json",
+      "archive_member": "persistence_bashprofile_modify.json",
+      "uncompressed_bytes": 2619,
+      "ground_truth": [
+        "T1546.004"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 11,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 72,
+      "regex_searches": 4,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 43,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.001
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-032",
+      "title": "persistence_create_local_account_hidden_logon",
+      "tactic": "persistence",
+      "capture": "Persistence/persistence_create_local_account_hidden_logon.json",
+      "archive_member": "persistence_create_local_account_hidden_logon.json",
+      "uncompressed_bytes": 2573,
+      "ground_truth": [
+        "T1564.002"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 12,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 3,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 71,
+      "regex_searches": 5,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1136.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_create_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1564.002": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: proc_creation_macos_create_hidden_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1136.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_create_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1564.002": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: proc_creation_macos_create_hidden_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-033",
+      "title": "persistence_crontab_creation",
+      "tactic": "persistence",
+      "capture": "Persistence/persistence_crontab_creation.json",
+      "archive_member": "persistence_crontab_creation.json",
+      "uncompressed_bytes": 2523,
+      "ground_truth": [
+        "T1053.003"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 8,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 73,
+      "regex_searches": 3,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1053.003": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: proc_creation_macos_schedule_task_job_cron.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1053.003": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: proc_creation_macos_schedule_task_job_cron.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.001
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-034",
+      "title": "persistence_crontab_runtime",
+      "tactic": "persistence",
+      "capture": "Persistence/persistence_crontab_runtime.json",
+      "archive_member": "persistence_crontab_runtime.json",
+      "uncompressed_bytes": 3474,
+      "ground_truth": [
+        "T1053.003"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 74,
+      "regex_searches": 2,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-035",
+      "title": "persistence_docker_pref_modif_persistjxa",
+      "tactic": "persistence",
+      "capture": "Persistence/persistence_docker_pref_modif_persistjxa.json",
+      "archive_member": "persistence_docker_pref_modif_persistjxa.json",
+      "uncompressed_bytes": 2356,
+      "ground_truth": [
+        "T1647"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 10,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 72,
+      "regex_searches": 4,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 43,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.001
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-036",
+      "title": "persistence_emond_process_execution",
+      "tactic": "persistence",
+      "capture": "Persistence/persistence_emond_process_execution.json",
+      "archive_member": "persistence_emond_process_execution.json",
+      "uncompressed_bytes": 43864,
+      "ground_truth": [
+        "T1546.014"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 12,
+        "platform": "macos",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "length": 2,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 10,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 733,
+      "regex_searches": 12,
+      "runtime_predictions": {
+        "T1105": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1105"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1105": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1105"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1105": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1105"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 426,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.012
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-037",
+      "title": "persistence_emond_rules_filemod",
+      "tactic": "persistence",
+      "capture": "Persistence/persistence_emond_rules_filemod.json",
+      "archive_member": "persistence_emond_rules_filemod.json",
+      "uncompressed_bytes": 19100,
+      "ground_truth": [
+        "T1546.014"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 12,
+        "platform": "macos",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "length": 2,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 5,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 365,
+      "regex_searches": 7,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1546.014": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: file_event_macos_emond_launch_daemon.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1546.014": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: file_event_macos_emond_launch_daemon.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 211,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.005
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-038",
+      "title": "persistence_execution_hidden_launchd_childproc",
+      "tactic": "persistence",
+      "capture": "Persistence/persistence_execution_hidden_launchd_childproc.json",
+      "archive_member": "persistence_execution_hidden_launchd_childproc.json",
+      "uncompressed_bytes": 8729,
+      "ground_truth": [
+        "T1564.001"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 11,
+        "platform": "macos",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 2,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 148,
+      "regex_searches": 3,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 87,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.003
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-039",
+      "title": "persistence_execution_hidden_loginitem_creation_osascript",
+      "tactic": "persistence",
+      "capture": "Persistence/persistence_execution_hidden_loginitem_creation_osascript.json",
+      "archive_member": "persistence_execution_hidden_loginitem_creation_osascript.json",
+      "uncompressed_bytes": 3978,
+      "ground_truth": [
+        "T1547.015"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 13,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 2,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 3,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 72,
+      "regex_searches": 4,
+      "runtime_predictions": {
+        "T1059.002": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1059.002"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1059.002": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1059.002"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1059.002": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1059.002"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-040",
+      "title": "persistence_launchagent_hidden_file",
+      "tactic": "persistence",
+      "capture": "Persistence/persistence_launchagent_hidden_file.json",
+      "archive_member": "persistence_launchagent_hidden_file.json",
+      "uncompressed_bytes": 2642,
+      "ground_truth": [
+        "T1543.001",
+        "T1564.001"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 11,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 72,
+      "regex_searches": 4,
+      "runtime_predictions": {
+        "T1543.001": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1543.001"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1543.001": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1543.001"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1543.001": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1543.001"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 43,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-041",
+      "title": "persistence_launchdaemon_file_creation",
+      "tactic": "persistence",
+      "capture": "Persistence/persistence_launchdaemon_file_creation.json",
+      "archive_member": "persistence_launchdaemon_file_creation.json",
+      "uncompressed_bytes": 2686,
+      "ground_truth": [
+        "T1543.004"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 10,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 1,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 73,
+      "regex_searches": 3,
+      "runtime_predictions": {
+        "T1543.004": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1543.004"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1543.004": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1543.004"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1543.004": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1543.004"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 43,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.001
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-042",
+      "title": "persistence_login_hook_process_execution",
+      "tactic": "persistence",
+      "capture": "Persistence/persistence_login_hook_process_execution.json",
+      "archive_member": "persistence_login_hook_process_execution.json",
+      "uncompressed_bytes": 3359,
+      "ground_truth": [
+        "T1037.002"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 73,
+      "regex_searches": 3,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-043",
+      "title": "persistence_login_plist_script_filemod",
+      "tactic": "persistence",
+      "capture": "Persistence/persistence_login_plist_script_filemod.json",
+      "archive_member": "persistence_login_plist_script_filemod.json",
+      "uncompressed_bytes": 2392,
+      "ground_truth": [
+        "T1037.002"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 8,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 74,
+      "regex_searches": 2,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 43,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.001
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-044",
+      "title": "persistence_periodic_job_fimemod",
+      "tactic": "persistence",
+      "capture": "Persistence/persistence_periodic_job_fimemod.json",
+      "archive_member": "persistence_periodic_job_fimemod.json",
+      "uncompressed_bytes": 2682,
+      "ground_truth": [
+        "T1053"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 74,
+      "regex_searches": 2,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 43,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.001
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-045",
+      "title": "persistence_ssh_authorized_keys_filemod",
+      "tactic": "persistence",
+      "capture": "Persistence/persistence_ssh_authorized_keys_filemod.json",
+      "archive_member": "persistence_ssh_authorized_keys_filemod.json",
+      "uncompressed_bytes": 7662,
+      "ground_truth": [
+        "T1098.004"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 11,
+        "platform": "macos",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 2,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 146,
+      "regex_searches": 4,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 86,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-046",
+      "title": "persistence_vim_plugin_filemod",
+      "tactic": "persistence",
+      "capture": "Persistence/persistence_vim_plugin_filemod.json",
+      "archive_member": "persistence_vim_plugin_filemod.json",
+      "uncompressed_bytes": 2511,
+      "ground_truth": [
+        "T1546"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 73,
+      "regex_searches": 3,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 43,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-047",
+      "title": "privesc_evasion_CVE-2020-9934_fake_tccdb_home_envar_manip",
+      "tactic": "privileges_elevation",
+      "capture": "Privileges Elevation/privesc_evasion_CVE-2020-9934_fake_tccdb_home_envar_manip.json",
+      "archive_member": "privesc_evasion_CVE-2020-9934_fake_tccdb_home_envar_manip.json",
+      "uncompressed_bytes": 13321,
+      "ground_truth": [
+        "T1548.006"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 15,
+        "platform": "macos",
+        "signals": {
+          "multiline": 2,
+          "kv_density": 2,
+          "length": 2,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 3,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 4,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 292,
+      "regex_searches": 6,
+      "runtime_predictions": {
+        "T1685": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: macos_tcc_database_tampering"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1685": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: macos_tcc_database_tampering"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1685": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: macos_tcc_database_tampering"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 178,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.005
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-048",
+      "title": "privesc_evasion_sudoers_modification",
+      "tactic": "privileges_elevation",
+      "capture": "Privileges Elevation/privesc_evasion_sudoers_modification.json",
+      "archive_member": "privesc_evasion_sudoers_modification.json",
+      "uncompressed_bytes": 2307,
+      "ground_truth": [
+        "T1548.003"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 8,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 74,
+      "regex_searches": 2,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 43,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.001
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-049",
+      "title": "privesc_evasion_tccp_bypass_apfs_mount_cve-2020-9771",
+      "tactic": "privileges_elevation",
+      "capture": "Privileges Elevation/privesc_evasion_tccp_bypass_apfs_mount_cve-2020-9771.json",
+      "archive_member": "privesc_evasion_tccp_bypass_apfs_mount_cve-2020-9771.json",
+      "uncompressed_bytes": 2826,
+      "ground_truth": [
+        "T1548.006"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 74,
+      "regex_searches": 2,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.001
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-050",
+      "title": "privesc_execution_enable_root_account",
+      "tactic": "privileges_elevation",
+      "capture": "Privileges Elevation/privesc_execution_enable_root_account.json",
+      "archive_member": "privesc_execution_enable_root_account.json",
+      "uncompressed_bytes": 3278,
+      "ground_truth": [
+        "T1098"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 74,
+      "regex_searches": 2,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-051",
+      "title": "privesc_execution_setuid_chmod",
+      "tactic": "privileges_elevation",
+      "capture": "Privileges Elevation/privesc_execution_setuid_chmod.json",
+      "archive_member": "privesc_execution_setuid_chmod.json",
+      "uncompressed_bytes": 3297,
+      "ground_truth": [
+        "T1548.001"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 74,
+      "regex_searches": 2,
+      "runtime_predictions": {},
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {},
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-052",
+      "title": "privesc_runas_admin_applescript",
+      "tactic": "privileges_elevation",
+      "capture": "Privileges Elevation/privesc_runas_admin_applescript.json",
+      "archive_member": "privesc_runas_admin_applescript.json",
+      "uncompressed_bytes": 2762,
+      "ground_truth": [
+        "T1548.004"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 12,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 3,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 71,
+      "regex_searches": 5,
+      "runtime_predictions": {
+        "T1059.002": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1059.002"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1059.002": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1059.002"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1059.002": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1059.002"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-053",
+      "title": "privesc_seauthtrampoline_authorizationexecutewith_privs",
+      "tactic": "privileges_elevation",
+      "capture": "Privileges Elevation/privesc_seauthtrampoline_authorizationexecutewith_privs.json",
+      "archive_member": "privesc_seauthtrampoline_authorizationexecutewith_privs.json",
+      "uncompressed_bytes": 3616,
+      "ground_truth": [
+        "T1548.004"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 12,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "platform_macos": 3,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 71,
+      "regex_searches": 5,
+      "runtime_predictions": {
+        "T1543.001": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1543.001"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        },
+        "T1569.001": {
+          "confidence": "high",
+          "sources": [
+            "GTFOBins-style LOLBin: launchctl"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1087.001": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_local_account.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1543.001": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1543.001"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        },
+        "T1569.001": {
+          "confidence": "high",
+          "sources": [
+            "GTFOBins-style LOLBin: launchctl"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1543.001": {
+          "confidence": "high",
+          "sources": [
+            "Atomic Red Team T1543.001"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        },
+        "T1569.001": {
+          "confidence": "high",
+          "sources": [
+            "GTFOBins-style LOLBin: launchctl"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    },
+    {
+      "metadata_id": "MACOS-ATTACK-054",
+      "title": "privesc_user_added_to_admin_group",
+      "tactic": "privileges_elevation",
+      "capture": "Privileges Elevation/privesc_user_added_to_admin_group.json",
+      "archive_member": "privesc_user_added_to_admin_group.json",
+      "uncompressed_bytes": 3672,
+      "ground_truth": [
+        "T1098.007"
+      ],
+      "detector": {
+        "is_raw_log": true,
+        "score": 9,
+        "platform": "macos",
+        "signals": {
+          "multiline": 1,
+          "kv_density": 1,
+          "length": 1,
+          "timestamps": 1,
+          "json_shape": 2,
+          "macos_json_schema": 3
+        }
+      },
+      "parsed_event_count": 1,
+      "eligible_rule_count": 79,
+      "unique_pattern_count": 76,
+      "prefilter_rejections": 72,
+      "regex_searches": 4,
+      "runtime_predictions": {
+        "T1078.003": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: proc_creation_macos_dseditgroup_add_to_admin_group.yml"
+          ],
+          "origins": [
+            "runtime"
+          ]
+        }
+      },
+      "expanded_predictions": {
+        "T1036.006": {
+          "confidence": "low",
+          "sources": [
+            "Sigma: proc_creation_macos_space_after_filename.yml"
+          ],
+          "origins": [
+            "sigma_preview"
+          ]
+        },
+        "T1078.003": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: proc_creation_macos_dseditgroup_add_to_admin_group.yml"
+          ],
+          "origins": [
+            "runtime",
+            "sigma_preview"
+          ]
+        }
+      },
+      "layer2_predictions": {
+        "T1078.003": {
+          "confidence": "medium",
+          "sources": [
+            "Sigma: proc_creation_macos_dseditgroup_add_to_admin_group.yml"
+          ],
+          "origins": [
+            "runtime",
+            "sigma_preview"
+          ]
+        }
+      },
+      "structured_rule_count": 47,
+      "structured_evaluations": 45,
+      "raw_fallback_searches": 0,
+      "elapsed_seconds": 0.002
+    }
+  ]
+}

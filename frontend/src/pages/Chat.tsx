@@ -66,6 +66,7 @@ export function Chat() {
       isMock,
       answerSource: data.answer_source,
       logEvidence: data.log_evidence,
+      groundedIds: data.grounded_ids,
     };
     append(assistantMessage);
     setPending(false);

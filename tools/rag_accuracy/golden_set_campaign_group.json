@@ -1,0 +1,3876 @@
+{
+  "extraction_audit": {
+    "bundle_attributed_to_relationship_count": 26,
+    "inactive_or_dangling_attributed_to_relationship_count": 0,
+    "selected_path_count": 26
+  },
+  "global_coverage": {
+    "active_attributed_to_relationship_count": 26,
+    "active_campaign_count": 56,
+    "active_group_count": 174,
+    "campaigns_with_multiple_attributed_groups": 1,
+    "campaigns_with_one_attributed_group": 24,
+    "campaigns_with_zero_attributed_groups": 31
+  },
+  "negative_selection": {
+    "all_cases_verified_absent_by_extracted_path_set": true,
+    "method": "preserve the verified prototype negative, then choose nine evenly spaced positive-attribution campaigns and select an active probe group having no attributed-to relationship"
+  },
+  "pairs": [
+    {
+      "campaign": {
+        "external_id": "C0001",
+        "first_seen": "2019-01-01T06:00:00.000Z",
+        "last_seen": "2019-04-01T05:00:00.000Z",
+        "name": "Frankenstein",
+        "stix_id": "campaign--26d9ebae-de59-427f-ae9a-349456bae4b1"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0001 (Frankenstein) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0001",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--26d9ebae-de59-427f-ae9a-349456bae4b1",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0001 (Frankenstein)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0002",
+        "first_seen": "2009-11-01T04:00:00.000Z",
+        "last_seen": "2011-02-01T05:00:00.000Z",
+        "name": "Night Dragon",
+        "stix_id": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0002 (Night Dragon) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0002",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0002 (Night Dragon)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0004",
+        "first_seen": "2019-10-01T04:00:00.000Z",
+        "last_seen": "2020-11-01T04:00:00.000Z",
+        "name": "CostaRicto",
+        "stix_id": "campaign--f9cc545e-b0ef-4b92-8884-a3a4427609f6"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0004 (CostaRicto) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0004",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--f9cc545e-b0ef-4b92-8884-a3a4427609f6",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0004 (CostaRicto)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0005",
+        "first_seen": "2019-11-01T05:00:00.000Z",
+        "last_seen": "2021-01-01T06:00:00.000Z",
+        "name": "Operation Spalax",
+        "stix_id": "campaign--4c840263-bbda-440d-a22b-674679ddebf1"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0005 (Operation Spalax) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0005",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--4c840263-bbda-440d-a22b-674679ddebf1",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0005 (Operation Spalax)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0006",
+        "first_seen": "2017-08-01T05:00:00.000Z",
+        "last_seen": "2018-02-01T06:00:00.000Z",
+        "name": "Operation Honeybee",
+        "stix_id": "campaign--4553292d-12c6-4a93-934d-12160370d4e0"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0006 (Operation Honeybee) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0006",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--4553292d-12c6-4a93-934d-12160370d4e0",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0006 (Operation Honeybee)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0007",
+        "first_seen": "2018-07-01T05:00:00.000Z",
+        "last_seen": "2020-11-01T04:00:00.000Z",
+        "name": "FunnyDream",
+        "stix_id": "campaign--8d2bc130-89fe-466e-a4f9-6bce6129c2b8"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0007 (FunnyDream) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0007",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--8d2bc130-89fe-466e-a4f9-6bce6129c2b8",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0007 (FunnyDream)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0010",
+        "first_seen": "2020-12-01T07:00:00.000Z",
+        "last_seen": "2022-08-01T06:00:00.000Z",
+        "name": "C0010",
+        "stix_id": "campaign--ab747e62-1bcb-479f-a26b-1cd39d413d81"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0010 (C0010) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0010",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--ab747e62-1bcb-479f-a26b-1cd39d413d81",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0010 (C0010)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0011",
+        "first_seen": "2021-12-01T06:00:00.000Z",
+        "last_seen": "2022-07-01T05:00:00.000Z",
+        "name": "C0011",
+        "stix_id": "campaign--b4e5a4a9-f3be-4631-ba8f-da6ebb067fac"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0011 (C0011) is attributed to G0134 (Transparent Tribe) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "Transparent Tribe",
+            "COPPER FIELDSTONE",
+            "APT36",
+            "Mythic Leopard",
+            "ProjectM"
+          ],
+          "external_id": "G0134",
+          "name": "Transparent Tribe",
+          "stix_id": "intrusion-set--e44e0985-bc65-4a8f-b578-211c858128e3"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0011",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--751e795e-7c1a-4ba1-bb20-636aed025df9"
+        ],
+        "campaign_stix_id": "campaign--b4e5a4a9-f3be-4631-ba8f-da6ebb067fac",
+        "group_stix_ids": [
+          "intrusion-set--e44e0985-bc65-4a8f-b578-211c858128e3"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--751e795e-7c1a-4ba1-bb20-636aed025df9",
+            "campaign_ref": "campaign--b4e5a4a9-f3be-4631-ba8f-da6ebb067fac",
+            "group_ref": "intrusion-set--e44e0985-bc65-4a8f-b578-211c858128e3"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0011 (C0011)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0012",
+        "first_seen": "2019-12-01T07:00:00.000Z",
+        "last_seen": "2022-05-01T06:00:00.000Z",
+        "name": "Operation CuckooBees",
+        "stix_id": "campaign--93c23946-49af-41f4-ac03-40f9ffc7419b"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0012 (Operation CuckooBees) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0012",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--93c23946-49af-41f4-ac03-40f9ffc7419b",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0012 (Operation CuckooBees)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0013",
+        "first_seen": "2017-09-01T05:00:00.000Z",
+        "last_seen": "2019-03-01T06:00:00.000Z",
+        "name": "Operation Sharpshooter",
+        "stix_id": "campaign--37764c78-2a99-46d1-a7ea-6454b9bf93a0"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0013 (Operation Sharpshooter) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0013",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--37764c78-2a99-46d1-a7ea-6454b9bf93a0",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0013 (Operation Sharpshooter)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0014",
+        "first_seen": "2017-12-01T05:00:00.000Z",
+        "last_seen": "2019-12-01T05:00:00.000Z",
+        "name": "Operation Wocao",
+        "stix_id": "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0014 (Operation Wocao) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0014",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0014 (Operation Wocao)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0015",
+        "first_seen": "2021-08-01T05:00:00.000Z",
+        "last_seen": "2021-08-01T05:00:00.000Z",
+        "name": "C0015",
+        "stix_id": "campaign--78068e68-4124-4243-b6f4-76e4e5be8a06"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0015 (C0015) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0015",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--78068e68-4124-4243-b6f4-76e4e5be8a06",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0015 (C0015)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0016",
+        "first_seen": "2010-01-01T07:00:00.000Z",
+        "last_seen": "2016-02-01T06:00:00.000Z",
+        "name": "Operation Dust Storm",
+        "stix_id": "campaign--4603cf2f-06d0-4970-9c5d-5071b08c817f"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0016 (Operation Dust Storm) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0016",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--4603cf2f-06d0-4970-9c5d-5071b08c817f",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0016 (Operation Dust Storm)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0017",
+        "first_seen": "2021-05-01T04:00:00.000Z",
+        "last_seen": "2022-02-01T05:00:00.000Z",
+        "name": "C0017",
+        "stix_id": "campaign--ba6dfa37-f401-4140-88b0-8938f2895e61"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0017 (C0017) is attributed to G0096 (APT41) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "APT41",
+            "Wicked Panda",
+            "Brass Typhoon",
+            "BARIUM"
+          ],
+          "external_id": "G0096",
+          "name": "APT41",
+          "stix_id": "intrusion-set--18854f55-ac7c-4634-bd9a-352dd07613b7"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0017",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--990a03f8-5813-4fa8-b948-976730d4d285"
+        ],
+        "campaign_stix_id": "campaign--ba6dfa37-f401-4140-88b0-8938f2895e61",
+        "group_stix_ids": [
+          "intrusion-set--18854f55-ac7c-4634-bd9a-352dd07613b7"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--990a03f8-5813-4fa8-b948-976730d4d285",
+            "campaign_ref": "campaign--ba6dfa37-f401-4140-88b0-8938f2895e61",
+            "group_ref": "intrusion-set--18854f55-ac7c-4634-bd9a-352dd07613b7"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0017 (C0017)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0018",
+        "first_seen": "2022-02-01T05:00:00.000Z",
+        "last_seen": "2022-03-01T05:00:00.000Z",
+        "name": "C0018",
+        "stix_id": "campaign--519ee082-8ab6-439b-988f-a8a3f02c8d30"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0018 (C0018) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0018",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--519ee082-8ab6-439b-988f-a8a3f02c8d30",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0018 (C0018)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0021",
+        "first_seen": "2018-11-01T05:00:00.000Z",
+        "last_seen": "2018-11-01T05:00:00.000Z",
+        "name": "C0021",
+        "stix_id": "campaign--712e38c3-a656-426a-9b3b-a6bfb63294c6"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0021 (C0021) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0021",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--712e38c3-a656-426a-9b3b-a6bfb63294c6",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0021 (C0021)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0022",
+        "first_seen": "2019-09-01T04:00:00.000Z",
+        "last_seen": "2020-08-01T04:00:00.000Z",
+        "name": "Operation Dream Job",
+        "stix_id": "campaign--0257b35b-93ef-4a70-80dd-ad5258e6045b"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0022 (Operation Dream Job) is attributed to G0032 (Lazarus Group) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "Lazarus Group",
+            "Labyrinth Chollima",
+            "HIDDEN COBRA",
+            "Guardians of Peace",
+            "ZINC",
+            "NICKEL ACADEMY",
+            "Diamond Sleet"
+          ],
+          "external_id": "G0032",
+          "name": "Lazarus Group",
+          "stix_id": "intrusion-set--c93fccb1-e8e8-42cf-ae33-2ad1d183913a"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0022",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--4b66e057-adbc-498d-99ee-156e0d17bd53"
+        ],
+        "campaign_stix_id": "campaign--0257b35b-93ef-4a70-80dd-ad5258e6045b",
+        "group_stix_ids": [
+          "intrusion-set--c93fccb1-e8e8-42cf-ae33-2ad1d183913a"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--4b66e057-adbc-498d-99ee-156e0d17bd53",
+            "campaign_ref": "campaign--0257b35b-93ef-4a70-80dd-ad5258e6045b",
+            "group_ref": "intrusion-set--c93fccb1-e8e8-42cf-ae33-2ad1d183913a"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0022 (Operation Dream Job)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0023",
+        "first_seen": "2013-09-01T04:00:00.000Z",
+        "last_seen": "2019-10-01T04:00:00.000Z",
+        "name": "Operation Ghost",
+        "stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0023 (Operation Ghost) is attributed to G0016 (APT29) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "APT29",
+            "IRON RITUAL",
+            "IRON HEMLOCK",
+            "NobleBaron",
+            "Dark Halo",
+            "NOBELIUM",
+            "UNC2452",
+            "YTTRIUM",
+            "The Dukes",
+            "Cozy Bear",
+            "CozyDuke",
+            "SolarStorm",
+            "Blue Kitsune",
+            "UNC3524",
+            "Midnight Blizzard"
+          ],
+          "external_id": "G0016",
+          "name": "APT29",
+          "stix_id": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0023",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--a3adcf1b-a48a-4fab-bc61-5e0b0aeaaca6"
+        ],
+        "campaign_stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+        "group_stix_ids": [
+          "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--a3adcf1b-a48a-4fab-bc61-5e0b0aeaaca6",
+            "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+            "group_ref": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0023 (Operation Ghost)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0024",
+        "first_seen": "2019-08-01T05:00:00.000Z",
+        "last_seen": "2021-01-01T06:00:00.000Z",
+        "name": "SolarWinds Compromise",
+        "stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0024 (SolarWinds Compromise) is attributed to G0016 (APT29) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "APT29",
+            "IRON RITUAL",
+            "IRON HEMLOCK",
+            "NobleBaron",
+            "Dark Halo",
+            "NOBELIUM",
+            "UNC2452",
+            "YTTRIUM",
+            "The Dukes",
+            "Cozy Bear",
+            "CozyDuke",
+            "SolarStorm",
+            "Blue Kitsune",
+            "UNC3524",
+            "Midnight Blizzard"
+          ],
+          "external_id": "G0016",
+          "name": "APT29",
+          "stix_id": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0024",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--3b2680f0-aa69-4766-ab41-9123373ffa4e"
+        ],
+        "campaign_stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+        "group_stix_ids": [
+          "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--3b2680f0-aa69-4766-ab41-9123373ffa4e",
+            "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+            "group_ref": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0024 (SolarWinds Compromise)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0025",
+        "first_seen": "2016-12-01T05:00:00.000Z",
+        "last_seen": "2016-12-01T05:00:00.000Z",
+        "name": "2016 Ukraine Electric Power Attack",
+        "stix_id": "campaign--aa73efef-1418-4dbe-b43c-87a498e97234"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0025 (2016 Ukraine Electric Power Attack) is attributed to G0034 (Sandworm Team) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "Sandworm Team",
+            "ELECTRUM",
+            "Telebots",
+            "IRON VIKING",
+            "BlackEnergy (Group)",
+            "Quedagh",
+            "Voodoo Bear",
+            "IRIDIUM",
+            "Seashell Blizzard",
+            "FROZENBARENTS",
+            "APT44"
+          ],
+          "external_id": "G0034",
+          "name": "Sandworm Team",
+          "stix_id": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0025",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--90647f03-38a4-4364-a3af-53640a81360e"
+        ],
+        "campaign_stix_id": "campaign--aa73efef-1418-4dbe-b43c-87a498e97234",
+        "group_stix_ids": [
+          "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--90647f03-38a4-4364-a3af-53640a81360e",
+            "campaign_ref": "campaign--aa73efef-1418-4dbe-b43c-87a498e97234",
+            "group_ref": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0025 (2016 Ukraine Electric Power Attack)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0026",
+        "first_seen": "2022-08-01T05:00:00.000Z",
+        "last_seen": "2022-09-01T04:00:00.000Z",
+        "name": "C0026",
+        "stix_id": "campaign--c89fa3ff-4773-4daf-8aec-d8f43f10116e"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0026 (C0026) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0026",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--c89fa3ff-4773-4daf-8aec-d8f43f10116e",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0026 (C0026)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0027",
+        "first_seen": "2022-06-01T04:00:00.000Z",
+        "last_seen": "2022-12-01T05:00:00.000Z",
+        "name": "C0027",
+        "stix_id": "campaign--df74f7ad-b10d-431c-9f1d-a2bc18dadefa"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0027 (C0027) is attributed to G1015 (Scattered Spider) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "Scattered Spider",
+            "Roasted 0ktapus",
+            "Octo Tempest",
+            "Storm-0875",
+            "UNC3944"
+          ],
+          "external_id": "G1015",
+          "name": "Scattered Spider",
+          "stix_id": "intrusion-set--44d37b89-a739-4810-9111-0d2617a8939b"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0027",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--e662ff77-e38c-4a8b-ac49-cfb98ad01b47"
+        ],
+        "campaign_stix_id": "campaign--df74f7ad-b10d-431c-9f1d-a2bc18dadefa",
+        "group_stix_ids": [
+          "intrusion-set--44d37b89-a739-4810-9111-0d2617a8939b"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--e662ff77-e38c-4a8b-ac49-cfb98ad01b47",
+            "campaign_ref": "campaign--df74f7ad-b10d-431c-9f1d-a2bc18dadefa",
+            "group_ref": "intrusion-set--44d37b89-a739-4810-9111-0d2617a8939b"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0027 (C0027)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0028",
+        "first_seen": "2015-12-01T05:00:00.000Z",
+        "last_seen": "2016-01-01T05:00:00.000Z",
+        "name": "2015 Ukraine Electric Power Attack",
+        "stix_id": "campaign--46421788-b6e1-4256-b351-f8beffd1afba"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0028 (2015 Ukraine Electric Power Attack) is attributed to G0034 (Sandworm Team) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "Sandworm Team",
+            "ELECTRUM",
+            "Telebots",
+            "IRON VIKING",
+            "BlackEnergy (Group)",
+            "Quedagh",
+            "Voodoo Bear",
+            "IRIDIUM",
+            "Seashell Blizzard",
+            "FROZENBARENTS",
+            "APT44"
+          ],
+          "external_id": "G0034",
+          "name": "Sandworm Team",
+          "stix_id": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0028",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--4d407dda-944a-4974-b1c2-0a04d2c9ee4c"
+        ],
+        "campaign_stix_id": "campaign--46421788-b6e1-4256-b351-f8beffd1afba",
+        "group_stix_ids": [
+          "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--4d407dda-944a-4974-b1c2-0a04d2c9ee4c",
+            "campaign_ref": "campaign--46421788-b6e1-4256-b351-f8beffd1afba",
+            "group_ref": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0028 (2015 Ukraine Electric Power Attack)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0029",
+        "first_seen": "2023-12-01T05:00:00.000Z",
+        "last_seen": "2024-02-01T05:00:00.000Z",
+        "name": "Cutting Edge",
+        "stix_id": "campaign--4fdd2487-26c1-494e-8702-ec5abe9aa1d9"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0029 (Cutting Edge) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0029",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--4fdd2487-26c1-494e-8702-ec5abe9aa1d9",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0029 (Cutting Edge)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0030",
+        "first_seen": "2017-06-01T04:00:00.000Z",
+        "last_seen": "2017-08-01T04:00:00.000Z",
+        "name": "Triton Safety Instrumented System Attack",
+        "stix_id": "campaign--45a98f02-852f-49b2-94c0-c63207bebbbf"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0030 (Triton Safety Instrumented System Attack) is attributed to G0088 (TEMP.Veles) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "TEMP.Veles",
+            "XENOTIME"
+          ],
+          "external_id": "G0088",
+          "name": "TEMP.Veles",
+          "stix_id": "intrusion-set--9538b1a4-4120-4e2d-bf59-3b11fcab05a4"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0030",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--538e5653-137a-4ce2-8b08-5ba69caa794a"
+        ],
+        "campaign_stix_id": "campaign--45a98f02-852f-49b2-94c0-c63207bebbbf",
+        "group_stix_ids": [
+          "intrusion-set--9538b1a4-4120-4e2d-bf59-3b11fcab05a4"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--538e5653-137a-4ce2-8b08-5ba69caa794a",
+            "campaign_ref": "campaign--45a98f02-852f-49b2-94c0-c63207bebbbf",
+            "group_ref": "intrusion-set--9538b1a4-4120-4e2d-bf59-3b11fcab05a4"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0030 (Triton Safety Instrumented System Attack)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0032",
+        "first_seen": "2014-10-01T04:00:00.000Z",
+        "last_seen": "2017-01-01T05:00:00.000Z",
+        "name": "C0032",
+        "stix_id": "campaign--7ec2826c-0bf0-4b47-acae-fd683431a4ca"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0032 (C0032) is attributed to G0088 (TEMP.Veles) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "TEMP.Veles",
+            "XENOTIME"
+          ],
+          "external_id": "G0088",
+          "name": "TEMP.Veles",
+          "stix_id": "intrusion-set--9538b1a4-4120-4e2d-bf59-3b11fcab05a4"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0032",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--dd10cc43-3f46-42f4-9230-69a0e2751ab2"
+        ],
+        "campaign_stix_id": "campaign--7ec2826c-0bf0-4b47-acae-fd683431a4ca",
+        "group_stix_ids": [
+          "intrusion-set--9538b1a4-4120-4e2d-bf59-3b11fcab05a4"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--dd10cc43-3f46-42f4-9230-69a0e2751ab2",
+            "campaign_ref": "campaign--7ec2826c-0bf0-4b47-acae-fd683431a4ca",
+            "group_ref": "intrusion-set--9538b1a4-4120-4e2d-bf59-3b11fcab05a4"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0032 (C0032)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0033",
+        "first_seen": "2016-05-01T07:00:00.000Z",
+        "last_seen": "2023-01-01T08:00:00.000Z",
+        "name": "C0033",
+        "stix_id": "campaign--a82bc5ad-5f95-4c6a-9f25-aaf6f476a3c4"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0033 (C0033) is attributed to G0056 (PROMETHIUM) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "PROMETHIUM",
+            "StrongPity"
+          ],
+          "external_id": "G0056",
+          "name": "PROMETHIUM",
+          "stix_id": "intrusion-set--efed95ba-d7e8-47ff-8c53-99c42426ee7c"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0033",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--f372697e-b661-4995-9920-4ec0a9060ebb"
+        ],
+        "campaign_stix_id": "campaign--a82bc5ad-5f95-4c6a-9f25-aaf6f476a3c4",
+        "group_stix_ids": [
+          "intrusion-set--efed95ba-d7e8-47ff-8c53-99c42426ee7c"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--f372697e-b661-4995-9920-4ec0a9060ebb",
+            "campaign_ref": "campaign--a82bc5ad-5f95-4c6a-9f25-aaf6f476a3c4",
+            "group_ref": "intrusion-set--efed95ba-d7e8-47ff-8c53-99c42426ee7c"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0033 (C0033)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0034",
+        "first_seen": "2022-06-01T04:00:00.000Z",
+        "last_seen": "2022-10-01T04:00:00.000Z",
+        "name": "2022 Ukraine Electric Power Attack",
+        "stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0034 (2022 Ukraine Electric Power Attack) is attributed to G0034 (Sandworm Team) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "Sandworm Team",
+            "ELECTRUM",
+            "Telebots",
+            "IRON VIKING",
+            "BlackEnergy (Group)",
+            "Quedagh",
+            "Voodoo Bear",
+            "IRIDIUM",
+            "Seashell Blizzard",
+            "FROZENBARENTS",
+            "APT44"
+          ],
+          "external_id": "G0034",
+          "name": "Sandworm Team",
+          "stix_id": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0034",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--d3717846-eaab-4fde-99f6-a972dec9323b"
+        ],
+        "campaign_stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+        "group_stix_ids": [
+          "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--d3717846-eaab-4fde-99f6-a972dec9323b",
+            "campaign_ref": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+            "group_ref": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0034 (2022 Ukraine Electric Power Attack)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0035",
+        "first_seen": "2022-10-01T04:00:00.000Z",
+        "last_seen": "2024-01-01T05:00:00.000Z",
+        "name": "KV Botnet Activity",
+        "stix_id": "campaign--0c259854-4044-4f6c-ac49-118d484b3e3b"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0035 (KV Botnet Activity) is attributed to G1017 (Volt Typhoon) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "Volt Typhoon",
+            "BRONZE SILHOUETTE",
+            "Vanguard Panda",
+            "DEV-0391",
+            "UNC3236",
+            "Voltzite",
+            "Insidious Taurus",
+            "DazedToad"
+          ],
+          "external_id": "G1017",
+          "name": "Volt Typhoon",
+          "stix_id": "intrusion-set--174279b4-399f-4ddb-966e-5efedd1dd5f2"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0035",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--ddbd85c0-2b3a-4311-966b-abc2e658c340"
+        ],
+        "campaign_stix_id": "campaign--0c259854-4044-4f6c-ac49-118d484b3e3b",
+        "group_stix_ids": [
+          "intrusion-set--174279b4-399f-4ddb-966e-5efedd1dd5f2"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--ddbd85c0-2b3a-4311-966b-abc2e658c340",
+            "campaign_ref": "campaign--0c259854-4044-4f6c-ac49-118d484b3e3b",
+            "group_ref": "intrusion-set--174279b4-399f-4ddb-966e-5efedd1dd5f2"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0035 (KV Botnet Activity)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0036",
+        "first_seen": "2024-02-01T05:00:00.000Z",
+        "last_seen": "2024-02-01T05:00:00.000Z",
+        "name": "Pikabot Distribution February 2024",
+        "stix_id": "campaign--81e89fb4-8d07-4d8a-82f4-bf084f9d5d53"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0036 (Pikabot Distribution February 2024) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0036",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--81e89fb4-8d07-4d8a-82f4-bf084f9d5d53",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0036 (Pikabot Distribution February 2024)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0037",
+        "first_seen": "2023-01-01T05:00:00.000Z",
+        "last_seen": "2023-12-01T05:00:00.000Z",
+        "name": "Water Curupira Pikabot Distribution",
+        "stix_id": "campaign--57541e3b-657e-463a-a4ab-ca08d7ea9965"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0037 (Water Curupira Pikabot Distribution) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0037",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--57541e3b-657e-463a-a4ab-ca08d7ea9965",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0037 (Water Curupira Pikabot Distribution)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0038",
+        "first_seen": "2021-05-01T04:00:00.000Z",
+        "last_seen": "2022-09-01T04:00:00.000Z",
+        "name": "HomeLand Justice",
+        "stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0038 (HomeLand Justice) is attributed to G1055 (VOID MANTICORE) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "VOID MANTICORE",
+            "COBALT MYSTIQUE",
+            "Handala Hack",
+            "Homeland Justice",
+            "Karma",
+            "Karmabelow80",
+            "BANISHED KITTEN",
+            "Red Sandstorm"
+          ],
+          "external_id": "G1055",
+          "name": "VOID MANTICORE",
+          "stix_id": "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0038",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--0dd04e16-ad64-4b7d-af2f-12ad644cfe3e"
+        ],
+        "campaign_stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+        "group_stix_ids": [
+          "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--0dd04e16-ad64-4b7d-af2f-12ad644cfe3e",
+            "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+            "group_ref": "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0038 (HomeLand Justice)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0039",
+        "first_seen": "2024-06-01T06:00:00.000Z",
+        "last_seen": "2024-08-01T06:00:00.000Z",
+        "name": "Versa Director Zero Day Exploitation",
+        "stix_id": "campaign--af0ec65a-caa9-40ef-b1c7-21b71fbf3a10"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0039 (Versa Director Zero Day Exploitation) is attributed to G1017 (Volt Typhoon) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "Volt Typhoon",
+            "BRONZE SILHOUETTE",
+            "Vanguard Panda",
+            "DEV-0391",
+            "UNC3236",
+            "Voltzite",
+            "Insidious Taurus",
+            "DazedToad"
+          ],
+          "external_id": "G1017",
+          "name": "Volt Typhoon",
+          "stix_id": "intrusion-set--174279b4-399f-4ddb-966e-5efedd1dd5f2"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0039",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--b109514b-66b3-4c06-8b1d-4f89e1f2cfde"
+        ],
+        "campaign_stix_id": "campaign--af0ec65a-caa9-40ef-b1c7-21b71fbf3a10",
+        "group_stix_ids": [
+          "intrusion-set--174279b4-399f-4ddb-966e-5efedd1dd5f2"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--b109514b-66b3-4c06-8b1d-4f89e1f2cfde",
+            "campaign_ref": "campaign--af0ec65a-caa9-40ef-b1c7-21b71fbf3a10",
+            "group_ref": "intrusion-set--174279b4-399f-4ddb-966e-5efedd1dd5f2"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0039 (Versa Director Zero Day Exploitation)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0040",
+        "first_seen": "2023-01-31T23:00:00.000Z",
+        "last_seen": "2024-06-30T22:00:00.000Z",
+        "name": "APT41 DUST",
+        "stix_id": "campaign--add4d9de-1256-4166-83b8-57087288dced"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0040 (APT41 DUST) is attributed to G0096 (APT41) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "APT41",
+            "Wicked Panda",
+            "Brass Typhoon",
+            "BARIUM"
+          ],
+          "external_id": "G0096",
+          "name": "APT41",
+          "stix_id": "intrusion-set--18854f55-ac7c-4634-bd9a-352dd07613b7"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0040",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--31aebdb8-ce4d-4d31-a144-7a5c354bfd7c"
+        ],
+        "campaign_stix_id": "campaign--add4d9de-1256-4166-83b8-57087288dced",
+        "group_stix_ids": [
+          "intrusion-set--18854f55-ac7c-4634-bd9a-352dd07613b7"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--31aebdb8-ce4d-4d31-a144-7a5c354bfd7c",
+            "campaign_ref": "campaign--add4d9de-1256-4166-83b8-57087288dced",
+            "group_ref": "intrusion-set--18854f55-ac7c-4634-bd9a-352dd07613b7"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0040 (APT41 DUST)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0041",
+        "first_seen": "2024-01-01T07:00:00.000Z",
+        "last_seen": "2024-01-01T07:00:00.000Z",
+        "name": "FrostyGoop Incident",
+        "stix_id": "campaign--1169ff24-b35f-4d8d-8cf3-643a2834227f"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0041 (FrostyGoop Incident) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0041",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--1169ff24-b35f-4d8d-8cf3-643a2834227f",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0041 (FrostyGoop Incident)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0042",
+        "first_seen": "2021-01-01T05:00:00.000Z",
+        "last_seen": "2021-12-01T05:00:00.000Z",
+        "name": "Outer Space",
+        "stix_id": "campaign--a1f5df89-ec82-45ef-b229-4ca6a407dc4f"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0042 (Outer Space) is attributed to G0049 (OilRig) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "OilRig",
+            "COBALT GYPSY",
+            "IRN2",
+            "APT34",
+            "Helix Kitten",
+            "Evasive Serpens",
+            "Hazel Sandstorm",
+            "EUROPIUM",
+            "ITG13",
+            "Earth Simnavaz",
+            "Crambus",
+            "TA452"
+          ],
+          "external_id": "G0049",
+          "name": "OilRig",
+          "stix_id": "intrusion-set--4ca1929c-7d64-4aab-b849-badbfc0c760d"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0042",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--2f87d195-6eb2-49d2-8dcf-a7bd4163cd09"
+        ],
+        "campaign_stix_id": "campaign--a1f5df89-ec82-45ef-b229-4ca6a407dc4f",
+        "group_stix_ids": [
+          "intrusion-set--4ca1929c-7d64-4aab-b849-badbfc0c760d"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--2f87d195-6eb2-49d2-8dcf-a7bd4163cd09",
+            "campaign_ref": "campaign--a1f5df89-ec82-45ef-b229-4ca6a407dc4f",
+            "group_ref": "intrusion-set--4ca1929c-7d64-4aab-b849-badbfc0c760d"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0042 (Outer Space)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0043",
+        "first_seen": "2021-01-01T07:00:00.000Z",
+        "last_seen": "2022-04-01T06:00:00.000Z",
+        "name": "Indian Critical Infrastructure Intrusions",
+        "stix_id": "campaign--4b7f9839-4822-4c19-8a1f-70bb61ba97e1"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0043 (Indian Critical Infrastructure Intrusions) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0043",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--4b7f9839-4822-4c19-8a1f-70bb61ba97e1",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0043 (Indian Critical Infrastructure Intrusions)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0044",
+        "first_seen": "2022-01-01T05:00:00.000Z",
+        "last_seen": "2022-12-01T05:00:00.000Z",
+        "name": "Juicy Mix",
+        "stix_id": "campaign--7ab2f1a1-26af-4204-ad84-d640fde391da"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0044 (Juicy Mix) is attributed to G0049 (OilRig) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "OilRig",
+            "COBALT GYPSY",
+            "IRN2",
+            "APT34",
+            "Helix Kitten",
+            "Evasive Serpens",
+            "Hazel Sandstorm",
+            "EUROPIUM",
+            "ITG13",
+            "Earth Simnavaz",
+            "Crambus",
+            "TA452"
+          ],
+          "external_id": "G0049",
+          "name": "OilRig",
+          "stix_id": "intrusion-set--4ca1929c-7d64-4aab-b849-badbfc0c760d"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0044",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--f0ce9b1b-9184-4071-9b02-1eb2f38f5856"
+        ],
+        "campaign_stix_id": "campaign--7ab2f1a1-26af-4204-ad84-d640fde391da",
+        "group_stix_ids": [
+          "intrusion-set--4ca1929c-7d64-4aab-b849-badbfc0c760d"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--f0ce9b1b-9184-4071-9b02-1eb2f38f5856",
+            "campaign_ref": "campaign--7ab2f1a1-26af-4204-ad84-d640fde391da",
+            "group_ref": "intrusion-set--4ca1929c-7d64-4aab-b849-badbfc0c760d"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0044 (Juicy Mix)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0045",
+        "first_seen": "2023-09-01T04:00:00.000Z",
+        "last_seen": "2024-03-01T05:00:00.000Z",
+        "name": "ShadowRay",
+        "stix_id": "campaign--57899965-b171-48ed-bbb4-8faffa3d836a"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0045 (ShadowRay) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0045",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--57899965-b171-48ed-bbb4-8faffa3d836a",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0045 (ShadowRay)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0046",
+        "first_seen": "2023-07-01T06:00:00.000Z",
+        "last_seen": "2024-04-01T06:00:00.000Z",
+        "name": "ArcaneDoor",
+        "stix_id": "campaign--a543ef15-91ea-4aa9-9c10-267d56e1ee82"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0046 (ArcaneDoor) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0046",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--a543ef15-91ea-4aa9-9c10-267d56e1ee82",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0046 (ArcaneDoor)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0047",
+        "first_seen": "2023-07-01T06:00:00.000Z",
+        "last_seen": "2024-12-01T07:00:00.000Z",
+        "name": "RedDelta Modified PlugX Infection Chain Operations",
+        "stix_id": "campaign--276671b5-5425-48db-ad65-c8c2564a969b"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0047 (RedDelta Modified PlugX Infection Chain Operations) is attributed to G0129 (Mustang Panda) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "Mustang Panda",
+            "TA416",
+            "RedDelta",
+            "BRONZE PRESIDENT",
+            "STATELY TAURUS",
+            "FIREANT",
+            "CAMARO DRAGON",
+            "EARTH PRETA",
+            "HIVE0154",
+            "TWILL TYPHOON",
+            "TANTALUM",
+            "LUMINOUS MOTH",
+            "UNC6384",
+            "TEMP.Hex",
+            "Red Lich",
+            "ClumsyToad"
+          ],
+          "external_id": "G0129",
+          "name": "Mustang Panda",
+          "stix_id": "intrusion-set--420ac20b-f2b9-42b8-aa1a-6d4b72895ca4"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0047",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--88015217-a3df-4654-bea1-b1d8241b67ee"
+        ],
+        "campaign_stix_id": "campaign--276671b5-5425-48db-ad65-c8c2564a969b",
+        "group_stix_ids": [
+          "intrusion-set--420ac20b-f2b9-42b8-aa1a-6d4b72895ca4"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--88015217-a3df-4654-bea1-b1d8241b67ee",
+            "campaign_ref": "campaign--276671b5-5425-48db-ad65-c8c2564a969b",
+            "group_ref": "intrusion-set--420ac20b-f2b9-42b8-aa1a-6d4b72895ca4"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0047 (RedDelta Modified PlugX Infection Chain Operations)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0048",
+        "first_seen": "2024-03-01T05:00:00.000Z",
+        "last_seen": "2024-04-01T04:00:00.000Z",
+        "name": "Operation MidnightEclipse",
+        "stix_id": "campaign--455b011a-2510-49ab-a96f-2f84d6a80189"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0048 (Operation MidnightEclipse) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0048",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--455b011a-2510-49ab-a96f-2f84d6a80189",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0048 (Operation MidnightEclipse)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0049",
+        "first_seen": "2022-04-01T06:00:00.000Z",
+        "last_seen": "2022-09-01T06:00:00.000Z",
+        "name": "Leviathan Australian Intrusions",
+        "stix_id": "campaign--b66bc597-399c-4e4d-828a-1ed4a7f1fb15"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0049 (Leviathan Australian Intrusions) is attributed to G0065 (Leviathan) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "Leviathan",
+            "MUDCARP",
+            "Kryptonite Panda",
+            "Gadolinium",
+            "BRONZE MOHAWK",
+            "TEMP.Jumper",
+            "APT40",
+            "TEMP.Periscope",
+            "Gingham Typhoon"
+          ],
+          "external_id": "G0065",
+          "name": "Leviathan",
+          "stix_id": "intrusion-set--7113eaa5-ba79-4fb3-b68a-398ee9cd698e"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0049",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--920874f2-f1e1-4981-9469-4ee45b6218a7"
+        ],
+        "campaign_stix_id": "campaign--b66bc597-399c-4e4d-828a-1ed4a7f1fb15",
+        "group_stix_ids": [
+          "intrusion-set--7113eaa5-ba79-4fb3-b68a-398ee9cd698e"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--920874f2-f1e1-4981-9469-4ee45b6218a7",
+            "campaign_ref": "campaign--b66bc597-399c-4e4d-828a-1ed4a7f1fb15",
+            "group_ref": "intrusion-set--7113eaa5-ba79-4fb3-b68a-398ee9cd698e"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0049 (Leviathan Australian Intrusions)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0050",
+        "first_seen": "2023-06-01T04:00:00.000Z",
+        "last_seen": "2024-06-01T04:00:00.000Z",
+        "name": "J-magic Campaign",
+        "stix_id": "campaign--58c4fd17-88f5-433a-8242-e9cac31f3c45"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0050 (J-magic Campaign) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0050",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--58c4fd17-88f5-433a-8242-e9cac31f3c45",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0050 (J-magic Campaign)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0051",
+        "first_seen": "2022-02-01T05:00:00.000Z",
+        "last_seen": "2024-11-01T04:00:00.000Z",
+        "name": "APT28 Nearest Neighbor Campaign",
+        "stix_id": "campaign--a010610e-22cb-437e-bfde-b78861bdca7a"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0051 (APT28 Nearest Neighbor Campaign) is attributed to G0007 (APT28) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "APT28",
+            "IRON TWILIGHT",
+            "SNAKEMACKEREL",
+            "Swallowtail",
+            "Group 74",
+            "Sednit",
+            "Sofacy",
+            "Pawn Storm",
+            "Fancy Bear",
+            "STRONTIUM",
+            "Tsar Team",
+            "Threat Group-4127",
+            "TG-4127",
+            "Forest Blizzard",
+            "FROZENLAKE",
+            "GruesomeLarch"
+          ],
+          "external_id": "G0007",
+          "name": "APT28",
+          "stix_id": "intrusion-set--bef4c620-0787-42a8-a96d-b7eb6e85917c"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0051",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--f113a6b7-ffe0-4fe4-9c29-75936a093f7a"
+        ],
+        "campaign_stix_id": "campaign--a010610e-22cb-437e-bfde-b78861bdca7a",
+        "group_stix_ids": [
+          "intrusion-set--bef4c620-0787-42a8-a96d-b7eb6e85917c"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--f113a6b7-ffe0-4fe4-9c29-75936a093f7a",
+            "campaign_ref": "campaign--a010610e-22cb-437e-bfde-b78861bdca7a",
+            "group_ref": "intrusion-set--bef4c620-0787-42a8-a96d-b7eb6e85917c"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0051 (APT28 Nearest Neighbor Campaign)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0052",
+        "first_seen": "2019-01-01T05:00:00.000Z",
+        "last_seen": "2024-05-01T04:00:00.000Z",
+        "name": "SPACEHOP Activity",
+        "stix_id": "campaign--83e1f587-34da-44cc-b65b-a72479cb1616"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0052 (SPACEHOP Activity) is attributed to G0004 (Ke3chang) and G1023 (APT5) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "Ke3chang",
+            "APT15",
+            "Mirage",
+            "Vixen Panda",
+            "GREF",
+            "Playful Dragon",
+            "RoyalAPT",
+            "NICKEL",
+            "Nylon Typhoon"
+          ],
+          "external_id": "G0004",
+          "name": "Ke3chang",
+          "stix_id": "intrusion-set--6713ab67-e25b-49cc-808d-2b36d4fbc35c"
+        },
+        {
+          "aliases": [
+            "APT5",
+            "Mulberry Typhoon",
+            "MANGANESE",
+            "BRONZE FLEETWOOD",
+            "Keyhole Panda",
+            "UNC2630"
+          ],
+          "external_id": "G1023",
+          "name": "APT5",
+          "stix_id": "intrusion-set--c1aab4c9-4c34-4f4f-8541-d529e46a07f9"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0052",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--c1b3aa1d-ffc8-4ca9-8214-aa671c5d27f6",
+          "relationship--7e632f9c-c55b-4aef-8bdc-56e0317375ee"
+        ],
+        "campaign_stix_id": "campaign--83e1f587-34da-44cc-b65b-a72479cb1616",
+        "group_stix_ids": [
+          "intrusion-set--6713ab67-e25b-49cc-808d-2b36d4fbc35c",
+          "intrusion-set--c1aab4c9-4c34-4f4f-8541-d529e46a07f9"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--c1b3aa1d-ffc8-4ca9-8214-aa671c5d27f6",
+            "campaign_ref": "campaign--83e1f587-34da-44cc-b65b-a72479cb1616",
+            "group_ref": "intrusion-set--6713ab67-e25b-49cc-808d-2b36d4fbc35c"
+          },
+          {
+            "attributed_to_relationship_stix_id": "relationship--7e632f9c-c55b-4aef-8bdc-56e0317375ee",
+            "campaign_ref": "campaign--83e1f587-34da-44cc-b65b-a72479cb1616",
+            "group_ref": "intrusion-set--c1aab4c9-4c34-4f4f-8541-d529e46a07f9"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0052 (SPACEHOP Activity)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0053",
+        "first_seen": "2019-01-01T05:00:00.000Z",
+        "last_seen": "2024-05-01T04:00:00.000Z",
+        "name": "FLORAHOX Activity",
+        "stix_id": "campaign--f494272a-c110-4574-be90-42c4957f7ae7"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0053 (FLORAHOX Activity) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0053",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--f494272a-c110-4574-be90-42c4957f7ae7",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0053 (FLORAHOX Activity)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0055",
+        "first_seen": "2023-08-01T04:00:00.000Z",
+        "last_seen": "2025-08-01T04:00:00.000Z",
+        "name": "Quad7 Activity",
+        "stix_id": "campaign--e7511089-1076-4a3b-984d-1a0a8afe31e9"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0055 (Quad7 Activity) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0055",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--e7511089-1076-4a3b-984d-1a0a8afe31e9",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0055 (Quad7 Activity)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0056",
+        "first_seen": "2024-07-01T04:00:00.000Z",
+        "last_seen": "2025-03-01T05:00:00.000Z",
+        "name": "RedPenguin",
+        "stix_id": "campaign--35879bf3-0a21-4cc1-9e42-6de917a22501"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0056 (RedPenguin) is attributed to G1048 (UNC3886) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "UNC3886"
+          ],
+          "external_id": "G1048",
+          "name": "UNC3886",
+          "stix_id": "intrusion-set--461b8e25-8f4a-4ea2-a4a8-e39df7ce6630"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0056",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--3cde6cab-a70e-45d3-b1e5-a7a6ba08241e"
+        ],
+        "campaign_stix_id": "campaign--35879bf3-0a21-4cc1-9e42-6de917a22501",
+        "group_stix_ids": [
+          "intrusion-set--461b8e25-8f4a-4ea2-a4a8-e39df7ce6630"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--3cde6cab-a70e-45d3-b1e5-a7a6ba08241e",
+            "campaign_ref": "campaign--35879bf3-0a21-4cc1-9e42-6de917a22501",
+            "group_ref": "intrusion-set--461b8e25-8f4a-4ea2-a4a8-e39df7ce6630"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0056 (RedPenguin)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0057",
+        "first_seen": "2022-11-01T06:00:00.000Z",
+        "last_seen": "2023-03-01T05:00:00.000Z",
+        "name": "3CX Supply Chain Attack",
+        "stix_id": "campaign--4fd53ccc-c6b1-4e3c-abe8-a456d46d789e"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0057 (3CX Supply Chain Attack) is attributed to G1049 (AppleJeus) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "AppleJeus",
+            "Gleaming Pisces",
+            "Citrine Sleet",
+            "UNC1720",
+            "UNC4736"
+          ],
+          "external_id": "G1049",
+          "name": "AppleJeus",
+          "stix_id": "intrusion-set--14225573-63b5-4e50-ba9a-5fdcaf6a7b4c"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0057",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--7c78e819-d227-4469-967d-08dc9f50edc9"
+        ],
+        "campaign_stix_id": "campaign--4fd53ccc-c6b1-4e3c-abe8-a456d46d789e",
+        "group_stix_ids": [
+          "intrusion-set--14225573-63b5-4e50-ba9a-5fdcaf6a7b4c"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--7c78e819-d227-4469-967d-08dc9f50edc9",
+            "campaign_ref": "campaign--4fd53ccc-c6b1-4e3c-abe8-a456d46d789e",
+            "group_ref": "intrusion-set--14225573-63b5-4e50-ba9a-5fdcaf6a7b4c"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0057 (3CX Supply Chain Attack)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0058",
+        "first_seen": "2025-07-01T04:00:00.000Z",
+        "last_seen": "2025-07-01T04:00:00.000Z",
+        "name": "SharePoint ToolShell Exploitation",
+        "stix_id": "campaign--1a0576df-df21-4775-843e-844d8a58a94b"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0058 (SharePoint ToolShell Exploitation) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0058",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--1a0576df-df21-4775-843e-844d8a58a94b",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0058 (SharePoint ToolShell Exploitation)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0059",
+        "first_seen": "2004-10-01T04:00:00.000Z",
+        "last_seen": "2025-09-01T04:00:00.000Z",
+        "name": "Salesforce Data Exfiltration",
+        "stix_id": "campaign--9cea8bec-07c5-422b-84b8-99d3128ce570"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0059 (Salesforce Data Exfiltration) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0059",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--9cea8bec-07c5-422b-84b8-99d3128ce570",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0059 (Salesforce Data Exfiltration)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0060",
+        "first_seen": "2004-06-01T04:00:00.000Z",
+        "last_seen": "2004-09-01T04:00:00.000Z",
+        "name": "Operation AkaiRy\u016b",
+        "stix_id": "campaign--8a7c55ea-f363-4a03-b4c5-fa3fdb132d8f"
+      },
+      "case_type": "aggregate_campaign_groups",
+      "expected_answer": "C0060 (Operation AkaiRy\u016b) is attributed to G1054 (MirrorFace) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [
+        {
+          "aliases": [
+            "MirrorFace",
+            "Earth Kasha"
+          ],
+          "external_id": "G1054",
+          "name": "MirrorFace",
+          "stix_id": "intrusion-set--8cf6e33b-b6ef-4a1f-a77c-0ecdde93161f"
+        }
+      ],
+      "id": "campaign-attributed-groups-c0060",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [
+          "relationship--2611f491-1c9d-4c2a-82da-8a9bcfc31870"
+        ],
+        "campaign_stix_id": "campaign--8a7c55ea-f363-4a03-b4c5-fa3fdb132d8f",
+        "group_stix_ids": [
+          "intrusion-set--8cf6e33b-b6ef-4a1f-a77c-0ecdde93161f"
+        ],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [
+          {
+            "attributed_to_relationship_stix_id": "relationship--2611f491-1c9d-4c2a-82da-8a9bcfc31870",
+            "campaign_ref": "campaign--8a7c55ea-f363-4a03-b4c5-fa3fdb132d8f",
+            "group_ref": "intrusion-set--8cf6e33b-b6ef-4a1f-a77c-0ecdde93161f"
+          }
+        ],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0060 (Operation AkaiRy\u016b)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0061",
+        "first_seen": "2024-06-01T04:00:00.000Z",
+        "last_seen": "2024-07-01T04:00:00.000Z",
+        "name": "Operation Digital Eye",
+        "stix_id": "campaign--75ea699b-bff5-4541-b9b7-df4996c9db3c"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0061 (Operation Digital Eye) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0061",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--75ea699b-bff5-4541-b9b7-df4996c9db3c",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0061 (Operation Digital Eye)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0062",
+        "first_seen": "2025-09-01T04:00:00.000Z",
+        "last_seen": "2025-09-01T04:00:00.000Z",
+        "name": "Anthropic AI-orchestrated Campaign",
+        "stix_id": "campaign--590cd5b0-2421-4158-84a2-db13b5db02a3"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0062 (Anthropic AI-orchestrated Campaign) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0062",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--590cd5b0-2421-4158-84a2-db13b5db02a3",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0062 (Anthropic AI-orchestrated Campaign)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0063",
+        "first_seen": "2025-03-01T05:00:00.000Z",
+        "last_seen": "2025-12-01T05:00:00.000Z",
+        "name": "2025 Poland Wiper Attacks",
+        "stix_id": "campaign--a6aba167-5ada-4812-9da1-912c0e73335d"
+      },
+      "case_type": "aggregate_campaign_no_attributed_group",
+      "expected_answer": "No active attributed-to relationship from C0063 (2025 Poland Wiper Attacks) to an active group is recorded in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-has-no-attributed-group-c0063",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--a6aba167-5ada-4812-9da1-912c0e73335d",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "question": "Which group is attributed to C0063 (2025 Poland Wiper Attacks)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0011",
+        "first_seen": "2021-12-01T06:00:00.000Z",
+        "last_seen": "2022-07-01T05:00:00.000Z",
+        "name": "C0011",
+        "stix_id": "campaign--b4e5a4a9-f3be-4631-ba8f-da6ebb067fac"
+      },
+      "case_type": "negative_campaign_group",
+      "expected_answer": "No active attributed-to relationship exists from C0011 (C0011) to G0016 (APT29) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-not-attributed-group-c0011-g0016",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--b4e5a4a9-f3be-4631-ba8f-da6ebb067fac",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "queried_group_stix_id": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "queried_group": {
+        "aliases": [
+          "APT29",
+          "IRON RITUAL",
+          "IRON HEMLOCK",
+          "NobleBaron",
+          "Dark Halo",
+          "NOBELIUM",
+          "UNC2452",
+          "YTTRIUM",
+          "The Dukes",
+          "Cozy Bear",
+          "CozyDuke",
+          "SolarStorm",
+          "Blue Kitsune",
+          "UNC3524",
+          "Midnight Blizzard"
+        ],
+        "external_id": "G0016",
+        "name": "APT29",
+        "stix_id": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+      },
+      "question": "Is C0011 (C0011) attributed to G0016 (APT29)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0023",
+        "first_seen": "2013-09-01T04:00:00.000Z",
+        "last_seen": "2019-10-01T04:00:00.000Z",
+        "name": "Operation Ghost",
+        "stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05"
+      },
+      "case_type": "negative_campaign_group",
+      "expected_answer": "No active attributed-to relationship exists from C0023 (Operation Ghost) to G0034 (Sandworm Team) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-not-attributed-group-c0023-g0034",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "queried_group_stix_id": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "queried_group": {
+        "aliases": [
+          "Sandworm Team",
+          "ELECTRUM",
+          "Telebots",
+          "IRON VIKING",
+          "BlackEnergy (Group)",
+          "Quedagh",
+          "Voodoo Bear",
+          "IRIDIUM",
+          "Seashell Blizzard",
+          "FROZENBARENTS",
+          "APT44"
+        ],
+        "external_id": "G0034",
+        "name": "Sandworm Team",
+        "stix_id": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+      },
+      "question": "Is C0023 (Operation Ghost) attributed to G0034 (Sandworm Team)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0024",
+        "first_seen": "2019-08-01T05:00:00.000Z",
+        "last_seen": "2021-01-01T06:00:00.000Z",
+        "name": "SolarWinds Compromise",
+        "stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650"
+      },
+      "case_type": "negative_campaign_group",
+      "expected_answer": "No active attributed-to relationship exists from C0024 (SolarWinds Compromise) to G0007 (APT28) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-not-attributed-group-c0024-g0007",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "queried_group_stix_id": "intrusion-set--bef4c620-0787-42a8-a96d-b7eb6e85917c",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "queried_group": {
+        "aliases": [
+          "APT28",
+          "IRON TWILIGHT",
+          "SNAKEMACKEREL",
+          "Swallowtail",
+          "Group 74",
+          "Sednit",
+          "Sofacy",
+          "Pawn Storm",
+          "Fancy Bear",
+          "STRONTIUM",
+          "Tsar Team",
+          "Threat Group-4127",
+          "TG-4127",
+          "Forest Blizzard",
+          "FROZENLAKE",
+          "GruesomeLarch"
+        ],
+        "external_id": "G0007",
+        "name": "APT28",
+        "stix_id": "intrusion-set--bef4c620-0787-42a8-a96d-b7eb6e85917c"
+      },
+      "question": "Is C0024 (SolarWinds Compromise) attributed to G0007 (APT28)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0028",
+        "first_seen": "2015-12-01T05:00:00.000Z",
+        "last_seen": "2016-01-01T05:00:00.000Z",
+        "name": "2015 Ukraine Electric Power Attack",
+        "stix_id": "campaign--46421788-b6e1-4256-b351-f8beffd1afba"
+      },
+      "case_type": "negative_campaign_group",
+      "expected_answer": "No active attributed-to relationship exists from C0028 (2015 Ukraine Electric Power Attack) to G0096 (APT41) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-not-attributed-group-c0028-g0096",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--46421788-b6e1-4256-b351-f8beffd1afba",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "queried_group_stix_id": "intrusion-set--18854f55-ac7c-4634-bd9a-352dd07613b7",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "queried_group": {
+        "aliases": [
+          "APT41",
+          "Wicked Panda",
+          "Brass Typhoon",
+          "BARIUM"
+        ],
+        "external_id": "G0096",
+        "name": "APT41",
+        "stix_id": "intrusion-set--18854f55-ac7c-4634-bd9a-352dd07613b7"
+      },
+      "question": "Is C0028 (2015 Ukraine Electric Power Attack) attributed to G0096 (APT41)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0033",
+        "first_seen": "2016-05-01T07:00:00.000Z",
+        "last_seen": "2023-01-01T08:00:00.000Z",
+        "name": "C0033",
+        "stix_id": "campaign--a82bc5ad-5f95-4c6a-9f25-aaf6f476a3c4"
+      },
+      "case_type": "negative_campaign_group",
+      "expected_answer": "No active attributed-to relationship exists from C0033 (C0033) to G0049 (OilRig) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-not-attributed-group-c0033-g0049",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--a82bc5ad-5f95-4c6a-9f25-aaf6f476a3c4",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "queried_group_stix_id": "intrusion-set--4ca1929c-7d64-4aab-b849-badbfc0c760d",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "queried_group": {
+        "aliases": [
+          "OilRig",
+          "COBALT GYPSY",
+          "IRN2",
+          "APT34",
+          "Helix Kitten",
+          "Evasive Serpens",
+          "Hazel Sandstorm",
+          "EUROPIUM",
+          "ITG13",
+          "Earth Simnavaz",
+          "Crambus",
+          "TA452"
+        ],
+        "external_id": "G0049",
+        "name": "OilRig",
+        "stix_id": "intrusion-set--4ca1929c-7d64-4aab-b849-badbfc0c760d"
+      },
+      "question": "Is C0033 (C0033) attributed to G0049 (OilRig)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0038",
+        "first_seen": "2021-05-01T04:00:00.000Z",
+        "last_seen": "2022-09-01T04:00:00.000Z",
+        "name": "HomeLand Justice",
+        "stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526"
+      },
+      "case_type": "negative_campaign_group",
+      "expected_answer": "No active attributed-to relationship exists from C0038 (HomeLand Justice) to G0032 (Lazarus Group) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-not-attributed-group-c0038-g0032",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "queried_group_stix_id": "intrusion-set--c93fccb1-e8e8-42cf-ae33-2ad1d183913a",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "queried_group": {
+        "aliases": [
+          "Lazarus Group",
+          "Labyrinth Chollima",
+          "HIDDEN COBRA",
+          "Guardians of Peace",
+          "ZINC",
+          "NICKEL ACADEMY",
+          "Diamond Sleet"
+        ],
+        "external_id": "G0032",
+        "name": "Lazarus Group",
+        "stix_id": "intrusion-set--c93fccb1-e8e8-42cf-ae33-2ad1d183913a"
+      },
+      "question": "Is C0038 (HomeLand Justice) attributed to G0032 (Lazarus Group)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0040",
+        "first_seen": "2023-01-31T23:00:00.000Z",
+        "last_seen": "2024-06-30T22:00:00.000Z",
+        "name": "APT41 DUST",
+        "stix_id": "campaign--add4d9de-1256-4166-83b8-57087288dced"
+      },
+      "case_type": "negative_campaign_group",
+      "expected_answer": "No active attributed-to relationship exists from C0040 (APT41 DUST) to G0007 (APT28) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-not-attributed-group-c0040-g0007",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--add4d9de-1256-4166-83b8-57087288dced",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "queried_group_stix_id": "intrusion-set--bef4c620-0787-42a8-a96d-b7eb6e85917c",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "queried_group": {
+        "aliases": [
+          "APT28",
+          "IRON TWILIGHT",
+          "SNAKEMACKEREL",
+          "Swallowtail",
+          "Group 74",
+          "Sednit",
+          "Sofacy",
+          "Pawn Storm",
+          "Fancy Bear",
+          "STRONTIUM",
+          "Tsar Team",
+          "Threat Group-4127",
+          "TG-4127",
+          "Forest Blizzard",
+          "FROZENLAKE",
+          "GruesomeLarch"
+        ],
+        "external_id": "G0007",
+        "name": "APT28",
+        "stix_id": "intrusion-set--bef4c620-0787-42a8-a96d-b7eb6e85917c"
+      },
+      "question": "Is C0040 (APT41 DUST) attributed to G0007 (APT28)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0047",
+        "first_seen": "2023-07-01T06:00:00.000Z",
+        "last_seen": "2024-12-01T07:00:00.000Z",
+        "name": "RedDelta Modified PlugX Infection Chain Operations",
+        "stix_id": "campaign--276671b5-5425-48db-ad65-c8c2564a969b"
+      },
+      "case_type": "negative_campaign_group",
+      "expected_answer": "No active attributed-to relationship exists from C0047 (RedDelta Modified PlugX Infection Chain Operations) to G1017 (Volt Typhoon) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-not-attributed-group-c0047-g1017",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--276671b5-5425-48db-ad65-c8c2564a969b",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "queried_group_stix_id": "intrusion-set--174279b4-399f-4ddb-966e-5efedd1dd5f2",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "queried_group": {
+        "aliases": [
+          "Volt Typhoon",
+          "BRONZE SILHOUETTE",
+          "Vanguard Panda",
+          "DEV-0391",
+          "UNC3236",
+          "Voltzite",
+          "Insidious Taurus",
+          "DazedToad"
+        ],
+        "external_id": "G1017",
+        "name": "Volt Typhoon",
+        "stix_id": "intrusion-set--174279b4-399f-4ddb-966e-5efedd1dd5f2"
+      },
+      "question": "Is C0047 (RedDelta Modified PlugX Infection Chain Operations) attributed to G1017 (Volt Typhoon)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0052",
+        "first_seen": "2019-01-01T05:00:00.000Z",
+        "last_seen": "2024-05-01T04:00:00.000Z",
+        "name": "SPACEHOP Activity",
+        "stix_id": "campaign--83e1f587-34da-44cc-b65b-a72479cb1616"
+      },
+      "case_type": "negative_campaign_group",
+      "expected_answer": "No active attributed-to relationship exists from C0052 (SPACEHOP Activity) to G1055 (VOID MANTICORE) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-not-attributed-group-c0052-g1055",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--83e1f587-34da-44cc-b65b-a72479cb1616",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "queried_group_stix_id": "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "queried_group": {
+        "aliases": [
+          "VOID MANTICORE",
+          "COBALT MYSTIQUE",
+          "Handala Hack",
+          "Homeland Justice",
+          "Karma",
+          "Karmabelow80",
+          "BANISHED KITTEN",
+          "Red Sandstorm"
+        ],
+        "external_id": "G1055",
+        "name": "VOID MANTICORE",
+        "stix_id": "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559"
+      },
+      "question": "Is C0052 (SPACEHOP Activity) attributed to G1055 (VOID MANTICORE)?",
+      "relationship_type": "campaign_attributed_to_group"
+    },
+    {
+      "campaign": {
+        "external_id": "C0060",
+        "first_seen": "2004-06-01T04:00:00.000Z",
+        "last_seen": "2004-09-01T04:00:00.000Z",
+        "name": "Operation AkaiRy\u016b",
+        "stix_id": "campaign--8a7c55ea-f363-4a03-b4c5-fa3fdb132d8f"
+      },
+      "case_type": "negative_campaign_group",
+      "expected_answer": "No active attributed-to relationship exists from C0060 (Operation AkaiRy\u016b) to G0065 (Leviathan) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_groups": [],
+      "id": "campaign-not-attributed-group-c0060-g0065",
+      "provenance": {
+        "attributed_to_relationship_stix_ids": [],
+        "campaign_stix_id": "campaign--8a7c55ea-f363-4a03-b4c5-fa3fdb132d8f",
+        "group_stix_ids": [],
+        "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+        "queried_group_stix_id": "intrusion-set--7113eaa5-ba79-4fb3-b68a-398ee9cd698e",
+        "relationship_paths": [],
+        "scope": "active_campaign_attributed_to_active_intrusion_set",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git"
+      },
+      "queried_group": {
+        "aliases": [
+          "Leviathan",
+          "MUDCARP",
+          "Kryptonite Panda",
+          "Gadolinium",
+          "BRONZE MOHAWK",
+          "TEMP.Jumper",
+          "APT40",
+          "TEMP.Periscope",
+          "Gingham Typhoon"
+        ],
+        "external_id": "G0065",
+        "name": "Leviathan",
+        "stix_id": "intrusion-set--7113eaa5-ba79-4fb3-b68a-398ee9cd698e"
+      },
+      "question": "Is C0060 (Operation AkaiRy\u016b) attributed to G0065 (Leviathan)?",
+      "relationship_type": "campaign_attributed_to_group"
+    }
+  ],
+  "parsed_data": {
+    "C0001": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0001",
+        "first_seen": "2019-01-01T06:00:00.000Z",
+        "last_seen": "2019-04-01T05:00:00.000Z",
+        "name": "Frankenstein",
+        "stix_id": "campaign--26d9ebae-de59-427f-ae9a-349456bae4b1"
+      },
+      "relationship_paths": []
+    },
+    "C0002": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0002",
+        "first_seen": "2009-11-01T04:00:00.000Z",
+        "last_seen": "2011-02-01T05:00:00.000Z",
+        "name": "Night Dragon",
+        "stix_id": "campaign--ae407e32-87e0-4d92-8705-3ae25d504d8a"
+      },
+      "relationship_paths": []
+    },
+    "C0004": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0004",
+        "first_seen": "2019-10-01T04:00:00.000Z",
+        "last_seen": "2020-11-01T04:00:00.000Z",
+        "name": "CostaRicto",
+        "stix_id": "campaign--f9cc545e-b0ef-4b92-8884-a3a4427609f6"
+      },
+      "relationship_paths": []
+    },
+    "C0005": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0005",
+        "first_seen": "2019-11-01T05:00:00.000Z",
+        "last_seen": "2021-01-01T06:00:00.000Z",
+        "name": "Operation Spalax",
+        "stix_id": "campaign--4c840263-bbda-440d-a22b-674679ddebf1"
+      },
+      "relationship_paths": []
+    },
+    "C0006": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0006",
+        "first_seen": "2017-08-01T05:00:00.000Z",
+        "last_seen": "2018-02-01T06:00:00.000Z",
+        "name": "Operation Honeybee",
+        "stix_id": "campaign--4553292d-12c6-4a93-934d-12160370d4e0"
+      },
+      "relationship_paths": []
+    },
+    "C0007": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0007",
+        "first_seen": "2018-07-01T05:00:00.000Z",
+        "last_seen": "2020-11-01T04:00:00.000Z",
+        "name": "FunnyDream",
+        "stix_id": "campaign--8d2bc130-89fe-466e-a4f9-6bce6129c2b8"
+      },
+      "relationship_paths": []
+    },
+    "C0010": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0010",
+        "first_seen": "2020-12-01T07:00:00.000Z",
+        "last_seen": "2022-08-01T06:00:00.000Z",
+        "name": "C0010",
+        "stix_id": "campaign--ab747e62-1bcb-479f-a26b-1cd39d413d81"
+      },
+      "relationship_paths": []
+    },
+    "C0011": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "Transparent Tribe",
+            "COPPER FIELDSTONE",
+            "APT36",
+            "Mythic Leopard",
+            "ProjectM"
+          ],
+          "external_id": "G0134",
+          "name": "Transparent Tribe",
+          "stix_id": "intrusion-set--e44e0985-bc65-4a8f-b578-211c858128e3"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0011",
+        "first_seen": "2021-12-01T06:00:00.000Z",
+        "last_seen": "2022-07-01T05:00:00.000Z",
+        "name": "C0011",
+        "stix_id": "campaign--b4e5a4a9-f3be-4631-ba8f-da6ebb067fac"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--751e795e-7c1a-4ba1-bb20-636aed025df9",
+          "campaign_ref": "campaign--b4e5a4a9-f3be-4631-ba8f-da6ebb067fac",
+          "group_ref": "intrusion-set--e44e0985-bc65-4a8f-b578-211c858128e3"
+        }
+      ]
+    },
+    "C0012": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0012",
+        "first_seen": "2019-12-01T07:00:00.000Z",
+        "last_seen": "2022-05-01T06:00:00.000Z",
+        "name": "Operation CuckooBees",
+        "stix_id": "campaign--93c23946-49af-41f4-ac03-40f9ffc7419b"
+      },
+      "relationship_paths": []
+    },
+    "C0013": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0013",
+        "first_seen": "2017-09-01T05:00:00.000Z",
+        "last_seen": "2019-03-01T06:00:00.000Z",
+        "name": "Operation Sharpshooter",
+        "stix_id": "campaign--37764c78-2a99-46d1-a7ea-6454b9bf93a0"
+      },
+      "relationship_paths": []
+    },
+    "C0014": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0014",
+        "first_seen": "2017-12-01T05:00:00.000Z",
+        "last_seen": "2019-12-01T05:00:00.000Z",
+        "name": "Operation Wocao",
+        "stix_id": "campaign--b03d5112-e23a-4ac8-add0-be7502d24eff"
+      },
+      "relationship_paths": []
+    },
+    "C0015": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0015",
+        "first_seen": "2021-08-01T05:00:00.000Z",
+        "last_seen": "2021-08-01T05:00:00.000Z",
+        "name": "C0015",
+        "stix_id": "campaign--78068e68-4124-4243-b6f4-76e4e5be8a06"
+      },
+      "relationship_paths": []
+    },
+    "C0016": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0016",
+        "first_seen": "2010-01-01T07:00:00.000Z",
+        "last_seen": "2016-02-01T06:00:00.000Z",
+        "name": "Operation Dust Storm",
+        "stix_id": "campaign--4603cf2f-06d0-4970-9c5d-5071b08c817f"
+      },
+      "relationship_paths": []
+    },
+    "C0017": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "APT41",
+            "Wicked Panda",
+            "Brass Typhoon",
+            "BARIUM"
+          ],
+          "external_id": "G0096",
+          "name": "APT41",
+          "stix_id": "intrusion-set--18854f55-ac7c-4634-bd9a-352dd07613b7"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0017",
+        "first_seen": "2021-05-01T04:00:00.000Z",
+        "last_seen": "2022-02-01T05:00:00.000Z",
+        "name": "C0017",
+        "stix_id": "campaign--ba6dfa37-f401-4140-88b0-8938f2895e61"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--990a03f8-5813-4fa8-b948-976730d4d285",
+          "campaign_ref": "campaign--ba6dfa37-f401-4140-88b0-8938f2895e61",
+          "group_ref": "intrusion-set--18854f55-ac7c-4634-bd9a-352dd07613b7"
+        }
+      ]
+    },
+    "C0018": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0018",
+        "first_seen": "2022-02-01T05:00:00.000Z",
+        "last_seen": "2022-03-01T05:00:00.000Z",
+        "name": "C0018",
+        "stix_id": "campaign--519ee082-8ab6-439b-988f-a8a3f02c8d30"
+      },
+      "relationship_paths": []
+    },
+    "C0021": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0021",
+        "first_seen": "2018-11-01T05:00:00.000Z",
+        "last_seen": "2018-11-01T05:00:00.000Z",
+        "name": "C0021",
+        "stix_id": "campaign--712e38c3-a656-426a-9b3b-a6bfb63294c6"
+      },
+      "relationship_paths": []
+    },
+    "C0022": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "Lazarus Group",
+            "Labyrinth Chollima",
+            "HIDDEN COBRA",
+            "Guardians of Peace",
+            "ZINC",
+            "NICKEL ACADEMY",
+            "Diamond Sleet"
+          ],
+          "external_id": "G0032",
+          "name": "Lazarus Group",
+          "stix_id": "intrusion-set--c93fccb1-e8e8-42cf-ae33-2ad1d183913a"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0022",
+        "first_seen": "2019-09-01T04:00:00.000Z",
+        "last_seen": "2020-08-01T04:00:00.000Z",
+        "name": "Operation Dream Job",
+        "stix_id": "campaign--0257b35b-93ef-4a70-80dd-ad5258e6045b"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--4b66e057-adbc-498d-99ee-156e0d17bd53",
+          "campaign_ref": "campaign--0257b35b-93ef-4a70-80dd-ad5258e6045b",
+          "group_ref": "intrusion-set--c93fccb1-e8e8-42cf-ae33-2ad1d183913a"
+        }
+      ]
+    },
+    "C0023": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "APT29",
+            "IRON RITUAL",
+            "IRON HEMLOCK",
+            "NobleBaron",
+            "Dark Halo",
+            "NOBELIUM",
+            "UNC2452",
+            "YTTRIUM",
+            "The Dukes",
+            "Cozy Bear",
+            "CozyDuke",
+            "SolarStorm",
+            "Blue Kitsune",
+            "UNC3524",
+            "Midnight Blizzard"
+          ],
+          "external_id": "G0016",
+          "name": "APT29",
+          "stix_id": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0023",
+        "first_seen": "2013-09-01T04:00:00.000Z",
+        "last_seen": "2019-10-01T04:00:00.000Z",
+        "name": "Operation Ghost",
+        "stix_id": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--a3adcf1b-a48a-4fab-bc61-5e0b0aeaaca6",
+          "campaign_ref": "campaign--7854c1a0-f06c-4876-98a4-4bbd34751b05",
+          "group_ref": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        }
+      ]
+    },
+    "C0024": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "APT29",
+            "IRON RITUAL",
+            "IRON HEMLOCK",
+            "NobleBaron",
+            "Dark Halo",
+            "NOBELIUM",
+            "UNC2452",
+            "YTTRIUM",
+            "The Dukes",
+            "Cozy Bear",
+            "CozyDuke",
+            "SolarStorm",
+            "Blue Kitsune",
+            "UNC3524",
+            "Midnight Blizzard"
+          ],
+          "external_id": "G0016",
+          "name": "APT29",
+          "stix_id": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0024",
+        "first_seen": "2019-08-01T05:00:00.000Z",
+        "last_seen": "2021-01-01T06:00:00.000Z",
+        "name": "SolarWinds Compromise",
+        "stix_id": "campaign--808d6b30-df4e-4341-8248-724da4bac650"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--3b2680f0-aa69-4766-ab41-9123373ffa4e",
+          "campaign_ref": "campaign--808d6b30-df4e-4341-8248-724da4bac650",
+          "group_ref": "intrusion-set--899ce53f-13a0-479b-a0e4-67d46e241542"
+        }
+      ]
+    },
+    "C0025": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "Sandworm Team",
+            "ELECTRUM",
+            "Telebots",
+            "IRON VIKING",
+            "BlackEnergy (Group)",
+            "Quedagh",
+            "Voodoo Bear",
+            "IRIDIUM",
+            "Seashell Blizzard",
+            "FROZENBARENTS",
+            "APT44"
+          ],
+          "external_id": "G0034",
+          "name": "Sandworm Team",
+          "stix_id": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0025",
+        "first_seen": "2016-12-01T05:00:00.000Z",
+        "last_seen": "2016-12-01T05:00:00.000Z",
+        "name": "2016 Ukraine Electric Power Attack",
+        "stix_id": "campaign--aa73efef-1418-4dbe-b43c-87a498e97234"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--90647f03-38a4-4364-a3af-53640a81360e",
+          "campaign_ref": "campaign--aa73efef-1418-4dbe-b43c-87a498e97234",
+          "group_ref": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        }
+      ]
+    },
+    "C0026": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0026",
+        "first_seen": "2022-08-01T05:00:00.000Z",
+        "last_seen": "2022-09-01T04:00:00.000Z",
+        "name": "C0026",
+        "stix_id": "campaign--c89fa3ff-4773-4daf-8aec-d8f43f10116e"
+      },
+      "relationship_paths": []
+    },
+    "C0027": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "Scattered Spider",
+            "Roasted 0ktapus",
+            "Octo Tempest",
+            "Storm-0875",
+            "UNC3944"
+          ],
+          "external_id": "G1015",
+          "name": "Scattered Spider",
+          "stix_id": "intrusion-set--44d37b89-a739-4810-9111-0d2617a8939b"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0027",
+        "first_seen": "2022-06-01T04:00:00.000Z",
+        "last_seen": "2022-12-01T05:00:00.000Z",
+        "name": "C0027",
+        "stix_id": "campaign--df74f7ad-b10d-431c-9f1d-a2bc18dadefa"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--e662ff77-e38c-4a8b-ac49-cfb98ad01b47",
+          "campaign_ref": "campaign--df74f7ad-b10d-431c-9f1d-a2bc18dadefa",
+          "group_ref": "intrusion-set--44d37b89-a739-4810-9111-0d2617a8939b"
+        }
+      ]
+    },
+    "C0028": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "Sandworm Team",
+            "ELECTRUM",
+            "Telebots",
+            "IRON VIKING",
+            "BlackEnergy (Group)",
+            "Quedagh",
+            "Voodoo Bear",
+            "IRIDIUM",
+            "Seashell Blizzard",
+            "FROZENBARENTS",
+            "APT44"
+          ],
+          "external_id": "G0034",
+          "name": "Sandworm Team",
+          "stix_id": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0028",
+        "first_seen": "2015-12-01T05:00:00.000Z",
+        "last_seen": "2016-01-01T05:00:00.000Z",
+        "name": "2015 Ukraine Electric Power Attack",
+        "stix_id": "campaign--46421788-b6e1-4256-b351-f8beffd1afba"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--4d407dda-944a-4974-b1c2-0a04d2c9ee4c",
+          "campaign_ref": "campaign--46421788-b6e1-4256-b351-f8beffd1afba",
+          "group_ref": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        }
+      ]
+    },
+    "C0029": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0029",
+        "first_seen": "2023-12-01T05:00:00.000Z",
+        "last_seen": "2024-02-01T05:00:00.000Z",
+        "name": "Cutting Edge",
+        "stix_id": "campaign--4fdd2487-26c1-494e-8702-ec5abe9aa1d9"
+      },
+      "relationship_paths": []
+    },
+    "C0030": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "TEMP.Veles",
+            "XENOTIME"
+          ],
+          "external_id": "G0088",
+          "name": "TEMP.Veles",
+          "stix_id": "intrusion-set--9538b1a4-4120-4e2d-bf59-3b11fcab05a4"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0030",
+        "first_seen": "2017-06-01T04:00:00.000Z",
+        "last_seen": "2017-08-01T04:00:00.000Z",
+        "name": "Triton Safety Instrumented System Attack",
+        "stix_id": "campaign--45a98f02-852f-49b2-94c0-c63207bebbbf"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--538e5653-137a-4ce2-8b08-5ba69caa794a",
+          "campaign_ref": "campaign--45a98f02-852f-49b2-94c0-c63207bebbbf",
+          "group_ref": "intrusion-set--9538b1a4-4120-4e2d-bf59-3b11fcab05a4"
+        }
+      ]
+    },
+    "C0032": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "TEMP.Veles",
+            "XENOTIME"
+          ],
+          "external_id": "G0088",
+          "name": "TEMP.Veles",
+          "stix_id": "intrusion-set--9538b1a4-4120-4e2d-bf59-3b11fcab05a4"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0032",
+        "first_seen": "2014-10-01T04:00:00.000Z",
+        "last_seen": "2017-01-01T05:00:00.000Z",
+        "name": "C0032",
+        "stix_id": "campaign--7ec2826c-0bf0-4b47-acae-fd683431a4ca"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--dd10cc43-3f46-42f4-9230-69a0e2751ab2",
+          "campaign_ref": "campaign--7ec2826c-0bf0-4b47-acae-fd683431a4ca",
+          "group_ref": "intrusion-set--9538b1a4-4120-4e2d-bf59-3b11fcab05a4"
+        }
+      ]
+    },
+    "C0033": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "PROMETHIUM",
+            "StrongPity"
+          ],
+          "external_id": "G0056",
+          "name": "PROMETHIUM",
+          "stix_id": "intrusion-set--efed95ba-d7e8-47ff-8c53-99c42426ee7c"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0033",
+        "first_seen": "2016-05-01T07:00:00.000Z",
+        "last_seen": "2023-01-01T08:00:00.000Z",
+        "name": "C0033",
+        "stix_id": "campaign--a82bc5ad-5f95-4c6a-9f25-aaf6f476a3c4"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--f372697e-b661-4995-9920-4ec0a9060ebb",
+          "campaign_ref": "campaign--a82bc5ad-5f95-4c6a-9f25-aaf6f476a3c4",
+          "group_ref": "intrusion-set--efed95ba-d7e8-47ff-8c53-99c42426ee7c"
+        }
+      ]
+    },
+    "C0034": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "Sandworm Team",
+            "ELECTRUM",
+            "Telebots",
+            "IRON VIKING",
+            "BlackEnergy (Group)",
+            "Quedagh",
+            "Voodoo Bear",
+            "IRIDIUM",
+            "Seashell Blizzard",
+            "FROZENBARENTS",
+            "APT44"
+          ],
+          "external_id": "G0034",
+          "name": "Sandworm Team",
+          "stix_id": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0034",
+        "first_seen": "2022-06-01T04:00:00.000Z",
+        "last_seen": "2022-10-01T04:00:00.000Z",
+        "name": "2022 Ukraine Electric Power Attack",
+        "stix_id": "campaign--df8eb785-70f8-4300-b444-277ba849083d"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--d3717846-eaab-4fde-99f6-a972dec9323b",
+          "campaign_ref": "campaign--df8eb785-70f8-4300-b444-277ba849083d",
+          "group_ref": "intrusion-set--381fcf73-60f6-4ab2-9991-6af3cbc35192"
+        }
+      ]
+    },
+    "C0035": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "Volt Typhoon",
+            "BRONZE SILHOUETTE",
+            "Vanguard Panda",
+            "DEV-0391",
+            "UNC3236",
+            "Voltzite",
+            "Insidious Taurus",
+            "DazedToad"
+          ],
+          "external_id": "G1017",
+          "name": "Volt Typhoon",
+          "stix_id": "intrusion-set--174279b4-399f-4ddb-966e-5efedd1dd5f2"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0035",
+        "first_seen": "2022-10-01T04:00:00.000Z",
+        "last_seen": "2024-01-01T05:00:00.000Z",
+        "name": "KV Botnet Activity",
+        "stix_id": "campaign--0c259854-4044-4f6c-ac49-118d484b3e3b"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--ddbd85c0-2b3a-4311-966b-abc2e658c340",
+          "campaign_ref": "campaign--0c259854-4044-4f6c-ac49-118d484b3e3b",
+          "group_ref": "intrusion-set--174279b4-399f-4ddb-966e-5efedd1dd5f2"
+        }
+      ]
+    },
+    "C0036": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0036",
+        "first_seen": "2024-02-01T05:00:00.000Z",
+        "last_seen": "2024-02-01T05:00:00.000Z",
+        "name": "Pikabot Distribution February 2024",
+        "stix_id": "campaign--81e89fb4-8d07-4d8a-82f4-bf084f9d5d53"
+      },
+      "relationship_paths": []
+    },
+    "C0037": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0037",
+        "first_seen": "2023-01-01T05:00:00.000Z",
+        "last_seen": "2023-12-01T05:00:00.000Z",
+        "name": "Water Curupira Pikabot Distribution",
+        "stix_id": "campaign--57541e3b-657e-463a-a4ab-ca08d7ea9965"
+      },
+      "relationship_paths": []
+    },
+    "C0038": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "VOID MANTICORE",
+            "COBALT MYSTIQUE",
+            "Handala Hack",
+            "Homeland Justice",
+            "Karma",
+            "Karmabelow80",
+            "BANISHED KITTEN",
+            "Red Sandstorm"
+          ],
+          "external_id": "G1055",
+          "name": "VOID MANTICORE",
+          "stix_id": "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0038",
+        "first_seen": "2021-05-01T04:00:00.000Z",
+        "last_seen": "2022-09-01T04:00:00.000Z",
+        "name": "HomeLand Justice",
+        "stix_id": "campaign--7e21077d-2589-43a7-a5f9-490061289526"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--0dd04e16-ad64-4b7d-af2f-12ad644cfe3e",
+          "campaign_ref": "campaign--7e21077d-2589-43a7-a5f9-490061289526",
+          "group_ref": "intrusion-set--ebd7ce77-c9ba-4fba-bb28-58296ac66559"
+        }
+      ]
+    },
+    "C0039": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "Volt Typhoon",
+            "BRONZE SILHOUETTE",
+            "Vanguard Panda",
+            "DEV-0391",
+            "UNC3236",
+            "Voltzite",
+            "Insidious Taurus",
+            "DazedToad"
+          ],
+          "external_id": "G1017",
+          "name": "Volt Typhoon",
+          "stix_id": "intrusion-set--174279b4-399f-4ddb-966e-5efedd1dd5f2"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0039",
+        "first_seen": "2024-06-01T06:00:00.000Z",
+        "last_seen": "2024-08-01T06:00:00.000Z",
+        "name": "Versa Director Zero Day Exploitation",
+        "stix_id": "campaign--af0ec65a-caa9-40ef-b1c7-21b71fbf3a10"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--b109514b-66b3-4c06-8b1d-4f89e1f2cfde",
+          "campaign_ref": "campaign--af0ec65a-caa9-40ef-b1c7-21b71fbf3a10",
+          "group_ref": "intrusion-set--174279b4-399f-4ddb-966e-5efedd1dd5f2"
+        }
+      ]
+    },
+    "C0040": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "APT41",
+            "Wicked Panda",
+            "Brass Typhoon",
+            "BARIUM"
+          ],
+          "external_id": "G0096",
+          "name": "APT41",
+          "stix_id": "intrusion-set--18854f55-ac7c-4634-bd9a-352dd07613b7"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0040",
+        "first_seen": "2023-01-31T23:00:00.000Z",
+        "last_seen": "2024-06-30T22:00:00.000Z",
+        "name": "APT41 DUST",
+        "stix_id": "campaign--add4d9de-1256-4166-83b8-57087288dced"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--31aebdb8-ce4d-4d31-a144-7a5c354bfd7c",
+          "campaign_ref": "campaign--add4d9de-1256-4166-83b8-57087288dced",
+          "group_ref": "intrusion-set--18854f55-ac7c-4634-bd9a-352dd07613b7"
+        }
+      ]
+    },
+    "C0041": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0041",
+        "first_seen": "2024-01-01T07:00:00.000Z",
+        "last_seen": "2024-01-01T07:00:00.000Z",
+        "name": "FrostyGoop Incident",
+        "stix_id": "campaign--1169ff24-b35f-4d8d-8cf3-643a2834227f"
+      },
+      "relationship_paths": []
+    },
+    "C0042": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "OilRig",
+            "COBALT GYPSY",
+            "IRN2",
+            "APT34",
+            "Helix Kitten",
+            "Evasive Serpens",
+            "Hazel Sandstorm",
+            "EUROPIUM",
+            "ITG13",
+            "Earth Simnavaz",
+            "Crambus",
+            "TA452"
+          ],
+          "external_id": "G0049",
+          "name": "OilRig",
+          "stix_id": "intrusion-set--4ca1929c-7d64-4aab-b849-badbfc0c760d"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0042",
+        "first_seen": "2021-01-01T05:00:00.000Z",
+        "last_seen": "2021-12-01T05:00:00.000Z",
+        "name": "Outer Space",
+        "stix_id": "campaign--a1f5df89-ec82-45ef-b229-4ca6a407dc4f"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--2f87d195-6eb2-49d2-8dcf-a7bd4163cd09",
+          "campaign_ref": "campaign--a1f5df89-ec82-45ef-b229-4ca6a407dc4f",
+          "group_ref": "intrusion-set--4ca1929c-7d64-4aab-b849-badbfc0c760d"
+        }
+      ]
+    },
+    "C0043": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0043",
+        "first_seen": "2021-01-01T07:00:00.000Z",
+        "last_seen": "2022-04-01T06:00:00.000Z",
+        "name": "Indian Critical Infrastructure Intrusions",
+        "stix_id": "campaign--4b7f9839-4822-4c19-8a1f-70bb61ba97e1"
+      },
+      "relationship_paths": []
+    },
+    "C0044": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "OilRig",
+            "COBALT GYPSY",
+            "IRN2",
+            "APT34",
+            "Helix Kitten",
+            "Evasive Serpens",
+            "Hazel Sandstorm",
+            "EUROPIUM",
+            "ITG13",
+            "Earth Simnavaz",
+            "Crambus",
+            "TA452"
+          ],
+          "external_id": "G0049",
+          "name": "OilRig",
+          "stix_id": "intrusion-set--4ca1929c-7d64-4aab-b849-badbfc0c760d"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0044",
+        "first_seen": "2022-01-01T05:00:00.000Z",
+        "last_seen": "2022-12-01T05:00:00.000Z",
+        "name": "Juicy Mix",
+        "stix_id": "campaign--7ab2f1a1-26af-4204-ad84-d640fde391da"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--f0ce9b1b-9184-4071-9b02-1eb2f38f5856",
+          "campaign_ref": "campaign--7ab2f1a1-26af-4204-ad84-d640fde391da",
+          "group_ref": "intrusion-set--4ca1929c-7d64-4aab-b849-badbfc0c760d"
+        }
+      ]
+    },
+    "C0045": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0045",
+        "first_seen": "2023-09-01T04:00:00.000Z",
+        "last_seen": "2024-03-01T05:00:00.000Z",
+        "name": "ShadowRay",
+        "stix_id": "campaign--57899965-b171-48ed-bbb4-8faffa3d836a"
+      },
+      "relationship_paths": []
+    },
+    "C0046": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0046",
+        "first_seen": "2023-07-01T06:00:00.000Z",
+        "last_seen": "2024-04-01T06:00:00.000Z",
+        "name": "ArcaneDoor",
+        "stix_id": "campaign--a543ef15-91ea-4aa9-9c10-267d56e1ee82"
+      },
+      "relationship_paths": []
+    },
+    "C0047": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "Mustang Panda",
+            "TA416",
+            "RedDelta",
+            "BRONZE PRESIDENT",
+            "STATELY TAURUS",
+            "FIREANT",
+            "CAMARO DRAGON",
+            "EARTH PRETA",
+            "HIVE0154",
+            "TWILL TYPHOON",
+            "TANTALUM",
+            "LUMINOUS MOTH",
+            "UNC6384",
+            "TEMP.Hex",
+            "Red Lich",
+            "ClumsyToad"
+          ],
+          "external_id": "G0129",
+          "name": "Mustang Panda",
+          "stix_id": "intrusion-set--420ac20b-f2b9-42b8-aa1a-6d4b72895ca4"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0047",
+        "first_seen": "2023-07-01T06:00:00.000Z",
+        "last_seen": "2024-12-01T07:00:00.000Z",
+        "name": "RedDelta Modified PlugX Infection Chain Operations",
+        "stix_id": "campaign--276671b5-5425-48db-ad65-c8c2564a969b"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--88015217-a3df-4654-bea1-b1d8241b67ee",
+          "campaign_ref": "campaign--276671b5-5425-48db-ad65-c8c2564a969b",
+          "group_ref": "intrusion-set--420ac20b-f2b9-42b8-aa1a-6d4b72895ca4"
+        }
+      ]
+    },
+    "C0048": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0048",
+        "first_seen": "2024-03-01T05:00:00.000Z",
+        "last_seen": "2024-04-01T04:00:00.000Z",
+        "name": "Operation MidnightEclipse",
+        "stix_id": "campaign--455b011a-2510-49ab-a96f-2f84d6a80189"
+      },
+      "relationship_paths": []
+    },
+    "C0049": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "Leviathan",
+            "MUDCARP",
+            "Kryptonite Panda",
+            "Gadolinium",
+            "BRONZE MOHAWK",
+            "TEMP.Jumper",
+            "APT40",
+            "TEMP.Periscope",
+            "Gingham Typhoon"
+          ],
+          "external_id": "G0065",
+          "name": "Leviathan",
+          "stix_id": "intrusion-set--7113eaa5-ba79-4fb3-b68a-398ee9cd698e"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0049",
+        "first_seen": "2022-04-01T06:00:00.000Z",
+        "last_seen": "2022-09-01T06:00:00.000Z",
+        "name": "Leviathan Australian Intrusions",
+        "stix_id": "campaign--b66bc597-399c-4e4d-828a-1ed4a7f1fb15"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--920874f2-f1e1-4981-9469-4ee45b6218a7",
+          "campaign_ref": "campaign--b66bc597-399c-4e4d-828a-1ed4a7f1fb15",
+          "group_ref": "intrusion-set--7113eaa5-ba79-4fb3-b68a-398ee9cd698e"
+        }
+      ]
+    },
+    "C0050": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0050",
+        "first_seen": "2023-06-01T04:00:00.000Z",
+        "last_seen": "2024-06-01T04:00:00.000Z",
+        "name": "J-magic Campaign",
+        "stix_id": "campaign--58c4fd17-88f5-433a-8242-e9cac31f3c45"
+      },
+      "relationship_paths": []
+    },
+    "C0051": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "APT28",
+            "IRON TWILIGHT",
+            "SNAKEMACKEREL",
+            "Swallowtail",
+            "Group 74",
+            "Sednit",
+            "Sofacy",
+            "Pawn Storm",
+            "Fancy Bear",
+            "STRONTIUM",
+            "Tsar Team",
+            "Threat Group-4127",
+            "TG-4127",
+            "Forest Blizzard",
+            "FROZENLAKE",
+            "GruesomeLarch"
+          ],
+          "external_id": "G0007",
+          "name": "APT28",
+          "stix_id": "intrusion-set--bef4c620-0787-42a8-a96d-b7eb6e85917c"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0051",
+        "first_seen": "2022-02-01T05:00:00.000Z",
+        "last_seen": "2024-11-01T04:00:00.000Z",
+        "name": "APT28 Nearest Neighbor Campaign",
+        "stix_id": "campaign--a010610e-22cb-437e-bfde-b78861bdca7a"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--f113a6b7-ffe0-4fe4-9c29-75936a093f7a",
+          "campaign_ref": "campaign--a010610e-22cb-437e-bfde-b78861bdca7a",
+          "group_ref": "intrusion-set--bef4c620-0787-42a8-a96d-b7eb6e85917c"
+        }
+      ]
+    },
+    "C0052": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "Ke3chang",
+            "APT15",
+            "Mirage",
+            "Vixen Panda",
+            "GREF",
+            "Playful Dragon",
+            "RoyalAPT",
+            "NICKEL",
+            "Nylon Typhoon"
+          ],
+          "external_id": "G0004",
+          "name": "Ke3chang",
+          "stix_id": "intrusion-set--6713ab67-e25b-49cc-808d-2b36d4fbc35c"
+        },
+        {
+          "aliases": [
+            "APT5",
+            "Mulberry Typhoon",
+            "MANGANESE",
+            "BRONZE FLEETWOOD",
+            "Keyhole Panda",
+            "UNC2630"
+          ],
+          "external_id": "G1023",
+          "name": "APT5",
+          "stix_id": "intrusion-set--c1aab4c9-4c34-4f4f-8541-d529e46a07f9"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0052",
+        "first_seen": "2019-01-01T05:00:00.000Z",
+        "last_seen": "2024-05-01T04:00:00.000Z",
+        "name": "SPACEHOP Activity",
+        "stix_id": "campaign--83e1f587-34da-44cc-b65b-a72479cb1616"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--c1b3aa1d-ffc8-4ca9-8214-aa671c5d27f6",
+          "campaign_ref": "campaign--83e1f587-34da-44cc-b65b-a72479cb1616",
+          "group_ref": "intrusion-set--6713ab67-e25b-49cc-808d-2b36d4fbc35c"
+        },
+        {
+          "attributed_to_relationship_stix_id": "relationship--7e632f9c-c55b-4aef-8bdc-56e0317375ee",
+          "campaign_ref": "campaign--83e1f587-34da-44cc-b65b-a72479cb1616",
+          "group_ref": "intrusion-set--c1aab4c9-4c34-4f4f-8541-d529e46a07f9"
+        }
+      ]
+    },
+    "C0053": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0053",
+        "first_seen": "2019-01-01T05:00:00.000Z",
+        "last_seen": "2024-05-01T04:00:00.000Z",
+        "name": "FLORAHOX Activity",
+        "stix_id": "campaign--f494272a-c110-4574-be90-42c4957f7ae7"
+      },
+      "relationship_paths": []
+    },
+    "C0055": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0055",
+        "first_seen": "2023-08-01T04:00:00.000Z",
+        "last_seen": "2025-08-01T04:00:00.000Z",
+        "name": "Quad7 Activity",
+        "stix_id": "campaign--e7511089-1076-4a3b-984d-1a0a8afe31e9"
+      },
+      "relationship_paths": []
+    },
+    "C0056": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "UNC3886"
+          ],
+          "external_id": "G1048",
+          "name": "UNC3886",
+          "stix_id": "intrusion-set--461b8e25-8f4a-4ea2-a4a8-e39df7ce6630"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0056",
+        "first_seen": "2024-07-01T04:00:00.000Z",
+        "last_seen": "2025-03-01T05:00:00.000Z",
+        "name": "RedPenguin",
+        "stix_id": "campaign--35879bf3-0a21-4cc1-9e42-6de917a22501"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--3cde6cab-a70e-45d3-b1e5-a7a6ba08241e",
+          "campaign_ref": "campaign--35879bf3-0a21-4cc1-9e42-6de917a22501",
+          "group_ref": "intrusion-set--461b8e25-8f4a-4ea2-a4a8-e39df7ce6630"
+        }
+      ]
+    },
+    "C0057": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "AppleJeus",
+            "Gleaming Pisces",
+            "Citrine Sleet",
+            "UNC1720",
+            "UNC4736"
+          ],
+          "external_id": "G1049",
+          "name": "AppleJeus",
+          "stix_id": "intrusion-set--14225573-63b5-4e50-ba9a-5fdcaf6a7b4c"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0057",
+        "first_seen": "2022-11-01T06:00:00.000Z",
+        "last_seen": "2023-03-01T05:00:00.000Z",
+        "name": "3CX Supply Chain Attack",
+        "stix_id": "campaign--4fd53ccc-c6b1-4e3c-abe8-a456d46d789e"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--7c78e819-d227-4469-967d-08dc9f50edc9",
+          "campaign_ref": "campaign--4fd53ccc-c6b1-4e3c-abe8-a456d46d789e",
+          "group_ref": "intrusion-set--14225573-63b5-4e50-ba9a-5fdcaf6a7b4c"
+        }
+      ]
+    },
+    "C0058": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0058",
+        "first_seen": "2025-07-01T04:00:00.000Z",
+        "last_seen": "2025-07-01T04:00:00.000Z",
+        "name": "SharePoint ToolShell Exploitation",
+        "stix_id": "campaign--1a0576df-df21-4775-843e-844d8a58a94b"
+      },
+      "relationship_paths": []
+    },
+    "C0059": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0059",
+        "first_seen": "2004-10-01T04:00:00.000Z",
+        "last_seen": "2025-09-01T04:00:00.000Z",
+        "name": "Salesforce Data Exfiltration",
+        "stix_id": "campaign--9cea8bec-07c5-422b-84b8-99d3128ce570"
+      },
+      "relationship_paths": []
+    },
+    "C0060": {
+      "attributed_groups": [
+        {
+          "aliases": [
+            "MirrorFace",
+            "Earth Kasha"
+          ],
+          "external_id": "G1054",
+          "name": "MirrorFace",
+          "stix_id": "intrusion-set--8cf6e33b-b6ef-4a1f-a77c-0ecdde93161f"
+        }
+      ],
+      "campaign": {
+        "external_id": "C0060",
+        "first_seen": "2004-06-01T04:00:00.000Z",
+        "last_seen": "2004-09-01T04:00:00.000Z",
+        "name": "Operation AkaiRy\u016b",
+        "stix_id": "campaign--8a7c55ea-f363-4a03-b4c5-fa3fdb132d8f"
+      },
+      "relationship_paths": [
+        {
+          "attributed_to_relationship_stix_id": "relationship--2611f491-1c9d-4c2a-82da-8a9bcfc31870",
+          "campaign_ref": "campaign--8a7c55ea-f363-4a03-b4c5-fa3fdb132d8f",
+          "group_ref": "intrusion-set--8cf6e33b-b6ef-4a1f-a77c-0ecdde93161f"
+        }
+      ]
+    },
+    "C0061": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0061",
+        "first_seen": "2024-06-01T04:00:00.000Z",
+        "last_seen": "2024-07-01T04:00:00.000Z",
+        "name": "Operation Digital Eye",
+        "stix_id": "campaign--75ea699b-bff5-4541-b9b7-df4996c9db3c"
+      },
+      "relationship_paths": []
+    },
+    "C0062": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0062",
+        "first_seen": "2025-09-01T04:00:00.000Z",
+        "last_seen": "2025-09-01T04:00:00.000Z",
+        "name": "Anthropic AI-orchestrated Campaign",
+        "stix_id": "campaign--590cd5b0-2421-4158-84a2-db13b5db02a3"
+      },
+      "relationship_paths": []
+    },
+    "C0063": {
+      "attributed_groups": [],
+      "campaign": {
+        "external_id": "C0063",
+        "first_seen": "2025-03-01T05:00:00.000Z",
+        "last_seen": "2025-12-01T05:00:00.000Z",
+        "name": "2025 Poland Wiper Attacks",
+        "stix_id": "campaign--a6aba167-5ada-4812-9da1-912c0e73335d"
+      },
+      "relationship_paths": []
+    }
+  },
+  "phase": "card6_part_b_step_7c_full_campaign_group_golden_set",
+  "schema_version": "1.0",
+  "scope": {
+    "answer_scope": "active_campaign_attributed_to_active_intrusion_set",
+    "domain": "enterprise-attack",
+    "methodology_note": "Only active STIX attributed-to relationships directed from an active campaign to an active intrusion-set are included. Negative cases assert only that no qualifying relationship exists in the pinned Enterprise ATT&CK snapshot; they do not make broader real-world attribution claims.",
+    "one_aggregate_pair_per_active_campaign": true,
+    "relationship_type": "attributed-to",
+    "revoked_and_deprecated_excluded": true,
+    "source_type": "campaign",
+    "target_type": "intrusion-set"
+  },
+  "selection": {
+    "active_campaign_count": 56,
+    "embedded_campaign_group_fact_count": 26,
+    "multi_group_aggregate_pairs": 1,
+    "negative_existence_distinct_campaign_count": 10,
+    "negative_existence_pairs": 10,
+    "pair_count": 66,
+    "positive_aggregate_pairs": 25,
+    "prototype_negative_preserved": true,
+    "zero_path_aggregate_pairs": 31
+  },
+  "source": {
+    "commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+    "domain": "enterprise-attack",
+    "path": "enterprise-attack/enterprise-attack.json",
+    "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+    "sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+    "stix_version": "2.1"
+  }
+}

@@ -1,0 +1,13 @@
+# Step 8a local-only Ragas prototype.
+# Ragas judge and embeddings are explicitly supplied by evaluate_rag.py;
+# the library defaults must never select a hosted provider.
+ragas==0.4.3
+
+# Ragas 0.4.3 does not constrain LangChain below 1.x, but its Ollama wrapper
+# path still imports the 0.3.x community layout. Pin the compatible family so
+# a fresh install cannot resolve to the import-broken 1.x/0.4.x combination.
+langchain==0.3.27
+langchain-core==0.3.80
+langchain-community==0.3.31
+langchain-openai==0.3.35
+langchain-ollama==0.3.10

@@ -1,0 +1,184 @@
+{
+  "checkpoint": "Card 5 Part 1 roadmap step 8 Linux pilot only",
+  "sigma_commit": "65b39fa48afc2739ed01df03ef61c68be995bb36",
+  "hybrid_policy": "A structured condition is authoritative for a grouped Linux audit record once one full positive field branch is available; otherwise that rule/event falls back to raw regex.",
+  "inventory": {
+    "approved_linux_sigma_candidates": 155,
+    "structured_linux_candidates": 131,
+    "raw_fallback_only_candidates": 24,
+    "canonical_linux_field_count": 15,
+    "distinct_sigma_source_fields": 24,
+    "sigma_source_field_references": {
+      "image": 79,
+      "commandline": 71,
+      "type": 38,
+      "a0": 24,
+      "a1": 22,
+      "a2": 11,
+      "name": 9,
+      "a3": 7,
+      "targetfilename": 5,
+      "exe": 4,
+      "syscall": 4,
+      "parentcommandline": 4,
+      "parentimage": 4,
+      "a4": 3,
+      "a5": 2,
+      "comm": 2,
+      "a7": 1,
+      "a6": 1,
+      "nametype": 1,
+      "unit": 1,
+      "key": 1,
+      "euid": 1,
+      "destinationip": 1,
+      "destinationhostname": 1
+    }
+  },
+  "raw_fallback_only": [
+    {
+      "source_path": "rules/linux/auditd/execve/lnx_auditd_binary_padding.yml",
+      "source": "Sigma: lnx_auditd_binary_padding.yml",
+      "technique_id": "T1027.001",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/auditd/execve/lnx_auditd_bpfdoor_port_redirect.yml",
+      "source": "Sigma: lnx_auditd_bpfdoor_port_redirect.yml",
+      "technique_id": "T1686",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/auditd/execve/lnx_auditd_change_file_time_attr.yml",
+      "source": "Sigma: lnx_auditd_change_file_time_attr.yml",
+      "technique_id": "T1070.006",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/auditd/execve/lnx_auditd_find_cred_in_files.yml",
+      "source": "Sigma: lnx_auditd_find_cred_in_files.yml",
+      "technique_id": "T1552.001",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/auditd/execve/lnx_auditd_susp_histfile_operations.yml",
+      "source": "Sigma: lnx_auditd_susp_histfile_operations.yml",
+      "technique_id": "T1552.003",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/auditd/execve/lnx_auditd_system_shutdown_reboot.yml",
+      "source": "Sigma: lnx_auditd_system_shutdown_reboot.yml",
+      "technique_id": "T1529",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/clamav/lnx_clamav_relevant_message.yml",
+      "source": "Sigma: lnx_clamav_relevant_message.yml",
+      "technique_id": "T1588.001",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/cron/lnx_cron_crontab_file_modification.yml",
+      "source": "Sigma: lnx_cron_crontab_file_modification.yml",
+      "technique_id": "T1053.003",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/guacamole/lnx_guacamole_susp_guacamole.yml",
+      "source": "Sigma: lnx_guacamole_susp_guacamole.yml",
+      "technique_id": "T1212",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/lnx_apt_equationgroup_lnx.yml",
+      "source": "Sigma: lnx_apt_equationgroup_lnx.yml",
+      "technique_id": "T1059.004",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/lnx_buffer_overflows.yml",
+      "source": "Sigma: lnx_buffer_overflows.yml",
+      "technique_id": "T1068",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/lnx_clear_syslog.yml",
+      "source": "Sigma: lnx_clear_syslog.yml",
+      "technique_id": "T1565.001",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/lnx_file_copy.yml",
+      "source": "Sigma: lnx_file_copy.yml",
+      "technique_id": "T1105",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/lnx_ldso_preload_injection.yml",
+      "source": "Sigma: lnx_ldso_preload_injection.yml",
+      "technique_id": "T1574.006",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/lnx_shell_clear_cmd_history.yml",
+      "source": "Sigma: lnx_shell_clear_cmd_history.yml",
+      "technique_id": "T1070.003",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/lnx_shell_susp_commands.yml",
+      "source": "Sigma: lnx_shell_susp_commands.yml",
+      "technique_id": "T1059.004",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/lnx_shell_susp_rev_shells.yml",
+      "source": "Sigma: lnx_shell_susp_rev_shells.yml",
+      "technique_id": "T1059.004",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/lnx_shellshock.yml",
+      "source": "Sigma: lnx_shellshock.yml",
+      "technique_id": "T1505.003",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/lnx_susp_jexboss.yml",
+      "source": "Sigma: lnx_susp_jexboss.yml",
+      "technique_id": "T1059.004",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/lnx_symlink_etc_passwd.yml",
+      "source": "Sigma: lnx_symlink_etc_passwd.yml",
+      "technique_id": "T1204.001",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/sshd/lnx_sshd_susp_ssh.yml",
+      "source": "Sigma: lnx_sshd_susp_ssh.yml",
+      "technique_id": "T1190",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/syslog/lnx_syslog_security_tools_disabling_syslog.yml",
+      "source": "Sigma: lnx_syslog_security_tools_disabling_syslog.yml",
+      "technique_id": "T1686",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/syslog/lnx_syslog_susp_named.yml",
+      "source": "Sigma: lnx_syslog_susp_named.yml",
+      "technique_id": "T1190",
+      "reason": "fieldless Sigma value requires raw fallback"
+    },
+    {
+      "source_path": "rules/linux/builtin/vsftpd/lnx_vsftpd_susp_error_messages.yml",
+      "source": "Sigma: lnx_vsftpd_susp_error_messages.yml",
+      "technique_id": "T1190",
+      "reason": "fieldless Sigma value requires raw fallback"
+    }
+  ]
+}

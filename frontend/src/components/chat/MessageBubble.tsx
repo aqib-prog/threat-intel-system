@@ -109,7 +109,12 @@ export function MessageBubble({ message, typewrite }: { message: ChatMessage; ty
         )}
 
         <div className="relative">
-          <MarkdownMessage text={displayed} messageId={message.id} />
+          <MarkdownMessage
+            text={displayed}
+            messageId={message.id}
+            groundedIds={message.groundedIds}
+            nodes={message.nodes}
+          />
           {!done && <span className="ml-0.5 inline-block h-4 w-[7px] translate-y-0.5 bg-cyan motion-safe:animate-blink" />}
         </div>
 

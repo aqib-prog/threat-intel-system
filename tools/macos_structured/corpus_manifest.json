@@ -1,0 +1,628 @@
+{
+  "corpus_name": "sbousseaden/macOS-ATTACK-DATASET",
+  "corpus_commit": "0315ec88d1f4b338c07315223bc6a53619465472",
+  "platform": "macos",
+  "selection_policy": "Use every review-approved mapping candidate that passes the deterministic macOS export parser. needs_review mappings and unparseable source files are listed but excluded from scoring. Selection occurs before detector results.",
+  "license_observation": "The upstream README links GNU GPL v3. Corpus telemetry remains in the external pinned checkout and is not redistributed in this repository.",
+  "mapping_manifest": "tools/macos_structured/manual_ground_truth_mapping.json",
+  "mapping_candidate_count": 55,
+  "needs_review_count": 11,
+  "parse_inventory": {
+    "source_files": 54,
+    "elastic_records": 88,
+    "triple_quoted_string_repairs": 6,
+    "trailing_comma_repairs": 1,
+    "missing_root_closure_repairs": 0
+  },
+  "excluded": [
+    {
+      "capture": "Discovery/discovery_system_profile_sw_vers.json",
+      "reason": "parse_eligibility: unparseable JSON at line 165, column 26: Invalid control character at"
+    }
+  ],
+  "cases": [
+    {
+      "id": "MACOS-ATTACK-001",
+      "title": "collection_clipboard_osascript_pbpast",
+      "capture": "Collection/collection_clipboard_osascript_pbpast.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "collection",
+      "ground_truth": [
+        "T1115"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-002",
+      "title": "collection_discovery_bash_history_procexec",
+      "capture": "Collection/collection_discovery_bash_history_procexec.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "collection",
+      "ground_truth": [
+        "T1552.003"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-003",
+      "title": "collection_screencapture_command_proc_file",
+      "capture": "Collection/collection_screencapture_command_proc_file.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "collection",
+      "ground_truth": [
+        "T1113"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-004",
+      "title": "credaccess_browsers_cookies_access",
+      "capture": "Credential Access/credaccess_browsers_cookies_access.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "credential_access",
+      "ground_truth": [
+        "T1539"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-005",
+      "title": "credaccess_cookies_crimes_chrome_debugging",
+      "capture": "Credential Access/credaccess_cookies_crimes_chrome_debugging.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "credential_access",
+      "ground_truth": [
+        "T1539"
+      ],
+      "mapping_confidence": "medium"
+    },
+    {
+      "id": "MACOS-ATTACK-006",
+      "title": "credaccess_kerberos_credcache_kcc",
+      "capture": "Credential Access/credaccess_kerberos_credcache_kcc.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "credential_access",
+      "ground_truth": [
+        "T1558.005"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-007",
+      "title": "credaccess_keychain_dumping_security",
+      "capture": "Credential Access/credaccess_keychain_dumping_security.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "credential_access",
+      "ground_truth": [
+        "T1555.001"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-008",
+      "title": "credaccess_keychain_pwd_retrieval_security",
+      "capture": "Credential Access/credaccess_keychain_pwd_retrieval_security.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "credential_access",
+      "ground_truth": [
+        "T1555.001"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-009",
+      "title": "credaccess_phish_input_capture_applescript",
+      "capture": "Credential Access/credaccess_phish_input_capture_applescript.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "credential_access",
+      "ground_truth": [
+        "T1056.002"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-010",
+      "title": "credaccess_systemkey_hexdump",
+      "capture": "Credential Access/credaccess_systemkey_hexdump.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "credential_access",
+      "ground_truth": [
+        "T1003"
+      ],
+      "mapping_confidence": "medium"
+    },
+    {
+      "id": "MACOS-ATTACK-011",
+      "title": "credaccess_tcc_bypass_sshd_scp_safari_cookies",
+      "capture": "Credential Access/credaccess_tcc_bypass_sshd_scp_safari_cookies.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "credential_access",
+      "ground_truth": [
+        "T1548.006",
+        "T1539"
+      ],
+      "mapping_confidence": "medium"
+    },
+    {
+      "id": "MACOS-ATTACK-012",
+      "title": "credential_access_account_pwd_hash_read",
+      "capture": "Credential Access/credential_access_account_pwd_hash_read.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "credential_access",
+      "ground_truth": [
+        "T1003"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-013",
+      "title": "evasion_deletion_quarantine_xattr",
+      "capture": "Defense Evasion/evasion_deletion_quarantine_xattr.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "defense_evasion",
+      "ground_truth": [
+        "T1553.001"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-014",
+      "title": "evasion_disable_securityupdates",
+      "capture": "Defense Evasion/evasion_disable_securityupdates.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "defense_evasion",
+      "ground_truth": [
+        "T1685"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-015",
+      "title": "evasion_envar_modif_launchctl_dylib_home",
+      "capture": "Defense Evasion/evasion_envar_modif_launchctl_dylib_home.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "defense_evasion",
+      "ground_truth": [
+        "T1574.006"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-016",
+      "title": "evasion_execution_electron_tcc_bypass_nodejs_childproc_osascript_apfell",
+      "capture": "Defense Evasion/evasion_execution_electron_tcc_bypass_nodejs_childproc_osascript_apfell.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "defense_evasion",
+      "ground_truth": [
+        "T1548.006",
+        "T1059.007"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-017",
+      "title": "evasion_install_root_trust_certificate",
+      "capture": "Defense Evasion/evasion_install_root_trust_certificate.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "defense_evasion",
+      "ground_truth": [
+        "T1553.004"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-018",
+      "title": "evasion_privesc_credaccess__persis_auth_modules_modif",
+      "capture": "Defense Evasion/evasion_privesc_credaccess__persis_auth_modules_modif.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "defense_evasion",
+      "ground_truth": [
+        "T1556.003"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-019",
+      "title": "evasion_tcc_bypass_tccdb_direct_modif_sqlite",
+      "capture": "Defense Evasion/evasion_tcc_bypass_tccdb_direct_modif_sqlite.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "defense_evasion",
+      "ground_truth": [
+        "T1548.006"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-020",
+      "title": "evasion_unloading_kext_kextunload",
+      "capture": "Defense Evasion/evasion_unloading_kext_kextunload.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "defense_evasion",
+      "ground_truth": [
+        "T1685"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-021",
+      "title": "discovery_security_sw_little_snitch",
+      "capture": "Discovery/discovery_security_sw_little_snitch.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "discovery",
+      "ground_truth": [
+        "T1518.001"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-022",
+      "title": "discovery_users_and_groups_dscl",
+      "capture": "Discovery/discovery_users_and_groups_dscl.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "discovery",
+      "ground_truth": [
+        "T1087.001",
+        "T1069.002"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-023",
+      "title": "execution_automator_workflow_template_jxa",
+      "capture": "Execution/execution_automator_workflow_template_jxa.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "execution",
+      "ground_truth": [
+        "T1059.007",
+        "T1059.004",
+        "T1105"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-024",
+      "title": "execution_evasion_masquerading_and_hidden_file",
+      "capture": "Execution/execution_evasion_masquerading_and_hidden_file.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "execution",
+      "ground_truth": [
+        "T1036",
+        "T1564.001"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-025",
+      "title": "execution_pkg_preinstall_shell_script_file_proc",
+      "capture": "Execution/execution_pkg_preinstall_shell_script_file_proc.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "execution",
+      "ground_truth": [
+        "T1546.016"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-026",
+      "title": "execution_scripting_jxa_osascript_apfell_dwnld",
+      "capture": "Execution/execution_scripting_jxa_osascript_apfell_dwnld.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "execution",
+      "ground_truth": [
+        "T1059.007",
+        "T1105"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-027",
+      "title": "execution_scripting_python",
+      "capture": "Execution/execution_scripting_python.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "execution",
+      "ground_truth": [
+        "T1059.006",
+        "T1027"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-028",
+      "title": "execution_suspicious_path_masquerading",
+      "capture": "Execution/execution_suspicious_path_masquerading.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "execution",
+      "ground_truth": [
+        "T1036"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-029",
+      "title": "lateral_movement_execution_reverse_shell",
+      "capture": "Lateral Movement/lateral_movement_execution_reverse_shell.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "lateral_movement",
+      "ground_truth": [
+        "T1059.004"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-030",
+      "title": "lateral_movement_ssh_from_python_procexec",
+      "capture": "Lateral Movement/lateral_movement_ssh_from_python_procexec.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "lateral_movement",
+      "ground_truth": [
+        "T1021.004"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-031",
+      "title": "persistence_bashprofile_modify",
+      "capture": "Persistence/persistence_bashprofile_modify.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "persistence",
+      "ground_truth": [
+        "T1546.004"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-032",
+      "title": "persistence_create_local_account_hidden_logon",
+      "capture": "Persistence/persistence_create_local_account_hidden_logon.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "persistence",
+      "ground_truth": [
+        "T1564.002"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-033",
+      "title": "persistence_crontab_creation",
+      "capture": "Persistence/persistence_crontab_creation.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "persistence",
+      "ground_truth": [
+        "T1053.003"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-034",
+      "title": "persistence_crontab_runtime",
+      "capture": "Persistence/persistence_crontab_runtime.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "persistence",
+      "ground_truth": [
+        "T1053.003"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-035",
+      "title": "persistence_docker_pref_modif_persistjxa",
+      "capture": "Persistence/persistence_docker_pref_modif_persistjxa.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "persistence",
+      "ground_truth": [
+        "T1647"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-036",
+      "title": "persistence_emond_process_execution",
+      "capture": "Persistence/persistence_emond_process_execution.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "persistence",
+      "ground_truth": [
+        "T1546.014"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-037",
+      "title": "persistence_emond_rules_filemod",
+      "capture": "Persistence/persistence_emond_rules_filemod.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "persistence",
+      "ground_truth": [
+        "T1546.014"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-038",
+      "title": "persistence_execution_hidden_launchd_childproc",
+      "capture": "Persistence/persistence_execution_hidden_launchd_childproc.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "persistence",
+      "ground_truth": [
+        "T1564.001"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-039",
+      "title": "persistence_execution_hidden_loginitem_creation_osascript",
+      "capture": "Persistence/persistence_execution_hidden_loginitem_creation_osascript.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "persistence",
+      "ground_truth": [
+        "T1547.015"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-040",
+      "title": "persistence_launchagent_hidden_file",
+      "capture": "Persistence/persistence_launchagent_hidden_file.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "persistence",
+      "ground_truth": [
+        "T1543.001",
+        "T1564.001"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-041",
+      "title": "persistence_launchdaemon_file_creation",
+      "capture": "Persistence/persistence_launchdaemon_file_creation.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "persistence",
+      "ground_truth": [
+        "T1543.004"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-042",
+      "title": "persistence_login_hook_process_execution",
+      "capture": "Persistence/persistence_login_hook_process_execution.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "persistence",
+      "ground_truth": [
+        "T1037.002"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-043",
+      "title": "persistence_login_plist_script_filemod",
+      "capture": "Persistence/persistence_login_plist_script_filemod.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "persistence",
+      "ground_truth": [
+        "T1037.002"
+      ],
+      "mapping_confidence": "medium"
+    },
+    {
+      "id": "MACOS-ATTACK-044",
+      "title": "persistence_periodic_job_fimemod",
+      "capture": "Persistence/persistence_periodic_job_fimemod.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "persistence",
+      "ground_truth": [
+        "T1053"
+      ],
+      "mapping_confidence": "medium"
+    },
+    {
+      "id": "MACOS-ATTACK-045",
+      "title": "persistence_ssh_authorized_keys_filemod",
+      "capture": "Persistence/persistence_ssh_authorized_keys_filemod.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "persistence",
+      "ground_truth": [
+        "T1098.004"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-046",
+      "title": "persistence_vim_plugin_filemod",
+      "capture": "Persistence/persistence_vim_plugin_filemod.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "persistence",
+      "ground_truth": [
+        "T1546"
+      ],
+      "mapping_confidence": "medium"
+    },
+    {
+      "id": "MACOS-ATTACK-047",
+      "title": "privesc_evasion_CVE-2020-9934_fake_tccdb_home_envar_manip",
+      "capture": "Privileges Elevation/privesc_evasion_CVE-2020-9934_fake_tccdb_home_envar_manip.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "privileges_elevation",
+      "ground_truth": [
+        "T1548.006"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-048",
+      "title": "privesc_evasion_sudoers_modification",
+      "capture": "Privileges Elevation/privesc_evasion_sudoers_modification.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "privileges_elevation",
+      "ground_truth": [
+        "T1548.003"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-049",
+      "title": "privesc_evasion_tccp_bypass_apfs_mount_cve-2020-9771",
+      "capture": "Privileges Elevation/privesc_evasion_tccp_bypass_apfs_mount_cve-2020-9771.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "privileges_elevation",
+      "ground_truth": [
+        "T1548.006"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-050",
+      "title": "privesc_execution_enable_root_account",
+      "capture": "Privileges Elevation/privesc_execution_enable_root_account.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "privileges_elevation",
+      "ground_truth": [
+        "T1098"
+      ],
+      "mapping_confidence": "medium"
+    },
+    {
+      "id": "MACOS-ATTACK-051",
+      "title": "privesc_execution_setuid_chmod",
+      "capture": "Privileges Elevation/privesc_execution_setuid_chmod.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "privileges_elevation",
+      "ground_truth": [
+        "T1548.001"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-052",
+      "title": "privesc_runas_admin_applescript",
+      "capture": "Privileges Elevation/privesc_runas_admin_applescript.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "privileges_elevation",
+      "ground_truth": [
+        "T1548.004"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-053",
+      "title": "privesc_seauthtrampoline_authorizationexecutewith_privs",
+      "capture": "Privileges Elevation/privesc_seauthtrampoline_authorizationexecutewith_privs.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "privileges_elevation",
+      "ground_truth": [
+        "T1548.004"
+      ],
+      "mapping_confidence": "high"
+    },
+    {
+      "id": "MACOS-ATTACK-054",
+      "title": "privesc_user_added_to_admin_group",
+      "capture": "Privileges Elevation/privesc_user_added_to_admin_group.json",
+      "reader": "macos_attack_dataset",
+      "tactic": "privileges_elevation",
+      "ground_truth": [
+        "T1098.007"
+      ],
+      "mapping_confidence": "high"
+    }
+  ]
+}

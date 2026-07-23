@@ -1,0 +1,3203 @@
+{
+  "extraction": {
+    "direct_path_count": 208,
+    "distinct_referenced_technique_count": 139,
+    "inactive_filter_audit": {
+      "bundle_uses_relationship_count": 18220,
+      "inactive_uses_relationship_count": 0,
+      "qualifying_direct_path_count": 208
+    },
+    "software": [
+      {
+        "external_id": "S0002",
+        "name": "Mimikatz",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+        "stix_type": "tool"
+      },
+      {
+        "external_id": "S0154",
+        "name": "Cobalt Strike",
+        "platforms": [
+          "Linux",
+          "macOS",
+          "Windows"
+        ],
+        "stix_id": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+        "stix_type": "malware"
+      },
+      {
+        "external_id": "S0367",
+        "name": "Emotet",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+        "stix_type": "malware"
+      },
+      {
+        "external_id": "S0366",
+        "name": "WannaCry",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+        "stix_type": "malware"
+      },
+      {
+        "external_id": "S0266",
+        "name": "TrickBot",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+        "stix_type": "malware"
+      }
+    ],
+    "technique_counts_by_software": {
+      "S0002": 17,
+      "S0154": 73,
+      "S0266": 55,
+      "S0366": 16,
+      "S0367": 47
+    }
+  },
+  "pairs": [
+    {
+      "case_type": "aggregate_software_techniques",
+      "expected_answer": "S0002 (Mimikatz) directly uses T1003.001 (LSASS Memory), T1003.002 (Security Account Manager), T1003.004 (LSA Secrets), T1003.006 (DCSync), T1098 (Account Manipulation), T1134.005 (SID-History Injection), T1207 (Rogue Domain Controller), T1547.005 (Security Support Provider), T1550.002 (Pass the Hash), T1550.003 (Pass the Ticket), T1552.004 (Private Keys), T1555 (Credentials from Password Stores), T1555.003 (Credentials from Web Browsers), T1555.004 (Windows Credential Manager), T1558.001 (Golden Ticket), T1558.002 (Silver Ticket), and T1649 (Steal or Forge Authentication Certificates) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_techniques": [
+        {
+          "external_id": "T1003.001",
+          "is_subtechnique": true,
+          "name": "LSASS Memory",
+          "stix_id": "attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90"
+        },
+        {
+          "external_id": "T1003.002",
+          "is_subtechnique": true,
+          "name": "Security Account Manager",
+          "stix_id": "attack-pattern--1644e709-12d2-41e5-a60f-3470991f5011"
+        },
+        {
+          "external_id": "T1003.004",
+          "is_subtechnique": true,
+          "name": "LSA Secrets",
+          "stix_id": "attack-pattern--1ecfdab8-7d59-4c98-95d4-dc41970f57fc"
+        },
+        {
+          "external_id": "T1003.006",
+          "is_subtechnique": true,
+          "name": "DCSync",
+          "stix_id": "attack-pattern--f303a39a-6255-4b89-aecc-18c4d8ca7163"
+        },
+        {
+          "external_id": "T1098",
+          "is_subtechnique": false,
+          "name": "Account Manipulation",
+          "stix_id": "attack-pattern--a10641f4-87b4-45a3-a906-92a149cb2c27"
+        },
+        {
+          "external_id": "T1134.005",
+          "is_subtechnique": true,
+          "name": "SID-History Injection",
+          "stix_id": "attack-pattern--b7dc639b-24cd-482d-a7f1-8897eda21023"
+        },
+        {
+          "external_id": "T1207",
+          "is_subtechnique": false,
+          "name": "Rogue Domain Controller",
+          "stix_id": "attack-pattern--564998d8-ab3e-4123-93fb-eccaa6b9714a"
+        },
+        {
+          "external_id": "T1547.005",
+          "is_subtechnique": true,
+          "name": "Security Support Provider",
+          "stix_id": "attack-pattern--5095a853-299c-4876-abd7-ac0050fb5462"
+        },
+        {
+          "external_id": "T1550.002",
+          "is_subtechnique": true,
+          "name": "Pass the Hash",
+          "stix_id": "attack-pattern--e624264c-033a-424d-9fd7-fc9c3bbdb03e"
+        },
+        {
+          "external_id": "T1550.003",
+          "is_subtechnique": true,
+          "name": "Pass the Ticket",
+          "stix_id": "attack-pattern--7b211ac6-c815-4189-93a9-ab415deca926"
+        },
+        {
+          "external_id": "T1552.004",
+          "is_subtechnique": true,
+          "name": "Private Keys",
+          "stix_id": "attack-pattern--60b508a1-6a5e-46b1-821a-9f7b78752abf"
+        },
+        {
+          "external_id": "T1555",
+          "is_subtechnique": false,
+          "name": "Credentials from Password Stores",
+          "stix_id": "attack-pattern--3fc9b85a-2862-4363-a64d-d692e3ffbee0"
+        },
+        {
+          "external_id": "T1555.003",
+          "is_subtechnique": true,
+          "name": "Credentials from Web Browsers",
+          "stix_id": "attack-pattern--58a3e6aa-4453-4cc8-a51f-4befe80b31a8"
+        },
+        {
+          "external_id": "T1555.004",
+          "is_subtechnique": true,
+          "name": "Windows Credential Manager",
+          "stix_id": "attack-pattern--d336b553-5da9-46ca-98a8-0b23f49fb447"
+        },
+        {
+          "external_id": "T1558.001",
+          "is_subtechnique": true,
+          "name": "Golden Ticket",
+          "stix_id": "attack-pattern--768dce68-8d0d-477a-b01d-0eea98b963a1"
+        },
+        {
+          "external_id": "T1558.002",
+          "is_subtechnique": true,
+          "name": "Silver Ticket",
+          "stix_id": "attack-pattern--d273434a-448e-4598-8e14-607f4a0d5e27"
+        },
+        {
+          "external_id": "T1649",
+          "is_subtechnique": false,
+          "name": "Steal or Forge Authentication Certificates",
+          "stix_id": "attack-pattern--7de1f7ac-5d0c-4c9c-8873-627202205331"
+        }
+      ],
+      "id": "software-uses-techniques-s0002",
+      "provenance": {
+        "methodology_note": "Only active direct malware/tool --uses--> attack-pattern relationships are included. Group- or campaign-mediated paths are outside this relationship type. Parent and sub-technique objects remain distinct when each has its own qualifying relationship.",
+        "relationship_paths": [
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90",
+            "uses_relationship_stix_id": "relationship--b7930db8-2cb9-4ecf-b3d3-7425f99140d8"
+          },
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--1644e709-12d2-41e5-a60f-3470991f5011",
+            "uses_relationship_stix_id": "relationship--7f04a14f-ab65-4ad5-9d67-a4b509ba8087"
+          },
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--1ecfdab8-7d59-4c98-95d4-dc41970f57fc",
+            "uses_relationship_stix_id": "relationship--f5e29f3a-99b1-4c45-952b-c238f72435ab"
+          },
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--f303a39a-6255-4b89-aecc-18c4d8ca7163",
+            "uses_relationship_stix_id": "relationship--0209cfd7-95d3-4bc5-8f0e-72a70b245fe9"
+          },
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--a10641f4-87b4-45a3-a906-92a149cb2c27",
+            "uses_relationship_stix_id": "relationship--6e641c36-188b-480e-b177-e412cd000b34"
+          },
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--b7dc639b-24cd-482d-a7f1-8897eda21023",
+            "uses_relationship_stix_id": "relationship--3e5cf341-4707-4de3-bb06-43530ee3e90f"
+          },
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--564998d8-ab3e-4123-93fb-eccaa6b9714a",
+            "uses_relationship_stix_id": "relationship--15fe2d8e-9a4e-433e-9dca-d7329e7ca846"
+          },
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--5095a853-299c-4876-abd7-ac0050fb5462",
+            "uses_relationship_stix_id": "relationship--41f04732-8fdc-4b2f-9e22-7b78ff650e5d"
+          },
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--e624264c-033a-424d-9fd7-fc9c3bbdb03e",
+            "uses_relationship_stix_id": "relationship--6b83bc1e-edfc-4c6a-961f-d3757ae6a234"
+          },
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--7b211ac6-c815-4189-93a9-ab415deca926",
+            "uses_relationship_stix_id": "relationship--76037b22-a3e4-40d3-bd56-699d1ea4e97e"
+          },
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--60b508a1-6a5e-46b1-821a-9f7b78752abf",
+            "uses_relationship_stix_id": "relationship--1c5b8ff2-400a-4e0f-a819-3cc8f1bc76b8"
+          },
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--3fc9b85a-2862-4363-a64d-d692e3ffbee0",
+            "uses_relationship_stix_id": "relationship--11d0f089-6dc7-4468-b186-e1a8b621051b"
+          },
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--58a3e6aa-4453-4cc8-a51f-4befe80b31a8",
+            "uses_relationship_stix_id": "relationship--7804d727-91bc-41bd-9b05-686d550e9e04"
+          },
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--d336b553-5da9-46ca-98a8-0b23f49fb447",
+            "uses_relationship_stix_id": "relationship--c92047b8-50d6-4fde-8acd-98132dcdc32f"
+          },
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--768dce68-8d0d-477a-b01d-0eea98b963a1",
+            "uses_relationship_stix_id": "relationship--7b8254f2-bfbb-4775-aaf8-3b5fa3457ee9"
+          },
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--d273434a-448e-4598-8e14-607f4a0d5e27",
+            "uses_relationship_stix_id": "relationship--bf080191-d58e-4834-8b4f-7315df4d76bf"
+          },
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--7de1f7ac-5d0c-4c9c-8873-627202205331",
+            "uses_relationship_stix_id": "relationship--ed48d88f-840e-4653-84df-7181afc6dfd3"
+          }
+        ],
+        "scope": "direct_software_to_technique_only",
+        "software_stix_id": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "technique_stix_ids": [
+          "attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90",
+          "attack-pattern--1644e709-12d2-41e5-a60f-3470991f5011",
+          "attack-pattern--1ecfdab8-7d59-4c98-95d4-dc41970f57fc",
+          "attack-pattern--f303a39a-6255-4b89-aecc-18c4d8ca7163",
+          "attack-pattern--a10641f4-87b4-45a3-a906-92a149cb2c27",
+          "attack-pattern--b7dc639b-24cd-482d-a7f1-8897eda21023",
+          "attack-pattern--564998d8-ab3e-4123-93fb-eccaa6b9714a",
+          "attack-pattern--5095a853-299c-4876-abd7-ac0050fb5462",
+          "attack-pattern--e624264c-033a-424d-9fd7-fc9c3bbdb03e",
+          "attack-pattern--7b211ac6-c815-4189-93a9-ab415deca926",
+          "attack-pattern--60b508a1-6a5e-46b1-821a-9f7b78752abf",
+          "attack-pattern--3fc9b85a-2862-4363-a64d-d692e3ffbee0",
+          "attack-pattern--58a3e6aa-4453-4cc8-a51f-4befe80b31a8",
+          "attack-pattern--d336b553-5da9-46ca-98a8-0b23f49fb447",
+          "attack-pattern--768dce68-8d0d-477a-b01d-0eea98b963a1",
+          "attack-pattern--d273434a-448e-4598-8e14-607f4a0d5e27",
+          "attack-pattern--7de1f7ac-5d0c-4c9c-8873-627202205331"
+        ],
+        "uses_relationship_stix_ids": [
+          "relationship--b7930db8-2cb9-4ecf-b3d3-7425f99140d8",
+          "relationship--7f04a14f-ab65-4ad5-9d67-a4b509ba8087",
+          "relationship--f5e29f3a-99b1-4c45-952b-c238f72435ab",
+          "relationship--0209cfd7-95d3-4bc5-8f0e-72a70b245fe9",
+          "relationship--6e641c36-188b-480e-b177-e412cd000b34",
+          "relationship--3e5cf341-4707-4de3-bb06-43530ee3e90f",
+          "relationship--15fe2d8e-9a4e-433e-9dca-d7329e7ca846",
+          "relationship--41f04732-8fdc-4b2f-9e22-7b78ff650e5d",
+          "relationship--6b83bc1e-edfc-4c6a-961f-d3757ae6a234",
+          "relationship--76037b22-a3e4-40d3-bd56-699d1ea4e97e",
+          "relationship--1c5b8ff2-400a-4e0f-a819-3cc8f1bc76b8",
+          "relationship--11d0f089-6dc7-4468-b186-e1a8b621051b",
+          "relationship--7804d727-91bc-41bd-9b05-686d550e9e04",
+          "relationship--c92047b8-50d6-4fde-8acd-98132dcdc32f",
+          "relationship--7b8254f2-bfbb-4775-aaf8-3b5fa3457ee9",
+          "relationship--bf080191-d58e-4834-8b4f-7315df4d76bf",
+          "relationship--ed48d88f-840e-4653-84df-7181afc6dfd3"
+        ]
+      },
+      "question": "What techniques does Mimikatz use?",
+      "relationship_type": "software_uses_technique",
+      "software": {
+        "external_id": "S0002",
+        "name": "Mimikatz",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+        "stix_type": "tool"
+      }
+    },
+    {
+      "case_type": "aggregate_software_techniques",
+      "expected_answer": "S0154 (Cobalt Strike) directly uses T1001.003 (Protocol or Service Impersonation), T1003.001 (LSASS Memory), T1003.002 (Security Account Manager), T1005 (Data from Local System), T1007 (System Service Discovery), T1012 (Query Registry), T1016 (System Network Configuration Discovery), T1018 (Remote System Discovery), T1021.001 (Remote Desktop Protocol), T1021.002 (SMB/Windows Admin Shares), T1021.003 (Distributed Component Object Model), T1021.004 (SSH), T1021.006 (Windows Remote Management), T1027 (Obfuscated Files or Information), T1027.005 (Indicator Removal from Tools), T1029 (Scheduled Transfer), T1030 (Data Transfer Size Limits), T1046 (Network Service Discovery), T1047 (Windows Management Instrumentation), T1049 (System Network Connections Discovery), T1055 (Process Injection), T1055.001 (Dynamic-link Library Injection), T1055.012 (Process Hollowing), T1056.001 (Keylogging), T1057 (Process Discovery), T1059.001 (PowerShell), T1059.003 (Windows Command Shell), T1059.005 (Visual Basic), T1059.006 (Python), T1059.007 (JavaScript), T1068 (Exploitation for Privilege Escalation), T1069.001 (Local Groups), T1069.002 (Domain Groups), T1070.006 (Timestomp), T1071.001 (Web Protocols), T1071.002 (File Transfer Protocols), T1071.004 (DNS), T1078.002 (Domain Accounts), T1078.003 (Local Accounts), T1083 (File and Directory Discovery), T1087.002 (Domain Account), T1090.001 (Internal Proxy), T1090.004 (Domain Fronting), T1095 (Non-Application Layer Protocol), T1105 (Ingress Tool Transfer), T1106 (Native API), T1112 (Modify Registry), T1113 (Screen Capture), T1132.001 (Standard Encoding), T1134.001 (Token Impersonation/Theft), T1134.003 (Make and Impersonate Token), T1134.004 (Parent PID Spoofing), T1135 (Network Share Discovery), T1137.001 (Office Template Macros), T1140 (Deobfuscate/Decode Files or Information), T1185 (Browser Session Hijacking), T1197 (BITS Jobs), T1203 (Exploitation for Client Execution), T1218.011 (Rundll32), T1497.002 (User Activity Based Checks), T1518 (Software Discovery), T1543.003 (Windows Service), T1548.002 (Bypass User Account Control), T1548.003 (Sudo and Sudo Caching), T1550.002 (Pass the Hash), T1553.002 (Code Signing), T1564.010 (Process Argument Spoofing), T1569.002 (Service Execution), T1572 (Protocol Tunneling), T1573.001 (Symmetric Cryptography), T1573.002 (Asymmetric Cryptography), T1620 (Reflective Code Loading), and T1685 (Disable or Modify Tools) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_techniques": [
+        {
+          "external_id": "T1001.003",
+          "is_subtechnique": true,
+          "name": "Protocol or Service Impersonation",
+          "stix_id": "attack-pattern--c325b232-d5bc-4dde-a3ec-71f3db9e8adc"
+        },
+        {
+          "external_id": "T1003.001",
+          "is_subtechnique": true,
+          "name": "LSASS Memory",
+          "stix_id": "attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90"
+        },
+        {
+          "external_id": "T1003.002",
+          "is_subtechnique": true,
+          "name": "Security Account Manager",
+          "stix_id": "attack-pattern--1644e709-12d2-41e5-a60f-3470991f5011"
+        },
+        {
+          "external_id": "T1005",
+          "is_subtechnique": false,
+          "name": "Data from Local System",
+          "stix_id": "attack-pattern--3c4a2599-71ee-4405-ba1e-0e28414b4bc5"
+        },
+        {
+          "external_id": "T1007",
+          "is_subtechnique": false,
+          "name": "System Service Discovery",
+          "stix_id": "attack-pattern--322bad5a-1c49-4d23-ab79-76d641794afa"
+        },
+        {
+          "external_id": "T1012",
+          "is_subtechnique": false,
+          "name": "Query Registry",
+          "stix_id": "attack-pattern--c32f7008-9fea-41f7-8366-5eb9b74bd896"
+        },
+        {
+          "external_id": "T1016",
+          "is_subtechnique": false,
+          "name": "System Network Configuration Discovery",
+          "stix_id": "attack-pattern--707399d6-ab3e-4963-9315-d9d3818cd6a0"
+        },
+        {
+          "external_id": "T1018",
+          "is_subtechnique": false,
+          "name": "Remote System Discovery",
+          "stix_id": "attack-pattern--e358d692-23c0-4a31-9eb6-ecc13a8d7735"
+        },
+        {
+          "external_id": "T1021.001",
+          "is_subtechnique": true,
+          "name": "Remote Desktop Protocol",
+          "stix_id": "attack-pattern--eb062747-2193-45de-8fa2-e62549c37ddf"
+        },
+        {
+          "external_id": "T1021.002",
+          "is_subtechnique": true,
+          "name": "SMB/Windows Admin Shares",
+          "stix_id": "attack-pattern--4f9ca633-15c5-463c-9724-bdcd54fde541"
+        },
+        {
+          "external_id": "T1021.003",
+          "is_subtechnique": true,
+          "name": "Distributed Component Object Model",
+          "stix_id": "attack-pattern--68a0c5ed-bee2-4513-830d-5b0d650139bd"
+        },
+        {
+          "external_id": "T1021.004",
+          "is_subtechnique": true,
+          "name": "SSH",
+          "stix_id": "attack-pattern--2db31dcd-54da-405d-acef-b9129b816ed6"
+        },
+        {
+          "external_id": "T1021.006",
+          "is_subtechnique": true,
+          "name": "Windows Remote Management",
+          "stix_id": "attack-pattern--60d0c01d-e2bf-49dd-a453-f8a9c9fa6f65"
+        },
+        {
+          "external_id": "T1027",
+          "is_subtechnique": false,
+          "name": "Obfuscated Files or Information",
+          "stix_id": "attack-pattern--b3d682b6-98f2-4fb0-aa3b-b4df007ca70a"
+        },
+        {
+          "external_id": "T1027.005",
+          "is_subtechnique": true,
+          "name": "Indicator Removal from Tools",
+          "stix_id": "attack-pattern--b0533c6e-8fea-4788-874f-b799cacc4b92"
+        },
+        {
+          "external_id": "T1029",
+          "is_subtechnique": false,
+          "name": "Scheduled Transfer",
+          "stix_id": "attack-pattern--4eeaf8a9-c86b-4954-a663-9555fb406466"
+        },
+        {
+          "external_id": "T1030",
+          "is_subtechnique": false,
+          "name": "Data Transfer Size Limits",
+          "stix_id": "attack-pattern--c3888c54-775d-4b2f-b759-75a2ececcbfd"
+        },
+        {
+          "external_id": "T1046",
+          "is_subtechnique": false,
+          "name": "Network Service Discovery",
+          "stix_id": "attack-pattern--e3a12395-188d-4051-9a16-ea8e14d07b88"
+        },
+        {
+          "external_id": "T1047",
+          "is_subtechnique": false,
+          "name": "Windows Management Instrumentation",
+          "stix_id": "attack-pattern--01a5a209-b94c-450b-b7f9-946497d91055"
+        },
+        {
+          "external_id": "T1049",
+          "is_subtechnique": false,
+          "name": "System Network Connections Discovery",
+          "stix_id": "attack-pattern--7e150503-88e7-4861-866b-ff1ac82c4475"
+        },
+        {
+          "external_id": "T1055",
+          "is_subtechnique": false,
+          "name": "Process Injection",
+          "stix_id": "attack-pattern--43e7dc91-05b2-474c-b9ac-2ed4fe101f4d"
+        },
+        {
+          "external_id": "T1055.001",
+          "is_subtechnique": true,
+          "name": "Dynamic-link Library Injection",
+          "stix_id": "attack-pattern--f4599aa0-4f85-4a32-80ea-fc39dc965945"
+        },
+        {
+          "external_id": "T1055.012",
+          "is_subtechnique": true,
+          "name": "Process Hollowing",
+          "stix_id": "attack-pattern--b200542e-e877-4395-875b-cf1a44537ca4"
+        },
+        {
+          "external_id": "T1056.001",
+          "is_subtechnique": true,
+          "name": "Keylogging",
+          "stix_id": "attack-pattern--09a60ea3-a8d1-4ae5-976e-5783248b72a4"
+        },
+        {
+          "external_id": "T1057",
+          "is_subtechnique": false,
+          "name": "Process Discovery",
+          "stix_id": "attack-pattern--8f4a33ec-8b1f-4b80-a2f6-642b2e479580"
+        },
+        {
+          "external_id": "T1059.001",
+          "is_subtechnique": true,
+          "name": "PowerShell",
+          "stix_id": "attack-pattern--970a3432-3237-47ad-bcca-7d8cbb217736"
+        },
+        {
+          "external_id": "T1059.003",
+          "is_subtechnique": true,
+          "name": "Windows Command Shell",
+          "stix_id": "attack-pattern--d1fcf083-a721-4223-aedf-bf8960798d62"
+        },
+        {
+          "external_id": "T1059.005",
+          "is_subtechnique": true,
+          "name": "Visual Basic",
+          "stix_id": "attack-pattern--dfd7cc1d-e1d8-4394-a198-97c4cab8aa67"
+        },
+        {
+          "external_id": "T1059.006",
+          "is_subtechnique": true,
+          "name": "Python",
+          "stix_id": "attack-pattern--cc3502b5-30cc-4473-ad48-42d51a6ef6d1"
+        },
+        {
+          "external_id": "T1059.007",
+          "is_subtechnique": true,
+          "name": "JavaScript",
+          "stix_id": "attack-pattern--0f4a0c76-ab2d-4cb0-85d3-3f0efb8cba0d"
+        },
+        {
+          "external_id": "T1068",
+          "is_subtechnique": false,
+          "name": "Exploitation for Privilege Escalation",
+          "stix_id": "attack-pattern--b21c3b2d-02e6-45b1-980b-e69051040839"
+        },
+        {
+          "external_id": "T1069.001",
+          "is_subtechnique": true,
+          "name": "Local Groups",
+          "stix_id": "attack-pattern--a01bf75f-00b2-4568-a58f-565ff9bf202b"
+        },
+        {
+          "external_id": "T1069.002",
+          "is_subtechnique": true,
+          "name": "Domain Groups",
+          "stix_id": "attack-pattern--2aed01ad-3df3-4410-a8cb-11ea4ded587c"
+        },
+        {
+          "external_id": "T1070.006",
+          "is_subtechnique": true,
+          "name": "Timestomp",
+          "stix_id": "attack-pattern--47f2d673-ca62-47e9-929b-1b0be9657611"
+        },
+        {
+          "external_id": "T1071.001",
+          "is_subtechnique": true,
+          "name": "Web Protocols",
+          "stix_id": "attack-pattern--df8b2a25-8bdf-4856-953c-a04372b1c161"
+        },
+        {
+          "external_id": "T1071.002",
+          "is_subtechnique": true,
+          "name": "File Transfer Protocols",
+          "stix_id": "attack-pattern--9a60a291-8960-4387-8a4a-2ab5c18bb50b"
+        },
+        {
+          "external_id": "T1071.004",
+          "is_subtechnique": true,
+          "name": "DNS",
+          "stix_id": "attack-pattern--1996eef1-ced3-4d7f-bf94-33298cabbf72"
+        },
+        {
+          "external_id": "T1078.002",
+          "is_subtechnique": true,
+          "name": "Domain Accounts",
+          "stix_id": "attack-pattern--c3d4bdd9-2cfe-4a80-9d0c-07a29ecdce8f"
+        },
+        {
+          "external_id": "T1078.003",
+          "is_subtechnique": true,
+          "name": "Local Accounts",
+          "stix_id": "attack-pattern--fdc47f44-dd32-4b99-af5f-209f556f63c2"
+        },
+        {
+          "external_id": "T1083",
+          "is_subtechnique": false,
+          "name": "File and Directory Discovery",
+          "stix_id": "attack-pattern--7bc57495-ea59-4380-be31-a64af124ef18"
+        },
+        {
+          "external_id": "T1087.002",
+          "is_subtechnique": true,
+          "name": "Domain Account",
+          "stix_id": "attack-pattern--21875073-b0ee-49e3-9077-1e2a885359af"
+        },
+        {
+          "external_id": "T1090.001",
+          "is_subtechnique": true,
+          "name": "Internal Proxy",
+          "stix_id": "attack-pattern--f6dacc85-b37d-458e-b58d-74fc4bbf5755"
+        },
+        {
+          "external_id": "T1090.004",
+          "is_subtechnique": true,
+          "name": "Domain Fronting",
+          "stix_id": "attack-pattern--ca9d3402-ada3-484d-876a-d717bd6e05f2"
+        },
+        {
+          "external_id": "T1095",
+          "is_subtechnique": false,
+          "name": "Non-Application Layer Protocol",
+          "stix_id": "attack-pattern--c21d5a77-d422-4a69-acd7-2c53c1faa34b"
+        },
+        {
+          "external_id": "T1105",
+          "is_subtechnique": false,
+          "name": "Ingress Tool Transfer",
+          "stix_id": "attack-pattern--e6919abc-99f9-4c6c-95a5-14761e7b2add"
+        },
+        {
+          "external_id": "T1106",
+          "is_subtechnique": false,
+          "name": "Native API",
+          "stix_id": "attack-pattern--391d824f-0ef1-47a0-b0ee-c59a75e27670"
+        },
+        {
+          "external_id": "T1112",
+          "is_subtechnique": false,
+          "name": "Modify Registry",
+          "stix_id": "attack-pattern--57340c81-c025-4189-8fa0-fc7ede51bae4"
+        },
+        {
+          "external_id": "T1113",
+          "is_subtechnique": false,
+          "name": "Screen Capture",
+          "stix_id": "attack-pattern--0259baeb-9f63-4c69-bf10-eb038c390688"
+        },
+        {
+          "external_id": "T1132.001",
+          "is_subtechnique": true,
+          "name": "Standard Encoding",
+          "stix_id": "attack-pattern--04fd5427-79c7-44ea-ae13-11b24778ff1c"
+        },
+        {
+          "external_id": "T1134.001",
+          "is_subtechnique": true,
+          "name": "Token Impersonation/Theft",
+          "stix_id": "attack-pattern--86850eff-2729-40c3-b85e-c4af26da4a2d"
+        },
+        {
+          "external_id": "T1134.003",
+          "is_subtechnique": true,
+          "name": "Make and Impersonate Token",
+          "stix_id": "attack-pattern--8cdeb020-e31e-4f88-a582-f53dcfbda819"
+        },
+        {
+          "external_id": "T1134.004",
+          "is_subtechnique": true,
+          "name": "Parent PID Spoofing",
+          "stix_id": "attack-pattern--93591901-3172-4e94-abf8-6034ab26f44a"
+        },
+        {
+          "external_id": "T1135",
+          "is_subtechnique": false,
+          "name": "Network Share Discovery",
+          "stix_id": "attack-pattern--3489cfc5-640f-4bb3-a103-9137b97de79f"
+        },
+        {
+          "external_id": "T1137.001",
+          "is_subtechnique": true,
+          "name": "Office Template Macros",
+          "stix_id": "attack-pattern--79a47ad0-fc3b-4821-9f01-a026b1ddba21"
+        },
+        {
+          "external_id": "T1140",
+          "is_subtechnique": false,
+          "name": "Deobfuscate/Decode Files or Information",
+          "stix_id": "attack-pattern--3ccef7ae-cb5e-48f6-8302-897105fbf55c"
+        },
+        {
+          "external_id": "T1185",
+          "is_subtechnique": false,
+          "name": "Browser Session Hijacking",
+          "stix_id": "attack-pattern--544b0346-29ad-41e1-a808-501bb4193f47"
+        },
+        {
+          "external_id": "T1197",
+          "is_subtechnique": false,
+          "name": "BITS Jobs",
+          "stix_id": "attack-pattern--c8e87b83-edbb-48d4-9295-4974897525b7"
+        },
+        {
+          "external_id": "T1203",
+          "is_subtechnique": false,
+          "name": "Exploitation for Client Execution",
+          "stix_id": "attack-pattern--be2dcee9-a7a7-4e38-afd6-21b31ecc3d63"
+        },
+        {
+          "external_id": "T1218.011",
+          "is_subtechnique": true,
+          "name": "Rundll32",
+          "stix_id": "attack-pattern--045d0922-2310-4e60-b5e4-3302302cb3c5"
+        },
+        {
+          "external_id": "T1497.002",
+          "is_subtechnique": true,
+          "name": "User Activity Based Checks",
+          "stix_id": "attack-pattern--91541e7e-b969-40c6-bbd8-1b5352ec2938"
+        },
+        {
+          "external_id": "T1518",
+          "is_subtechnique": false,
+          "name": "Software Discovery",
+          "stix_id": "attack-pattern--e3b6daca-e963-4a69-aee6-ed4fd653ad58"
+        },
+        {
+          "external_id": "T1543.003",
+          "is_subtechnique": true,
+          "name": "Windows Service",
+          "stix_id": "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32"
+        },
+        {
+          "external_id": "T1548.002",
+          "is_subtechnique": true,
+          "name": "Bypass User Account Control",
+          "stix_id": "attack-pattern--120d5519-3098-4e1c-9191-2aa61232f073"
+        },
+        {
+          "external_id": "T1548.003",
+          "is_subtechnique": true,
+          "name": "Sudo and Sudo Caching",
+          "stix_id": "attack-pattern--1365fe3b-0f50-455d-b4da-266ce31c23b0"
+        },
+        {
+          "external_id": "T1550.002",
+          "is_subtechnique": true,
+          "name": "Pass the Hash",
+          "stix_id": "attack-pattern--e624264c-033a-424d-9fd7-fc9c3bbdb03e"
+        },
+        {
+          "external_id": "T1553.002",
+          "is_subtechnique": true,
+          "name": "Code Signing",
+          "stix_id": "attack-pattern--32901740-b42c-4fdd-bc02-345b5dc57082"
+        },
+        {
+          "external_id": "T1564.010",
+          "is_subtechnique": true,
+          "name": "Process Argument Spoofing",
+          "stix_id": "attack-pattern--ffe59ad3-ad9b-4b9f-b74f-5beb3c309dc1"
+        },
+        {
+          "external_id": "T1569.002",
+          "is_subtechnique": true,
+          "name": "Service Execution",
+          "stix_id": "attack-pattern--f1951e8a-500e-4a26-8803-76d95c4554b4"
+        },
+        {
+          "external_id": "T1572",
+          "is_subtechnique": false,
+          "name": "Protocol Tunneling",
+          "stix_id": "attack-pattern--4fe28b27-b13c-453e-a386-c2ef362a573b"
+        },
+        {
+          "external_id": "T1573.001",
+          "is_subtechnique": true,
+          "name": "Symmetric Cryptography",
+          "stix_id": "attack-pattern--24bfaeba-cb0d-4525-b3dc-507c77ecec41"
+        },
+        {
+          "external_id": "T1573.002",
+          "is_subtechnique": true,
+          "name": "Asymmetric Cryptography",
+          "stix_id": "attack-pattern--bf176076-b789-408e-8cba-7275e81c0ada"
+        },
+        {
+          "external_id": "T1620",
+          "is_subtechnique": false,
+          "name": "Reflective Code Loading",
+          "stix_id": "attack-pattern--4933e63b-9b77-476e-ab29-761bc5b7d15a"
+        },
+        {
+          "external_id": "T1685",
+          "is_subtechnique": false,
+          "name": "Disable or Modify Tools",
+          "stix_id": "attack-pattern--bbde9781-60aa-4b8a-a911-895b0c1b3872"
+        }
+      ],
+      "id": "software-uses-techniques-s0154",
+      "provenance": {
+        "methodology_note": "Only active direct malware/tool --uses--> attack-pattern relationships are included. Group- or campaign-mediated paths are outside this relationship type. Parent and sub-technique objects remain distinct when each has its own qualifying relationship.",
+        "relationship_paths": [
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--c325b232-d5bc-4dde-a3ec-71f3db9e8adc",
+            "uses_relationship_stix_id": "relationship--5179f874-72fb-4743-bd51-3f3fdb660038"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90",
+            "uses_relationship_stix_id": "relationship--82a7e330-e4b1-4db8-8c73-03cabd9b8991"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--1644e709-12d2-41e5-a60f-3470991f5011",
+            "uses_relationship_stix_id": "relationship--dc7e8f00-d57c-4cfd-971c-510ede375c2f"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--3c4a2599-71ee-4405-ba1e-0e28414b4bc5",
+            "uses_relationship_stix_id": "relationship--22e84b06-fbac-4811-b9b7-3c6587aab7d7"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--322bad5a-1c49-4d23-ab79-76d641794afa",
+            "uses_relationship_stix_id": "relationship--6017ff5f-e522-45fe-857a-e4fef38a6349"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--c32f7008-9fea-41f7-8366-5eb9b74bd896",
+            "uses_relationship_stix_id": "relationship--8e12d3f8-6c2b-4622-889e-63c9abcff04b"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--707399d6-ab3e-4963-9315-d9d3818cd6a0",
+            "uses_relationship_stix_id": "relationship--12798001-5af6-4b47-b17e-e98888c1482c"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--e358d692-23c0-4a31-9eb6-ecc13a8d7735",
+            "uses_relationship_stix_id": "relationship--80299c96-9450-48bc-8161-e72a41389f6a"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--eb062747-2193-45de-8fa2-e62549c37ddf",
+            "uses_relationship_stix_id": "relationship--094a2284-eeab-47fd-b6fb-6351d98330aa"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--4f9ca633-15c5-463c-9724-bdcd54fde541",
+            "uses_relationship_stix_id": "relationship--d486dd75-bb96-44e6-9898-c256b9f1b8ba"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--68a0c5ed-bee2-4513-830d-5b0d650139bd",
+            "uses_relationship_stix_id": "relationship--e1a8fd78-3712-4951-8ebc-af5fe271295d"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--2db31dcd-54da-405d-acef-b9129b816ed6",
+            "uses_relationship_stix_id": "relationship--75c238d1-f2dc-413a-89c3-66797a65da90"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--60d0c01d-e2bf-49dd-a453-f8a9c9fa6f65",
+            "uses_relationship_stix_id": "relationship--c5bab3a0-69b6-4ef6-97b3-3f3aecd710f8"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--b3d682b6-98f2-4fb0-aa3b-b4df007ca70a",
+            "uses_relationship_stix_id": "relationship--fe57d6a5-09d4-4642-9b71-cfcf9b9e0de1"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--b0533c6e-8fea-4788-874f-b799cacc4b92",
+            "uses_relationship_stix_id": "relationship--10b3228c-b96b-4a34-8da8-4d1fd3fa37d0"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--4eeaf8a9-c86b-4954-a663-9555fb406466",
+            "uses_relationship_stix_id": "relationship--6d5dfa51-1e2b-4da5-9db8-ae8e8f00ea9d"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--c3888c54-775d-4b2f-b759-75a2ececcbfd",
+            "uses_relationship_stix_id": "relationship--98cc96c2-b876-4e1b-bec9-cb7ea8a8e532"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--e3a12395-188d-4051-9a16-ea8e14d07b88",
+            "uses_relationship_stix_id": "relationship--98e08749-5e7b-40ed-8a66-cd33f9c8c6ba"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--01a5a209-b94c-450b-b7f9-946497d91055",
+            "uses_relationship_stix_id": "relationship--db1a20ca-55a0-42db-b0e5-d600478baddd"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--7e150503-88e7-4861-866b-ff1ac82c4475",
+            "uses_relationship_stix_id": "relationship--4bf260f4-0a10-49d9-b930-e1293f40e693"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--43e7dc91-05b2-474c-b9ac-2ed4fe101f4d",
+            "uses_relationship_stix_id": "relationship--5ebc97a3-54ee-4582-92ce-981f67c26f45"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--f4599aa0-4f85-4a32-80ea-fc39dc965945",
+            "uses_relationship_stix_id": "relationship--249897d9-131f-4cf8-93d7-cb20006a511d"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--b200542e-e877-4395-875b-cf1a44537ca4",
+            "uses_relationship_stix_id": "relationship--315cd644-875d-4761-b440-f2cf48badbe0"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--09a60ea3-a8d1-4ae5-976e-5783248b72a4",
+            "uses_relationship_stix_id": "relationship--2aa0dea4-ca6d-4095-8c20-9250308c3315"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--8f4a33ec-8b1f-4b80-a2f6-642b2e479580",
+            "uses_relationship_stix_id": "relationship--ecf30cb0-3183-4ed4-bb33-da604ea6a65e"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--970a3432-3237-47ad-bcca-7d8cbb217736",
+            "uses_relationship_stix_id": "relationship--7396dd25-432c-4285-8149-1237b1273a53"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--d1fcf083-a721-4223-aedf-bf8960798d62",
+            "uses_relationship_stix_id": "relationship--fc901b6f-3575-443c-9ba3-32ca1bebf7af"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--dfd7cc1d-e1d8-4394-a198-97c4cab8aa67",
+            "uses_relationship_stix_id": "relationship--5a166a20-4191-429c-9fd0-f566a86f0753"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--cc3502b5-30cc-4473-ad48-42d51a6ef6d1",
+            "uses_relationship_stix_id": "relationship--d9ed5493-1610-4f65-bd2e-527b97bde8bf"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--0f4a0c76-ab2d-4cb0-85d3-3f0efb8cba0d",
+            "uses_relationship_stix_id": "relationship--072552be-9c74-4ee8-972c-46454a2c78c0"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--b21c3b2d-02e6-45b1-980b-e69051040839",
+            "uses_relationship_stix_id": "relationship--412a57f3-ce06-4790-8e3a-cb8c34b9e0f1"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--a01bf75f-00b2-4568-a58f-565ff9bf202b",
+            "uses_relationship_stix_id": "relationship--72e0dd03-d994-4a38-97a8-dab5ae456cbc"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--2aed01ad-3df3-4410-a8cb-11ea4ded587c",
+            "uses_relationship_stix_id": "relationship--4af77ee9-ee38-4594-81e3-177a2f2d4bfb"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--47f2d673-ca62-47e9-929b-1b0be9657611",
+            "uses_relationship_stix_id": "relationship--61e9d783-571b-49d4-a30b-8fde8a13d4c0"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--df8b2a25-8bdf-4856-953c-a04372b1c161",
+            "uses_relationship_stix_id": "relationship--a3567e77-aa1c-45dd-8217-e24df76e5def"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--9a60a291-8960-4387-8a4a-2ab5c18bb50b",
+            "uses_relationship_stix_id": "relationship--d979fd42-450e-4bd3-a6f8-74b8c8f8fb7b"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--1996eef1-ced3-4d7f-bf94-33298cabbf72",
+            "uses_relationship_stix_id": "relationship--6a4ee5a3-9bc2-4352-856a-ae078ddc6cf2"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--c3d4bdd9-2cfe-4a80-9d0c-07a29ecdce8f",
+            "uses_relationship_stix_id": "relationship--0fee0f43-7352-4503-867b-ae17eb7c278b"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--fdc47f44-dd32-4b99-af5f-209f556f63c2",
+            "uses_relationship_stix_id": "relationship--3a2883ee-60fb-4123-9d82-9ade53f4b43b"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--7bc57495-ea59-4380-be31-a64af124ef18",
+            "uses_relationship_stix_id": "relationship--6747d237-8156-453c-9751-3afd1b36bdca"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--21875073-b0ee-49e3-9077-1e2a885359af",
+            "uses_relationship_stix_id": "relationship--909db543-0968-4f02-b1d9-de64c0730c0a"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--f6dacc85-b37d-458e-b58d-74fc4bbf5755",
+            "uses_relationship_stix_id": "relationship--406ca789-682f-4e08-bb7e-60421923ee09"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--ca9d3402-ada3-484d-876a-d717bd6e05f2",
+            "uses_relationship_stix_id": "relationship--0023f0a7-26ae-40ec-ac6e-9dacf5217fb9"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--c21d5a77-d422-4a69-acd7-2c53c1faa34b",
+            "uses_relationship_stix_id": "relationship--c904b6b7-52f4-42fe-b921-bb5a490c0c3f"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--e6919abc-99f9-4c6c-95a5-14761e7b2add",
+            "uses_relationship_stix_id": "relationship--cecb2ce6-cb40-453d-9487-9f59f156a98c"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--391d824f-0ef1-47a0-b0ee-c59a75e27670",
+            "uses_relationship_stix_id": "relationship--095bfdd3-2379-4cad-bef4-53e8bdd08a75"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--57340c81-c025-4189-8fa0-fc7ede51bae4",
+            "uses_relationship_stix_id": "relationship--45376fe9-2a43-4e09-942e-82be661ed572"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--0259baeb-9f63-4c69-bf10-eb038c390688",
+            "uses_relationship_stix_id": "relationship--4183341a-f5ed-4914-9dc5-0eb7c1d6c4e6"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--04fd5427-79c7-44ea-ae13-11b24778ff1c",
+            "uses_relationship_stix_id": "relationship--cbf79556-91df-45cf-a64b-1dd01025ac8d"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--86850eff-2729-40c3-b85e-c4af26da4a2d",
+            "uses_relationship_stix_id": "relationship--56ff911a-d7bb-4176-8e1f-bf0f46cc7f89"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--8cdeb020-e31e-4f88-a582-f53dcfbda819",
+            "uses_relationship_stix_id": "relationship--dd900d1e-ef80-4e35-9cf3-53653babf346"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--93591901-3172-4e94-abf8-6034ab26f44a",
+            "uses_relationship_stix_id": "relationship--538e4202-41cf-4d4e-9c1c-30df5bc30a22"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--3489cfc5-640f-4bb3-a103-9137b97de79f",
+            "uses_relationship_stix_id": "relationship--a106b02a-0a6a-493f-911c-a00576013004"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--79a47ad0-fc3b-4821-9f01-a026b1ddba21",
+            "uses_relationship_stix_id": "relationship--f7232e30-bc04-476a-871a-5048a0ada06c"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--3ccef7ae-cb5e-48f6-8302-897105fbf55c",
+            "uses_relationship_stix_id": "relationship--b1065110-5387-4dee-b27e-f671d75f403f"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--544b0346-29ad-41e1-a808-501bb4193f47",
+            "uses_relationship_stix_id": "relationship--ad7f635b-7775-4706-8577-eee00612c996"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--c8e87b83-edbb-48d4-9295-4974897525b7",
+            "uses_relationship_stix_id": "relationship--2d0748e3-7427-4847-9861-75680f6aacb3"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--be2dcee9-a7a7-4e38-afd6-21b31ecc3d63",
+            "uses_relationship_stix_id": "relationship--de676fc0-0b1f-4392-a84b-f412c660d89a"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--045d0922-2310-4e60-b5e4-3302302cb3c5",
+            "uses_relationship_stix_id": "relationship--d4e351be-ccdc-4c51-a52a-b4d6a55cbeca"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--91541e7e-b969-40c6-bbd8-1b5352ec2938",
+            "uses_relationship_stix_id": "relationship--9889694f-03c8-4e18-9e9b-9c96ced8eb9d"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--e3b6daca-e963-4a69-aee6-ed4fd653ad58",
+            "uses_relationship_stix_id": "relationship--3407bbe8-bceb-42f1-824b-d92d9972d917"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32",
+            "uses_relationship_stix_id": "relationship--59cb4ff6-e1fd-4088-905f-2ade864dabb0"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--120d5519-3098-4e1c-9191-2aa61232f073",
+            "uses_relationship_stix_id": "relationship--126ecc74-4376-4909-9f75-a0630e47cb68"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--1365fe3b-0f50-455d-b4da-266ce31c23b0",
+            "uses_relationship_stix_id": "relationship--00991be5-e2c2-4645-b743-e9e4af3d38b9"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--e624264c-033a-424d-9fd7-fc9c3bbdb03e",
+            "uses_relationship_stix_id": "relationship--0f5b5d67-44f6-4725-951e-ce614385c361"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--32901740-b42c-4fdd-bc02-345b5dc57082",
+            "uses_relationship_stix_id": "relationship--00e99176-c74e-4f49-a498-c66a71612a5b"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--ffe59ad3-ad9b-4b9f-b74f-5beb3c309dc1",
+            "uses_relationship_stix_id": "relationship--41b8a7b7-0134-412d-85d7-3a0141beb8e2"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--f1951e8a-500e-4a26-8803-76d95c4554b4",
+            "uses_relationship_stix_id": "relationship--155a8883-7b22-4fa8-8d2f-bd76c8efd5b3"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--4fe28b27-b13c-453e-a386-c2ef362a573b",
+            "uses_relationship_stix_id": "relationship--b6f52beb-1be0-4607-86a6-977d34fabe54"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--24bfaeba-cb0d-4525-b3dc-507c77ecec41",
+            "uses_relationship_stix_id": "relationship--c7aa0575-5434-4a42-ae9d-9a7a52eac99b"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--bf176076-b789-408e-8cba-7275e81c0ada",
+            "uses_relationship_stix_id": "relationship--a3aa78fe-28c9-44e8-a0a3-0f84c087b5e0"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--4933e63b-9b77-476e-ab29-761bc5b7d15a",
+            "uses_relationship_stix_id": "relationship--79c5870a-c93f-47c5-a382-e26a23666209"
+          },
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--bbde9781-60aa-4b8a-a911-895b0c1b3872",
+            "uses_relationship_stix_id": "relationship--8c4af801-00dc-4aa2-acd4-6608fb258088"
+          }
+        ],
+        "scope": "direct_software_to_technique_only",
+        "software_stix_id": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "technique_stix_ids": [
+          "attack-pattern--c325b232-d5bc-4dde-a3ec-71f3db9e8adc",
+          "attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90",
+          "attack-pattern--1644e709-12d2-41e5-a60f-3470991f5011",
+          "attack-pattern--3c4a2599-71ee-4405-ba1e-0e28414b4bc5",
+          "attack-pattern--322bad5a-1c49-4d23-ab79-76d641794afa",
+          "attack-pattern--c32f7008-9fea-41f7-8366-5eb9b74bd896",
+          "attack-pattern--707399d6-ab3e-4963-9315-d9d3818cd6a0",
+          "attack-pattern--e358d692-23c0-4a31-9eb6-ecc13a8d7735",
+          "attack-pattern--eb062747-2193-45de-8fa2-e62549c37ddf",
+          "attack-pattern--4f9ca633-15c5-463c-9724-bdcd54fde541",
+          "attack-pattern--68a0c5ed-bee2-4513-830d-5b0d650139bd",
+          "attack-pattern--2db31dcd-54da-405d-acef-b9129b816ed6",
+          "attack-pattern--60d0c01d-e2bf-49dd-a453-f8a9c9fa6f65",
+          "attack-pattern--b3d682b6-98f2-4fb0-aa3b-b4df007ca70a",
+          "attack-pattern--b0533c6e-8fea-4788-874f-b799cacc4b92",
+          "attack-pattern--4eeaf8a9-c86b-4954-a663-9555fb406466",
+          "attack-pattern--c3888c54-775d-4b2f-b759-75a2ececcbfd",
+          "attack-pattern--e3a12395-188d-4051-9a16-ea8e14d07b88",
+          "attack-pattern--01a5a209-b94c-450b-b7f9-946497d91055",
+          "attack-pattern--7e150503-88e7-4861-866b-ff1ac82c4475",
+          "attack-pattern--43e7dc91-05b2-474c-b9ac-2ed4fe101f4d",
+          "attack-pattern--f4599aa0-4f85-4a32-80ea-fc39dc965945",
+          "attack-pattern--b200542e-e877-4395-875b-cf1a44537ca4",
+          "attack-pattern--09a60ea3-a8d1-4ae5-976e-5783248b72a4",
+          "attack-pattern--8f4a33ec-8b1f-4b80-a2f6-642b2e479580",
+          "attack-pattern--970a3432-3237-47ad-bcca-7d8cbb217736",
+          "attack-pattern--d1fcf083-a721-4223-aedf-bf8960798d62",
+          "attack-pattern--dfd7cc1d-e1d8-4394-a198-97c4cab8aa67",
+          "attack-pattern--cc3502b5-30cc-4473-ad48-42d51a6ef6d1",
+          "attack-pattern--0f4a0c76-ab2d-4cb0-85d3-3f0efb8cba0d",
+          "attack-pattern--b21c3b2d-02e6-45b1-980b-e69051040839",
+          "attack-pattern--a01bf75f-00b2-4568-a58f-565ff9bf202b",
+          "attack-pattern--2aed01ad-3df3-4410-a8cb-11ea4ded587c",
+          "attack-pattern--47f2d673-ca62-47e9-929b-1b0be9657611",
+          "attack-pattern--df8b2a25-8bdf-4856-953c-a04372b1c161",
+          "attack-pattern--9a60a291-8960-4387-8a4a-2ab5c18bb50b",
+          "attack-pattern--1996eef1-ced3-4d7f-bf94-33298cabbf72",
+          "attack-pattern--c3d4bdd9-2cfe-4a80-9d0c-07a29ecdce8f",
+          "attack-pattern--fdc47f44-dd32-4b99-af5f-209f556f63c2",
+          "attack-pattern--7bc57495-ea59-4380-be31-a64af124ef18",
+          "attack-pattern--21875073-b0ee-49e3-9077-1e2a885359af",
+          "attack-pattern--f6dacc85-b37d-458e-b58d-74fc4bbf5755",
+          "attack-pattern--ca9d3402-ada3-484d-876a-d717bd6e05f2",
+          "attack-pattern--c21d5a77-d422-4a69-acd7-2c53c1faa34b",
+          "attack-pattern--e6919abc-99f9-4c6c-95a5-14761e7b2add",
+          "attack-pattern--391d824f-0ef1-47a0-b0ee-c59a75e27670",
+          "attack-pattern--57340c81-c025-4189-8fa0-fc7ede51bae4",
+          "attack-pattern--0259baeb-9f63-4c69-bf10-eb038c390688",
+          "attack-pattern--04fd5427-79c7-44ea-ae13-11b24778ff1c",
+          "attack-pattern--86850eff-2729-40c3-b85e-c4af26da4a2d",
+          "attack-pattern--8cdeb020-e31e-4f88-a582-f53dcfbda819",
+          "attack-pattern--93591901-3172-4e94-abf8-6034ab26f44a",
+          "attack-pattern--3489cfc5-640f-4bb3-a103-9137b97de79f",
+          "attack-pattern--79a47ad0-fc3b-4821-9f01-a026b1ddba21",
+          "attack-pattern--3ccef7ae-cb5e-48f6-8302-897105fbf55c",
+          "attack-pattern--544b0346-29ad-41e1-a808-501bb4193f47",
+          "attack-pattern--c8e87b83-edbb-48d4-9295-4974897525b7",
+          "attack-pattern--be2dcee9-a7a7-4e38-afd6-21b31ecc3d63",
+          "attack-pattern--045d0922-2310-4e60-b5e4-3302302cb3c5",
+          "attack-pattern--91541e7e-b969-40c6-bbd8-1b5352ec2938",
+          "attack-pattern--e3b6daca-e963-4a69-aee6-ed4fd653ad58",
+          "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32",
+          "attack-pattern--120d5519-3098-4e1c-9191-2aa61232f073",
+          "attack-pattern--1365fe3b-0f50-455d-b4da-266ce31c23b0",
+          "attack-pattern--e624264c-033a-424d-9fd7-fc9c3bbdb03e",
+          "attack-pattern--32901740-b42c-4fdd-bc02-345b5dc57082",
+          "attack-pattern--ffe59ad3-ad9b-4b9f-b74f-5beb3c309dc1",
+          "attack-pattern--f1951e8a-500e-4a26-8803-76d95c4554b4",
+          "attack-pattern--4fe28b27-b13c-453e-a386-c2ef362a573b",
+          "attack-pattern--24bfaeba-cb0d-4525-b3dc-507c77ecec41",
+          "attack-pattern--bf176076-b789-408e-8cba-7275e81c0ada",
+          "attack-pattern--4933e63b-9b77-476e-ab29-761bc5b7d15a",
+          "attack-pattern--bbde9781-60aa-4b8a-a911-895b0c1b3872"
+        ],
+        "uses_relationship_stix_ids": [
+          "relationship--5179f874-72fb-4743-bd51-3f3fdb660038",
+          "relationship--82a7e330-e4b1-4db8-8c73-03cabd9b8991",
+          "relationship--dc7e8f00-d57c-4cfd-971c-510ede375c2f",
+          "relationship--22e84b06-fbac-4811-b9b7-3c6587aab7d7",
+          "relationship--6017ff5f-e522-45fe-857a-e4fef38a6349",
+          "relationship--8e12d3f8-6c2b-4622-889e-63c9abcff04b",
+          "relationship--12798001-5af6-4b47-b17e-e98888c1482c",
+          "relationship--80299c96-9450-48bc-8161-e72a41389f6a",
+          "relationship--094a2284-eeab-47fd-b6fb-6351d98330aa",
+          "relationship--d486dd75-bb96-44e6-9898-c256b9f1b8ba",
+          "relationship--e1a8fd78-3712-4951-8ebc-af5fe271295d",
+          "relationship--75c238d1-f2dc-413a-89c3-66797a65da90",
+          "relationship--c5bab3a0-69b6-4ef6-97b3-3f3aecd710f8",
+          "relationship--fe57d6a5-09d4-4642-9b71-cfcf9b9e0de1",
+          "relationship--10b3228c-b96b-4a34-8da8-4d1fd3fa37d0",
+          "relationship--6d5dfa51-1e2b-4da5-9db8-ae8e8f00ea9d",
+          "relationship--98cc96c2-b876-4e1b-bec9-cb7ea8a8e532",
+          "relationship--98e08749-5e7b-40ed-8a66-cd33f9c8c6ba",
+          "relationship--db1a20ca-55a0-42db-b0e5-d600478baddd",
+          "relationship--4bf260f4-0a10-49d9-b930-e1293f40e693",
+          "relationship--5ebc97a3-54ee-4582-92ce-981f67c26f45",
+          "relationship--249897d9-131f-4cf8-93d7-cb20006a511d",
+          "relationship--315cd644-875d-4761-b440-f2cf48badbe0",
+          "relationship--2aa0dea4-ca6d-4095-8c20-9250308c3315",
+          "relationship--ecf30cb0-3183-4ed4-bb33-da604ea6a65e",
+          "relationship--7396dd25-432c-4285-8149-1237b1273a53",
+          "relationship--fc901b6f-3575-443c-9ba3-32ca1bebf7af",
+          "relationship--5a166a20-4191-429c-9fd0-f566a86f0753",
+          "relationship--d9ed5493-1610-4f65-bd2e-527b97bde8bf",
+          "relationship--072552be-9c74-4ee8-972c-46454a2c78c0",
+          "relationship--412a57f3-ce06-4790-8e3a-cb8c34b9e0f1",
+          "relationship--72e0dd03-d994-4a38-97a8-dab5ae456cbc",
+          "relationship--4af77ee9-ee38-4594-81e3-177a2f2d4bfb",
+          "relationship--61e9d783-571b-49d4-a30b-8fde8a13d4c0",
+          "relationship--a3567e77-aa1c-45dd-8217-e24df76e5def",
+          "relationship--d979fd42-450e-4bd3-a6f8-74b8c8f8fb7b",
+          "relationship--6a4ee5a3-9bc2-4352-856a-ae078ddc6cf2",
+          "relationship--0fee0f43-7352-4503-867b-ae17eb7c278b",
+          "relationship--3a2883ee-60fb-4123-9d82-9ade53f4b43b",
+          "relationship--6747d237-8156-453c-9751-3afd1b36bdca",
+          "relationship--909db543-0968-4f02-b1d9-de64c0730c0a",
+          "relationship--406ca789-682f-4e08-bb7e-60421923ee09",
+          "relationship--0023f0a7-26ae-40ec-ac6e-9dacf5217fb9",
+          "relationship--c904b6b7-52f4-42fe-b921-bb5a490c0c3f",
+          "relationship--cecb2ce6-cb40-453d-9487-9f59f156a98c",
+          "relationship--095bfdd3-2379-4cad-bef4-53e8bdd08a75",
+          "relationship--45376fe9-2a43-4e09-942e-82be661ed572",
+          "relationship--4183341a-f5ed-4914-9dc5-0eb7c1d6c4e6",
+          "relationship--cbf79556-91df-45cf-a64b-1dd01025ac8d",
+          "relationship--56ff911a-d7bb-4176-8e1f-bf0f46cc7f89",
+          "relationship--dd900d1e-ef80-4e35-9cf3-53653babf346",
+          "relationship--538e4202-41cf-4d4e-9c1c-30df5bc30a22",
+          "relationship--a106b02a-0a6a-493f-911c-a00576013004",
+          "relationship--f7232e30-bc04-476a-871a-5048a0ada06c",
+          "relationship--b1065110-5387-4dee-b27e-f671d75f403f",
+          "relationship--ad7f635b-7775-4706-8577-eee00612c996",
+          "relationship--2d0748e3-7427-4847-9861-75680f6aacb3",
+          "relationship--de676fc0-0b1f-4392-a84b-f412c660d89a",
+          "relationship--d4e351be-ccdc-4c51-a52a-b4d6a55cbeca",
+          "relationship--9889694f-03c8-4e18-9e9b-9c96ced8eb9d",
+          "relationship--3407bbe8-bceb-42f1-824b-d92d9972d917",
+          "relationship--59cb4ff6-e1fd-4088-905f-2ade864dabb0",
+          "relationship--126ecc74-4376-4909-9f75-a0630e47cb68",
+          "relationship--00991be5-e2c2-4645-b743-e9e4af3d38b9",
+          "relationship--0f5b5d67-44f6-4725-951e-ce614385c361",
+          "relationship--00e99176-c74e-4f49-a498-c66a71612a5b",
+          "relationship--41b8a7b7-0134-412d-85d7-3a0141beb8e2",
+          "relationship--155a8883-7b22-4fa8-8d2f-bd76c8efd5b3",
+          "relationship--b6f52beb-1be0-4607-86a6-977d34fabe54",
+          "relationship--c7aa0575-5434-4a42-ae9d-9a7a52eac99b",
+          "relationship--a3aa78fe-28c9-44e8-a0a3-0f84c087b5e0",
+          "relationship--79c5870a-c93f-47c5-a382-e26a23666209",
+          "relationship--8c4af801-00dc-4aa2-acd4-6608fb258088"
+        ]
+      },
+      "question": "What techniques does Cobalt Strike use?",
+      "relationship_type": "software_uses_technique",
+      "software": {
+        "external_id": "S0154",
+        "name": "Cobalt Strike",
+        "platforms": [
+          "Linux",
+          "macOS",
+          "Windows"
+        ],
+        "stix_id": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+        "stix_type": "malware"
+      }
+    },
+    {
+      "case_type": "aggregate_software_techniques",
+      "expected_answer": "S0367 (Emotet) directly uses T1003.001 (LSASS Memory), T1016.002 (Wi-Fi Discovery), T1021.002 (SMB/Windows Admin Shares), T1027.001 (Binary Padding), T1027.002 (Software Packing), T1027.009 (Embedded Payloads), T1027.010 (Command Obfuscation), T1027.013 (Encrypted/Encoded File), T1033 (System Owner/User Discovery), T1036.004 (Masquerade Task or Service), T1040 (Network Sniffing), T1041 (Exfiltration Over C2 Channel), T1047 (Windows Management Instrumentation), T1053.005 (Scheduled Task), T1055.001 (Dynamic-link Library Injection), T1055.012 (Process Hollowing), T1057 (Process Discovery), T1059.001 (PowerShell), T1059.003 (Windows Command Shell), T1059.005 (Visual Basic), T1071.001 (Web Protocols), T1078.003 (Local Accounts), T1087.003 (Email Account), T1105 (Ingress Tool Transfer), T1106 (Native API), T1110.001 (Password Guessing), T1114 (Email Collection), T1114.001 (Local Email Collection), T1132.001 (Standard Encoding), T1134.001 (Token Impersonation/Theft), T1135 (Network Share Discovery), T1140 (Deobfuscate/Decode Files or Information), T1204.001 (Malicious Link), T1204.002 (Malicious File), T1210 (Exploitation of Remote Services), T1218.010 (Regsvr32), T1543.003 (Windows Service), T1547.001 (Registry Run Keys / Startup Folder), T1552.001 (Credentials In Files), T1555.003 (Credentials from Web Browsers), T1566.001 (Spearphishing Attachment), T1566.002 (Spearphishing Link), T1570 (Lateral Tool Transfer), T1571 (Non-Standard Port), T1573 (Encrypted Channel), T1573.001 (Symmetric Cryptography), and T1620 (Reflective Code Loading) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_techniques": [
+        {
+          "external_id": "T1003.001",
+          "is_subtechnique": true,
+          "name": "LSASS Memory",
+          "stix_id": "attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90"
+        },
+        {
+          "external_id": "T1016.002",
+          "is_subtechnique": true,
+          "name": "Wi-Fi Discovery",
+          "stix_id": "attack-pattern--494ab9f0-36e0-4b06-b10d-57285b040a06"
+        },
+        {
+          "external_id": "T1021.002",
+          "is_subtechnique": true,
+          "name": "SMB/Windows Admin Shares",
+          "stix_id": "attack-pattern--4f9ca633-15c5-463c-9724-bdcd54fde541"
+        },
+        {
+          "external_id": "T1027.001",
+          "is_subtechnique": true,
+          "name": "Binary Padding",
+          "stix_id": "attack-pattern--5bfccc3f-2326-4112-86cc-c1ece9d8a2b5"
+        },
+        {
+          "external_id": "T1027.002",
+          "is_subtechnique": true,
+          "name": "Software Packing",
+          "stix_id": "attack-pattern--deb98323-e13f-4b0c-8d94-175379069062"
+        },
+        {
+          "external_id": "T1027.009",
+          "is_subtechnique": true,
+          "name": "Embedded Payloads",
+          "stix_id": "attack-pattern--0533ab23-3f7d-463f-9bd8-634d27e4dee1"
+        },
+        {
+          "external_id": "T1027.010",
+          "is_subtechnique": true,
+          "name": "Command Obfuscation",
+          "stix_id": "attack-pattern--d511a6f6-4a33-41d5-bc95-c343875d1377"
+        },
+        {
+          "external_id": "T1027.013",
+          "is_subtechnique": true,
+          "name": "Encrypted/Encoded File",
+          "stix_id": "attack-pattern--0d91b3c0-5e50-47c3-949a-2a796f04d144"
+        },
+        {
+          "external_id": "T1033",
+          "is_subtechnique": false,
+          "name": "System Owner/User Discovery",
+          "stix_id": "attack-pattern--03d7999c-1f4c-42cc-8373-e7690d318104"
+        },
+        {
+          "external_id": "T1036.004",
+          "is_subtechnique": true,
+          "name": "Masquerade Task or Service",
+          "stix_id": "attack-pattern--7bdca9d5-d500-4d7d-8c52-5fd47baf4c0c"
+        },
+        {
+          "external_id": "T1040",
+          "is_subtechnique": false,
+          "name": "Network Sniffing",
+          "stix_id": "attack-pattern--3257eb21-f9a7-4430-8de1-d8b6e288f529"
+        },
+        {
+          "external_id": "T1041",
+          "is_subtechnique": false,
+          "name": "Exfiltration Over C2 Channel",
+          "stix_id": "attack-pattern--92d7da27-2d91-488e-a00c-059dc162766d"
+        },
+        {
+          "external_id": "T1047",
+          "is_subtechnique": false,
+          "name": "Windows Management Instrumentation",
+          "stix_id": "attack-pattern--01a5a209-b94c-450b-b7f9-946497d91055"
+        },
+        {
+          "external_id": "T1053.005",
+          "is_subtechnique": true,
+          "name": "Scheduled Task",
+          "stix_id": "attack-pattern--005a06c6-14bf-4118-afa0-ebcd8aebb0c9"
+        },
+        {
+          "external_id": "T1055.001",
+          "is_subtechnique": true,
+          "name": "Dynamic-link Library Injection",
+          "stix_id": "attack-pattern--f4599aa0-4f85-4a32-80ea-fc39dc965945"
+        },
+        {
+          "external_id": "T1055.012",
+          "is_subtechnique": true,
+          "name": "Process Hollowing",
+          "stix_id": "attack-pattern--b200542e-e877-4395-875b-cf1a44537ca4"
+        },
+        {
+          "external_id": "T1057",
+          "is_subtechnique": false,
+          "name": "Process Discovery",
+          "stix_id": "attack-pattern--8f4a33ec-8b1f-4b80-a2f6-642b2e479580"
+        },
+        {
+          "external_id": "T1059.001",
+          "is_subtechnique": true,
+          "name": "PowerShell",
+          "stix_id": "attack-pattern--970a3432-3237-47ad-bcca-7d8cbb217736"
+        },
+        {
+          "external_id": "T1059.003",
+          "is_subtechnique": true,
+          "name": "Windows Command Shell",
+          "stix_id": "attack-pattern--d1fcf083-a721-4223-aedf-bf8960798d62"
+        },
+        {
+          "external_id": "T1059.005",
+          "is_subtechnique": true,
+          "name": "Visual Basic",
+          "stix_id": "attack-pattern--dfd7cc1d-e1d8-4394-a198-97c4cab8aa67"
+        },
+        {
+          "external_id": "T1071.001",
+          "is_subtechnique": true,
+          "name": "Web Protocols",
+          "stix_id": "attack-pattern--df8b2a25-8bdf-4856-953c-a04372b1c161"
+        },
+        {
+          "external_id": "T1078.003",
+          "is_subtechnique": true,
+          "name": "Local Accounts",
+          "stix_id": "attack-pattern--fdc47f44-dd32-4b99-af5f-209f556f63c2"
+        },
+        {
+          "external_id": "T1087.003",
+          "is_subtechnique": true,
+          "name": "Email Account",
+          "stix_id": "attack-pattern--4bc31b94-045b-4752-8920-aebaebdb6470"
+        },
+        {
+          "external_id": "T1105",
+          "is_subtechnique": false,
+          "name": "Ingress Tool Transfer",
+          "stix_id": "attack-pattern--e6919abc-99f9-4c6c-95a5-14761e7b2add"
+        },
+        {
+          "external_id": "T1106",
+          "is_subtechnique": false,
+          "name": "Native API",
+          "stix_id": "attack-pattern--391d824f-0ef1-47a0-b0ee-c59a75e27670"
+        },
+        {
+          "external_id": "T1110.001",
+          "is_subtechnique": true,
+          "name": "Password Guessing",
+          "stix_id": "attack-pattern--09c4c11e-4fa1-4f8c-8dad-3cf8e69ad119"
+        },
+        {
+          "external_id": "T1114",
+          "is_subtechnique": false,
+          "name": "Email Collection",
+          "stix_id": "attack-pattern--1608f3e1-598a-42f4-a01a-2e252e81728f"
+        },
+        {
+          "external_id": "T1114.001",
+          "is_subtechnique": true,
+          "name": "Local Email Collection",
+          "stix_id": "attack-pattern--1e9eb839-294b-48cc-b0d3-c45555a2a004"
+        },
+        {
+          "external_id": "T1132.001",
+          "is_subtechnique": true,
+          "name": "Standard Encoding",
+          "stix_id": "attack-pattern--04fd5427-79c7-44ea-ae13-11b24778ff1c"
+        },
+        {
+          "external_id": "T1134.001",
+          "is_subtechnique": true,
+          "name": "Token Impersonation/Theft",
+          "stix_id": "attack-pattern--86850eff-2729-40c3-b85e-c4af26da4a2d"
+        },
+        {
+          "external_id": "T1135",
+          "is_subtechnique": false,
+          "name": "Network Share Discovery",
+          "stix_id": "attack-pattern--3489cfc5-640f-4bb3-a103-9137b97de79f"
+        },
+        {
+          "external_id": "T1140",
+          "is_subtechnique": false,
+          "name": "Deobfuscate/Decode Files or Information",
+          "stix_id": "attack-pattern--3ccef7ae-cb5e-48f6-8302-897105fbf55c"
+        },
+        {
+          "external_id": "T1204.001",
+          "is_subtechnique": true,
+          "name": "Malicious Link",
+          "stix_id": "attack-pattern--ef67e13e-5598-4adc-bdb2-998225874fa9"
+        },
+        {
+          "external_id": "T1204.002",
+          "is_subtechnique": true,
+          "name": "Malicious File",
+          "stix_id": "attack-pattern--232b7f21-adf9-4b42-b936-b9d6f7df856e"
+        },
+        {
+          "external_id": "T1210",
+          "is_subtechnique": false,
+          "name": "Exploitation of Remote Services",
+          "stix_id": "attack-pattern--9db0cf3a-a3c9-4012-8268-123b9db6fd82"
+        },
+        {
+          "external_id": "T1218.010",
+          "is_subtechnique": true,
+          "name": "Regsvr32",
+          "stix_id": "attack-pattern--b97f1d35-4249-4486-a6b5-ee60ccf24fab"
+        },
+        {
+          "external_id": "T1543.003",
+          "is_subtechnique": true,
+          "name": "Windows Service",
+          "stix_id": "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32"
+        },
+        {
+          "external_id": "T1547.001",
+          "is_subtechnique": true,
+          "name": "Registry Run Keys / Startup Folder",
+          "stix_id": "attack-pattern--9efb1ea7-c37b-4595-9640-b7680cd84279"
+        },
+        {
+          "external_id": "T1552.001",
+          "is_subtechnique": true,
+          "name": "Credentials In Files",
+          "stix_id": "attack-pattern--837f9164-50af-4ac0-8219-379d8a74cefc"
+        },
+        {
+          "external_id": "T1555.003",
+          "is_subtechnique": true,
+          "name": "Credentials from Web Browsers",
+          "stix_id": "attack-pattern--58a3e6aa-4453-4cc8-a51f-4befe80b31a8"
+        },
+        {
+          "external_id": "T1566.001",
+          "is_subtechnique": true,
+          "name": "Spearphishing Attachment",
+          "stix_id": "attack-pattern--2e34237d-8574-43f6-aace-ae2915de8597"
+        },
+        {
+          "external_id": "T1566.002",
+          "is_subtechnique": true,
+          "name": "Spearphishing Link",
+          "stix_id": "attack-pattern--2b742742-28c3-4e1b-bab7-8350d6300fa7"
+        },
+        {
+          "external_id": "T1570",
+          "is_subtechnique": false,
+          "name": "Lateral Tool Transfer",
+          "stix_id": "attack-pattern--bf90d72c-c00b-45e3-b3aa-68560560d4c5"
+        },
+        {
+          "external_id": "T1571",
+          "is_subtechnique": false,
+          "name": "Non-Standard Port",
+          "stix_id": "attack-pattern--b18eae87-b469-4e14-b454-b171b416bc18"
+        },
+        {
+          "external_id": "T1573",
+          "is_subtechnique": false,
+          "name": "Encrypted Channel",
+          "stix_id": "attack-pattern--b8902400-e6c5-4ba2-95aa-2d35b442b118"
+        },
+        {
+          "external_id": "T1573.001",
+          "is_subtechnique": true,
+          "name": "Symmetric Cryptography",
+          "stix_id": "attack-pattern--24bfaeba-cb0d-4525-b3dc-507c77ecec41"
+        },
+        {
+          "external_id": "T1620",
+          "is_subtechnique": false,
+          "name": "Reflective Code Loading",
+          "stix_id": "attack-pattern--4933e63b-9b77-476e-ab29-761bc5b7d15a"
+        }
+      ],
+      "id": "software-uses-techniques-s0367",
+      "provenance": {
+        "methodology_note": "Only active direct malware/tool --uses--> attack-pattern relationships are included. Group- or campaign-mediated paths are outside this relationship type. Parent and sub-technique objects remain distinct when each has its own qualifying relationship.",
+        "relationship_paths": [
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90",
+            "uses_relationship_stix_id": "relationship--a0321bbd-edab-4ee6-be37-979015511e4a"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--494ab9f0-36e0-4b06-b10d-57285b040a06",
+            "uses_relationship_stix_id": "relationship--fe8a52b2-b1b8-4193-a637-abd9ec219e6a"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--4f9ca633-15c5-463c-9724-bdcd54fde541",
+            "uses_relationship_stix_id": "relationship--1bc150db-66ca-4361-84a2-2dd0f104790f"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--5bfccc3f-2326-4112-86cc-c1ece9d8a2b5",
+            "uses_relationship_stix_id": "relationship--136b197b-4900-4e6e-a16f-0b2cf96fd77c"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--deb98323-e13f-4b0c-8d94-175379069062",
+            "uses_relationship_stix_id": "relationship--d4c5a3a8-203d-4201-80fa-48b5ac9a533f"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--0533ab23-3f7d-463f-9bd8-634d27e4dee1",
+            "uses_relationship_stix_id": "relationship--58e22fa6-5925-40b7-9df6-4cda34892ea6"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--d511a6f6-4a33-41d5-bc95-c343875d1377",
+            "uses_relationship_stix_id": "relationship--9f6eef25-7a90-4f74-a788-8022166952f8"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--0d91b3c0-5e50-47c3-949a-2a796f04d144",
+            "uses_relationship_stix_id": "relationship--c995160b-04cd-42b8-bb1a-106f24c9b28c"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--03d7999c-1f4c-42cc-8373-e7690d318104",
+            "uses_relationship_stix_id": "relationship--05e02170-dc4f-4112-a54c-fde4d05632d7"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--7bdca9d5-d500-4d7d-8c52-5fd47baf4c0c",
+            "uses_relationship_stix_id": "relationship--9da66aaa-79be-426c-8abe-3c68a9159e8b"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--3257eb21-f9a7-4430-8de1-d8b6e288f529",
+            "uses_relationship_stix_id": "relationship--aa6d74b0-3db2-4679-bf1c-03d3dd7561b0"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--92d7da27-2d91-488e-a00c-059dc162766d",
+            "uses_relationship_stix_id": "relationship--5201448e-f009-4c24-abb5-9382383dc42d"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--01a5a209-b94c-450b-b7f9-946497d91055",
+            "uses_relationship_stix_id": "relationship--11f31998-c76f-4433-8e9c-c0ef0b7574d5"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--005a06c6-14bf-4118-afa0-ebcd8aebb0c9",
+            "uses_relationship_stix_id": "relationship--7a28c0d9-28cf-4881-b8a5-8d779eb76e0d"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--f4599aa0-4f85-4a32-80ea-fc39dc965945",
+            "uses_relationship_stix_id": "relationship--e834920f-bc30-458e-b56e-80947d3a7c6e"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--b200542e-e877-4395-875b-cf1a44537ca4",
+            "uses_relationship_stix_id": "relationship--dddf6fd0-6d38-4f33-90dc-42ff99c5072b"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--8f4a33ec-8b1f-4b80-a2f6-642b2e479580",
+            "uses_relationship_stix_id": "relationship--e39eb7ad-f233-4c22-8707-aaf600f42100"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--970a3432-3237-47ad-bcca-7d8cbb217736",
+            "uses_relationship_stix_id": "relationship--7b458295-8e67-4f1f-acde-3316ae2e061e"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--d1fcf083-a721-4223-aedf-bf8960798d62",
+            "uses_relationship_stix_id": "relationship--c9e27933-d6fa-427b-b4ff-2367a2d7d060"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--dfd7cc1d-e1d8-4394-a198-97c4cab8aa67",
+            "uses_relationship_stix_id": "relationship--88309efb-b366-4c4a-bd23-ba43b9f05c4c"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--df8b2a25-8bdf-4856-953c-a04372b1c161",
+            "uses_relationship_stix_id": "relationship--50e590c6-32bb-452c-a0ba-20c2ee6f0030"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--fdc47f44-dd32-4b99-af5f-209f556f63c2",
+            "uses_relationship_stix_id": "relationship--30930d8a-3c0d-41b2-a226-cccc56599bfd"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--4bc31b94-045b-4752-8920-aebaebdb6470",
+            "uses_relationship_stix_id": "relationship--d3dbd171-a82c-4fef-ba16-2355dd9b513e"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--e6919abc-99f9-4c6c-95a5-14761e7b2add",
+            "uses_relationship_stix_id": "relationship--622ba39c-2f40-4605-81ce-ef04cea95808"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--391d824f-0ef1-47a0-b0ee-c59a75e27670",
+            "uses_relationship_stix_id": "relationship--fba17e05-d7dd-4944-97c8-7771d6b833fb"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--09c4c11e-4fa1-4f8c-8dad-3cf8e69ad119",
+            "uses_relationship_stix_id": "relationship--0c76bb94-1a6e-4ec6-9faa-2b444d80002c"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--1608f3e1-598a-42f4-a01a-2e252e81728f",
+            "uses_relationship_stix_id": "relationship--76d0dcb7-046a-40d7-80ec-e0e571359f51"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--1e9eb839-294b-48cc-b0d3-c45555a2a004",
+            "uses_relationship_stix_id": "relationship--ea023f09-6a7d-445c-a39d-5e57eea2706b"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--04fd5427-79c7-44ea-ae13-11b24778ff1c",
+            "uses_relationship_stix_id": "relationship--48a7db34-eee7-4358-918b-0cc802aaec03"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--86850eff-2729-40c3-b85e-c4af26da4a2d",
+            "uses_relationship_stix_id": "relationship--2b16958e-8c41-4342-87d8-f98b42548724"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--3489cfc5-640f-4bb3-a103-9137b97de79f",
+            "uses_relationship_stix_id": "relationship--491dc622-fa43-4015-b24a-8ec8d8f5a376"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--3ccef7ae-cb5e-48f6-8302-897105fbf55c",
+            "uses_relationship_stix_id": "relationship--7e4db234-1923-4bfb-ab32-284f31182c76"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--ef67e13e-5598-4adc-bdb2-998225874fa9",
+            "uses_relationship_stix_id": "relationship--90b7c9e6-53db-4656-a5ee-f8056a8d6ef7"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--232b7f21-adf9-4b42-b936-b9d6f7df856e",
+            "uses_relationship_stix_id": "relationship--219dcd0b-a6fe-47d4-99b9-24d945b1f168"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--9db0cf3a-a3c9-4012-8268-123b9db6fd82",
+            "uses_relationship_stix_id": "relationship--6cb2f741-eedb-4b1d-8d84-7823f0095d44"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--b97f1d35-4249-4486-a6b5-ee60ccf24fab",
+            "uses_relationship_stix_id": "relationship--15d75abf-f6e1-4e86-8acb-6461958fdbac"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32",
+            "uses_relationship_stix_id": "relationship--eba0a033-02a9-45e8-a1a1-27df73d6442b"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--9efb1ea7-c37b-4595-9640-b7680cd84279",
+            "uses_relationship_stix_id": "relationship--3236ca50-2342-455a-b258-6a085cae8fc2"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--837f9164-50af-4ac0-8219-379d8a74cefc",
+            "uses_relationship_stix_id": "relationship--09c80e35-2839-4b5b-aad8-8f81db8da551"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--58a3e6aa-4453-4cc8-a51f-4befe80b31a8",
+            "uses_relationship_stix_id": "relationship--7ac04e64-a09e-4a66-b6ce-047030400045"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--2e34237d-8574-43f6-aace-ae2915de8597",
+            "uses_relationship_stix_id": "relationship--cc4f0b64-db39-4546-a5fc-a518ecc5438b"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--2b742742-28c3-4e1b-bab7-8350d6300fa7",
+            "uses_relationship_stix_id": "relationship--382b8780-edc3-477f-a7fa-3e6ba62397a2"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--bf90d72c-c00b-45e3-b3aa-68560560d4c5",
+            "uses_relationship_stix_id": "relationship--0694d72f-cf4b-4355-b485-ccbd8d3a22b2"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--b18eae87-b469-4e14-b454-b171b416bc18",
+            "uses_relationship_stix_id": "relationship--12c14ace-db29-4b08-a052-ba867c9ba534"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--b8902400-e6c5-4ba2-95aa-2d35b442b118",
+            "uses_relationship_stix_id": "relationship--f18b11ea-4604-4c9e-8f12-6cfb526ef58c"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--24bfaeba-cb0d-4525-b3dc-507c77ecec41",
+            "uses_relationship_stix_id": "relationship--095a259d-79c7-42b0-b65a-e423f110d187"
+          },
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--4933e63b-9b77-476e-ab29-761bc5b7d15a",
+            "uses_relationship_stix_id": "relationship--b92542f4-97bc-4e75-9f92-328c25a007ef"
+          }
+        ],
+        "scope": "direct_software_to_technique_only",
+        "software_stix_id": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "technique_stix_ids": [
+          "attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90",
+          "attack-pattern--494ab9f0-36e0-4b06-b10d-57285b040a06",
+          "attack-pattern--4f9ca633-15c5-463c-9724-bdcd54fde541",
+          "attack-pattern--5bfccc3f-2326-4112-86cc-c1ece9d8a2b5",
+          "attack-pattern--deb98323-e13f-4b0c-8d94-175379069062",
+          "attack-pattern--0533ab23-3f7d-463f-9bd8-634d27e4dee1",
+          "attack-pattern--d511a6f6-4a33-41d5-bc95-c343875d1377",
+          "attack-pattern--0d91b3c0-5e50-47c3-949a-2a796f04d144",
+          "attack-pattern--03d7999c-1f4c-42cc-8373-e7690d318104",
+          "attack-pattern--7bdca9d5-d500-4d7d-8c52-5fd47baf4c0c",
+          "attack-pattern--3257eb21-f9a7-4430-8de1-d8b6e288f529",
+          "attack-pattern--92d7da27-2d91-488e-a00c-059dc162766d",
+          "attack-pattern--01a5a209-b94c-450b-b7f9-946497d91055",
+          "attack-pattern--005a06c6-14bf-4118-afa0-ebcd8aebb0c9",
+          "attack-pattern--f4599aa0-4f85-4a32-80ea-fc39dc965945",
+          "attack-pattern--b200542e-e877-4395-875b-cf1a44537ca4",
+          "attack-pattern--8f4a33ec-8b1f-4b80-a2f6-642b2e479580",
+          "attack-pattern--970a3432-3237-47ad-bcca-7d8cbb217736",
+          "attack-pattern--d1fcf083-a721-4223-aedf-bf8960798d62",
+          "attack-pattern--dfd7cc1d-e1d8-4394-a198-97c4cab8aa67",
+          "attack-pattern--df8b2a25-8bdf-4856-953c-a04372b1c161",
+          "attack-pattern--fdc47f44-dd32-4b99-af5f-209f556f63c2",
+          "attack-pattern--4bc31b94-045b-4752-8920-aebaebdb6470",
+          "attack-pattern--e6919abc-99f9-4c6c-95a5-14761e7b2add",
+          "attack-pattern--391d824f-0ef1-47a0-b0ee-c59a75e27670",
+          "attack-pattern--09c4c11e-4fa1-4f8c-8dad-3cf8e69ad119",
+          "attack-pattern--1608f3e1-598a-42f4-a01a-2e252e81728f",
+          "attack-pattern--1e9eb839-294b-48cc-b0d3-c45555a2a004",
+          "attack-pattern--04fd5427-79c7-44ea-ae13-11b24778ff1c",
+          "attack-pattern--86850eff-2729-40c3-b85e-c4af26da4a2d",
+          "attack-pattern--3489cfc5-640f-4bb3-a103-9137b97de79f",
+          "attack-pattern--3ccef7ae-cb5e-48f6-8302-897105fbf55c",
+          "attack-pattern--ef67e13e-5598-4adc-bdb2-998225874fa9",
+          "attack-pattern--232b7f21-adf9-4b42-b936-b9d6f7df856e",
+          "attack-pattern--9db0cf3a-a3c9-4012-8268-123b9db6fd82",
+          "attack-pattern--b97f1d35-4249-4486-a6b5-ee60ccf24fab",
+          "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32",
+          "attack-pattern--9efb1ea7-c37b-4595-9640-b7680cd84279",
+          "attack-pattern--837f9164-50af-4ac0-8219-379d8a74cefc",
+          "attack-pattern--58a3e6aa-4453-4cc8-a51f-4befe80b31a8",
+          "attack-pattern--2e34237d-8574-43f6-aace-ae2915de8597",
+          "attack-pattern--2b742742-28c3-4e1b-bab7-8350d6300fa7",
+          "attack-pattern--bf90d72c-c00b-45e3-b3aa-68560560d4c5",
+          "attack-pattern--b18eae87-b469-4e14-b454-b171b416bc18",
+          "attack-pattern--b8902400-e6c5-4ba2-95aa-2d35b442b118",
+          "attack-pattern--24bfaeba-cb0d-4525-b3dc-507c77ecec41",
+          "attack-pattern--4933e63b-9b77-476e-ab29-761bc5b7d15a"
+        ],
+        "uses_relationship_stix_ids": [
+          "relationship--a0321bbd-edab-4ee6-be37-979015511e4a",
+          "relationship--fe8a52b2-b1b8-4193-a637-abd9ec219e6a",
+          "relationship--1bc150db-66ca-4361-84a2-2dd0f104790f",
+          "relationship--136b197b-4900-4e6e-a16f-0b2cf96fd77c",
+          "relationship--d4c5a3a8-203d-4201-80fa-48b5ac9a533f",
+          "relationship--58e22fa6-5925-40b7-9df6-4cda34892ea6",
+          "relationship--9f6eef25-7a90-4f74-a788-8022166952f8",
+          "relationship--c995160b-04cd-42b8-bb1a-106f24c9b28c",
+          "relationship--05e02170-dc4f-4112-a54c-fde4d05632d7",
+          "relationship--9da66aaa-79be-426c-8abe-3c68a9159e8b",
+          "relationship--aa6d74b0-3db2-4679-bf1c-03d3dd7561b0",
+          "relationship--5201448e-f009-4c24-abb5-9382383dc42d",
+          "relationship--11f31998-c76f-4433-8e9c-c0ef0b7574d5",
+          "relationship--7a28c0d9-28cf-4881-b8a5-8d779eb76e0d",
+          "relationship--e834920f-bc30-458e-b56e-80947d3a7c6e",
+          "relationship--dddf6fd0-6d38-4f33-90dc-42ff99c5072b",
+          "relationship--e39eb7ad-f233-4c22-8707-aaf600f42100",
+          "relationship--7b458295-8e67-4f1f-acde-3316ae2e061e",
+          "relationship--c9e27933-d6fa-427b-b4ff-2367a2d7d060",
+          "relationship--88309efb-b366-4c4a-bd23-ba43b9f05c4c",
+          "relationship--50e590c6-32bb-452c-a0ba-20c2ee6f0030",
+          "relationship--30930d8a-3c0d-41b2-a226-cccc56599bfd",
+          "relationship--d3dbd171-a82c-4fef-ba16-2355dd9b513e",
+          "relationship--622ba39c-2f40-4605-81ce-ef04cea95808",
+          "relationship--fba17e05-d7dd-4944-97c8-7771d6b833fb",
+          "relationship--0c76bb94-1a6e-4ec6-9faa-2b444d80002c",
+          "relationship--76d0dcb7-046a-40d7-80ec-e0e571359f51",
+          "relationship--ea023f09-6a7d-445c-a39d-5e57eea2706b",
+          "relationship--48a7db34-eee7-4358-918b-0cc802aaec03",
+          "relationship--2b16958e-8c41-4342-87d8-f98b42548724",
+          "relationship--491dc622-fa43-4015-b24a-8ec8d8f5a376",
+          "relationship--7e4db234-1923-4bfb-ab32-284f31182c76",
+          "relationship--90b7c9e6-53db-4656-a5ee-f8056a8d6ef7",
+          "relationship--219dcd0b-a6fe-47d4-99b9-24d945b1f168",
+          "relationship--6cb2f741-eedb-4b1d-8d84-7823f0095d44",
+          "relationship--15d75abf-f6e1-4e86-8acb-6461958fdbac",
+          "relationship--eba0a033-02a9-45e8-a1a1-27df73d6442b",
+          "relationship--3236ca50-2342-455a-b258-6a085cae8fc2",
+          "relationship--09c80e35-2839-4b5b-aad8-8f81db8da551",
+          "relationship--7ac04e64-a09e-4a66-b6ce-047030400045",
+          "relationship--cc4f0b64-db39-4546-a5fc-a518ecc5438b",
+          "relationship--382b8780-edc3-477f-a7fa-3e6ba62397a2",
+          "relationship--0694d72f-cf4b-4355-b485-ccbd8d3a22b2",
+          "relationship--12c14ace-db29-4b08-a052-ba867c9ba534",
+          "relationship--f18b11ea-4604-4c9e-8f12-6cfb526ef58c",
+          "relationship--095a259d-79c7-42b0-b65a-e423f110d187",
+          "relationship--b92542f4-97bc-4e75-9f92-328c25a007ef"
+        ]
+      },
+      "question": "What techniques does Emotet use?",
+      "relationship_type": "software_uses_technique",
+      "software": {
+        "external_id": "S0367",
+        "name": "Emotet",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+        "stix_type": "malware"
+      }
+    },
+    {
+      "case_type": "aggregate_software_techniques",
+      "expected_answer": "S0366 (WannaCry) directly uses T1016 (System Network Configuration Discovery), T1018 (Remote System Discovery), T1047 (Windows Management Instrumentation), T1083 (File and Directory Discovery), T1090.003 (Multi-hop Proxy), T1120 (Peripheral Device Discovery), T1210 (Exploitation of Remote Services), T1222.001 (Windows Permissions), T1486 (Data Encrypted for Impact), T1489 (Service Stop), T1490 (Inhibit System Recovery), T1543.003 (Windows Service), T1563.002 (RDP Hijacking), T1564.001 (Hidden Files and Directories), T1570 (Lateral Tool Transfer), and T1573.002 (Asymmetric Cryptography) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_techniques": [
+        {
+          "external_id": "T1016",
+          "is_subtechnique": false,
+          "name": "System Network Configuration Discovery",
+          "stix_id": "attack-pattern--707399d6-ab3e-4963-9315-d9d3818cd6a0"
+        },
+        {
+          "external_id": "T1018",
+          "is_subtechnique": false,
+          "name": "Remote System Discovery",
+          "stix_id": "attack-pattern--e358d692-23c0-4a31-9eb6-ecc13a8d7735"
+        },
+        {
+          "external_id": "T1047",
+          "is_subtechnique": false,
+          "name": "Windows Management Instrumentation",
+          "stix_id": "attack-pattern--01a5a209-b94c-450b-b7f9-946497d91055"
+        },
+        {
+          "external_id": "T1083",
+          "is_subtechnique": false,
+          "name": "File and Directory Discovery",
+          "stix_id": "attack-pattern--7bc57495-ea59-4380-be31-a64af124ef18"
+        },
+        {
+          "external_id": "T1090.003",
+          "is_subtechnique": true,
+          "name": "Multi-hop Proxy",
+          "stix_id": "attack-pattern--a782ebe2-daba-42c7-bc82-e8e9d923162d"
+        },
+        {
+          "external_id": "T1120",
+          "is_subtechnique": false,
+          "name": "Peripheral Device Discovery",
+          "stix_id": "attack-pattern--348f1eef-964b-4eb6-bb53-69b3dcb0c643"
+        },
+        {
+          "external_id": "T1210",
+          "is_subtechnique": false,
+          "name": "Exploitation of Remote Services",
+          "stix_id": "attack-pattern--9db0cf3a-a3c9-4012-8268-123b9db6fd82"
+        },
+        {
+          "external_id": "T1222.001",
+          "is_subtechnique": true,
+          "name": "Windows Permissions",
+          "stix_id": "attack-pattern--34e793de-0274-4982-9c1a-246ed1c19dee"
+        },
+        {
+          "external_id": "T1486",
+          "is_subtechnique": false,
+          "name": "Data Encrypted for Impact",
+          "stix_id": "attack-pattern--b80d107d-fa0d-4b60-9684-b0433e8bdba0"
+        },
+        {
+          "external_id": "T1489",
+          "is_subtechnique": false,
+          "name": "Service Stop",
+          "stix_id": "attack-pattern--20fb2507-d71c-455d-9b6d-6104461cf26b"
+        },
+        {
+          "external_id": "T1490",
+          "is_subtechnique": false,
+          "name": "Inhibit System Recovery",
+          "stix_id": "attack-pattern--f5d8eed6-48a9-4cdf-a3d7-d1ffa99c3d2a"
+        },
+        {
+          "external_id": "T1543.003",
+          "is_subtechnique": true,
+          "name": "Windows Service",
+          "stix_id": "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32"
+        },
+        {
+          "external_id": "T1563.002",
+          "is_subtechnique": true,
+          "name": "RDP Hijacking",
+          "stix_id": "attack-pattern--e0033c16-a07e-48aa-8204-7c3ca669998c"
+        },
+        {
+          "external_id": "T1564.001",
+          "is_subtechnique": true,
+          "name": "Hidden Files and Directories",
+          "stix_id": "attack-pattern--ec8fc7e2-b356-455c-8db5-2e37be158e7d"
+        },
+        {
+          "external_id": "T1570",
+          "is_subtechnique": false,
+          "name": "Lateral Tool Transfer",
+          "stix_id": "attack-pattern--bf90d72c-c00b-45e3-b3aa-68560560d4c5"
+        },
+        {
+          "external_id": "T1573.002",
+          "is_subtechnique": true,
+          "name": "Asymmetric Cryptography",
+          "stix_id": "attack-pattern--bf176076-b789-408e-8cba-7275e81c0ada"
+        }
+      ],
+      "id": "software-uses-techniques-s0366",
+      "provenance": {
+        "methodology_note": "Only active direct malware/tool --uses--> attack-pattern relationships are included. Group- or campaign-mediated paths are outside this relationship type. Parent and sub-technique objects remain distinct when each has its own qualifying relationship.",
+        "relationship_paths": [
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--707399d6-ab3e-4963-9315-d9d3818cd6a0",
+            "uses_relationship_stix_id": "relationship--b3c7d447-9b00-4bd6-b0b7-25c0bb56d28a"
+          },
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--e358d692-23c0-4a31-9eb6-ecc13a8d7735",
+            "uses_relationship_stix_id": "relationship--7a116d1c-33ab-4729-abff-2e37dc387f31"
+          },
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--01a5a209-b94c-450b-b7f9-946497d91055",
+            "uses_relationship_stix_id": "relationship--6ad5d5c8-b53e-417c-a574-3818269d1e85"
+          },
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--7bc57495-ea59-4380-be31-a64af124ef18",
+            "uses_relationship_stix_id": "relationship--3ca496bf-41f9-4d0b-b36d-576f90db340e"
+          },
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--a782ebe2-daba-42c7-bc82-e8e9d923162d",
+            "uses_relationship_stix_id": "relationship--cf498579-a7c9-4d06-949b-fb75bf762990"
+          },
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--348f1eef-964b-4eb6-bb53-69b3dcb0c643",
+            "uses_relationship_stix_id": "relationship--3f58682a-dc04-40f6-b224-42bab6ef6f67"
+          },
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--9db0cf3a-a3c9-4012-8268-123b9db6fd82",
+            "uses_relationship_stix_id": "relationship--0e12dc13-6f73-4ad9-9cb5-845d443b4d58"
+          },
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--34e793de-0274-4982-9c1a-246ed1c19dee",
+            "uses_relationship_stix_id": "relationship--c49a3d89-c8fa-4c5d-813e-f4495d892d1a"
+          },
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--b80d107d-fa0d-4b60-9684-b0433e8bdba0",
+            "uses_relationship_stix_id": "relationship--5c56206f-8ae3-4296-ab89-bc2036b74896"
+          },
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--20fb2507-d71c-455d-9b6d-6104461cf26b",
+            "uses_relationship_stix_id": "relationship--1427027f-0fd1-4781-b4b3-06dc8e6e9998"
+          },
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--f5d8eed6-48a9-4cdf-a3d7-d1ffa99c3d2a",
+            "uses_relationship_stix_id": "relationship--76d0be57-e439-4640-b26d-db422353d9e5"
+          },
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32",
+            "uses_relationship_stix_id": "relationship--facd3eca-9156-47a8-85d1-09719bc0eb88"
+          },
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--e0033c16-a07e-48aa-8204-7c3ca669998c",
+            "uses_relationship_stix_id": "relationship--6b22c256-44a9-4b73-8df6-e4da9c32a5a3"
+          },
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--ec8fc7e2-b356-455c-8db5-2e37be158e7d",
+            "uses_relationship_stix_id": "relationship--a802b910-b023-425a-8c09-c1b2df185812"
+          },
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--bf90d72c-c00b-45e3-b3aa-68560560d4c5",
+            "uses_relationship_stix_id": "relationship--fe78de3a-107f-4870-b5a1-c60289d68dec"
+          },
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--bf176076-b789-408e-8cba-7275e81c0ada",
+            "uses_relationship_stix_id": "relationship--d9bfa498-69a1-44f9-8e44-67a6a4c48088"
+          }
+        ],
+        "scope": "direct_software_to_technique_only",
+        "software_stix_id": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "technique_stix_ids": [
+          "attack-pattern--707399d6-ab3e-4963-9315-d9d3818cd6a0",
+          "attack-pattern--e358d692-23c0-4a31-9eb6-ecc13a8d7735",
+          "attack-pattern--01a5a209-b94c-450b-b7f9-946497d91055",
+          "attack-pattern--7bc57495-ea59-4380-be31-a64af124ef18",
+          "attack-pattern--a782ebe2-daba-42c7-bc82-e8e9d923162d",
+          "attack-pattern--348f1eef-964b-4eb6-bb53-69b3dcb0c643",
+          "attack-pattern--9db0cf3a-a3c9-4012-8268-123b9db6fd82",
+          "attack-pattern--34e793de-0274-4982-9c1a-246ed1c19dee",
+          "attack-pattern--b80d107d-fa0d-4b60-9684-b0433e8bdba0",
+          "attack-pattern--20fb2507-d71c-455d-9b6d-6104461cf26b",
+          "attack-pattern--f5d8eed6-48a9-4cdf-a3d7-d1ffa99c3d2a",
+          "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32",
+          "attack-pattern--e0033c16-a07e-48aa-8204-7c3ca669998c",
+          "attack-pattern--ec8fc7e2-b356-455c-8db5-2e37be158e7d",
+          "attack-pattern--bf90d72c-c00b-45e3-b3aa-68560560d4c5",
+          "attack-pattern--bf176076-b789-408e-8cba-7275e81c0ada"
+        ],
+        "uses_relationship_stix_ids": [
+          "relationship--b3c7d447-9b00-4bd6-b0b7-25c0bb56d28a",
+          "relationship--7a116d1c-33ab-4729-abff-2e37dc387f31",
+          "relationship--6ad5d5c8-b53e-417c-a574-3818269d1e85",
+          "relationship--3ca496bf-41f9-4d0b-b36d-576f90db340e",
+          "relationship--cf498579-a7c9-4d06-949b-fb75bf762990",
+          "relationship--3f58682a-dc04-40f6-b224-42bab6ef6f67",
+          "relationship--0e12dc13-6f73-4ad9-9cb5-845d443b4d58",
+          "relationship--c49a3d89-c8fa-4c5d-813e-f4495d892d1a",
+          "relationship--5c56206f-8ae3-4296-ab89-bc2036b74896",
+          "relationship--1427027f-0fd1-4781-b4b3-06dc8e6e9998",
+          "relationship--76d0be57-e439-4640-b26d-db422353d9e5",
+          "relationship--facd3eca-9156-47a8-85d1-09719bc0eb88",
+          "relationship--6b22c256-44a9-4b73-8df6-e4da9c32a5a3",
+          "relationship--a802b910-b023-425a-8c09-c1b2df185812",
+          "relationship--fe78de3a-107f-4870-b5a1-c60289d68dec",
+          "relationship--d9bfa498-69a1-44f9-8e44-67a6a4c48088"
+        ]
+      },
+      "question": "What techniques does WannaCry use?",
+      "relationship_type": "software_uses_technique",
+      "software": {
+        "external_id": "S0366",
+        "name": "WannaCry",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+        "stix_type": "malware"
+      }
+    },
+    {
+      "case_type": "aggregate_software_techniques",
+      "expected_answer": "S0266 (TrickBot) directly uses T1005 (Data from Local System), T1007 (System Service Discovery), T1008 (Fallback Channels), T1016 (System Network Configuration Discovery), T1018 (Remote System Discovery), T1021.005 (VNC), T1027 (Obfuscated Files or Information), T1027.002 (Software Packing), T1027.013 (Encrypted/Encoded File), T1033 (System Owner/User Discovery), T1036 (Masquerading), T1041 (Exfiltration Over C2 Channel), T1053.005 (Scheduled Task), T1055 (Process Injection), T1055.012 (Process Hollowing), T1056.004 (Credential API Hooking), T1057 (Process Discovery), T1059.001 (PowerShell), T1059.003 (Windows Command Shell), T1069 (Permission Groups Discovery), T1071.001 (Web Protocols), T1082 (System Information Discovery), T1083 (File and Directory Discovery), T1087.001 (Local Account), T1087.003 (Email Account), T1090.002 (External Proxy), T1105 (Ingress Tool Transfer), T1106 (Native API), T1110.004 (Credential Stuffing), T1112 (Modify Registry), T1132.001 (Standard Encoding), T1135 (Network Share Discovery), T1140 (Deobfuscate/Decode Files or Information), T1185 (Browser Session Hijacking), T1204.002 (Malicious File), T1210 (Exploitation of Remote Services), T1219 (Remote Access Tools), T1482 (Domain Trust Discovery), T1495 (Firmware Corruption), T1497.003 (Time Based Checks), T1542.003 (Bootkit), T1543.003 (Windows Service), T1547.001 (Registry Run Keys / Startup Folder), T1552.001 (Credentials In Files), T1552.002 (Credentials in Registry), T1553.002 (Code Signing), T1555.003 (Credentials from Web Browsers), T1555.005 (Password Managers), T1559.001 (Component Object Model), T1564.003 (Hidden Window), T1566.001 (Spearphishing Attachment), T1566.002 (Spearphishing Link), T1571 (Non-Standard Port), T1573.001 (Symmetric Cryptography), and T1685 (Disable or Modify Tools) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_techniques": [
+        {
+          "external_id": "T1005",
+          "is_subtechnique": false,
+          "name": "Data from Local System",
+          "stix_id": "attack-pattern--3c4a2599-71ee-4405-ba1e-0e28414b4bc5"
+        },
+        {
+          "external_id": "T1007",
+          "is_subtechnique": false,
+          "name": "System Service Discovery",
+          "stix_id": "attack-pattern--322bad5a-1c49-4d23-ab79-76d641794afa"
+        },
+        {
+          "external_id": "T1008",
+          "is_subtechnique": false,
+          "name": "Fallback Channels",
+          "stix_id": "attack-pattern--f24faf46-3b26-4dbb-98f2-63460498e433"
+        },
+        {
+          "external_id": "T1016",
+          "is_subtechnique": false,
+          "name": "System Network Configuration Discovery",
+          "stix_id": "attack-pattern--707399d6-ab3e-4963-9315-d9d3818cd6a0"
+        },
+        {
+          "external_id": "T1018",
+          "is_subtechnique": false,
+          "name": "Remote System Discovery",
+          "stix_id": "attack-pattern--e358d692-23c0-4a31-9eb6-ecc13a8d7735"
+        },
+        {
+          "external_id": "T1021.005",
+          "is_subtechnique": true,
+          "name": "VNC",
+          "stix_id": "attack-pattern--01327cde-66c4-4123-bf34-5f258d59457b"
+        },
+        {
+          "external_id": "T1027",
+          "is_subtechnique": false,
+          "name": "Obfuscated Files or Information",
+          "stix_id": "attack-pattern--b3d682b6-98f2-4fb0-aa3b-b4df007ca70a"
+        },
+        {
+          "external_id": "T1027.002",
+          "is_subtechnique": true,
+          "name": "Software Packing",
+          "stix_id": "attack-pattern--deb98323-e13f-4b0c-8d94-175379069062"
+        },
+        {
+          "external_id": "T1027.013",
+          "is_subtechnique": true,
+          "name": "Encrypted/Encoded File",
+          "stix_id": "attack-pattern--0d91b3c0-5e50-47c3-949a-2a796f04d144"
+        },
+        {
+          "external_id": "T1033",
+          "is_subtechnique": false,
+          "name": "System Owner/User Discovery",
+          "stix_id": "attack-pattern--03d7999c-1f4c-42cc-8373-e7690d318104"
+        },
+        {
+          "external_id": "T1036",
+          "is_subtechnique": false,
+          "name": "Masquerading",
+          "stix_id": "attack-pattern--42e8de7b-37b2-4258-905a-6897815e58e0"
+        },
+        {
+          "external_id": "T1041",
+          "is_subtechnique": false,
+          "name": "Exfiltration Over C2 Channel",
+          "stix_id": "attack-pattern--92d7da27-2d91-488e-a00c-059dc162766d"
+        },
+        {
+          "external_id": "T1053.005",
+          "is_subtechnique": true,
+          "name": "Scheduled Task",
+          "stix_id": "attack-pattern--005a06c6-14bf-4118-afa0-ebcd8aebb0c9"
+        },
+        {
+          "external_id": "T1055",
+          "is_subtechnique": false,
+          "name": "Process Injection",
+          "stix_id": "attack-pattern--43e7dc91-05b2-474c-b9ac-2ed4fe101f4d"
+        },
+        {
+          "external_id": "T1055.012",
+          "is_subtechnique": true,
+          "name": "Process Hollowing",
+          "stix_id": "attack-pattern--b200542e-e877-4395-875b-cf1a44537ca4"
+        },
+        {
+          "external_id": "T1056.004",
+          "is_subtechnique": true,
+          "name": "Credential API Hooking",
+          "stix_id": "attack-pattern--f5946b5e-9408-485f-a7f7-b5efc88909b6"
+        },
+        {
+          "external_id": "T1057",
+          "is_subtechnique": false,
+          "name": "Process Discovery",
+          "stix_id": "attack-pattern--8f4a33ec-8b1f-4b80-a2f6-642b2e479580"
+        },
+        {
+          "external_id": "T1059.001",
+          "is_subtechnique": true,
+          "name": "PowerShell",
+          "stix_id": "attack-pattern--970a3432-3237-47ad-bcca-7d8cbb217736"
+        },
+        {
+          "external_id": "T1059.003",
+          "is_subtechnique": true,
+          "name": "Windows Command Shell",
+          "stix_id": "attack-pattern--d1fcf083-a721-4223-aedf-bf8960798d62"
+        },
+        {
+          "external_id": "T1069",
+          "is_subtechnique": false,
+          "name": "Permission Groups Discovery",
+          "stix_id": "attack-pattern--15dbf668-795c-41e6-8219-f0447c0e64ce"
+        },
+        {
+          "external_id": "T1071.001",
+          "is_subtechnique": true,
+          "name": "Web Protocols",
+          "stix_id": "attack-pattern--df8b2a25-8bdf-4856-953c-a04372b1c161"
+        },
+        {
+          "external_id": "T1082",
+          "is_subtechnique": false,
+          "name": "System Information Discovery",
+          "stix_id": "attack-pattern--354a7f88-63fb-41b5-a801-ce3b377b36f1"
+        },
+        {
+          "external_id": "T1083",
+          "is_subtechnique": false,
+          "name": "File and Directory Discovery",
+          "stix_id": "attack-pattern--7bc57495-ea59-4380-be31-a64af124ef18"
+        },
+        {
+          "external_id": "T1087.001",
+          "is_subtechnique": true,
+          "name": "Local Account",
+          "stix_id": "attack-pattern--25659dd6-ea12-45c4-97e6-381e3e4b593e"
+        },
+        {
+          "external_id": "T1087.003",
+          "is_subtechnique": true,
+          "name": "Email Account",
+          "stix_id": "attack-pattern--4bc31b94-045b-4752-8920-aebaebdb6470"
+        },
+        {
+          "external_id": "T1090.002",
+          "is_subtechnique": true,
+          "name": "External Proxy",
+          "stix_id": "attack-pattern--69b8fd78-40e8-4600-ae4d-662c9d7afdb3"
+        },
+        {
+          "external_id": "T1105",
+          "is_subtechnique": false,
+          "name": "Ingress Tool Transfer",
+          "stix_id": "attack-pattern--e6919abc-99f9-4c6c-95a5-14761e7b2add"
+        },
+        {
+          "external_id": "T1106",
+          "is_subtechnique": false,
+          "name": "Native API",
+          "stix_id": "attack-pattern--391d824f-0ef1-47a0-b0ee-c59a75e27670"
+        },
+        {
+          "external_id": "T1110.004",
+          "is_subtechnique": true,
+          "name": "Credential Stuffing",
+          "stix_id": "attack-pattern--b2d03cea-aec1-45ca-9744-9ee583c1e1cc"
+        },
+        {
+          "external_id": "T1112",
+          "is_subtechnique": false,
+          "name": "Modify Registry",
+          "stix_id": "attack-pattern--57340c81-c025-4189-8fa0-fc7ede51bae4"
+        },
+        {
+          "external_id": "T1132.001",
+          "is_subtechnique": true,
+          "name": "Standard Encoding",
+          "stix_id": "attack-pattern--04fd5427-79c7-44ea-ae13-11b24778ff1c"
+        },
+        {
+          "external_id": "T1135",
+          "is_subtechnique": false,
+          "name": "Network Share Discovery",
+          "stix_id": "attack-pattern--3489cfc5-640f-4bb3-a103-9137b97de79f"
+        },
+        {
+          "external_id": "T1140",
+          "is_subtechnique": false,
+          "name": "Deobfuscate/Decode Files or Information",
+          "stix_id": "attack-pattern--3ccef7ae-cb5e-48f6-8302-897105fbf55c"
+        },
+        {
+          "external_id": "T1185",
+          "is_subtechnique": false,
+          "name": "Browser Session Hijacking",
+          "stix_id": "attack-pattern--544b0346-29ad-41e1-a808-501bb4193f47"
+        },
+        {
+          "external_id": "T1204.002",
+          "is_subtechnique": true,
+          "name": "Malicious File",
+          "stix_id": "attack-pattern--232b7f21-adf9-4b42-b936-b9d6f7df856e"
+        },
+        {
+          "external_id": "T1210",
+          "is_subtechnique": false,
+          "name": "Exploitation of Remote Services",
+          "stix_id": "attack-pattern--9db0cf3a-a3c9-4012-8268-123b9db6fd82"
+        },
+        {
+          "external_id": "T1219",
+          "is_subtechnique": false,
+          "name": "Remote Access Tools",
+          "stix_id": "attack-pattern--4061e78c-1284-44b4-9116-73e4ac3912f7"
+        },
+        {
+          "external_id": "T1482",
+          "is_subtechnique": false,
+          "name": "Domain Trust Discovery",
+          "stix_id": "attack-pattern--767dbf9e-df3f-45cb-8998-4903ab5f80c0"
+        },
+        {
+          "external_id": "T1495",
+          "is_subtechnique": false,
+          "name": "Firmware Corruption",
+          "stix_id": "attack-pattern--f5bb433e-bdf6-4781-84bc-35e97e43be89"
+        },
+        {
+          "external_id": "T1497.003",
+          "is_subtechnique": true,
+          "name": "Time Based Checks",
+          "stix_id": "attack-pattern--4bed873f-0b7d-41d4-b93a-b6905d1f90b0"
+        },
+        {
+          "external_id": "T1542.003",
+          "is_subtechnique": true,
+          "name": "Bootkit",
+          "stix_id": "attack-pattern--1b7b1806-7746-41a1-a35d-e48dae25ddba"
+        },
+        {
+          "external_id": "T1543.003",
+          "is_subtechnique": true,
+          "name": "Windows Service",
+          "stix_id": "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32"
+        },
+        {
+          "external_id": "T1547.001",
+          "is_subtechnique": true,
+          "name": "Registry Run Keys / Startup Folder",
+          "stix_id": "attack-pattern--9efb1ea7-c37b-4595-9640-b7680cd84279"
+        },
+        {
+          "external_id": "T1552.001",
+          "is_subtechnique": true,
+          "name": "Credentials In Files",
+          "stix_id": "attack-pattern--837f9164-50af-4ac0-8219-379d8a74cefc"
+        },
+        {
+          "external_id": "T1552.002",
+          "is_subtechnique": true,
+          "name": "Credentials in Registry",
+          "stix_id": "attack-pattern--341e222a-a6e3-4f6f-b69c-831d792b1580"
+        },
+        {
+          "external_id": "T1553.002",
+          "is_subtechnique": true,
+          "name": "Code Signing",
+          "stix_id": "attack-pattern--32901740-b42c-4fdd-bc02-345b5dc57082"
+        },
+        {
+          "external_id": "T1555.003",
+          "is_subtechnique": true,
+          "name": "Credentials from Web Browsers",
+          "stix_id": "attack-pattern--58a3e6aa-4453-4cc8-a51f-4befe80b31a8"
+        },
+        {
+          "external_id": "T1555.005",
+          "is_subtechnique": true,
+          "name": "Password Managers",
+          "stix_id": "attack-pattern--315f51f0-6b03-4c1e-bfb2-84740afb8e21"
+        },
+        {
+          "external_id": "T1559.001",
+          "is_subtechnique": true,
+          "name": "Component Object Model",
+          "stix_id": "attack-pattern--2f6b4ed7-fef1-44ba-bcb8-1b4beb610b64"
+        },
+        {
+          "external_id": "T1564.003",
+          "is_subtechnique": true,
+          "name": "Hidden Window",
+          "stix_id": "attack-pattern--cbb66055-0325-4111-aca0-40547b6ad5b0"
+        },
+        {
+          "external_id": "T1566.001",
+          "is_subtechnique": true,
+          "name": "Spearphishing Attachment",
+          "stix_id": "attack-pattern--2e34237d-8574-43f6-aace-ae2915de8597"
+        },
+        {
+          "external_id": "T1566.002",
+          "is_subtechnique": true,
+          "name": "Spearphishing Link",
+          "stix_id": "attack-pattern--2b742742-28c3-4e1b-bab7-8350d6300fa7"
+        },
+        {
+          "external_id": "T1571",
+          "is_subtechnique": false,
+          "name": "Non-Standard Port",
+          "stix_id": "attack-pattern--b18eae87-b469-4e14-b454-b171b416bc18"
+        },
+        {
+          "external_id": "T1573.001",
+          "is_subtechnique": true,
+          "name": "Symmetric Cryptography",
+          "stix_id": "attack-pattern--24bfaeba-cb0d-4525-b3dc-507c77ecec41"
+        },
+        {
+          "external_id": "T1685",
+          "is_subtechnique": false,
+          "name": "Disable or Modify Tools",
+          "stix_id": "attack-pattern--bbde9781-60aa-4b8a-a911-895b0c1b3872"
+        }
+      ],
+      "id": "software-uses-techniques-s0266",
+      "provenance": {
+        "methodology_note": "Only active direct malware/tool --uses--> attack-pattern relationships are included. Group- or campaign-mediated paths are outside this relationship type. Parent and sub-technique objects remain distinct when each has its own qualifying relationship.",
+        "relationship_paths": [
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--3c4a2599-71ee-4405-ba1e-0e28414b4bc5",
+            "uses_relationship_stix_id": "relationship--7ecd1b78-a3f1-4997-be47-68377eb59689"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--322bad5a-1c49-4d23-ab79-76d641794afa",
+            "uses_relationship_stix_id": "relationship--d1f44e84-61cb-4a96-add8-d37a38369e43"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--f24faf46-3b26-4dbb-98f2-63460498e433",
+            "uses_relationship_stix_id": "relationship--3fa8155d-11ca-47de-902e-47e809d0ed64"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--707399d6-ab3e-4963-9315-d9d3818cd6a0",
+            "uses_relationship_stix_id": "relationship--f7bcd411-995f-41cb-b8ed-c333b0435ed3"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--e358d692-23c0-4a31-9eb6-ecc13a8d7735",
+            "uses_relationship_stix_id": "relationship--b0bba4a5-a3c3-4cf7-9347-c9070cb18998"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--01327cde-66c4-4123-bf34-5f258d59457b",
+            "uses_relationship_stix_id": "relationship--42eb6018-f049-41df-bbfc-6dcb2f079f16"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--b3d682b6-98f2-4fb0-aa3b-b4df007ca70a",
+            "uses_relationship_stix_id": "relationship--4ff492bf-f91d-445d-a29e-6e60c67a05c1"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--deb98323-e13f-4b0c-8d94-175379069062",
+            "uses_relationship_stix_id": "relationship--5ae4207c-95db-4a16-bfac-1d8daf29ba4a"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--0d91b3c0-5e50-47c3-949a-2a796f04d144",
+            "uses_relationship_stix_id": "relationship--e922f65f-67ea-4df9-8b88-463d89b9120b"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--03d7999c-1f4c-42cc-8373-e7690d318104",
+            "uses_relationship_stix_id": "relationship--03251067-ee3a-49e4-addc-86daaa8a3203"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--42e8de7b-37b2-4258-905a-6897815e58e0",
+            "uses_relationship_stix_id": "relationship--a8126b8d-8dd7-4e12-a384-96dabb975725"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--92d7da27-2d91-488e-a00c-059dc162766d",
+            "uses_relationship_stix_id": "relationship--3ed5a1c3-e7c8-4fb7-bfcf-401b29f5f47c"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--005a06c6-14bf-4118-afa0-ebcd8aebb0c9",
+            "uses_relationship_stix_id": "relationship--17ce446f-1a76-46d5-a276-589713425af8"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--43e7dc91-05b2-474c-b9ac-2ed4fe101f4d",
+            "uses_relationship_stix_id": "relationship--dc309013-0487-47fa-b514-71e18344a2db"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--b200542e-e877-4395-875b-cf1a44537ca4",
+            "uses_relationship_stix_id": "relationship--e0ce4a5f-ac3b-4d61-b540-c5c3c434beb0"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--f5946b5e-9408-485f-a7f7-b5efc88909b6",
+            "uses_relationship_stix_id": "relationship--ce44b002-2ef5-4740-a39e-1e58c2817955"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--8f4a33ec-8b1f-4b80-a2f6-642b2e479580",
+            "uses_relationship_stix_id": "relationship--9af0d85e-688a-4dd7-a04e-a175e268855c"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--970a3432-3237-47ad-bcca-7d8cbb217736",
+            "uses_relationship_stix_id": "relationship--3a26d78f-e0cb-4a58-8d84-6d867b32f279"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--d1fcf083-a721-4223-aedf-bf8960798d62",
+            "uses_relationship_stix_id": "relationship--9fb5ad4c-1929-4d00-bd87-fed2558d73bf"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--15dbf668-795c-41e6-8219-f0447c0e64ce",
+            "uses_relationship_stix_id": "relationship--887d8bb3-1bd5-4010-81dc-fe479690e72d"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--df8b2a25-8bdf-4856-953c-a04372b1c161",
+            "uses_relationship_stix_id": "relationship--e882b88e-7731-4bee-a644-c02f9aff2306"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--354a7f88-63fb-41b5-a801-ce3b377b36f1",
+            "uses_relationship_stix_id": "relationship--01aac35b-55e1-40d6-962f-5b5a6efdb2be"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--7bc57495-ea59-4380-be31-a64af124ef18",
+            "uses_relationship_stix_id": "relationship--caef212a-7ed2-4cb9-a155-7ce79a9784b8"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--25659dd6-ea12-45c4-97e6-381e3e4b593e",
+            "uses_relationship_stix_id": "relationship--76d7d7fa-94a4-4fa6-9fd2-e9af9ab0f356"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--4bc31b94-045b-4752-8920-aebaebdb6470",
+            "uses_relationship_stix_id": "relationship--9b5e38b3-31b5-4734-bef2-c05904479430"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--69b8fd78-40e8-4600-ae4d-662c9d7afdb3",
+            "uses_relationship_stix_id": "relationship--e014c5a8-f9bc-4de5-aa46-55765ac4461c"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--e6919abc-99f9-4c6c-95a5-14761e7b2add",
+            "uses_relationship_stix_id": "relationship--d8e0ed13-7938-4c9c-99ef-511b8dbf76aa"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--391d824f-0ef1-47a0-b0ee-c59a75e27670",
+            "uses_relationship_stix_id": "relationship--2af126e3-89ef-45b4-b345-45567ef17dfa"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--b2d03cea-aec1-45ca-9744-9ee583c1e1cc",
+            "uses_relationship_stix_id": "relationship--c9932124-c6dd-4c26-a762-bde5be25bed7"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--57340c81-c025-4189-8fa0-fc7ede51bae4",
+            "uses_relationship_stix_id": "relationship--c75ec383-2acd-479f-b9b7-b2038ec10a7d"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--04fd5427-79c7-44ea-ae13-11b24778ff1c",
+            "uses_relationship_stix_id": "relationship--7d13961a-5fcc-4c97-aeda-f3e42325aabf"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--3489cfc5-640f-4bb3-a103-9137b97de79f",
+            "uses_relationship_stix_id": "relationship--7cbc6309-f5fb-41e5-901b-67f02f29a834"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--3ccef7ae-cb5e-48f6-8302-897105fbf55c",
+            "uses_relationship_stix_id": "relationship--af7c56df-ced8-45b7-9aef-be1039e30cea"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--544b0346-29ad-41e1-a808-501bb4193f47",
+            "uses_relationship_stix_id": "relationship--20cf444d-b538-4971-b054-3d749aa945f0"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--232b7f21-adf9-4b42-b936-b9d6f7df856e",
+            "uses_relationship_stix_id": "relationship--6b55eeb9-c7a1-4ff5-b8ef-f114e3a1b75a"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--9db0cf3a-a3c9-4012-8268-123b9db6fd82",
+            "uses_relationship_stix_id": "relationship--e56f602c-ec9f-46f0-a52f-45b90220314e"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--4061e78c-1284-44b4-9116-73e4ac3912f7",
+            "uses_relationship_stix_id": "relationship--9f372adb-777a-4635-9310-cbb8f432f08e"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--767dbf9e-df3f-45cb-8998-4903ab5f80c0",
+            "uses_relationship_stix_id": "relationship--f4d15148-3a41-4fbc-a42e-59379724acc5"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--f5bb433e-bdf6-4781-84bc-35e97e43be89",
+            "uses_relationship_stix_id": "relationship--acece0c4-4c9e-4c11-a57a-f01bb23abbf7"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--4bed873f-0b7d-41d4-b93a-b6905d1f90b0",
+            "uses_relationship_stix_id": "relationship--9e07c247-c778-496d-9972-6581f2d10c93"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--1b7b1806-7746-41a1-a35d-e48dae25ddba",
+            "uses_relationship_stix_id": "relationship--20adc21a-7721-470f-82d4-8a4cfb59a8c1"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32",
+            "uses_relationship_stix_id": "relationship--5235fbdb-5c53-4860-a459-cd4b538817db"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--9efb1ea7-c37b-4595-9640-b7680cd84279",
+            "uses_relationship_stix_id": "relationship--e84c3f01-fb77-40e6-8507-42bc500bd928"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--837f9164-50af-4ac0-8219-379d8a74cefc",
+            "uses_relationship_stix_id": "relationship--5b2f0fb3-5877-4fa2-bed1-1962423caccd"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--341e222a-a6e3-4f6f-b69c-831d792b1580",
+            "uses_relationship_stix_id": "relationship--91cff72f-644b-42e3-9c86-8cc6475f725a"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--32901740-b42c-4fdd-bc02-345b5dc57082",
+            "uses_relationship_stix_id": "relationship--c94a3ac7-1f05-460b-9bff-67fafd260e01"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--58a3e6aa-4453-4cc8-a51f-4befe80b31a8",
+            "uses_relationship_stix_id": "relationship--f0dd2703-4846-47b5-a8d8-471f70f9968e"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--315f51f0-6b03-4c1e-bfb2-84740afb8e21",
+            "uses_relationship_stix_id": "relationship--bc016a10-a594-495b-8822-ca054050f144"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--2f6b4ed7-fef1-44ba-bcb8-1b4beb610b64",
+            "uses_relationship_stix_id": "relationship--17525c42-6859-4175-841c-272e85f68be9"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--cbb66055-0325-4111-aca0-40547b6ad5b0",
+            "uses_relationship_stix_id": "relationship--e83a16d0-70b7-415c-8b3f-bdbb89f10455"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--2e34237d-8574-43f6-aace-ae2915de8597",
+            "uses_relationship_stix_id": "relationship--fb27a498-e1c1-47a4-a668-32c58c359f71"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--2b742742-28c3-4e1b-bab7-8350d6300fa7",
+            "uses_relationship_stix_id": "relationship--7dee0645-9c39-4e04-8012-6ae10a449ae9"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--b18eae87-b469-4e14-b454-b171b416bc18",
+            "uses_relationship_stix_id": "relationship--b75e158b-3c2e-425d-a14e-84a974d86c8c"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--24bfaeba-cb0d-4525-b3dc-507c77ecec41",
+            "uses_relationship_stix_id": "relationship--71bb09bc-0405-43ed-9848-bf685234c670"
+          },
+          {
+            "software_ref": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+            "technique_ref": "attack-pattern--bbde9781-60aa-4b8a-a911-895b0c1b3872",
+            "uses_relationship_stix_id": "relationship--a50c7617-3148-4a0a-bf60-0c32171d6a9f"
+          }
+        ],
+        "scope": "direct_software_to_technique_only",
+        "software_stix_id": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "technique_stix_ids": [
+          "attack-pattern--3c4a2599-71ee-4405-ba1e-0e28414b4bc5",
+          "attack-pattern--322bad5a-1c49-4d23-ab79-76d641794afa",
+          "attack-pattern--f24faf46-3b26-4dbb-98f2-63460498e433",
+          "attack-pattern--707399d6-ab3e-4963-9315-d9d3818cd6a0",
+          "attack-pattern--e358d692-23c0-4a31-9eb6-ecc13a8d7735",
+          "attack-pattern--01327cde-66c4-4123-bf34-5f258d59457b",
+          "attack-pattern--b3d682b6-98f2-4fb0-aa3b-b4df007ca70a",
+          "attack-pattern--deb98323-e13f-4b0c-8d94-175379069062",
+          "attack-pattern--0d91b3c0-5e50-47c3-949a-2a796f04d144",
+          "attack-pattern--03d7999c-1f4c-42cc-8373-e7690d318104",
+          "attack-pattern--42e8de7b-37b2-4258-905a-6897815e58e0",
+          "attack-pattern--92d7da27-2d91-488e-a00c-059dc162766d",
+          "attack-pattern--005a06c6-14bf-4118-afa0-ebcd8aebb0c9",
+          "attack-pattern--43e7dc91-05b2-474c-b9ac-2ed4fe101f4d",
+          "attack-pattern--b200542e-e877-4395-875b-cf1a44537ca4",
+          "attack-pattern--f5946b5e-9408-485f-a7f7-b5efc88909b6",
+          "attack-pattern--8f4a33ec-8b1f-4b80-a2f6-642b2e479580",
+          "attack-pattern--970a3432-3237-47ad-bcca-7d8cbb217736",
+          "attack-pattern--d1fcf083-a721-4223-aedf-bf8960798d62",
+          "attack-pattern--15dbf668-795c-41e6-8219-f0447c0e64ce",
+          "attack-pattern--df8b2a25-8bdf-4856-953c-a04372b1c161",
+          "attack-pattern--354a7f88-63fb-41b5-a801-ce3b377b36f1",
+          "attack-pattern--7bc57495-ea59-4380-be31-a64af124ef18",
+          "attack-pattern--25659dd6-ea12-45c4-97e6-381e3e4b593e",
+          "attack-pattern--4bc31b94-045b-4752-8920-aebaebdb6470",
+          "attack-pattern--69b8fd78-40e8-4600-ae4d-662c9d7afdb3",
+          "attack-pattern--e6919abc-99f9-4c6c-95a5-14761e7b2add",
+          "attack-pattern--391d824f-0ef1-47a0-b0ee-c59a75e27670",
+          "attack-pattern--b2d03cea-aec1-45ca-9744-9ee583c1e1cc",
+          "attack-pattern--57340c81-c025-4189-8fa0-fc7ede51bae4",
+          "attack-pattern--04fd5427-79c7-44ea-ae13-11b24778ff1c",
+          "attack-pattern--3489cfc5-640f-4bb3-a103-9137b97de79f",
+          "attack-pattern--3ccef7ae-cb5e-48f6-8302-897105fbf55c",
+          "attack-pattern--544b0346-29ad-41e1-a808-501bb4193f47",
+          "attack-pattern--232b7f21-adf9-4b42-b936-b9d6f7df856e",
+          "attack-pattern--9db0cf3a-a3c9-4012-8268-123b9db6fd82",
+          "attack-pattern--4061e78c-1284-44b4-9116-73e4ac3912f7",
+          "attack-pattern--767dbf9e-df3f-45cb-8998-4903ab5f80c0",
+          "attack-pattern--f5bb433e-bdf6-4781-84bc-35e97e43be89",
+          "attack-pattern--4bed873f-0b7d-41d4-b93a-b6905d1f90b0",
+          "attack-pattern--1b7b1806-7746-41a1-a35d-e48dae25ddba",
+          "attack-pattern--2959d63f-73fd-46a1-abd2-109d7dcede32",
+          "attack-pattern--9efb1ea7-c37b-4595-9640-b7680cd84279",
+          "attack-pattern--837f9164-50af-4ac0-8219-379d8a74cefc",
+          "attack-pattern--341e222a-a6e3-4f6f-b69c-831d792b1580",
+          "attack-pattern--32901740-b42c-4fdd-bc02-345b5dc57082",
+          "attack-pattern--58a3e6aa-4453-4cc8-a51f-4befe80b31a8",
+          "attack-pattern--315f51f0-6b03-4c1e-bfb2-84740afb8e21",
+          "attack-pattern--2f6b4ed7-fef1-44ba-bcb8-1b4beb610b64",
+          "attack-pattern--cbb66055-0325-4111-aca0-40547b6ad5b0",
+          "attack-pattern--2e34237d-8574-43f6-aace-ae2915de8597",
+          "attack-pattern--2b742742-28c3-4e1b-bab7-8350d6300fa7",
+          "attack-pattern--b18eae87-b469-4e14-b454-b171b416bc18",
+          "attack-pattern--24bfaeba-cb0d-4525-b3dc-507c77ecec41",
+          "attack-pattern--bbde9781-60aa-4b8a-a911-895b0c1b3872"
+        ],
+        "uses_relationship_stix_ids": [
+          "relationship--7ecd1b78-a3f1-4997-be47-68377eb59689",
+          "relationship--d1f44e84-61cb-4a96-add8-d37a38369e43",
+          "relationship--3fa8155d-11ca-47de-902e-47e809d0ed64",
+          "relationship--f7bcd411-995f-41cb-b8ed-c333b0435ed3",
+          "relationship--b0bba4a5-a3c3-4cf7-9347-c9070cb18998",
+          "relationship--42eb6018-f049-41df-bbfc-6dcb2f079f16",
+          "relationship--4ff492bf-f91d-445d-a29e-6e60c67a05c1",
+          "relationship--5ae4207c-95db-4a16-bfac-1d8daf29ba4a",
+          "relationship--e922f65f-67ea-4df9-8b88-463d89b9120b",
+          "relationship--03251067-ee3a-49e4-addc-86daaa8a3203",
+          "relationship--a8126b8d-8dd7-4e12-a384-96dabb975725",
+          "relationship--3ed5a1c3-e7c8-4fb7-bfcf-401b29f5f47c",
+          "relationship--17ce446f-1a76-46d5-a276-589713425af8",
+          "relationship--dc309013-0487-47fa-b514-71e18344a2db",
+          "relationship--e0ce4a5f-ac3b-4d61-b540-c5c3c434beb0",
+          "relationship--ce44b002-2ef5-4740-a39e-1e58c2817955",
+          "relationship--9af0d85e-688a-4dd7-a04e-a175e268855c",
+          "relationship--3a26d78f-e0cb-4a58-8d84-6d867b32f279",
+          "relationship--9fb5ad4c-1929-4d00-bd87-fed2558d73bf",
+          "relationship--887d8bb3-1bd5-4010-81dc-fe479690e72d",
+          "relationship--e882b88e-7731-4bee-a644-c02f9aff2306",
+          "relationship--01aac35b-55e1-40d6-962f-5b5a6efdb2be",
+          "relationship--caef212a-7ed2-4cb9-a155-7ce79a9784b8",
+          "relationship--76d7d7fa-94a4-4fa6-9fd2-e9af9ab0f356",
+          "relationship--9b5e38b3-31b5-4734-bef2-c05904479430",
+          "relationship--e014c5a8-f9bc-4de5-aa46-55765ac4461c",
+          "relationship--d8e0ed13-7938-4c9c-99ef-511b8dbf76aa",
+          "relationship--2af126e3-89ef-45b4-b345-45567ef17dfa",
+          "relationship--c9932124-c6dd-4c26-a762-bde5be25bed7",
+          "relationship--c75ec383-2acd-479f-b9b7-b2038ec10a7d",
+          "relationship--7d13961a-5fcc-4c97-aeda-f3e42325aabf",
+          "relationship--7cbc6309-f5fb-41e5-901b-67f02f29a834",
+          "relationship--af7c56df-ced8-45b7-9aef-be1039e30cea",
+          "relationship--20cf444d-b538-4971-b054-3d749aa945f0",
+          "relationship--6b55eeb9-c7a1-4ff5-b8ef-f114e3a1b75a",
+          "relationship--e56f602c-ec9f-46f0-a52f-45b90220314e",
+          "relationship--9f372adb-777a-4635-9310-cbb8f432f08e",
+          "relationship--f4d15148-3a41-4fbc-a42e-59379724acc5",
+          "relationship--acece0c4-4c9e-4c11-a57a-f01bb23abbf7",
+          "relationship--9e07c247-c778-496d-9972-6581f2d10c93",
+          "relationship--20adc21a-7721-470f-82d4-8a4cfb59a8c1",
+          "relationship--5235fbdb-5c53-4860-a459-cd4b538817db",
+          "relationship--e84c3f01-fb77-40e6-8507-42bc500bd928",
+          "relationship--5b2f0fb3-5877-4fa2-bed1-1962423caccd",
+          "relationship--91cff72f-644b-42e3-9c86-8cc6475f725a",
+          "relationship--c94a3ac7-1f05-460b-9bff-67fafd260e01",
+          "relationship--f0dd2703-4846-47b5-a8d8-471f70f9968e",
+          "relationship--bc016a10-a594-495b-8822-ca054050f144",
+          "relationship--17525c42-6859-4175-841c-272e85f68be9",
+          "relationship--e83a16d0-70b7-415c-8b3f-bdbb89f10455",
+          "relationship--fb27a498-e1c1-47a4-a668-32c58c359f71",
+          "relationship--7dee0645-9c39-4e04-8012-6ae10a449ae9",
+          "relationship--b75e158b-3c2e-425d-a14e-84a974d86c8c",
+          "relationship--71bb09bc-0405-43ed-9848-bf685234c670",
+          "relationship--a50c7617-3148-4a0a-bf60-0c32171d6a9f"
+        ]
+      },
+      "question": "What techniques does TrickBot use?",
+      "relationship_type": "software_uses_technique",
+      "software": {
+        "external_id": "S0266",
+        "name": "TrickBot",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+        "stix_type": "malware"
+      }
+    },
+    {
+      "case_type": "focused_software_technique",
+      "expected_answer": "Yes. S0002 (Mimikatz) directly uses T1003.001 (LSASS Memory) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_techniques": [
+        {
+          "external_id": "T1003.001",
+          "is_subtechnique": true,
+          "name": "LSASS Memory",
+          "stix_id": "attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90"
+        }
+      ],
+      "id": "software-uses-technique-s0002-t1003.001",
+      "provenance": {
+        "methodology_note": "Only active direct malware/tool --uses--> attack-pattern relationships are included. Group- or campaign-mediated paths are outside this relationship type. Parent and sub-technique objects remain distinct when each has its own qualifying relationship.",
+        "queried_technique_stix_id": "attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90",
+        "relationship_paths": [
+          {
+            "software_ref": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+            "technique_ref": "attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90",
+            "uses_relationship_stix_id": "relationship--b7930db8-2cb9-4ecf-b3d3-7425f99140d8"
+          }
+        ],
+        "scope": "direct_software_to_technique_only",
+        "software_stix_id": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "technique_stix_ids": [
+          "attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90"
+        ],
+        "uses_relationship_stix_ids": [
+          "relationship--b7930db8-2cb9-4ecf-b3d3-7425f99140d8"
+        ]
+      },
+      "question": "Does Mimikatz use T1003.001 (LSASS Memory)?",
+      "relationship_type": "software_uses_technique",
+      "software": {
+        "external_id": "S0002",
+        "name": "Mimikatz",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "tool--afc079f3-c0ea-4096-b75d-3f05338b7f60",
+        "stix_type": "tool"
+      }
+    },
+    {
+      "case_type": "focused_software_technique",
+      "expected_answer": "Yes. S0154 (Cobalt Strike) directly uses T1059.001 (PowerShell) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_techniques": [
+        {
+          "external_id": "T1059.001",
+          "is_subtechnique": true,
+          "name": "PowerShell",
+          "stix_id": "attack-pattern--970a3432-3237-47ad-bcca-7d8cbb217736"
+        }
+      ],
+      "id": "software-uses-technique-s0154-t1059.001",
+      "provenance": {
+        "methodology_note": "Only active direct malware/tool --uses--> attack-pattern relationships are included. Group- or campaign-mediated paths are outside this relationship type. Parent and sub-technique objects remain distinct when each has its own qualifying relationship.",
+        "queried_technique_stix_id": "attack-pattern--970a3432-3237-47ad-bcca-7d8cbb217736",
+        "relationship_paths": [
+          {
+            "software_ref": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+            "technique_ref": "attack-pattern--970a3432-3237-47ad-bcca-7d8cbb217736",
+            "uses_relationship_stix_id": "relationship--7396dd25-432c-4285-8149-1237b1273a53"
+          }
+        ],
+        "scope": "direct_software_to_technique_only",
+        "software_stix_id": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "technique_stix_ids": [
+          "attack-pattern--970a3432-3237-47ad-bcca-7d8cbb217736"
+        ],
+        "uses_relationship_stix_ids": [
+          "relationship--7396dd25-432c-4285-8149-1237b1273a53"
+        ]
+      },
+      "question": "Does Cobalt Strike use T1059.001 (PowerShell)?",
+      "relationship_type": "software_uses_technique",
+      "software": {
+        "external_id": "S0154",
+        "name": "Cobalt Strike",
+        "platforms": [
+          "Linux",
+          "macOS",
+          "Windows"
+        ],
+        "stix_id": "malware--a7881f21-e978-4fe4-af56-92c9416a2616",
+        "stix_type": "malware"
+      }
+    },
+    {
+      "case_type": "focused_software_technique",
+      "expected_answer": "Yes. S0367 (Emotet) directly uses T1053.005 (Scheduled Task) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_techniques": [
+        {
+          "external_id": "T1053.005",
+          "is_subtechnique": true,
+          "name": "Scheduled Task",
+          "stix_id": "attack-pattern--005a06c6-14bf-4118-afa0-ebcd8aebb0c9"
+        }
+      ],
+      "id": "software-uses-technique-s0367-t1053.005",
+      "provenance": {
+        "methodology_note": "Only active direct malware/tool --uses--> attack-pattern relationships are included. Group- or campaign-mediated paths are outside this relationship type. Parent and sub-technique objects remain distinct when each has its own qualifying relationship.",
+        "queried_technique_stix_id": "attack-pattern--005a06c6-14bf-4118-afa0-ebcd8aebb0c9",
+        "relationship_paths": [
+          {
+            "software_ref": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+            "technique_ref": "attack-pattern--005a06c6-14bf-4118-afa0-ebcd8aebb0c9",
+            "uses_relationship_stix_id": "relationship--7a28c0d9-28cf-4881-b8a5-8d779eb76e0d"
+          }
+        ],
+        "scope": "direct_software_to_technique_only",
+        "software_stix_id": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "technique_stix_ids": [
+          "attack-pattern--005a06c6-14bf-4118-afa0-ebcd8aebb0c9"
+        ],
+        "uses_relationship_stix_ids": [
+          "relationship--7a28c0d9-28cf-4881-b8a5-8d779eb76e0d"
+        ]
+      },
+      "question": "Does Emotet use T1053.005 (Scheduled Task)?",
+      "relationship_type": "software_uses_technique",
+      "software": {
+        "external_id": "S0367",
+        "name": "Emotet",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--32066e94-3112-48ca-b9eb-ba2b59d2f023",
+        "stix_type": "malware"
+      }
+    },
+    {
+      "case_type": "focused_software_technique",
+      "expected_answer": "Yes. S0366 (WannaCry) directly uses T1486 (Data Encrypted for Impact) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_techniques": [
+        {
+          "external_id": "T1486",
+          "is_subtechnique": false,
+          "name": "Data Encrypted for Impact",
+          "stix_id": "attack-pattern--b80d107d-fa0d-4b60-9684-b0433e8bdba0"
+        }
+      ],
+      "id": "software-uses-technique-s0366-t1486",
+      "provenance": {
+        "methodology_note": "Only active direct malware/tool --uses--> attack-pattern relationships are included. Group- or campaign-mediated paths are outside this relationship type. Parent and sub-technique objects remain distinct when each has its own qualifying relationship.",
+        "queried_technique_stix_id": "attack-pattern--b80d107d-fa0d-4b60-9684-b0433e8bdba0",
+        "relationship_paths": [
+          {
+            "software_ref": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+            "technique_ref": "attack-pattern--b80d107d-fa0d-4b60-9684-b0433e8bdba0",
+            "uses_relationship_stix_id": "relationship--5c56206f-8ae3-4296-ab89-bc2036b74896"
+          }
+        ],
+        "scope": "direct_software_to_technique_only",
+        "software_stix_id": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "technique_stix_ids": [
+          "attack-pattern--b80d107d-fa0d-4b60-9684-b0433e8bdba0"
+        ],
+        "uses_relationship_stix_ids": [
+          "relationship--5c56206f-8ae3-4296-ab89-bc2036b74896"
+        ]
+      },
+      "question": "Does WannaCry use T1486 (Data Encrypted for Impact)?",
+      "relationship_type": "software_uses_technique",
+      "software": {
+        "external_id": "S0366",
+        "name": "WannaCry",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--75ecdbf1-c2bb-4afc-a3f9-c8da4de8c661",
+        "stix_type": "malware"
+      }
+    },
+    {
+      "case_type": "negative_software_technique",
+      "expected_answer": "No active direct uses relationship exists between S0266 (TrickBot) and T1496 (Resource Hijacking) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_techniques": [],
+      "id": "software-does-not-use-technique-s0266-t1496",
+      "provenance": {
+        "methodology_note": "Only active direct malware/tool --uses--> attack-pattern relationships are included. Group- or campaign-mediated paths are outside this relationship type. Parent and sub-technique objects remain distinct when each has its own qualifying relationship.",
+        "queried_technique_stix_id": "attack-pattern--cd25c1b4-935c-4f0e-ba8d-552f28bc4783",
+        "relationship_paths": [],
+        "scope": "direct_software_to_technique_only",
+        "software_stix_id": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "technique_stix_ids": [],
+        "uses_relationship_stix_ids": []
+      },
+      "queried_technique": {
+        "external_id": "T1496",
+        "is_subtechnique": false,
+        "name": "Resource Hijacking",
+        "stix_id": "attack-pattern--cd25c1b4-935c-4f0e-ba8d-552f28bc4783"
+      },
+      "question": "Does TrickBot use T1496 (Resource Hijacking)?",
+      "relationship_type": "software_uses_technique",
+      "software": {
+        "external_id": "S0266",
+        "name": "TrickBot",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "malware--00806466-754d-44ea-ad6f-0caf59cb8556",
+        "stix_type": "malware"
+      }
+    }
+  ],
+  "phase": "card6_part_b_step_3a_software_technique_prototype",
+  "schema_version": "1.0",
+  "scope": {
+    "answer_scope": "direct_software_to_technique_only",
+    "domain": "enterprise-attack",
+    "methodology_note": "Only active direct malware/tool --uses--> attack-pattern relationships are included. Group- or campaign-mediated paths are outside this relationship type. Parent and sub-technique objects remain distinct when each has its own qualifying relationship.",
+    "prototype_only": true,
+    "relationship_type": "uses",
+    "revoked_and_deprecated_excluded": true,
+    "source_types": [
+      "malware",
+      "tool"
+    ],
+    "target_type": "attack-pattern"
+  },
+  "selection": {
+    "aggregate_pairs": 5,
+    "focused_edge_pairs": 4,
+    "negative_edge_pairs": 1,
+    "pair_count": 10,
+    "software_count": 5,
+    "software_external_ids": [
+      "S0002",
+      "S0154",
+      "S0367",
+      "S0366",
+      "S0266"
+    ]
+  },
+  "source": {
+    "commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+    "domain": "enterprise-attack",
+    "path": "enterprise-attack/enterprise-attack.json",
+    "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+    "sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+    "stix_version": "2.1"
+  }
+}

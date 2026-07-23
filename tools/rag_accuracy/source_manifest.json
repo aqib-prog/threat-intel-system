@@ -1,0 +1,10 @@
+{
+  "enterprise_attack_stix": {
+    "repository": "https://github.com/mitre-attack/attack-stix-data.git",
+    "commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+    "domain": "enterprise-attack",
+    "stix_version": "2.1",
+    "path": "enterprise-attack/enterprise-attack.json",
+    "sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3"
+  }
+}
