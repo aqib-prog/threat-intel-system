@@ -213,6 +213,19 @@ def build_global_index(driver):
                 "description": r["description"] or ""
             }
 
+        # Technique names can be the subject of relationship questions
+        # without an explicit T-ID (for example, "Data Obfuscation"). Store
+        # the authoritative ID as the deterministic hint so downstream
+        # retrieval seeds the exact Technique instead of asking the LLM to
+        # guess an unrelated named entity.
+        techniques = session.run(
+            "MATCH (t:Technique) RETURN t.name as name, t.external_id as external_id"
+        )
+        for r in techniques:
+            GLOBAL_INDEX[r["name"].lower()] = {
+                "real_name": r["external_id"], "type": "mitre_id"
+            }
+
     GENERIC_ENTITY_CATEGORY_WORDS = build_generic_entity_category_words(
         category_contexts)
     logger.debug("Global index built: %s entries", len(GLOBAL_INDEX))
@@ -1108,6 +1121,10 @@ ALLOW defensive, educational, analytical, and threat-intelligence requests, incl
 - Detection engineering, monitoring logic, defensive rules, mitigations, forensics, incident response, recovery, and hardening guidance.
 - Explanations of suspicious commands, scripts, payloads, or vulnerabilities when the requested output is analysis, detection, or remediation rather than a deployable attack capability.
 
+Concrete ALLOW examples:
+- "What tools or malware does Axiom use?" is a benign threat-actor relationship lookup.
+- "What tools or malware does Frankenstein (C0001) utilize?" is a benign campaign relationship lookup.
+
 BLOCK requests that materially enable offensive action, including:
 - Functional exploit code or a working exploit chain.
 - Working malware, credential theft tooling, destructive code, or persistence/evasion implementations.
@@ -1569,8 +1586,8 @@ def extract_filters(query: str, driver) -> dict:
         seeded_regex_entities[k] = existing
 
     has_explicit_identifier = bool(
-        CYBER_ENTITY_REGEX["mitre_id"].search(query)
-        or CYBER_ENTITY_REGEX["cve_id"].search(query)
+        seeded_regex_entities.get("mitre_id")
+        or seeded_regex_entities.get("cve_id")
     )
     has_deterministic_entity = any(
         seeded_regex_entities.get(field)

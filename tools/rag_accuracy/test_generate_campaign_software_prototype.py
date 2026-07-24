@@ -343,8 +343,8 @@ class CampaignSoftwareFullArtifactTests(unittest.TestCase):
             },
         )
         selection = self.artifact["selection"]
-        self.assertEqual(selection["pair_count"], 993)
-        self.assertEqual(len(self.pairs), 993)
+        self.assertEqual(selection["pair_count"], 1093)
+        self.assertEqual(len(self.pairs), 1093)
         self.assertEqual(selection["embedded_forward_fact_count"], 172)
         self.assertEqual(selection["embedded_reverse_fact_count"], 172)
 
@@ -431,6 +431,12 @@ class CampaignSoftwareFullArtifactTests(unittest.TestCase):
         selection = self.artifact["selection"]
         self.assertEqual(selection["focused_positive_pairs"], 50)
         self.assertEqual(selection["negative_existence_pairs"], 10)
+        self.assertEqual(selection["adversarial_negative_pairs"], 100)
+        self.assertEqual(selection["adversarial_same_actor_pairs"], 36)
+        self.assertEqual(selection["adversarial_overlapping_time_pairs"], 64)
+        self.assertEqual(selection["total_negative_pairs"], 110)
+        self.assertGreaterEqual(selection["total_negative_ratio"], 0.08)
+        self.assertLessEqual(selection["total_negative_ratio"], 0.15)
         self.assertAlmostEqual(
             selection["explicit_point_negative_ratio"], 10 / 60
         )
@@ -452,6 +458,90 @@ class CampaignSoftwareFullArtifactTests(unittest.TestCase):
                     for pair in negatives
                 )
             )
+
+    def test_adversarial_negatives_have_real_sibling_context_and_false_edge(self):
+        negatives = [
+            pair
+            for pair in self.pairs
+            if pair["case_type"]
+            == "adversarial_negative_campaign_software"
+        ]
+        self.assertEqual(len(negatives), 100)
+        methods = {
+            pair["provenance"]["adversarial_context"]["method"]
+            for pair in negatives
+        }
+        self.assertEqual(
+            methods,
+            {
+                "different_campaign_same_attributed_actor",
+                "different_campaign_overlapping_activity_window",
+            },
+        )
+        for method in sorted(methods):
+            sample = next(
+                pair
+                for pair in negatives
+                if pair["provenance"]["adversarial_context"]["method"]
+                == method
+            )
+            context = sample["provenance"]["adversarial_context"]
+            self.assertFalse(sample["relationship_exists"])
+            self.assertTrue(context["sibling_software_paths"])
+            software_id = sample["queried_software"]["stix_id"]
+            anchor = next(
+                pair
+                for pair in self.pairs
+                if pair.get("campaign", {}).get("stix_id")
+                == sample["campaign"]["stix_id"]
+                and pair["case_type"]
+                in {
+                    "aggregate_campaign_software",
+                    "aggregate_campaign_no_qualifying_software",
+                }
+            )
+            sibling = next(
+                pair
+                for pair in self.pairs
+                if pair.get("campaign", {}).get("stix_id")
+                == context["sibling_campaign"]["stix_id"]
+                and pair["case_type"]
+                in {
+                    "aggregate_campaign_software",
+                    "aggregate_campaign_no_qualifying_software",
+                }
+            )
+            self.assertNotIn(
+                software_id,
+                {item["stix_id"] for item in anchor["expected_software"]},
+            )
+            self.assertIn(
+                software_id,
+                {item["stix_id"] for item in sibling["expected_software"]},
+            )
+            if method == "different_campaign_same_attributed_actor":
+                self.assertTrue(context["campaign_attribution_paths"])
+                self.assertTrue(context["sibling_attribution_paths"])
+                shared_group_id = context["shared_group"]["stix_id"]
+                self.assertTrue(
+                    all(
+                        path["group_ref"] == shared_group_id
+                        for path in context["campaign_attribution_paths"]
+                        + context["sibling_attribution_paths"]
+                    )
+                )
+            else:
+                windows = context["activity_window_evidence"]
+                self.assertLessEqual(
+                    max(
+                        windows["campaign_first_seen"],
+                        windows["sibling_first_seen"],
+                    ),
+                    min(
+                        windows["campaign_last_seen"],
+                        windows["sibling_last_seen"],
+                    ),
+                )
 
     def test_relationship_paths_exactly_support_every_embedded_fact(self):
         for pair in self.pairs:

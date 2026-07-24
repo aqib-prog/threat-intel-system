@@ -40,6 +40,7 @@ NEGATIVE_TECHNIQUE_BY_CAMPAIGN = {
     "C0049": "T1649",
 }
 FULL_NEGATIVE_EXISTENCE_CASE_COUNT = 10
+ADVERSARIAL_NEGATIVE_CASE_COUNT = 86
 FULL_NEGATIVE_PROBE_TECHNIQUE_IDS = (
     "T1496",
     "T1486",
@@ -105,6 +106,15 @@ def compact_technique(obj: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+def compact_group(obj: dict[str, Any]) -> dict[str, Any]:
+    return {
+        "stix_id": obj["id"],
+        "external_id": mitre_external_id(obj),
+        "name": obj.get("name"),
+        "aliases": sorted(set(obj.get("aliases", []))),
+    }
+
+
 def extract_campaign_technique_scope(
     bundle: dict[str, Any],
     campaign_ids: tuple[str, ...] | None = SELECTED_CAMPAIGN_IDS,
@@ -124,6 +134,11 @@ def extract_campaign_technique_scope(
         for obj in typed
         if obj.get("type") == "attack-pattern" and is_active(obj)
     ]
+    active_group_objects = [
+        obj
+        for obj in typed
+        if obj.get("type") == "intrusion-set" and is_active(obj)
+    ]
     campaign_catalog = require_unique_external_ids(
         active_campaign_objects, "campaign"
     )
@@ -141,6 +156,7 @@ def extract_campaign_technique_scope(
 
     campaign_by_stix = {obj["id"]: obj for obj in active_campaign_objects}
     technique_by_stix = {obj["id"]: obj for obj in active_technique_objects}
+    group_by_stix = {obj["id"]: obj for obj in active_group_objects}
     all_uses = [
         obj
         for obj in typed
@@ -174,6 +190,26 @@ def extract_campaign_technique_scope(
         raise CampaignTechniqueParserError(
             "multiple active relationships encode the same campaign/technique pair"
         )
+    attribution_paths = [
+        {
+            "campaign_ref": rel["source_ref"],
+            "group_ref": rel["target_ref"],
+            "attributed_to_relationship_stix_id": rel["id"],
+        }
+        for rel in typed
+        if rel.get("type") == "relationship"
+        and rel.get("relationship_type") == "attributed-to"
+        and is_active(rel)
+        and rel.get("source_ref") in campaign_by_stix
+        and rel.get("target_ref") in group_by_stix
+    ]
+    attribution_paths.sort(
+        key=lambda path: (
+            mitre_external_id(campaign_by_stix[path["campaign_ref"]]) or "",
+            mitre_external_id(group_by_stix[path["group_ref"]]) or "",
+            path["attributed_to_relationship_stix_id"],
+        )
+    )
 
     selected_campaign_objects = [
         campaign_catalog[item] for item in selected_campaign_ids
@@ -210,6 +246,14 @@ def extract_campaign_technique_scope(
             compact_technique(technique_catalog[item])
             for item in sorted(technique_catalog)
         ],
+        "active_group_catalog": [
+            compact_group(obj)
+            for obj in sorted(
+                active_group_objects,
+                key=lambda item: mitre_external_id(item) or "",
+            )
+        ],
+        "campaign_attribution_paths": attribution_paths,
         "paths": paths,
         "technique_counts_by_campaign": technique_counts_by_campaign,
         "campaign_counts_by_technique": campaign_counts_by_technique,
@@ -599,7 +643,7 @@ def generate_prototype_pairs(
     return pairs
 
 
-def evenly_spaced_items(items: list[str], count: int) -> list[str]:
+def evenly_spaced_items(items: list[Any], count: int) -> list[Any]:
     if count <= 0:
         return []
     if len(items) < count:
@@ -655,6 +699,179 @@ def select_full_negative_cases(extracted: dict[str, Any]) -> dict[str, str]:
     return selected
 
 
+def select_adversarial_negative_cases(
+    extracted: dict[str, Any],
+    existing_negative_cases: dict[str, str],
+    *,
+    count: int = ADVERSARIAL_NEGATIVE_CASE_COUNT,
+) -> list[dict[str, Any]]:
+    """Choose false campaign/technique pairs from a same-actor campaign."""
+
+    campaigns = {
+        item["stix_id"]: item for item in extracted["campaigns"]
+    }
+    groups = {
+        item["stix_id"]: item for item in extracted["active_group_catalog"]
+    }
+    techniques = {
+        item["stix_id"]: item
+        for item in extracted["active_technique_catalog"]
+    }
+    techniques_by_campaign: dict[str, set[str]] = {
+        campaign_ref: set() for campaign_ref in campaigns
+    }
+    technique_paths: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for path in extracted["paths"]:
+        if path["campaign_ref"] not in campaigns:
+            continue
+        techniques_by_campaign[path["campaign_ref"]].add(
+            path["technique_ref"]
+        )
+        technique_paths.setdefault(
+            (path["campaign_ref"], path["technique_ref"]), []
+        ).append(path)
+    campaigns_by_group: dict[str, set[str]] = {}
+    attribution_paths: dict[tuple[str, str], list[dict[str, Any]]] = {}
+    for path in extracted["campaign_attribution_paths"]:
+        if path["campaign_ref"] not in campaigns:
+            continue
+        campaigns_by_group.setdefault(path["group_ref"], set()).add(
+            path["campaign_ref"]
+        )
+        attribution_paths.setdefault(
+            (path["campaign_ref"], path["group_ref"]), []
+        ).append(path)
+    existing_keys = {
+        (
+            next(
+                item["stix_id"]
+                for item in campaigns.values()
+                if item["external_id"] == campaign_id
+            ),
+            next(
+                item["stix_id"]
+                for item in techniques.values()
+                if item["external_id"] == technique_id
+            ),
+        )
+        for campaign_id, technique_id in existing_negative_cases.items()
+    }
+    candidates: dict[tuple[str, str], dict[str, Any]] = {}
+    for group_ref in sorted(
+        campaigns_by_group,
+        key=lambda ref: groups[ref]["external_id"],
+    ):
+        sibling_campaign_refs = sorted(
+            campaigns_by_group[group_ref],
+            key=lambda ref: campaigns[ref]["external_id"],
+        )
+        for campaign_ref in sibling_campaign_refs:
+            for sibling_ref in sibling_campaign_refs:
+                if sibling_ref == campaign_ref:
+                    continue
+                sibling_only = (
+                    techniques_by_campaign[sibling_ref]
+                    - techniques_by_campaign[campaign_ref]
+                )
+                for technique_ref in sorted(
+                    sibling_only,
+                    key=lambda ref: techniques[ref]["external_id"],
+                ):
+                    key = (campaign_ref, technique_ref)
+                    if key in existing_keys:
+                        continue
+                    candidates.setdefault(
+                        key,
+                        {
+                            "campaign": campaigns[campaign_ref],
+                            "technique": techniques[technique_ref],
+                            "sibling_campaign": campaigns[sibling_ref],
+                            "shared_group": groups[group_ref],
+                            "campaign_attribution_paths": sorted(
+                                attribution_paths[(campaign_ref, group_ref)],
+                                key=lambda path: path[
+                                    "attributed_to_relationship_stix_id"
+                                ],
+                            ),
+                            "sibling_attribution_paths": sorted(
+                                attribution_paths[(sibling_ref, group_ref)],
+                                key=lambda path: path[
+                                    "attributed_to_relationship_stix_id"
+                                ],
+                            ),
+                            "sibling_technique_paths": sorted(
+                                technique_paths[(sibling_ref, technique_ref)],
+                                key=lambda path: path[
+                                    "uses_relationship_stix_id"
+                                ],
+                            ),
+                        },
+                    )
+    selected = evenly_spaced_items(
+        sorted(
+            candidates.values(),
+            key=lambda row: (
+                row["campaign"]["external_id"],
+                row["technique"]["external_id"],
+                row["sibling_campaign"]["external_id"],
+            ),
+        ),
+        count,
+    )
+    return selected
+
+
+def adversarial_negative_pair(
+    row: dict[str, Any],
+    extracted: dict[str, Any],
+    source: dict[str, Any],
+) -> dict[str, Any]:
+    campaign = row["campaign"]
+    technique = row["technique"]
+    pair = negative_pair(campaign, technique, extracted, source)
+    pair.update(
+        {
+            "id": (
+                "campaign-adversarial-not-uses-technique-"
+                f"{campaign['external_id'].lower()}-"
+                f"{technique['external_id'].lower()}"
+            ),
+            "case_type": "adversarial_negative_campaign_technique",
+            "relationship_exists": False,
+            "expected_answer": (
+                f"No active direct uses relationship exists from "
+                f"{campaign_label(campaign)} to {technique_label(technique)} "
+                "in the pinned Enterprise ATT&CK snapshot. The confusion is "
+                f"plausible because sibling "
+                f"{campaign_label(row['sibling_campaign'])}, attributed to "
+                f"{row['shared_group']['external_id']} "
+                f"({row['shared_group']['name']}) like the queried campaign, "
+                f"does use {technique_label(technique)}."
+            ),
+        }
+    )
+    pair["provenance"].update(
+        {
+            "difficulty": "adversarial_sibling",
+            "adversarial_context": {
+                "method": "different_campaign_same_attributed_actor",
+                "sibling_campaign": row["sibling_campaign"],
+                "shared_group": row["shared_group"],
+                "campaign_attribution_paths": row[
+                    "campaign_attribution_paths"
+                ],
+                "sibling_attribution_paths": row[
+                    "sibling_attribution_paths"
+                ],
+                "sibling_technique_paths": row[
+                    "sibling_technique_paths"
+                ],
+            },
+        }
+    )
+    return pair
+
+
 def generate_full_pairs(
     extracted: dict[str, Any], source: dict[str, Any]
 ) -> tuple[list[dict[str, Any]], dict[str, str]]:
@@ -686,7 +903,14 @@ def generate_full_pairs(
         )
         for campaign_id, technique_id in sorted(negative_cases.items())
     ]
-    pairs = forward + reverse + focused + platform + negatives
+    adversarial_cases = select_adversarial_negative_cases(
+        extracted, negative_cases
+    )
+    adversarial = [
+        adversarial_negative_pair(row, extracted, source)
+        for row in adversarial_cases
+    ]
+    pairs = forward + reverse + focused + platform + negatives + adversarial
     if len({pair["id"] for pair in pairs}) != len(pairs):
         raise CampaignTechniqueParserError("full pair IDs are not unique")
     return pairs, negative_cases
@@ -750,6 +974,10 @@ def full_payload(
     }
     focused_count = counts.get("focused_campaign_technique", 0)
     negative_count = counts.get("negative_campaign_technique", 0)
+    adversarial_count = counts.get(
+        "adversarial_negative_campaign_technique", 0
+    )
+    total_negative_count = negative_count + adversarial_count
     return {
         "schema_version": "1.0",
         "phase": "card6_part_b_full_campaign_technique_golden_set",
@@ -765,6 +993,7 @@ def full_payload(
             "one_forward_aggregate_per_active_campaign": True,
             "one_reverse_aggregate_per_active_technique": True,
             "one_windows_constrained_pair_per_active_campaign": True,
+            "adversarial_sibling_negatives": True,
         },
         "selection": {
             "active_campaign_count": len(extracted["campaigns"]),
@@ -787,6 +1016,9 @@ def full_payload(
             ),
             "negative_existence_pairs": negative_count,
             "negative_existence_distinct_campaign_count": len(negative_cases),
+            "adversarial_negative_pairs": adversarial_count,
+            "total_negative_pairs": total_negative_count,
+            "total_negative_ratio": total_negative_count / len(pairs),
             "explicit_point_negative_ratio": (
                 negative_count / (focused_count + negative_count)
             ),
@@ -809,6 +1041,12 @@ def full_payload(
                 "active probe technique with no direct uses relationship"
             ),
             "all_cases_verified_absent_by_extracted_path_set": True,
+            "adversarial_method": (
+                "pair a campaign with a technique used by another campaign "
+                "attributed to the same active group"
+            ),
+            "adversarial_cases_verified_absent_by_extracted_path_set": True,
+            "unrelated_pair_fallback_count": 0,
         },
         "global_coverage": extracted["global_coverage"],
         "extraction_audit": extracted["extraction_audit"],

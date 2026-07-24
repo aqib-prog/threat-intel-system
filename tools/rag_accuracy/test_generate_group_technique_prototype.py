@@ -596,7 +596,11 @@ class FullGroupTechniqueArtifactTests(unittest.TestCase):
         selection = self.payload["selection"]
         self.assertEqual(selection["active_group_count"], 174)
         self.assertEqual(selection["embedded_group_technique_fact_count"], 4826)
-        self.assertEqual(selection["pair_count"], 194)
+        self.assertEqual(selection["pair_count"], 911)
+        self.assertEqual(selection["original_pair_count"], 194)
+        self.assertEqual(selection["reverse_aggregate_pairs"], 697)
+        self.assertEqual(selection["reverse_zero_path_pairs"], 183)
+        self.assertEqual(selection["reverse_negative_existence_pairs"], 20)
         self.assertEqual(selection["positive_aggregate_pairs"], 171)
         self.assertEqual(selection["zero_path_aggregate_pairs"], 3)
         self.assertEqual(selection["negative_existence_pairs"], 20)

@@ -295,8 +295,8 @@ class CampaignTechniqueFullArtifactTests(unittest.TestCase):
             "techniques_with_zero_campaigns": 377,
         })
         selection = self.artifact["selection"]
-        self.assertEqual(selection["pair_count"], 874)
-        self.assertEqual(len(self.pairs), 874)
+        self.assertEqual(selection["pair_count"], 960)
+        self.assertEqual(len(self.pairs), 960)
         self.assertEqual(selection["embedded_forward_fact_count"], 1146)
         self.assertEqual(selection["embedded_reverse_fact_count"], 1146)
 
@@ -366,6 +366,10 @@ class CampaignTechniqueFullArtifactTests(unittest.TestCase):
         selection = self.artifact["selection"]
         self.assertEqual(selection["focused_positive_pairs"], 55)
         self.assertEqual(selection["negative_existence_pairs"], 10)
+        self.assertEqual(selection["adversarial_negative_pairs"], 86)
+        self.assertEqual(selection["total_negative_pairs"], 96)
+        self.assertGreaterEqual(selection["total_negative_ratio"], 0.08)
+        self.assertLessEqual(selection["total_negative_ratio"], 0.15)
         self.assertAlmostEqual(
             selection["explicit_point_negative_ratio"], 10 / 65
         )
@@ -385,6 +389,70 @@ class CampaignTechniqueFullArtifactTests(unittest.TestCase):
                 and pair["queried_technique"]["external_id"] == technique_id
                 for pair in negatives
             ))
+
+    def test_adversarial_negatives_use_real_same_actor_sibling_context(self):
+        negatives = [
+            pair
+            for pair in self.pairs
+            if pair["case_type"]
+            == "adversarial_negative_campaign_technique"
+        ]
+        self.assertEqual(len(negatives), 86)
+        sample = negatives[0]
+        context = sample["provenance"]["adversarial_context"]
+        self.assertFalse(sample["relationship_exists"])
+        self.assertEqual(
+            context["method"],
+            "different_campaign_same_attributed_actor",
+        )
+        self.assertTrue(context["campaign_attribution_paths"])
+        self.assertTrue(context["sibling_attribution_paths"])
+        self.assertTrue(context["sibling_technique_paths"])
+        shared_group_id = context["shared_group"]["stix_id"]
+        self.assertTrue(
+            all(
+                path["group_ref"] == shared_group_id
+                for path in context["campaign_attribution_paths"]
+                + context["sibling_attribution_paths"]
+            )
+        )
+        queried_technique_id = sample["queried_technique"]["stix_id"]
+        self.assertTrue(
+            all(
+                path["technique_ref"] == queried_technique_id
+                for path in context["sibling_technique_paths"]
+            )
+        )
+        anchor = next(
+            pair
+            for pair in self.pairs
+            if pair.get("campaign", {}).get("stix_id")
+            == sample["campaign"]["stix_id"]
+            and pair["case_type"]
+            in {
+                "aggregate_campaign_techniques",
+                "aggregate_campaign_no_techniques",
+            }
+        )
+        sibling = next(
+            pair
+            for pair in self.pairs
+            if pair.get("campaign", {}).get("stix_id")
+            == context["sibling_campaign"]["stix_id"]
+            and pair["case_type"]
+            in {
+                "aggregate_campaign_techniques",
+                "aggregate_campaign_no_techniques",
+            }
+        )
+        self.assertNotIn(
+            queried_technique_id,
+            {item["stix_id"] for item in anchor["expected_techniques"]},
+        )
+        self.assertIn(
+            queried_technique_id,
+            {item["stix_id"] for item in sibling["expected_techniques"]},
+        )
 
     def test_relationship_paths_exactly_support_every_embedded_fact(self):
         for pair in self.pairs:

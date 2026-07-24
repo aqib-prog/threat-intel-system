@@ -513,18 +513,20 @@ class GoldenSetArtifactTests(unittest.TestCase):
         ]
 
     def test_has_one_unique_pair_per_active_technique(self):
-        pairs = self.payload["pairs"]
+        all_pairs = self.payload["pairs"]
+        pairs = [
+            pair
+            for pair in all_pairs
+            if pair["case_type"] in {"positive", "negative"}
+        ]
         self.assertEqual(len(pairs), 697)
-        self.assertEqual(len({pair["id"] for pair in pairs}), 697)
-        self.assertEqual(len({pair["question"] for pair in pairs}), 697)
+        self.assertEqual(len(all_pairs), 761)
+        self.assertEqual(len({pair["id"] for pair in all_pairs}), 761)
+        self.assertEqual(len({pair["question"] for pair in all_pairs}), 761)
+        self.assertEqual(self.payload["selection"]["original_pair_count"], 697)
+        self.assertEqual(self.payload["selection"]["reverse_aggregate_pairs"], 44)
         self.assertEqual(
-            self.payload["selection"],
-            {
-                "method": "one_pair_per_active_enterprise_technique",
-                "pair_count": 697,
-                "positive_case_count": 586,
-                "negative_case_count": 111,
-            },
+            self.payload["selection"]["reverse_negative_existence_pairs"], 20
         )
         self.assertEqual(
             sum(pair["case_type"] == "positive" for pair in pairs), 586
@@ -534,7 +536,7 @@ class GoldenSetArtifactTests(unittest.TestCase):
         )
 
     def test_every_pair_has_complete_matching_provenance(self):
-        for pair in self.payload["pairs"]:
+        for pair in self.payload["pairs"][:697]:
             provenance = pair["provenance"]
             mitigations = pair["expected_mitigations"]
             self.assertEqual(provenance["stix_commit"], self.manifest["commit"])
@@ -578,7 +580,8 @@ class Phase1FixtureTests(unittest.TestCase):
         )
         full = json.loads((HERE / "golden_set.json").read_text())
         full_by_technique = {
-            pair["provenance"]["technique_stix_id"]: pair for pair in full["pairs"]
+            pair["provenance"]["technique_stix_id"]: pair
+            for pair in full["pairs"][:697]
         }
         self.assertEqual(len(fixture["pairs"]), 10)
         for fixture_pair in fixture["pairs"]:
@@ -663,22 +666,27 @@ class EnterpriseTacticArtifactTests(unittest.TestCase):
         ]
 
     def test_has_one_unique_pair_per_active_technique(self):
-        pairs = self.payload["pairs"]
+        all_pairs = self.payload["pairs"]
+        pairs = [
+            pair
+            for pair in all_pairs
+            if pair["case_type"] in {"single_tactic", "multi_tactic"}
+        ]
         self.assertEqual(len(pairs), 697)
-        self.assertEqual(len({pair["id"] for pair in pairs}), 697)
-        self.assertEqual(len({pair["question"] for pair in pairs}), 697)
+        self.assertEqual(len(all_pairs), 792)
+        self.assertEqual(len({pair["id"] for pair in all_pairs}), 792)
+        self.assertEqual(len({pair["question"] for pair in all_pairs}), 792)
+        self.assertEqual(self.payload["selection"]["original_pair_count"], 697)
+        self.assertEqual(self.payload["selection"]["reverse_aggregate_pairs"], 15)
         self.assertEqual(
-            self.payload["selection"],
-            {
-                "method": "one_pair_per_active_enterprise_technique",
-                "pair_count": 697,
-                "single_tactic_pairs": 552,
-                "multi_tactic_pairs": 145,
-            },
+            self.payload["selection"]["reverse_negative_existence_pairs"], 15
+        )
+        self.assertEqual(
+            self.payload["selection"]["adversarial_negative_pairs"], 65
         )
 
     def test_every_pair_has_complete_matching_provenance(self):
-        for pair in self.payload["pairs"]:
+        for pair in self.payload["pairs"][:697]:
             provenance = pair["provenance"]
             tactics = pair["expected_tactics"]
             self.assertTrue(tactics)
@@ -702,7 +710,7 @@ class EnterpriseTacticArtifactTests(unittest.TestCase):
     def test_verified_prototype_is_preserved_in_full_set(self):
         full_by_technique = {
             pair["provenance"]["technique_stix_id"]: pair
-            for pair in self.payload["pairs"]
+            for pair in self.payload["pairs"][:697]
         }
         self.assertEqual(len(self.prototype["pairs"]), 10)
         for prototype_pair in self.prototype["pairs"]:

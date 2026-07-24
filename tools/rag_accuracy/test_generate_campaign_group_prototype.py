@@ -162,7 +162,11 @@ class CampaignGroupPrototypeTests(unittest.TestCase):
         )
         selection = artifact["selection"]
         self.assertEqual(selection["active_campaign_count"], 56)
-        self.assertEqual(selection["pair_count"], 66)
+        self.assertEqual(selection["pair_count"], 250)
+        self.assertEqual(selection["original_pair_count"], 66)
+        self.assertEqual(selection["reverse_aggregate_pairs"], 174)
+        self.assertEqual(selection["reverse_zero_path_pairs"], 155)
+        self.assertEqual(selection["reverse_negative_existence_pairs"], 10)
         self.assertEqual(selection["positive_aggregate_pairs"], 25)
         self.assertEqual(selection["zero_path_aggregate_pairs"], 31)
         self.assertEqual(selection["negative_existence_pairs"], 10)

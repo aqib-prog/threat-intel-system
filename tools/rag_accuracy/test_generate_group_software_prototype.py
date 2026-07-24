@@ -213,10 +213,15 @@ class GroupSoftwarePrototypeTests(unittest.TestCase):
         )
         selection = artifact["selection"]
         self.assertEqual(selection["active_group_count"], 174)
-        self.assertEqual(selection["pair_count"], 194)
+        self.assertEqual(selection["pair_count"], 1106)
+        self.assertEqual(selection["original_pair_count"], 194)
+        self.assertEqual(selection["reverse_aggregate_pairs"], 821)
+        self.assertEqual(selection["reverse_zero_path_pairs"], 210)
+        self.assertEqual(selection["reverse_negative_existence_pairs"], 20)
         self.assertEqual(selection["positive_aggregate_pairs"], 161)
         self.assertEqual(selection["zero_path_aggregate_pairs"], 13)
         self.assertEqual(selection["negative_existence_pairs"], 20)
+        self.assertEqual(selection["adversarial_negative_pairs"], 71)
         self.assertEqual(selection["negative_existence_distinct_group_count"], 20)
         self.assertEqual(selection["embedded_group_software_fact_count"], 1164)
         positives = [

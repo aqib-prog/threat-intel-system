@@ -116,7 +116,7 @@ class DetectionStrategyPrototypeTests(unittest.TestCase):
         with self.assertRaises(module.DetectionStrategyParserError):
             module.extract_detection_strategy_scope(bundle, ("T1001",))
 
-    def test_artifact_has_five_techniques_and_ten_grounded_pairs(self):
+    def test_artifact_preserves_ten_pairs_and_adds_five_reverse_pairs(self):
         artifact = json.loads(
             (
                 HERE
@@ -125,9 +125,11 @@ class DetectionStrategyPrototypeTests(unittest.TestCase):
         )
         selection = artifact["selection"]
         self.assertEqual(selection["technique_count"], 5)
-        self.assertEqual(selection["pair_count"], 10)
+        self.assertEqual(selection["pair_count"], 15)
+        self.assertEqual(selection["original_pair_count"], 10)
         self.assertEqual(selection["strategy_and_analytic_pairs"], 5)
         self.assertEqual(selection["data_component_pairs"], 5)
+        self.assertEqual(selection["reverse_detection_strategy_pairs"], 5)
         self.assertFalse(selection["negative_zero_strategy_pair_included"])
         self.assertEqual(
             artifact["global_coverage"][
@@ -136,7 +138,10 @@ class DetectionStrategyPrototypeTests(unittest.TestCase):
             0,
         )
         self.assertEqual(
-            {pair["technique"]["external_id"] for pair in artifact["pairs"]},
+            {
+                pair["technique"]["external_id"]
+                for pair in artifact["pairs"][:10]
+            },
             set(module.SELECTED_TECHNIQUE_IDS),
         )
         self.assertTrue(
@@ -156,6 +161,10 @@ class DetectionStrategyPrototypeTests(unittest.TestCase):
         source = artifact["source"]
         for pair in artifact["pairs"]:
             provenance = pair["provenance"]
+            technique = pair.get("technique", pair.get("expected_technique"))
+            strategy = pair.get(
+                "expected_detection_strategy", pair.get("detection_strategy")
+            )
             self.assertEqual(provenance["source_commit"], source["commit"])
             self.assertEqual(
                 provenance["source_bundle_sha256"], source["sha256"]
@@ -163,11 +172,11 @@ class DetectionStrategyPrototypeTests(unittest.TestCase):
             self.assertEqual(provenance["scope"], module.SCOPE)
             self.assertEqual(
                 provenance["technique_stix_id"],
-                pair["technique"]["stix_id"],
+                technique["stix_id"],
             )
             self.assertEqual(
                 provenance["detection_strategy_stix_id"],
-                pair["expected_detection_strategy"]["stix_id"],
+                strategy["stix_id"],
             )
             self.assertEqual(
                 set(provenance["analytic_stix_ids"]),
@@ -192,6 +201,90 @@ class DetectionStrategyPrototypeTests(unittest.TestCase):
                 },
             )
 
+    def test_full_artifact_covers_all_detects_edges_in_both_directions(self):
+        artifact = json.loads(
+            (
+                HERE / "golden_set_technique_detection_strategy.json"
+            ).read_text()
+        )
+        selection = artifact["selection"]
+        self.assertEqual(selection["active_technique_count"], 697)
+        self.assertEqual(selection["active_detection_strategy_count"], 697)
+        self.assertEqual(selection["strategy_and_analytic_pairs"], 697)
+        self.assertEqual(selection["data_component_pairs"], 652)
+        self.assertEqual(selection["zero_data_component_pairs"], 45)
+        self.assertEqual(selection["reverse_detection_strategy_pairs"], 697)
+        self.assertEqual(selection["pair_count"], 2324)
+        self.assertEqual(selection["adversarial_negative_pairs"], 233)
+        self.assertEqual(selection["total_negative_pairs"], 233)
+        self.assertGreaterEqual(selection["total_negative_ratio"], 0.08)
+        self.assertLessEqual(selection["total_negative_ratio"], 0.15)
+        reverse = [
+            pair
+            for pair in artifact["pairs"]
+            if pair["case_type"]
+            == "aggregate_detection_strategy_technique"
+        ]
+        self.assertEqual(len(reverse), 697)
+        self.assertEqual(
+            len(
+                {
+                    pair["detection_strategy"]["external_id"]
+                    for pair in reverse
+                }
+            ),
+            697,
+        )
+        for pair in reverse:
+            self.assertEqual(
+                pair["provenance"]["detection_strategy_stix_id"],
+                pair["detection_strategy"]["stix_id"],
+            )
+            self.assertEqual(
+                pair["provenance"]["technique_stix_id"],
+                pair["expected_technique"]["stix_id"],
+            )
 
+    def test_adversarial_strategy_mismatches_are_same_tactic_non_edges(self):
+        artifact = json.loads(
+            (
+                HERE / "golden_set_technique_detection_strategy.json"
+            ).read_text()
+        )
+        negatives = [
+            pair
+            for pair in artifact["pairs"]
+            if pair["case_type"]
+            == "adversarial_negative_detection_strategy_technique"
+        ]
+        self.assertEqual(len(negatives), 233)
+        strategy_targets = {
+            pair["detection_strategy"]["stix_id"]:
+            pair["expected_technique"]["stix_id"]
+            for pair in artifact["pairs"]
+            if pair["case_type"]
+            == "aggregate_detection_strategy_technique"
+        }
+        sample = negatives[0]
+        context = sample["provenance"]["adversarial_context"]
+        self.assertFalse(sample["relationship_exists"])
+        self.assertTrue(context["anchor_tactic_links"])
+        self.assertTrue(context["sibling_tactic_links"])
+        self.assertEqual(
+            context["anchor_tactic_links"][0]["tactic_ref"],
+            context["shared_tactic"]["stix_id"],
+        )
+        self.assertEqual(
+            context["sibling_tactic_links"][0]["tactic_ref"],
+            context["shared_tactic"]["stix_id"],
+        )
+        self.assertEqual(
+            strategy_targets[sample["detection_strategy"]["stix_id"]],
+            context["sibling_technique"]["stix_id"],
+        )
+        self.assertNotEqual(
+            strategy_targets[sample["detection_strategy"]["stix_id"]],
+            sample["queried_technique"]["stix_id"],
+        )
 if __name__ == "__main__":
     unittest.main()

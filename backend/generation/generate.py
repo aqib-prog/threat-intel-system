@@ -227,8 +227,49 @@ def explicit_reference_status(query: str, nodes: list[dict]) -> tuple[list[str],
     return resolved, unresolved
 
 
+def validated_filter_resolves_context(filters: dict | None, nodes: list[dict]) -> bool:
+    """Honor an entity typo correction already validated against Neo4j."""
+    for field in (
+        "threat_actor",
+        "malware",
+        "tool",
+        "campaign",
+        "tactic",
+        "mitigation",
+        "analytic",
+        "detection_strategy",
+        "data_component",
+    ):
+        for value in (filters or {}).get(field, []):
+            if context_mentions_token(nodes, compact_text(str(value))):
+                return True
+    return False
+
+
+def _without_entity_name_parentheticals(query: str) -> str:
+    """Remove a parenthesized MITRE entity name immediately following its ID."""
+    stripped = query
+    for match in reversed(list(EXTERNAL_ID_RE.finditer(query or ""))):
+        start = match.end()
+        while start < len(stripped) and stripped[start].isspace():
+            start += 1
+        if start >= len(stripped) or stripped[start] != "(":
+            continue
+
+        depth = 0
+        for index in range(start, len(stripped)):
+            if stripped[index] == "(":
+                depth += 1
+            elif stripped[index] == ")":
+                depth -= 1
+                if depth == 0:
+                    stripped = stripped[:start] + " " + stripped[index + 1:]
+                    break
+    return stripped
+
+
 def query_platforms(query: str) -> set[str]:
-    query_lower = query.lower()
+    query_lower = _without_entity_name_parentheticals(query).lower()
     return {platform for platform in PLATFORM_TERMS if platform in query_lower}
 
 
@@ -944,6 +985,284 @@ def filtered_analytic_details(node: dict, query: str) -> list[str]:
     return rendered
 
 
+def _relationship_primary_node(query: str, nodes: list[dict]) -> dict | None:
+    requested_ids = [
+        match.group(0).upper() for match in EXTERNAL_ID_RE.finditer(query or "")
+    ]
+    for requested_id in requested_ids:
+        for node in nodes:
+            external_id = str(node.get("external_id") or node.get("id") or "").upper()
+            if external_id == requested_id:
+                return node
+
+    for node in nodes:
+        if query_mentions(str(node.get("name") or ""), query):
+            return node
+    return nodes[0] if nodes else None
+
+
+# Filter keys that only scope a search (never identify a specific subject
+# entity). Any OTHER populated filter key means the guardrail resolved a real
+# named/ID'd subject, which is what a relationship query needs to be answerable.
+_SUBJECT_SCOPE_FILTER_KEYS = {"node_type", "platform", "platforms"}
+
+
+def relationship_subject_unresolved(
+    query: str, nodes: list[dict], filters: dict | None = None
+) -> bool:
+    """True when a query expresses a subject-relationship intent (e.g. "what
+    malware does X use") but its subject failed to resolve, so retrieval only
+    returned unrelated object-type neighbours. Without this guard a renderer
+    would answer about an arbitrary wrong node (e.g. a typo'd short actor name
+    like "Axoim" that scores just under the fuzzy threshold, leaving the
+    pipeline to surface Malware nodes and pick the first one).
+
+    Explicit MITRE/CVE IDs and CamelCase names are already covered by
+    explicit_reference_status(); this only closes the plain-single-word gap
+    those miss. Deliberately conservative: it fires only when NONE of a
+    matching node name, an in-query ID match, or a resolved subject filter is
+    present, so correctly-resolved queries (including tolerated typos that DO
+    resolve, like "DragnoOK") are never refused.
+    """
+    if EXTERNAL_ID_RE.search(query or "") or CVE_ID_RE.search(query or ""):
+        return False
+
+    primary = _relationship_primary_node(query, nodes)
+    if not primary:
+        return False
+
+    node_type = str(primary.get("node_type") or primary.get("type") or "")
+    if not _relationship_intent(query, node_type):
+        return False
+
+    # A retrieved node whose name the user actually typed = confident subject.
+    for node in nodes:
+        if query_mentions(str(node.get("name") or ""), query):
+            return False
+
+    # The guardrail resolved a real subject entity into the filters.
+    if filters:
+        for key, value in filters.items():
+            if key not in _SUBJECT_SCOPE_FILTER_KEYS and value:
+                return False
+
+    return True
+
+
+def _relationship_intent(query: str, node_type: str) -> tuple[str, str, str | None] | None:
+    """Return the requested relationship as (label, value key, detail key).
+
+    All intent keywords are matched against the query with entity-name
+    parentheticals removed, so a relationship word that happens to appear
+    inside an entity's own MITRE name - "Detect" in DET0001's name,
+    "Analytic" in AN0001's name, "Software" as a technique name - never
+    hijacks the routing. Only the user's actual intent wording counts.
+    """
+    q = _without_entity_name_parentheticals(query)
+    if node_type == "DetectionStrategy" and re.search(r"\bAN\d{4}\b", q, re.IGNORECASE):
+        return "Analytics", "analytics", "analytic_details"
+    if node_type == "Analytic" and re.search(r"\bDC\d{4}\b", q, re.IGNORECASE):
+        return "Data Components", "log_sources", "data_component_details"
+    if re.search(r"\bparent\s+technique\b", q, re.IGNORECASE):
+        return "Parent Technique", "parent_technique", "parent_technique_detail"
+    if re.search(r"\bsub-?techniques?\b", q, re.IGNORECASE):
+        return "Subtechniques", "subtechniques", "subtechnique_details"
+    # Explicit "data component(s)" wins over generic detect/detection wording
+    # (e.g. "which data components support detection of T####" must not route
+    # to detection strategies). Skipped when the subject IS a DataComponent,
+    # where the phrase names the subject itself, not the requested relationship
+    # (then fall through so "which analytics use DC####" resolves to analytics).
+    if node_type != "DataComponent" and re.search(r"\bdata\s+components?\b", q, re.IGNORECASE):
+        return "Data Components", "log_sources", "data_component_details"
+    # An explicit "analytics" object noun wins over generic detect/detection wording.
+    if re.search(r"\banalytics?\b", q, re.IGNORECASE):
+        return "Analytics", "analytics", "analytic_details"
+    if re.search(r"\bdetection\s+strateg(?:y|ies)\b", q, re.IGNORECASE):
+        return (
+            "Detection Strategies",
+            "detection_strategies" if node_type == "Analytic" else "detections",
+            "detection_strategy_details",
+        )
+    if node_type == "Technique" and re.search(
+        r"\b(?:detect|detects|detected|detection)\b", q, re.IGNORECASE
+    ):
+        return "Detection Strategies", "detections", "detection_strategy_details"
+    # A DetectionStrategy detects Techniques; "does DET#### detect T####" must
+    # render its technique list (grounded), not fall to a free-form profile dump.
+    if node_type == "DetectionStrategy" and re.search(
+        r"\b(?:detect|detects|detected|detection)\b", q, re.IGNORECASE
+    ):
+        return "Techniques", "techniques", "technique_details"
+    if (
+        re.search(r"\b(?:countermeasures?|mitigations?)\b", q, re.IGNORECASE)
+        or (node_type == "Technique" and re.search(r"\bmitigates?\b", q, re.IGNORECASE))
+    ):
+        return "Mitigations", "mitigations", "mitigation_details"
+    if (
+        node_type == "Mitigation"
+        and re.search(r"\b(?:prevent|prevents|mitigate|mitigates|mitigated)\b", q, re.IGNORECASE)
+    ):
+        return "Techniques", "techniques", "technique_details"
+    if re.search(r"\btactics?\b", q, re.IGNORECASE):
+        return "Tactics", "tactics", "tactic_details"
+    if re.search(r"\b(?:actors?|groups?)\b", q, re.IGNORECASE):
+        return "Actors", "actors", "actor_details"
+    if (
+        re.search(r"\bmalware\b", q, re.IGNORECASE)
+        and re.search(r"\btools?\b", q, re.IGNORECASE)
+    ):
+        return "Software", "software", None
+    if re.search(r"\b(?:techniques?|techniqes?)\b", q, re.IGNORECASE):
+        return "Techniques", "techniques", "technique_details"
+    if re.search(r"\bcampaigns?\b", q, re.IGNORECASE):
+        return "Campaigns", "campaigns", "campaign_details"
+    if re.search(r"\bmalware\b", q, re.IGNORECASE):
+        return "Malware", "malware", "malware_details"
+    if re.search(r"\btools?\b", q, re.IGNORECASE):
+        return "Tools", "tools", "tool_details"
+    return None
+
+
+def _relationship_items(node: dict, value_key: str, detail_key: str | None) -> list[str]:
+    details = node.get(detail_key) if detail_key else None
+    if isinstance(details, list) and details:
+        rendered = []
+        for detail in details:
+            if not isinstance(detail, dict):
+                continue
+            name = str(detail.get("name") or "").strip()
+            external_id = str(detail.get("external_id") or "").strip()
+            if name:
+                rendered.append(f"{name} ({external_id})" if external_id else name)
+        if rendered:
+            return rendered
+
+    values = node.get(value_key) or []
+    if not isinstance(values, list):
+        return []
+    return [str(value) for value in values if value]
+
+
+def generate_requested_relationship_summary(query: str, nodes: list[dict]) -> str | None:
+    """Render the relationship explicitly requested instead of a generic profile."""
+    node = _relationship_primary_node(query, nodes)
+    if not node:
+        return None
+
+    node_type = str(node.get("node_type") or node.get("type") or "")
+    intent = _relationship_intent(query, node_type)
+    if not intent:
+        return None
+
+    label, value_key, detail_key = intent
+    name = str(node.get("name") or "Unknown")
+    external_id = str(node.get("external_id") or node.get("id") or "")
+    heading = f"{name} ({external_id})" if external_id else name
+
+    if value_key == "software":
+        malware = _relationship_items(node, "malware", "malware_details")
+        tools = _relationship_items(node, "tools", "tool_details")
+        if not malware and not tools:
+            return f"No malware or tools are recorded for {heading} in the knowledge graph."
+        lines = [f"Software explicitly connected to {heading}:"]
+        if malware:
+            lines.append("Malware:")
+            lines.extend(f"- {value}" for value in malware)
+        if tools:
+            lines.append("Tools:")
+            lines.extend(f"- {value}" for value in tools)
+        return "\n".join(lines)
+
+    if value_key == "parent_technique":
+        detail = node.get(detail_key) if detail_key else None
+        if isinstance(detail, dict) and detail.get("name"):
+            related_name = str(detail["name"])
+            related_id = str(detail.get("external_id") or "")
+            related = f"{related_name} ({related_id})" if related_id else related_name
+        else:
+            related = str(node.get(value_key) or "").strip()
+        if related:
+            return f"Parent Technique of {heading}:\n- {related}"
+        return f"No parent technique is recorded for {heading} in the knowledge graph."
+
+    requested_ids = [
+        match.group(0).upper() for match in EXTERNAL_ID_RE.finditer(query or "")
+    ]
+    if len(requested_ids) > 1 and re.search(
+        r"\b(?:does|is|has|have|associated|belong)\b", query, re.IGNORECASE
+    ):
+        target_id = requested_ids[1]
+        linked_ids = {
+            str(detail.get("external_id") or "").upper()
+            for detail in (node.get(detail_key) or [])
+            if isinstance(detail, dict)
+        } if detail_key else set()
+        if linked_ids:
+            verdict = "Yes" if target_id in linked_ids else "No"
+            return (
+                f"{verdict}. {target_id} is "
+                f"{'explicitly connected' if verdict == 'Yes' else 'not explicitly connected'} "
+                f"to {heading} by the requested relationship in the knowledge graph."
+            )
+
+    if value_key == "analytics":
+        requested_platforms = query_platforms(query)
+        details = node.get("analytic_details") or []
+        if isinstance(details, list) and details:
+            matching_details = []
+            for detail in details:
+                if not isinstance(detail, dict):
+                    continue
+                platforms = {
+                    str(value).lower() for value in detail.get("platforms") or [] if value
+                }
+                if requested_platforms and not requested_platforms.intersection(platforms):
+                    continue
+                matching_details.append(detail)
+            items = []
+            for detail in matching_details:
+                analytic_name = str(detail.get("name") or "").strip()
+                analytic_id = str(detail.get("external_id") or "").strip()
+                if analytic_name:
+                    items.append(
+                        f"{analytic_name} ({analytic_id})" if analytic_id else analytic_name
+                    )
+        else:
+            items = [] if requested_platforms else _relationship_items(
+                node, value_key, detail_key
+            )
+        if items:
+            return "\n".join([
+                f"Analytics explicitly connected to {heading}:",
+                *(f"- {value}" for value in items),
+            ])
+        if requested_platforms:
+            platforms = ", ".join(sorted(requested_platforms))
+            return (
+                f"No analytics with the requested platform ({platforms}) are "
+                f"recorded for {heading} in the knowledge graph."
+            )
+        return f"No analytics are recorded for {heading} in the knowledge graph."
+
+    items = _relationship_items(node, value_key, detail_key)
+
+    if items:
+        lines = [
+            f"{label} explicitly connected to {heading}:",
+            *(f"- {value}" for value in items),
+        ]
+        # "How is T#### detected?" wants the detection strategy AND the analytic
+        # IDs under it. Only the technique->detection path carries these, so
+        # append them when rendering a Technique's detection strategies.
+        if value_key == "detections" and node_type == "Technique":
+            analytics = _relationship_items(node, "analytics", "detection_analytic_details")
+            if analytics:
+                lines.append("Supporting analytics:")
+                lines.extend(f"- {value}" for value in analytics)
+        return "\n".join(lines)
+    return f"No {label.lower()} are recorded for {heading} in the knowledge graph."
+
+
 def generate_exact_id_summary(query: str, nodes: list[dict]) -> str | None:
     """Answer explicit MITRE ID lookups without allowing model substitutions."""
     requested_ids = list(dict.fromkeys(
@@ -986,11 +1305,13 @@ def generate_exact_id_summary(query: str, nodes: list[dict]) -> str | None:
         if node.get("parent_technique"):
             lines.append(f"Parent Technique: {node['parent_technique']}")
         if is_detection_query(query):
-            for label, key in (
-                ("Detection Strategies", "detections"),
-                ("Log Sources", "log_sources"),
+            for label, values in (
+                (
+                    "Detection Strategies",
+                    node.get("detection_strategies") or node.get("detections") or [],
+                ),
+                ("Log Sources", node.get("log_sources") or []),
             ):
-                values = node.get(key) or []
                 if isinstance(values, list) and values:
                     lines.append(f"{label}: {', '.join(str(value) for value in values if value)}")
             analytics = filtered_analytic_details(node, query)
@@ -1238,11 +1559,18 @@ def generate(query: str, nodes: list[dict], filters: dict | None = None) -> str:
     # note the rest weren't found, instead of discarding a fully-grounded
     # answer over an unrelated unresolved token.
     resolved_refs, unresolved_refs = explicit_reference_status(query, nodes)
-    if unresolved_refs and not resolved_refs:
+    resolved_by_filter = validated_filter_resolves_context(filters, nodes)
+    if unresolved_refs and not resolved_refs and not resolved_by_filter:
+        return "I don't have enough information about this in my knowledge base."
+
+    # A plain-word subject (not an ID/CamelCase name) that failed to resolve
+    # slips past explicit_reference_status; refuse rather than answer about an
+    # arbitrary unrelated node the semantic search happened to surface.
+    if relationship_subject_unresolved(query, nodes, filters):
         return "I don't have enough information about this in my knowledge base."
 
     answer = _build_answer(query, nodes, filters)
-    if unresolved_refs and answer:
+    if unresolved_refs and answer and not resolved_by_filter:
         answer += (
             f"\n\nNote: I don't have information about "
             f"{', '.join(unresolved_refs)} in my knowledge base."
@@ -1254,6 +1582,10 @@ def _build_answer(query: str, nodes: list[dict], filters: dict | None = None) ->
     telemetry_summary = generate_telemetry_indicator_summary(query, nodes)
     if telemetry_summary:
         return telemetry_summary
+
+    relationship_summary = generate_requested_relationship_summary(query, nodes)
+    if relationship_summary:
+        return relationship_summary
 
     overview = generate_actor_overview(query, nodes, filters)
     if overview:
@@ -1297,9 +1629,6 @@ def _build_answer(query: str, nodes: list[dict], filters: dict | None = None) ->
         return comparison
 
     context = format_context(nodes, query)
-    filter_text = ""
-    if filters:
-        filter_text = f"\nFilters applied: {filters}\n"
 
     response = OLLAMA_CLIENT.chat(
         model="llama3.1",
@@ -1313,13 +1642,14 @@ def _build_answer(query: str, nodes: list[dict], filters: dict | None = None) ->
                 "content": f"""Context from MITRE ATT&CK knowledge base:
 
 {context}
-{filter_text}
 ---
 
 Question: {query}
 
 Critical answer constraints:
 - Answer based strictly on the context above.
+- If the specific fact or relationship asked about is absent from the context, say it was not found in the provided context; never substitute a plausible relationship.
+- Internal retrieval filters are not relationship evidence and must never be used as facts.
 - Do not include caveated items that are not explicitly connected in the context.
 - Do not count comma-separated relationship-list items.
 - For comparisons, compare explicit facts and examples only; do not use broader/narrower range wording unless the context provides written counts.

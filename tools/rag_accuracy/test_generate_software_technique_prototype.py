@@ -164,10 +164,15 @@ class SoftwareTechniquePrototypeTests(unittest.TestCase):
         )
         selection = artifact["selection"]
         self.assertEqual(selection["active_software_count"], 821)
-        self.assertEqual(selection["pair_count"], 846)
+        self.assertEqual(selection["pair_count"], 1687)
+        self.assertEqual(selection["original_pair_count"], 846)
+        self.assertEqual(selection["reverse_aggregate_pairs"], 697)
+        self.assertEqual(selection["reverse_zero_path_pairs"], 210)
+        self.assertEqual(selection["reverse_negative_existence_pairs"], 25)
         self.assertEqual(selection["positive_aggregate_pairs"], 821)
         self.assertEqual(selection["zero_path_aggregate_pairs"], 0)
         self.assertEqual(selection["negative_existence_pairs"], 25)
+        self.assertEqual(selection["adversarial_negative_pairs"], 119)
         self.assertEqual(
             selection["negative_existence_distinct_software_count"], 25
         )

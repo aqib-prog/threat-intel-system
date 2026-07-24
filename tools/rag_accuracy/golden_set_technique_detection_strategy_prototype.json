@@ -3288,6 +3288,1641 @@
         ],
         "stix_id": "attack-pattern--2e34237d-8574-43f6-aace-ae2915de8597"
       }
+    },
+    {
+      "case_type": "aggregate_detection_strategy_technique",
+      "detection_strategy": {
+        "external_id": "DET0560",
+        "name": "Detection of Valid Account Abuse Across Platforms",
+        "stix_id": "x-mitre-detection-strategy--a6245075-b59f-46cf-8b76-e8d95c378a22"
+      },
+      "expected_analytics": [
+        {
+          "data_components": [
+            {
+              "external_id": "DC0002",
+              "name": "User Account Authentication",
+              "stix_id": "x-mitre-data-component--a953ca55-921a-44f7-9b8d-3d40141aa17e"
+            },
+            {
+              "external_id": "DC0032",
+              "name": "Process Creation",
+              "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+            },
+            {
+              "external_id": "DC0067",
+              "name": "Logon Session Creation",
+              "stix_id": "x-mitre-data-component--9ce98c86-8d30-4043-ba54-0784d478d0b5"
+            }
+          ],
+          "description": "Detection of compromised or misused valid accounts via anomalous logon patterns, abnormal logon types, and inconsistent geographic or time-based activity across Windows endpoints.",
+          "external_id": "AN1543",
+          "log_source_references": [
+            {
+              "analytic_external_id": "AN1543",
+              "analytic_ref": "x-mitre-analytic--f9c3a686-2894-498d-9d04-7ac510752e1f",
+              "data_component_external_id": "DC0067",
+              "data_component_ref": "x-mitre-data-component--9ce98c86-8d30-4043-ba54-0784d478d0b5",
+              "log_source_channel": "EventCode=4624",
+              "log_source_name": "WinEventLog:Security",
+              "log_source_reference_index": 0
+            },
+            {
+              "analytic_external_id": "AN1543",
+              "analytic_ref": "x-mitre-analytic--f9c3a686-2894-498d-9d04-7ac510752e1f",
+              "data_component_external_id": "DC0002",
+              "data_component_ref": "x-mitre-data-component--a953ca55-921a-44f7-9b8d-3d40141aa17e",
+              "log_source_channel": "EventCode=4776, 4625",
+              "log_source_name": "WinEventLog:Security",
+              "log_source_reference_index": 1
+            },
+            {
+              "analytic_external_id": "AN1543",
+              "analytic_ref": "x-mitre-analytic--f9c3a686-2894-498d-9d04-7ac510752e1f",
+              "data_component_external_id": "DC0032",
+              "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+              "log_source_channel": "EventCode=1",
+              "log_source_name": "WinEventLog:Sysmon",
+              "log_source_reference_index": 2
+            }
+          ],
+          "name": "Analytic 1543",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "x-mitre-analytic--f9c3a686-2894-498d-9d04-7ac510752e1f"
+        },
+        {
+          "data_components": [
+            {
+              "external_id": "DC0002",
+              "name": "User Account Authentication",
+              "stix_id": "x-mitre-data-component--a953ca55-921a-44f7-9b8d-3d40141aa17e"
+            },
+            {
+              "external_id": "DC0032",
+              "name": "Process Creation",
+              "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+            }
+          ],
+          "description": "Detection of valid account misuse through SSH logins, sudo/su abuse, and service account anomalies outside expected patterns.",
+          "external_id": "AN1544",
+          "log_source_references": [
+            {
+              "analytic_external_id": "AN1544",
+              "analytic_ref": "x-mitre-analytic--6cf46787-028d-4ac8-9dfa-58682edb3625",
+              "data_component_external_id": "DC0032",
+              "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+              "log_source_channel": "execve",
+              "log_source_name": "auditd:SYSCALL",
+              "log_source_reference_index": 0
+            },
+            {
+              "analytic_external_id": "AN1544",
+              "analytic_ref": "x-mitre-analytic--6cf46787-028d-4ac8-9dfa-58682edb3625",
+              "data_component_external_id": "DC0002",
+              "data_component_ref": "x-mitre-data-component--a953ca55-921a-44f7-9b8d-3d40141aa17e",
+              "log_source_channel": "sshd or PAM logins",
+              "log_source_name": "NSM:Connections",
+              "log_source_reference_index": 1
+            }
+          ],
+          "name": "Analytic 1544",
+          "platforms": [
+            "Linux"
+          ],
+          "stix_id": "x-mitre-analytic--6cf46787-028d-4ac8-9dfa-58682edb3625"
+        },
+        {
+          "data_components": [
+            {
+              "external_id": "DC0032",
+              "name": "Process Creation",
+              "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+            },
+            {
+              "external_id": "DC0088",
+              "name": "Logon Session Metadata",
+              "stix_id": "x-mitre-data-component--39b9db72-8b48-4595-a18d-db5bbba3091b"
+            }
+          ],
+          "description": "Detection of interactive and remote logins by service accounts or users at unusual times, with unexpected child process activity.",
+          "external_id": "AN1545",
+          "log_source_references": [
+            {
+              "analytic_external_id": "AN1545",
+              "analytic_ref": "x-mitre-analytic--d059a437-bf45-4b10-a36c-7e42e183d3c7",
+              "data_component_external_id": "DC0088",
+              "data_component_ref": "x-mitre-data-component--39b9db72-8b48-4595-a18d-db5bbba3091b",
+              "log_source_channel": "loginwindow, sshd",
+              "log_source_name": "macos:unifiedlog",
+              "log_source_reference_index": 0
+            },
+            {
+              "analytic_external_id": "AN1545",
+              "analytic_ref": "x-mitre-analytic--d059a437-bf45-4b10-a36c-7e42e183d3c7",
+              "data_component_external_id": "DC0032",
+              "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+              "log_source_channel": "exec logs",
+              "log_source_name": "macos:unifiedlog",
+              "log_source_reference_index": 1
+            }
+          ],
+          "name": "Analytic 1545",
+          "platforms": [
+            "macOS"
+          ],
+          "stix_id": "x-mitre-analytic--d059a437-bf45-4b10-a36c-7e42e183d3c7"
+        },
+        {
+          "data_components": [
+            {
+              "external_id": "DC0002",
+              "name": "User Account Authentication",
+              "stix_id": "x-mitre-data-component--a953ca55-921a-44f7-9b8d-3d40141aa17e"
+            }
+          ],
+          "description": "Detection of valid account abuse in IdP logs via geographic anomalies, impossible travel, risky sign-ins, and multiple MFA attempts or failures.",
+          "external_id": "AN1546",
+          "log_source_references": [
+            {
+              "analytic_external_id": "AN1546",
+              "analytic_ref": "x-mitre-analytic--aa255cdc-0b49-4ad3-951d-eab5582da56f",
+              "data_component_external_id": "DC0002",
+              "data_component_ref": "x-mitre-data-component--a953ca55-921a-44f7-9b8d-3d40141aa17e",
+              "log_source_channel": "Sign-in logs / audit events",
+              "log_source_name": "saas:okta",
+              "log_source_reference_index": 0
+            }
+          ],
+          "name": "Analytic 1546",
+          "platforms": [
+            "Identity Provider"
+          ],
+          "stix_id": "x-mitre-analytic--aa255cdc-0b49-4ad3-951d-eab5582da56f"
+        },
+        {
+          "data_components": [
+            {
+              "external_id": "DC0002",
+              "name": "User Account Authentication",
+              "stix_id": "x-mitre-data-component--a953ca55-921a-44f7-9b8d-3d40141aa17e"
+            }
+          ],
+          "description": "Detection of containerized service accounts or compromised kubeconfigs being used for cluster access from unexpected nodes or IPs.",
+          "external_id": "AN1547",
+          "log_source_references": [
+            {
+              "analytic_external_id": "AN1547",
+              "analytic_ref": "x-mitre-analytic--dc062a09-572e-41fc-bfff-f654751a6a0f",
+              "data_component_external_id": "DC0002",
+              "data_component_ref": "x-mitre-data-component--a953ca55-921a-44f7-9b8d-3d40141aa17e",
+              "log_source_channel": "authentication.k8s.io",
+              "log_source_name": "kubernetes:audit",
+              "log_source_reference_index": 0
+            }
+          ],
+          "name": "Analytic 1547",
+          "platforms": [
+            "Containers"
+          ],
+          "stix_id": "x-mitre-analytic--dc062a09-572e-41fc-bfff-f654751a6a0f"
+        }
+      ],
+      "expected_answer": "DET0560 (Detection of Valid Account Abuse Across Platforms) detects T1078 (Valid Accounts) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_data_components": [
+        {
+          "external_id": "DC0002",
+          "name": "User Account Authentication",
+          "stix_id": "x-mitre-data-component--a953ca55-921a-44f7-9b8d-3d40141aa17e"
+        },
+        {
+          "external_id": "DC0032",
+          "name": "Process Creation",
+          "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+        },
+        {
+          "external_id": "DC0067",
+          "name": "Logon Session Creation",
+          "stix_id": "x-mitre-data-component--9ce98c86-8d30-4043-ba54-0784d478d0b5"
+        },
+        {
+          "external_id": "DC0088",
+          "name": "Logon Session Metadata",
+          "stix_id": "x-mitre-data-component--39b9db72-8b48-4595-a18d-db5bbba3091b"
+        }
+      ],
+      "expected_technique": {
+        "external_id": "T1078",
+        "name": "Valid Accounts",
+        "platforms": [
+          "Containers",
+          "ESXi",
+          "IaaS",
+          "Identity Provider",
+          "Linux",
+          "macOS",
+          "Network Devices",
+          "Office Suite",
+          "SaaS",
+          "Windows"
+        ],
+        "stix_id": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81"
+      },
+      "id": "detection-strategy-technique-det0560",
+      "provenance": {
+        "analytic_data_component_links": [
+          {
+            "analytic_external_id": "AN1543",
+            "analytic_ref": "x-mitre-analytic--f9c3a686-2894-498d-9d04-7ac510752e1f",
+            "data_component_external_id": "DC0002",
+            "data_component_ref": "x-mitre-data-component--a953ca55-921a-44f7-9b8d-3d40141aa17e",
+            "log_source_channel": "EventCode=4776, 4625",
+            "log_source_name": "WinEventLog:Security",
+            "log_source_reference_index": 1
+          },
+          {
+            "analytic_external_id": "AN1543",
+            "analytic_ref": "x-mitre-analytic--f9c3a686-2894-498d-9d04-7ac510752e1f",
+            "data_component_external_id": "DC0032",
+            "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+            "log_source_channel": "EventCode=1",
+            "log_source_name": "WinEventLog:Sysmon",
+            "log_source_reference_index": 2
+          },
+          {
+            "analytic_external_id": "AN1543",
+            "analytic_ref": "x-mitre-analytic--f9c3a686-2894-498d-9d04-7ac510752e1f",
+            "data_component_external_id": "DC0067",
+            "data_component_ref": "x-mitre-data-component--9ce98c86-8d30-4043-ba54-0784d478d0b5",
+            "log_source_channel": "EventCode=4624",
+            "log_source_name": "WinEventLog:Security",
+            "log_source_reference_index": 0
+          },
+          {
+            "analytic_external_id": "AN1544",
+            "analytic_ref": "x-mitre-analytic--6cf46787-028d-4ac8-9dfa-58682edb3625",
+            "data_component_external_id": "DC0002",
+            "data_component_ref": "x-mitre-data-component--a953ca55-921a-44f7-9b8d-3d40141aa17e",
+            "log_source_channel": "sshd or PAM logins",
+            "log_source_name": "NSM:Connections",
+            "log_source_reference_index": 1
+          },
+          {
+            "analytic_external_id": "AN1544",
+            "analytic_ref": "x-mitre-analytic--6cf46787-028d-4ac8-9dfa-58682edb3625",
+            "data_component_external_id": "DC0032",
+            "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+            "log_source_channel": "execve",
+            "log_source_name": "auditd:SYSCALL",
+            "log_source_reference_index": 0
+          },
+          {
+            "analytic_external_id": "AN1545",
+            "analytic_ref": "x-mitre-analytic--d059a437-bf45-4b10-a36c-7e42e183d3c7",
+            "data_component_external_id": "DC0032",
+            "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+            "log_source_channel": "exec logs",
+            "log_source_name": "macos:unifiedlog",
+            "log_source_reference_index": 1
+          },
+          {
+            "analytic_external_id": "AN1545",
+            "analytic_ref": "x-mitre-analytic--d059a437-bf45-4b10-a36c-7e42e183d3c7",
+            "data_component_external_id": "DC0088",
+            "data_component_ref": "x-mitre-data-component--39b9db72-8b48-4595-a18d-db5bbba3091b",
+            "log_source_channel": "loginwindow, sshd",
+            "log_source_name": "macos:unifiedlog",
+            "log_source_reference_index": 0
+          },
+          {
+            "analytic_external_id": "AN1546",
+            "analytic_ref": "x-mitre-analytic--aa255cdc-0b49-4ad3-951d-eab5582da56f",
+            "data_component_external_id": "DC0002",
+            "data_component_ref": "x-mitre-data-component--a953ca55-921a-44f7-9b8d-3d40141aa17e",
+            "log_source_channel": "Sign-in logs / audit events",
+            "log_source_name": "saas:okta",
+            "log_source_reference_index": 0
+          },
+          {
+            "analytic_external_id": "AN1547",
+            "analytic_ref": "x-mitre-analytic--dc062a09-572e-41fc-bfff-f654751a6a0f",
+            "data_component_external_id": "DC0002",
+            "data_component_ref": "x-mitre-data-component--a953ca55-921a-44f7-9b8d-3d40141aa17e",
+            "log_source_channel": "authentication.k8s.io",
+            "log_source_name": "kubernetes:audit",
+            "log_source_reference_index": 0
+          }
+        ],
+        "analytic_stix_ids": [
+          "x-mitre-analytic--f9c3a686-2894-498d-9d04-7ac510752e1f",
+          "x-mitre-analytic--6cf46787-028d-4ac8-9dfa-58682edb3625",
+          "x-mitre-analytic--d059a437-bf45-4b10-a36c-7e42e183d3c7",
+          "x-mitre-analytic--aa255cdc-0b49-4ad3-951d-eab5582da56f",
+          "x-mitre-analytic--dc062a09-572e-41fc-bfff-f654751a6a0f"
+        ],
+        "data_component_stix_ids": [
+          "x-mitre-data-component--a953ca55-921a-44f7-9b8d-3d40141aa17e",
+          "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+          "x-mitre-data-component--9ce98c86-8d30-4043-ba54-0784d478d0b5",
+          "x-mitre-data-component--39b9db72-8b48-4595-a18d-db5bbba3091b"
+        ],
+        "detection_strategy_stix_id": "x-mitre-detection-strategy--a6245075-b59f-46cf-8b76-e8d95c378a22",
+        "detects_relationship_stix_id": "relationship--1b5cdb10-15a7-48ac-ab23-33edf7ef5602",
+        "methodology_note": "DetectionStrategy-to-Technique is an active STIX detects relationship. DetectionStrategy-to-Analytic is represented by the strategy object's x_mitre_analytic_refs field. Analytic-to-DataComponent is represented by the analytic object's x_mitre_log_source_references field. Repeated log source rows are preserved in provenance, while expected data-component answers are deduplicated by DataComponent STIX ID.",
+        "scope": "active_detection_strategy_with_analytics_and_data_components",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "strategy_analytic_links": [
+          {
+            "analytic_external_id": "AN1543",
+            "analytic_ref": "x-mitre-analytic--f9c3a686-2894-498d-9d04-7ac510752e1f",
+            "source_field": "x_mitre_analytic_refs",
+            "strategy_ref": "x-mitre-detection-strategy--a6245075-b59f-46cf-8b76-e8d95c378a22"
+          },
+          {
+            "analytic_external_id": "AN1544",
+            "analytic_ref": "x-mitre-analytic--6cf46787-028d-4ac8-9dfa-58682edb3625",
+            "source_field": "x_mitre_analytic_refs",
+            "strategy_ref": "x-mitre-detection-strategy--a6245075-b59f-46cf-8b76-e8d95c378a22"
+          },
+          {
+            "analytic_external_id": "AN1545",
+            "analytic_ref": "x-mitre-analytic--d059a437-bf45-4b10-a36c-7e42e183d3c7",
+            "source_field": "x_mitre_analytic_refs",
+            "strategy_ref": "x-mitre-detection-strategy--a6245075-b59f-46cf-8b76-e8d95c378a22"
+          },
+          {
+            "analytic_external_id": "AN1546",
+            "analytic_ref": "x-mitre-analytic--aa255cdc-0b49-4ad3-951d-eab5582da56f",
+            "source_field": "x_mitre_analytic_refs",
+            "strategy_ref": "x-mitre-detection-strategy--a6245075-b59f-46cf-8b76-e8d95c378a22"
+          },
+          {
+            "analytic_external_id": "AN1547",
+            "analytic_ref": "x-mitre-analytic--dc062a09-572e-41fc-bfff-f654751a6a0f",
+            "source_field": "x_mitre_analytic_refs",
+            "strategy_ref": "x-mitre-detection-strategy--a6245075-b59f-46cf-8b76-e8d95c378a22"
+          }
+        ],
+        "technique_stix_id": "attack-pattern--b17a1a56-e99c-403c-8948-561df0cffe81"
+      },
+      "question": "Which technique does DET0560 (Detection of Valid Account Abuse Across Platforms) detect?",
+      "relationship_type": "technique_detection_strategy"
+    },
+    {
+      "case_type": "aggregate_detection_strategy_technique",
+      "detection_strategy": {
+        "external_id": "DET0094",
+        "name": "Cross-Platform Behavioral Detection of Scheduled Task/Job Abuse",
+        "stix_id": "x-mitre-detection-strategy--df11466a-27a2-4cb1-bf73-2a3a4aaee0d9"
+      },
+      "expected_analytics": [
+        {
+          "data_components": [
+            {
+              "external_id": "DC0001",
+              "name": "Scheduled Job Creation",
+              "stix_id": "x-mitre-data-component--f42df6f0-6395-4f0c-9376-525a031f00c3"
+            },
+            {
+              "external_id": "DC0032",
+              "name": "Process Creation",
+              "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+            },
+            {
+              "external_id": "DC0061",
+              "name": "File Modification",
+              "stix_id": "x-mitre-data-component--84572de3-9583-4c73-aabd-06ea88123dd8"
+            }
+          ],
+          "description": "Detects creation or modification of scheduled tasks using schtasks.exe, at.exe, or COM objects followed by execution of outlier processes tied to the scheduled job.",
+          "external_id": "AN0258",
+          "log_source_references": [
+            {
+              "analytic_external_id": "AN0258",
+              "analytic_ref": "x-mitre-analytic--a0714b4d-5dbf-499e-a737-7b00478267ee",
+              "data_component_external_id": "DC0001",
+              "data_component_ref": "x-mitre-data-component--f42df6f0-6395-4f0c-9376-525a031f00c3",
+              "log_source_channel": "EventCode=4698",
+              "log_source_name": "WinEventLog:Security",
+              "log_source_reference_index": 0
+            },
+            {
+              "analytic_external_id": "AN0258",
+              "analytic_ref": "x-mitre-analytic--a0714b4d-5dbf-499e-a737-7b00478267ee",
+              "data_component_external_id": "DC0032",
+              "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+              "log_source_channel": "EventCode=1",
+              "log_source_name": "WinEventLog:Sysmon",
+              "log_source_reference_index": 1
+            },
+            {
+              "analytic_external_id": "AN0258",
+              "analytic_ref": "x-mitre-analytic--a0714b4d-5dbf-499e-a737-7b00478267ee",
+              "data_component_external_id": "DC0061",
+              "data_component_ref": "x-mitre-data-component--84572de3-9583-4c73-aabd-06ea88123dd8",
+              "log_source_channel": "EventCode=2",
+              "log_source_name": "WinEventLog:Sysmon",
+              "log_source_reference_index": 2
+            }
+          ],
+          "name": "Analytic 0258",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "x-mitre-analytic--a0714b4d-5dbf-499e-a737-7b00478267ee"
+        },
+        {
+          "data_components": [
+            {
+              "external_id": "DC0001",
+              "name": "Scheduled Job Creation",
+              "stix_id": "x-mitre-data-component--f42df6f0-6395-4f0c-9376-525a031f00c3"
+            },
+            {
+              "external_id": "DC0032",
+              "name": "Process Creation",
+              "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+            },
+            {
+              "external_id": "DC0061",
+              "name": "File Modification",
+              "stix_id": "x-mitre-data-component--84572de3-9583-4c73-aabd-06ea88123dd8"
+            }
+          ],
+          "description": "Detects creation or modification of cron jobs via crontab, /etc/cron.* directories, or systemd timer units with execution by unusual users or non-standard intervals.",
+          "external_id": "AN0259",
+          "log_source_references": [
+            {
+              "analytic_external_id": "AN0259",
+              "analytic_ref": "x-mitre-analytic--3374a404-06f9-4b32-bf94-5ac688fb9dad",
+              "data_component_external_id": "DC0061",
+              "data_component_ref": "x-mitre-data-component--84572de3-9583-4c73-aabd-06ea88123dd8",
+              "log_source_channel": "write, rename",
+              "log_source_name": "auditd:SYSCALL",
+              "log_source_reference_index": 0
+            },
+            {
+              "analytic_external_id": "AN0259",
+              "analytic_ref": "x-mitre-analytic--3374a404-06f9-4b32-bf94-5ac688fb9dad",
+              "data_component_external_id": "DC0032",
+              "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+              "log_source_channel": "execve",
+              "log_source_name": "auditd:SYSCALL",
+              "log_source_reference_index": 1
+            },
+            {
+              "analytic_external_id": "AN0259",
+              "analytic_ref": "x-mitre-analytic--3374a404-06f9-4b32-bf94-5ac688fb9dad",
+              "data_component_external_id": "DC0001",
+              "data_component_ref": "x-mitre-data-component--f42df6f0-6395-4f0c-9376-525a031f00c3",
+              "log_source_channel": "crontab, systemd_timers",
+              "log_source_name": "linux:osquery",
+              "log_source_reference_index": 2
+            }
+          ],
+          "name": "Analytic 0259",
+          "platforms": [
+            "Linux"
+          ],
+          "stix_id": "x-mitre-analytic--3374a404-06f9-4b32-bf94-5ac688fb9dad"
+        },
+        {
+          "data_components": [
+            {
+              "external_id": "DC0001",
+              "name": "Scheduled Job Creation",
+              "stix_id": "x-mitre-data-component--f42df6f0-6395-4f0c-9376-525a031f00c3"
+            },
+            {
+              "external_id": "DC0032",
+              "name": "Process Creation",
+              "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+            },
+            {
+              "external_id": "DC0039",
+              "name": "File Creation",
+              "stix_id": "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c"
+            }
+          ],
+          "description": "Detects creation or alteration of LaunchAgents or LaunchDaemons with corresponding plist modification followed by execution of associated binaries.",
+          "external_id": "AN0260",
+          "log_source_references": [
+            {
+              "analytic_external_id": "AN0260",
+              "analytic_ref": "x-mitre-analytic--8cbda989-39e6-4f9e-8e23-213f92b3479d",
+              "data_component_external_id": "DC0032",
+              "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+              "log_source_channel": "process launch",
+              "log_source_name": "macos:unifiedlog",
+              "log_source_reference_index": 0
+            },
+            {
+              "analytic_external_id": "AN0260",
+              "analytic_ref": "x-mitre-analytic--8cbda989-39e6-4f9e-8e23-213f92b3479d",
+              "data_component_external_id": "DC0039",
+              "data_component_ref": "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c",
+              "log_source_channel": "disk activity on /Library/LaunchAgents or LaunchDaemons",
+              "log_source_name": "fs:fsusage",
+              "log_source_reference_index": 1
+            },
+            {
+              "analytic_external_id": "AN0260",
+              "analytic_ref": "x-mitre-analytic--8cbda989-39e6-4f9e-8e23-213f92b3479d",
+              "data_component_external_id": "DC0001",
+              "data_component_ref": "x-mitre-data-component--f42df6f0-6395-4f0c-9376-525a031f00c3",
+              "log_source_channel": "launchd_jobs",
+              "log_source_name": "macos:osquery",
+              "log_source_reference_index": 2
+            }
+          ],
+          "name": "Analytic 0260",
+          "platforms": [
+            "macOS"
+          ],
+          "stix_id": "x-mitre-analytic--8cbda989-39e6-4f9e-8e23-213f92b3479d"
+        },
+        {
+          "data_components": [
+            {
+              "external_id": "DC0032",
+              "name": "Process Creation",
+              "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+            },
+            {
+              "external_id": "DC0061",
+              "name": "File Modification",
+              "stix_id": "x-mitre-data-component--84572de3-9583-4c73-aabd-06ea88123dd8"
+            }
+          ],
+          "description": "Detects unusual use of `cron` or `sleep` loops inside containers executing unfamiliar scripts or binaries repeatedly.",
+          "external_id": "AN0261",
+          "log_source_references": [
+            {
+              "analytic_external_id": "AN0261",
+              "analytic_ref": "x-mitre-analytic--d20d7cf8-ecac-4011-96e0-3ec862223c11",
+              "data_component_external_id": "DC0032",
+              "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+              "log_source_channel": "execve",
+              "log_source_name": "auditd:SYSCALL",
+              "log_source_reference_index": 0
+            },
+            {
+              "analytic_external_id": "AN0261",
+              "analytic_ref": "x-mitre-analytic--d20d7cf8-ecac-4011-96e0-3ec862223c11",
+              "data_component_external_id": "DC0061",
+              "data_component_ref": "x-mitre-data-component--84572de3-9583-4c73-aabd-06ea88123dd8",
+              "log_source_channel": "file change monitoring within /etc/cron.*, /tmp, or mounted volumes",
+              "log_source_name": "containerd:runtime",
+              "log_source_reference_index": 1
+            }
+          ],
+          "name": "Analytic 0261",
+          "platforms": [
+            "Containers"
+          ],
+          "stix_id": "x-mitre-analytic--d20d7cf8-ecac-4011-96e0-3ec862223c11"
+        },
+        {
+          "data_components": [
+            {
+              "external_id": "DC0001",
+              "name": "Scheduled Job Creation",
+              "stix_id": "x-mitre-data-component--f42df6f0-6395-4f0c-9376-525a031f00c3"
+            },
+            {
+              "external_id": "DC0061",
+              "name": "File Modification",
+              "stix_id": "x-mitre-data-component--84572de3-9583-4c73-aabd-06ea88123dd8"
+            },
+            {
+              "external_id": "DC0064",
+              "name": "Command Execution",
+              "stix_id": "x-mitre-data-component--685f917a-e95e-4ba0-ade1-c7d354dae6e0"
+            }
+          ],
+          "description": "Detects modification of ESXi cron jobs, local.sh scripts, or scheduled API calls to persist custom binaries or shell scripts.",
+          "external_id": "AN0262",
+          "log_source_references": [
+            {
+              "analytic_external_id": "AN0262",
+              "analytic_ref": "x-mitre-analytic--e5adcc7e-5d68-4080-bb87-e901f297485d",
+              "data_component_external_id": "DC0001",
+              "data_component_ref": "x-mitre-data-component--f42df6f0-6395-4f0c-9376-525a031f00c3",
+              "log_source_channel": "Startup script and task execution logs",
+              "log_source_name": "esxi:vmkernel",
+              "log_source_reference_index": 0
+            },
+            {
+              "analytic_external_id": "AN0262",
+              "analytic_ref": "x-mitre-analytic--e5adcc7e-5d68-4080-bb87-e901f297485d",
+              "data_component_external_id": "DC0064",
+              "data_component_ref": "x-mitre-data-component--685f917a-e95e-4ba0-ade1-c7d354dae6e0",
+              "log_source_channel": "shell access or job registration",
+              "log_source_name": "esxi:hostd",
+              "log_source_reference_index": 1
+            },
+            {
+              "analytic_external_id": "AN0262",
+              "analytic_ref": "x-mitre-analytic--e5adcc7e-5d68-4080-bb87-e901f297485d",
+              "data_component_external_id": "DC0061",
+              "data_component_ref": "x-mitre-data-component--84572de3-9583-4c73-aabd-06ea88123dd8",
+              "log_source_channel": "manual edits to /etc/rc.local.d/local.sh or cron.d",
+              "log_source_name": "esxi:cron",
+              "log_source_reference_index": 2
+            }
+          ],
+          "name": "Analytic 0262",
+          "platforms": [
+            "ESXi"
+          ],
+          "stix_id": "x-mitre-analytic--e5adcc7e-5d68-4080-bb87-e901f297485d"
+        }
+      ],
+      "expected_answer": "DET0094 (Cross-Platform Behavioral Detection of Scheduled Task/Job Abuse) detects T1053 (Scheduled Task/Job) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_data_components": [
+        {
+          "external_id": "DC0001",
+          "name": "Scheduled Job Creation",
+          "stix_id": "x-mitre-data-component--f42df6f0-6395-4f0c-9376-525a031f00c3"
+        },
+        {
+          "external_id": "DC0032",
+          "name": "Process Creation",
+          "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+        },
+        {
+          "external_id": "DC0039",
+          "name": "File Creation",
+          "stix_id": "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c"
+        },
+        {
+          "external_id": "DC0061",
+          "name": "File Modification",
+          "stix_id": "x-mitre-data-component--84572de3-9583-4c73-aabd-06ea88123dd8"
+        },
+        {
+          "external_id": "DC0064",
+          "name": "Command Execution",
+          "stix_id": "x-mitre-data-component--685f917a-e95e-4ba0-ade1-c7d354dae6e0"
+        }
+      ],
+      "expected_technique": {
+        "external_id": "T1053",
+        "name": "Scheduled Task/Job",
+        "platforms": [
+          "Containers",
+          "ESXi",
+          "Linux",
+          "macOS",
+          "Network Devices",
+          "Windows"
+        ],
+        "stix_id": "attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9"
+      },
+      "id": "detection-strategy-technique-det0094",
+      "provenance": {
+        "analytic_data_component_links": [
+          {
+            "analytic_external_id": "AN0258",
+            "analytic_ref": "x-mitre-analytic--a0714b4d-5dbf-499e-a737-7b00478267ee",
+            "data_component_external_id": "DC0001",
+            "data_component_ref": "x-mitre-data-component--f42df6f0-6395-4f0c-9376-525a031f00c3",
+            "log_source_channel": "EventCode=4698",
+            "log_source_name": "WinEventLog:Security",
+            "log_source_reference_index": 0
+          },
+          {
+            "analytic_external_id": "AN0258",
+            "analytic_ref": "x-mitre-analytic--a0714b4d-5dbf-499e-a737-7b00478267ee",
+            "data_component_external_id": "DC0032",
+            "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+            "log_source_channel": "EventCode=1",
+            "log_source_name": "WinEventLog:Sysmon",
+            "log_source_reference_index": 1
+          },
+          {
+            "analytic_external_id": "AN0258",
+            "analytic_ref": "x-mitre-analytic--a0714b4d-5dbf-499e-a737-7b00478267ee",
+            "data_component_external_id": "DC0061",
+            "data_component_ref": "x-mitre-data-component--84572de3-9583-4c73-aabd-06ea88123dd8",
+            "log_source_channel": "EventCode=2",
+            "log_source_name": "WinEventLog:Sysmon",
+            "log_source_reference_index": 2
+          },
+          {
+            "analytic_external_id": "AN0259",
+            "analytic_ref": "x-mitre-analytic--3374a404-06f9-4b32-bf94-5ac688fb9dad",
+            "data_component_external_id": "DC0001",
+            "data_component_ref": "x-mitre-data-component--f42df6f0-6395-4f0c-9376-525a031f00c3",
+            "log_source_channel": "crontab, systemd_timers",
+            "log_source_name": "linux:osquery",
+            "log_source_reference_index": 2
+          },
+          {
+            "analytic_external_id": "AN0259",
+            "analytic_ref": "x-mitre-analytic--3374a404-06f9-4b32-bf94-5ac688fb9dad",
+            "data_component_external_id": "DC0032",
+            "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+            "log_source_channel": "execve",
+            "log_source_name": "auditd:SYSCALL",
+            "log_source_reference_index": 1
+          },
+          {
+            "analytic_external_id": "AN0259",
+            "analytic_ref": "x-mitre-analytic--3374a404-06f9-4b32-bf94-5ac688fb9dad",
+            "data_component_external_id": "DC0061",
+            "data_component_ref": "x-mitre-data-component--84572de3-9583-4c73-aabd-06ea88123dd8",
+            "log_source_channel": "write, rename",
+            "log_source_name": "auditd:SYSCALL",
+            "log_source_reference_index": 0
+          },
+          {
+            "analytic_external_id": "AN0260",
+            "analytic_ref": "x-mitre-analytic--8cbda989-39e6-4f9e-8e23-213f92b3479d",
+            "data_component_external_id": "DC0001",
+            "data_component_ref": "x-mitre-data-component--f42df6f0-6395-4f0c-9376-525a031f00c3",
+            "log_source_channel": "launchd_jobs",
+            "log_source_name": "macos:osquery",
+            "log_source_reference_index": 2
+          },
+          {
+            "analytic_external_id": "AN0260",
+            "analytic_ref": "x-mitre-analytic--8cbda989-39e6-4f9e-8e23-213f92b3479d",
+            "data_component_external_id": "DC0032",
+            "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+            "log_source_channel": "process launch",
+            "log_source_name": "macos:unifiedlog",
+            "log_source_reference_index": 0
+          },
+          {
+            "analytic_external_id": "AN0260",
+            "analytic_ref": "x-mitre-analytic--8cbda989-39e6-4f9e-8e23-213f92b3479d",
+            "data_component_external_id": "DC0039",
+            "data_component_ref": "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c",
+            "log_source_channel": "disk activity on /Library/LaunchAgents or LaunchDaemons",
+            "log_source_name": "fs:fsusage",
+            "log_source_reference_index": 1
+          },
+          {
+            "analytic_external_id": "AN0261",
+            "analytic_ref": "x-mitre-analytic--d20d7cf8-ecac-4011-96e0-3ec862223c11",
+            "data_component_external_id": "DC0032",
+            "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+            "log_source_channel": "execve",
+            "log_source_name": "auditd:SYSCALL",
+            "log_source_reference_index": 0
+          },
+          {
+            "analytic_external_id": "AN0261",
+            "analytic_ref": "x-mitre-analytic--d20d7cf8-ecac-4011-96e0-3ec862223c11",
+            "data_component_external_id": "DC0061",
+            "data_component_ref": "x-mitre-data-component--84572de3-9583-4c73-aabd-06ea88123dd8",
+            "log_source_channel": "file change monitoring within /etc/cron.*, /tmp, or mounted volumes",
+            "log_source_name": "containerd:runtime",
+            "log_source_reference_index": 1
+          },
+          {
+            "analytic_external_id": "AN0262",
+            "analytic_ref": "x-mitre-analytic--e5adcc7e-5d68-4080-bb87-e901f297485d",
+            "data_component_external_id": "DC0001",
+            "data_component_ref": "x-mitre-data-component--f42df6f0-6395-4f0c-9376-525a031f00c3",
+            "log_source_channel": "Startup script and task execution logs",
+            "log_source_name": "esxi:vmkernel",
+            "log_source_reference_index": 0
+          },
+          {
+            "analytic_external_id": "AN0262",
+            "analytic_ref": "x-mitre-analytic--e5adcc7e-5d68-4080-bb87-e901f297485d",
+            "data_component_external_id": "DC0061",
+            "data_component_ref": "x-mitre-data-component--84572de3-9583-4c73-aabd-06ea88123dd8",
+            "log_source_channel": "manual edits to /etc/rc.local.d/local.sh or cron.d",
+            "log_source_name": "esxi:cron",
+            "log_source_reference_index": 2
+          },
+          {
+            "analytic_external_id": "AN0262",
+            "analytic_ref": "x-mitre-analytic--e5adcc7e-5d68-4080-bb87-e901f297485d",
+            "data_component_external_id": "DC0064",
+            "data_component_ref": "x-mitre-data-component--685f917a-e95e-4ba0-ade1-c7d354dae6e0",
+            "log_source_channel": "shell access or job registration",
+            "log_source_name": "esxi:hostd",
+            "log_source_reference_index": 1
+          }
+        ],
+        "analytic_stix_ids": [
+          "x-mitre-analytic--a0714b4d-5dbf-499e-a737-7b00478267ee",
+          "x-mitre-analytic--3374a404-06f9-4b32-bf94-5ac688fb9dad",
+          "x-mitre-analytic--8cbda989-39e6-4f9e-8e23-213f92b3479d",
+          "x-mitre-analytic--d20d7cf8-ecac-4011-96e0-3ec862223c11",
+          "x-mitre-analytic--e5adcc7e-5d68-4080-bb87-e901f297485d"
+        ],
+        "data_component_stix_ids": [
+          "x-mitre-data-component--f42df6f0-6395-4f0c-9376-525a031f00c3",
+          "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+          "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c",
+          "x-mitre-data-component--84572de3-9583-4c73-aabd-06ea88123dd8",
+          "x-mitre-data-component--685f917a-e95e-4ba0-ade1-c7d354dae6e0"
+        ],
+        "detection_strategy_stix_id": "x-mitre-detection-strategy--df11466a-27a2-4cb1-bf73-2a3a4aaee0d9",
+        "detects_relationship_stix_id": "relationship--9f9f4610-d586-4dff-bbca-282297fd5526",
+        "methodology_note": "DetectionStrategy-to-Technique is an active STIX detects relationship. DetectionStrategy-to-Analytic is represented by the strategy object's x_mitre_analytic_refs field. Analytic-to-DataComponent is represented by the analytic object's x_mitre_log_source_references field. Repeated log source rows are preserved in provenance, while expected data-component answers are deduplicated by DataComponent STIX ID.",
+        "scope": "active_detection_strategy_with_analytics_and_data_components",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "strategy_analytic_links": [
+          {
+            "analytic_external_id": "AN0258",
+            "analytic_ref": "x-mitre-analytic--a0714b4d-5dbf-499e-a737-7b00478267ee",
+            "source_field": "x_mitre_analytic_refs",
+            "strategy_ref": "x-mitre-detection-strategy--df11466a-27a2-4cb1-bf73-2a3a4aaee0d9"
+          },
+          {
+            "analytic_external_id": "AN0259",
+            "analytic_ref": "x-mitre-analytic--3374a404-06f9-4b32-bf94-5ac688fb9dad",
+            "source_field": "x_mitre_analytic_refs",
+            "strategy_ref": "x-mitre-detection-strategy--df11466a-27a2-4cb1-bf73-2a3a4aaee0d9"
+          },
+          {
+            "analytic_external_id": "AN0260",
+            "analytic_ref": "x-mitre-analytic--8cbda989-39e6-4f9e-8e23-213f92b3479d",
+            "source_field": "x_mitre_analytic_refs",
+            "strategy_ref": "x-mitre-detection-strategy--df11466a-27a2-4cb1-bf73-2a3a4aaee0d9"
+          },
+          {
+            "analytic_external_id": "AN0261",
+            "analytic_ref": "x-mitre-analytic--d20d7cf8-ecac-4011-96e0-3ec862223c11",
+            "source_field": "x_mitre_analytic_refs",
+            "strategy_ref": "x-mitre-detection-strategy--df11466a-27a2-4cb1-bf73-2a3a4aaee0d9"
+          },
+          {
+            "analytic_external_id": "AN0262",
+            "analytic_ref": "x-mitre-analytic--e5adcc7e-5d68-4080-bb87-e901f297485d",
+            "source_field": "x_mitre_analytic_refs",
+            "strategy_ref": "x-mitre-detection-strategy--df11466a-27a2-4cb1-bf73-2a3a4aaee0d9"
+          }
+        ],
+        "technique_stix_id": "attack-pattern--35dd844a-b219-4e2b-a6bb-efa9a75995a9"
+      },
+      "question": "Which technique does DET0094 (Cross-Platform Behavioral Detection of Scheduled Task/Job Abuse) detect?",
+      "relationship_type": "technique_detection_strategy"
+    },
+    {
+      "case_type": "aggregate_detection_strategy_technique",
+      "detection_strategy": {
+        "external_id": "DET0455",
+        "name": "Abuse of PowerShell for Arbitrary Execution",
+        "stix_id": "x-mitre-detection-strategy--72b209e2-8c65-4217-8532-fabd0cb54ae5"
+      },
+      "expected_analytics": [
+        {
+          "data_components": [
+            {
+              "external_id": "DC0016",
+              "name": "Module Load",
+              "stix_id": "x-mitre-data-component--c0a4a086-cc20-4e1e-b7cb-29d99dfa3fb1"
+            },
+            {
+              "external_id": "DC0032",
+              "name": "Process Creation",
+              "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+            },
+            {
+              "external_id": "DC0034",
+              "name": "Process Metadata",
+              "stix_id": "x-mitre-data-component--ee575f4a-2d4f-48f6-b18b-89067760adc1"
+            },
+            {
+              "external_id": "DC0064",
+              "name": "Command Execution",
+              "stix_id": "x-mitre-data-component--685f917a-e95e-4ba0-ade1-c7d354dae6e0"
+            }
+          ],
+          "description": "Detects behavioral chains where PowerShell is launched with encoded commands, unusual parent processes, or suspicious modules loaded, potentially followed by network connections or child process spawning. Supports detection of both direct (powershell.exe) and indirect (.NET automation) invocations.",
+          "external_id": "AN1252",
+          "log_source_references": [
+            {
+              "analytic_external_id": "AN1252",
+              "analytic_ref": "x-mitre-analytic--78864416-9ea3-4285-aab4-ecf31c935253",
+              "data_component_external_id": "DC0032",
+              "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+              "log_source_channel": "EventCode=1",
+              "log_source_name": "WinEventLog:Sysmon",
+              "log_source_reference_index": 0
+            },
+            {
+              "analytic_external_id": "AN1252",
+              "analytic_ref": "x-mitre-analytic--78864416-9ea3-4285-aab4-ecf31c935253",
+              "data_component_external_id": "DC0064",
+              "data_component_ref": "x-mitre-data-component--685f917a-e95e-4ba0-ade1-c7d354dae6e0",
+              "log_source_channel": "EventCode=4103, 4104, 4105, 4106",
+              "log_source_name": "WinEventLog:PowerShell",
+              "log_source_reference_index": 1
+            },
+            {
+              "analytic_external_id": "AN1252",
+              "analytic_ref": "x-mitre-analytic--78864416-9ea3-4285-aab4-ecf31c935253",
+              "data_component_external_id": "DC0034",
+              "data_component_ref": "x-mitre-data-component--ee575f4a-2d4f-48f6-b18b-89067760adc1",
+              "log_source_channel": "EventCode=400, 403",
+              "log_source_name": "WinEventLog:PowerShell",
+              "log_source_reference_index": 2
+            },
+            {
+              "analytic_external_id": "AN1252",
+              "analytic_ref": "x-mitre-analytic--78864416-9ea3-4285-aab4-ecf31c935253",
+              "data_component_external_id": "DC0016",
+              "data_component_ref": "x-mitre-data-component--c0a4a086-cc20-4e1e-b7cb-29d99dfa3fb1",
+              "log_source_channel": "EventCode=7",
+              "log_source_name": "WinEventLog:Sysmon",
+              "log_source_reference_index": 3
+            }
+          ],
+          "name": "Analytic 1252",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "x-mitre-analytic--78864416-9ea3-4285-aab4-ecf31c935253"
+        }
+      ],
+      "expected_answer": "DET0455 (Abuse of PowerShell for Arbitrary Execution) detects T1059.001 (PowerShell) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_data_components": [
+        {
+          "external_id": "DC0016",
+          "name": "Module Load",
+          "stix_id": "x-mitre-data-component--c0a4a086-cc20-4e1e-b7cb-29d99dfa3fb1"
+        },
+        {
+          "external_id": "DC0032",
+          "name": "Process Creation",
+          "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+        },
+        {
+          "external_id": "DC0034",
+          "name": "Process Metadata",
+          "stix_id": "x-mitre-data-component--ee575f4a-2d4f-48f6-b18b-89067760adc1"
+        },
+        {
+          "external_id": "DC0064",
+          "name": "Command Execution",
+          "stix_id": "x-mitre-data-component--685f917a-e95e-4ba0-ade1-c7d354dae6e0"
+        }
+      ],
+      "expected_technique": {
+        "external_id": "T1059.001",
+        "name": "PowerShell",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "attack-pattern--970a3432-3237-47ad-bcca-7d8cbb217736"
+      },
+      "id": "detection-strategy-technique-det0455",
+      "provenance": {
+        "analytic_data_component_links": [
+          {
+            "analytic_external_id": "AN1252",
+            "analytic_ref": "x-mitre-analytic--78864416-9ea3-4285-aab4-ecf31c935253",
+            "data_component_external_id": "DC0016",
+            "data_component_ref": "x-mitre-data-component--c0a4a086-cc20-4e1e-b7cb-29d99dfa3fb1",
+            "log_source_channel": "EventCode=7",
+            "log_source_name": "WinEventLog:Sysmon",
+            "log_source_reference_index": 3
+          },
+          {
+            "analytic_external_id": "AN1252",
+            "analytic_ref": "x-mitre-analytic--78864416-9ea3-4285-aab4-ecf31c935253",
+            "data_component_external_id": "DC0032",
+            "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+            "log_source_channel": "EventCode=1",
+            "log_source_name": "WinEventLog:Sysmon",
+            "log_source_reference_index": 0
+          },
+          {
+            "analytic_external_id": "AN1252",
+            "analytic_ref": "x-mitre-analytic--78864416-9ea3-4285-aab4-ecf31c935253",
+            "data_component_external_id": "DC0034",
+            "data_component_ref": "x-mitre-data-component--ee575f4a-2d4f-48f6-b18b-89067760adc1",
+            "log_source_channel": "EventCode=400, 403",
+            "log_source_name": "WinEventLog:PowerShell",
+            "log_source_reference_index": 2
+          },
+          {
+            "analytic_external_id": "AN1252",
+            "analytic_ref": "x-mitre-analytic--78864416-9ea3-4285-aab4-ecf31c935253",
+            "data_component_external_id": "DC0064",
+            "data_component_ref": "x-mitre-data-component--685f917a-e95e-4ba0-ade1-c7d354dae6e0",
+            "log_source_channel": "EventCode=4103, 4104, 4105, 4106",
+            "log_source_name": "WinEventLog:PowerShell",
+            "log_source_reference_index": 1
+          }
+        ],
+        "analytic_stix_ids": [
+          "x-mitre-analytic--78864416-9ea3-4285-aab4-ecf31c935253"
+        ],
+        "data_component_stix_ids": [
+          "x-mitre-data-component--c0a4a086-cc20-4e1e-b7cb-29d99dfa3fb1",
+          "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+          "x-mitre-data-component--ee575f4a-2d4f-48f6-b18b-89067760adc1",
+          "x-mitre-data-component--685f917a-e95e-4ba0-ade1-c7d354dae6e0"
+        ],
+        "detection_strategy_stix_id": "x-mitre-detection-strategy--72b209e2-8c65-4217-8532-fabd0cb54ae5",
+        "detects_relationship_stix_id": "relationship--029c6872-0b48-4838-ab3b-3a7c0e637be9",
+        "methodology_note": "DetectionStrategy-to-Technique is an active STIX detects relationship. DetectionStrategy-to-Analytic is represented by the strategy object's x_mitre_analytic_refs field. Analytic-to-DataComponent is represented by the analytic object's x_mitre_log_source_references field. Repeated log source rows are preserved in provenance, while expected data-component answers are deduplicated by DataComponent STIX ID.",
+        "scope": "active_detection_strategy_with_analytics_and_data_components",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "strategy_analytic_links": [
+          {
+            "analytic_external_id": "AN1252",
+            "analytic_ref": "x-mitre-analytic--78864416-9ea3-4285-aab4-ecf31c935253",
+            "source_field": "x_mitre_analytic_refs",
+            "strategy_ref": "x-mitre-detection-strategy--72b209e2-8c65-4217-8532-fabd0cb54ae5"
+          }
+        ],
+        "technique_stix_id": "attack-pattern--970a3432-3237-47ad-bcca-7d8cbb217736"
+      },
+      "question": "Which technique does DET0455 (Abuse of PowerShell for Arbitrary Execution) detect?",
+      "relationship_type": "technique_detection_strategy"
+    },
+    {
+      "case_type": "aggregate_detection_strategy_technique",
+      "detection_strategy": {
+        "external_id": "DET0363",
+        "name": "Detection of Credential Dumping from LSASS Memory via Access and Dump Sequence",
+        "stix_id": "x-mitre-detection-strategy--793c70fb-bc7a-4a77-95aa-7b0c583f10b4"
+      },
+      "expected_analytics": [
+        {
+          "data_components": [
+            {
+              "external_id": "DC0013",
+              "name": "User Account Metadata",
+              "stix_id": "x-mitre-data-component--b5d0492b-cda4-421c-8e51-ed2b8d85c5d0"
+            },
+            {
+              "external_id": "DC0032",
+              "name": "Process Creation",
+              "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+            },
+            {
+              "external_id": "DC0035",
+              "name": "Process Access",
+              "stix_id": "x-mitre-data-component--1887a270-576a-4049-84de-ef746b2572d6"
+            },
+            {
+              "external_id": "DC0039",
+              "name": "File Creation",
+              "stix_id": "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c"
+            },
+            {
+              "external_id": "DC0063",
+              "name": "Windows Registry Key Modification",
+              "stix_id": "x-mitre-data-component--da85d358-741a-410d-9433-20d6269a6170"
+            }
+          ],
+          "description": "A non-privileged or abnormal process attempts to open a handle with full access (0x1F0FFF) to lsass.exe and subsequently invokes memory dump, file creation, or registry modification indicative of credential scraping. This behavior chain reflects staged credential theft activity.",
+          "external_id": "AN1030",
+          "log_source_references": [
+            {
+              "analytic_external_id": "AN1030",
+              "analytic_ref": "x-mitre-analytic--2b0dd3b6-6949-4dd5-b0dd-7b0b6f431dbe",
+              "data_component_external_id": "DC0035",
+              "data_component_ref": "x-mitre-data-component--1887a270-576a-4049-84de-ef746b2572d6",
+              "log_source_channel": "EventCode=10",
+              "log_source_name": "WinEventLog:Sysmon",
+              "log_source_reference_index": 0
+            },
+            {
+              "analytic_external_id": "AN1030",
+              "analytic_ref": "x-mitre-analytic--2b0dd3b6-6949-4dd5-b0dd-7b0b6f431dbe",
+              "data_component_external_id": "DC0032",
+              "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+              "log_source_channel": "EventCode=1",
+              "log_source_name": "WinEventLog:Sysmon",
+              "log_source_reference_index": 1
+            },
+            {
+              "analytic_external_id": "AN1030",
+              "analytic_ref": "x-mitre-analytic--2b0dd3b6-6949-4dd5-b0dd-7b0b6f431dbe",
+              "data_component_external_id": "DC0039",
+              "data_component_ref": "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c",
+              "log_source_channel": "EventCode=11",
+              "log_source_name": "WinEventLog:Sysmon",
+              "log_source_reference_index": 2
+            },
+            {
+              "analytic_external_id": "AN1030",
+              "analytic_ref": "x-mitre-analytic--2b0dd3b6-6949-4dd5-b0dd-7b0b6f431dbe",
+              "data_component_external_id": "DC0013",
+              "data_component_ref": "x-mitre-data-component--b5d0492b-cda4-421c-8e51-ed2b8d85c5d0",
+              "log_source_channel": "EventCode=4673",
+              "log_source_name": "WinEventLog:Security",
+              "log_source_reference_index": 3
+            },
+            {
+              "analytic_external_id": "AN1030",
+              "analytic_ref": "x-mitre-analytic--2b0dd3b6-6949-4dd5-b0dd-7b0b6f431dbe",
+              "data_component_external_id": "DC0063",
+              "data_component_ref": "x-mitre-data-component--da85d358-741a-410d-9433-20d6269a6170",
+              "log_source_channel": "EventCode=13, 14",
+              "log_source_name": "WinEventLog:Sysmon",
+              "log_source_reference_index": 4
+            }
+          ],
+          "name": "Analytic 1030",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "x-mitre-analytic--2b0dd3b6-6949-4dd5-b0dd-7b0b6f431dbe"
+        }
+      ],
+      "expected_answer": "DET0363 (Detection of Credential Dumping from LSASS Memory via Access and Dump Sequence) detects T1003.001 (LSASS Memory) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_data_components": [
+        {
+          "external_id": "DC0013",
+          "name": "User Account Metadata",
+          "stix_id": "x-mitre-data-component--b5d0492b-cda4-421c-8e51-ed2b8d85c5d0"
+        },
+        {
+          "external_id": "DC0032",
+          "name": "Process Creation",
+          "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+        },
+        {
+          "external_id": "DC0035",
+          "name": "Process Access",
+          "stix_id": "x-mitre-data-component--1887a270-576a-4049-84de-ef746b2572d6"
+        },
+        {
+          "external_id": "DC0039",
+          "name": "File Creation",
+          "stix_id": "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c"
+        },
+        {
+          "external_id": "DC0063",
+          "name": "Windows Registry Key Modification",
+          "stix_id": "x-mitre-data-component--da85d358-741a-410d-9433-20d6269a6170"
+        }
+      ],
+      "expected_technique": {
+        "external_id": "T1003.001",
+        "name": "LSASS Memory",
+        "platforms": [
+          "Windows"
+        ],
+        "stix_id": "attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90"
+      },
+      "id": "detection-strategy-technique-det0363",
+      "provenance": {
+        "analytic_data_component_links": [
+          {
+            "analytic_external_id": "AN1030",
+            "analytic_ref": "x-mitre-analytic--2b0dd3b6-6949-4dd5-b0dd-7b0b6f431dbe",
+            "data_component_external_id": "DC0013",
+            "data_component_ref": "x-mitre-data-component--b5d0492b-cda4-421c-8e51-ed2b8d85c5d0",
+            "log_source_channel": "EventCode=4673",
+            "log_source_name": "WinEventLog:Security",
+            "log_source_reference_index": 3
+          },
+          {
+            "analytic_external_id": "AN1030",
+            "analytic_ref": "x-mitre-analytic--2b0dd3b6-6949-4dd5-b0dd-7b0b6f431dbe",
+            "data_component_external_id": "DC0032",
+            "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+            "log_source_channel": "EventCode=1",
+            "log_source_name": "WinEventLog:Sysmon",
+            "log_source_reference_index": 1
+          },
+          {
+            "analytic_external_id": "AN1030",
+            "analytic_ref": "x-mitre-analytic--2b0dd3b6-6949-4dd5-b0dd-7b0b6f431dbe",
+            "data_component_external_id": "DC0035",
+            "data_component_ref": "x-mitre-data-component--1887a270-576a-4049-84de-ef746b2572d6",
+            "log_source_channel": "EventCode=10",
+            "log_source_name": "WinEventLog:Sysmon",
+            "log_source_reference_index": 0
+          },
+          {
+            "analytic_external_id": "AN1030",
+            "analytic_ref": "x-mitre-analytic--2b0dd3b6-6949-4dd5-b0dd-7b0b6f431dbe",
+            "data_component_external_id": "DC0039",
+            "data_component_ref": "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c",
+            "log_source_channel": "EventCode=11",
+            "log_source_name": "WinEventLog:Sysmon",
+            "log_source_reference_index": 2
+          },
+          {
+            "analytic_external_id": "AN1030",
+            "analytic_ref": "x-mitre-analytic--2b0dd3b6-6949-4dd5-b0dd-7b0b6f431dbe",
+            "data_component_external_id": "DC0063",
+            "data_component_ref": "x-mitre-data-component--da85d358-741a-410d-9433-20d6269a6170",
+            "log_source_channel": "EventCode=13, 14",
+            "log_source_name": "WinEventLog:Sysmon",
+            "log_source_reference_index": 4
+          }
+        ],
+        "analytic_stix_ids": [
+          "x-mitre-analytic--2b0dd3b6-6949-4dd5-b0dd-7b0b6f431dbe"
+        ],
+        "data_component_stix_ids": [
+          "x-mitre-data-component--b5d0492b-cda4-421c-8e51-ed2b8d85c5d0",
+          "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+          "x-mitre-data-component--1887a270-576a-4049-84de-ef746b2572d6",
+          "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c",
+          "x-mitre-data-component--da85d358-741a-410d-9433-20d6269a6170"
+        ],
+        "detection_strategy_stix_id": "x-mitre-detection-strategy--793c70fb-bc7a-4a77-95aa-7b0c583f10b4",
+        "detects_relationship_stix_id": "relationship--7740826e-65ad-4fa8-853a-c4f09ed81f5f",
+        "methodology_note": "DetectionStrategy-to-Technique is an active STIX detects relationship. DetectionStrategy-to-Analytic is represented by the strategy object's x_mitre_analytic_refs field. Analytic-to-DataComponent is represented by the analytic object's x_mitre_log_source_references field. Repeated log source rows are preserved in provenance, while expected data-component answers are deduplicated by DataComponent STIX ID.",
+        "scope": "active_detection_strategy_with_analytics_and_data_components",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "strategy_analytic_links": [
+          {
+            "analytic_external_id": "AN1030",
+            "analytic_ref": "x-mitre-analytic--2b0dd3b6-6949-4dd5-b0dd-7b0b6f431dbe",
+            "source_field": "x_mitre_analytic_refs",
+            "strategy_ref": "x-mitre-detection-strategy--793c70fb-bc7a-4a77-95aa-7b0c583f10b4"
+          }
+        ],
+        "technique_stix_id": "attack-pattern--65f2d882-3f41-4d48-8a06-29af77ec9f90"
+      },
+      "question": "Which technique does DET0363 (Detection of Credential Dumping from LSASS Memory via Access and Dump Sequence) detect?",
+      "relationship_type": "technique_detection_strategy"
+    },
+    {
+      "case_type": "aggregate_detection_strategy_technique",
+      "detection_strategy": {
+        "external_id": "DET0236",
+        "name": "Detection Strategy for Spearphishing Attachment across OS Platforms",
+        "stix_id": "x-mitre-detection-strategy--8d904004-e492-4f76-9f84-be75fc61e5c5"
+      },
+      "expected_analytics": [
+        {
+          "data_components": [
+            {
+              "external_id": "DC0032",
+              "name": "Process Creation",
+              "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+            },
+            {
+              "external_id": "DC0038",
+              "name": "Application Log Content",
+              "stix_id": "x-mitre-data-component--9c2fa0ae-7abc-485a-97f6-699e3b6cf9fa"
+            },
+            {
+              "external_id": "DC0039",
+              "name": "File Creation",
+              "stix_id": "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c"
+            },
+            {
+              "external_id": "DC0082",
+              "name": "Network Connection Creation",
+              "stix_id": "x-mitre-data-component--181a9f8c-c780-4f1f-91a8-edb770e904ba"
+            }
+          ],
+          "description": "Detection of spearphishing attachments by correlating suspicious email delivery with subsequent file creation and abnormal process execution (e.g., Office spawning PowerShell or CMD). Behavior chain includes inbound email metadata \u2192 attachment stored on disk \u2192 process execution \u2192 outbound network activity.",
+          "external_id": "AN0655",
+          "log_source_references": [
+            {
+              "analytic_external_id": "AN0655",
+              "analytic_ref": "x-mitre-analytic--db6995d9-68ab-4638-a430-c0a8d2daf306",
+              "data_component_external_id": "DC0038",
+              "data_component_ref": "x-mitre-data-component--9c2fa0ae-7abc-485a-97f6-699e3b6cf9fa",
+              "log_source_channel": "Send/Receive: Inbound emails with attachments from suspicious or spoofed senders",
+              "log_source_name": "m365:unified",
+              "log_source_reference_index": 0
+            },
+            {
+              "analytic_external_id": "AN0655",
+              "analytic_ref": "x-mitre-analytic--db6995d9-68ab-4638-a430-c0a8d2daf306",
+              "data_component_external_id": "DC0039",
+              "data_component_ref": "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c",
+              "log_source_channel": "EventCode=11",
+              "log_source_name": "WinEventLog:Sysmon",
+              "log_source_reference_index": 1
+            },
+            {
+              "analytic_external_id": "AN0655",
+              "analytic_ref": "x-mitre-analytic--db6995d9-68ab-4638-a430-c0a8d2daf306",
+              "data_component_external_id": "DC0032",
+              "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+              "log_source_channel": "EventCode=1",
+              "log_source_name": "WinEventLog:Sysmon",
+              "log_source_reference_index": 2
+            },
+            {
+              "analytic_external_id": "AN0655",
+              "analytic_ref": "x-mitre-analytic--db6995d9-68ab-4638-a430-c0a8d2daf306",
+              "data_component_external_id": "DC0082",
+              "data_component_ref": "x-mitre-data-component--181a9f8c-c780-4f1f-91a8-edb770e904ba",
+              "log_source_channel": "EventCode=3, 22",
+              "log_source_name": "WinEventLog:Sysmon",
+              "log_source_reference_index": 3
+            }
+          ],
+          "name": "Analytic 0655",
+          "platforms": [
+            "Windows"
+          ],
+          "stix_id": "x-mitre-analytic--db6995d9-68ab-4638-a430-c0a8d2daf306"
+        },
+        {
+          "data_components": [
+            {
+              "external_id": "DC0032",
+              "name": "Process Creation",
+              "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+            },
+            {
+              "external_id": "DC0038",
+              "name": "Application Log Content",
+              "stix_id": "x-mitre-data-component--9c2fa0ae-7abc-485a-97f6-699e3b6cf9fa"
+            },
+            {
+              "external_id": "DC0078",
+              "name": "Network Traffic Flow",
+              "stix_id": "x-mitre-data-component--a7f22107-02e5-4982-9067-6625d4a1765a"
+            }
+          ],
+          "description": "Phishing attachments executed on Linux systems are detected by linking email logs to file creation in mail directories and subsequent suspicious process execution. Look for unexpected binaries or scripts spawned from user mail directories and anomalous outbound network activity.",
+          "external_id": "AN0656",
+          "log_source_references": [
+            {
+              "analytic_external_id": "AN0656",
+              "analytic_ref": "x-mitre-analytic--02309791-384c-4ca9-b25c-6a6bc754795f",
+              "data_component_external_id": "DC0038",
+              "data_component_ref": "x-mitre-data-component--9c2fa0ae-7abc-485a-97f6-699e3b6cf9fa",
+              "log_source_channel": "Inbound email attachments logged from MTAs with suspicious metadata",
+              "log_source_name": "Application:Mail",
+              "log_source_reference_index": 0
+            },
+            {
+              "analytic_external_id": "AN0656",
+              "analytic_ref": "x-mitre-analytic--02309791-384c-4ca9-b25c-6a6bc754795f",
+              "data_component_external_id": "DC0032",
+              "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+              "log_source_channel": "execve: Execution of files saved in mail or download directories",
+              "log_source_name": "auditd:SYSCALL",
+              "log_source_reference_index": 1
+            },
+            {
+              "analytic_external_id": "AN0656",
+              "analytic_ref": "x-mitre-analytic--02309791-384c-4ca9-b25c-6a6bc754795f",
+              "data_component_external_id": "DC0078",
+              "data_component_ref": "x-mitre-data-component--a7f22107-02e5-4982-9067-6625d4a1765a",
+              "log_source_channel": "Outbound traffic from suspicious new processes post-attachment execution",
+              "log_source_name": "NSM:Flow",
+              "log_source_reference_index": 2
+            }
+          ],
+          "name": "Analytic 0656",
+          "platforms": [
+            "Linux"
+          ],
+          "stix_id": "x-mitre-analytic--02309791-384c-4ca9-b25c-6a6bc754795f"
+        },
+        {
+          "data_components": [
+            {
+              "external_id": "DC0032",
+              "name": "Process Creation",
+              "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+            },
+            {
+              "external_id": "DC0038",
+              "name": "Application Log Content",
+              "stix_id": "x-mitre-data-component--9c2fa0ae-7abc-485a-97f6-699e3b6cf9fa"
+            },
+            {
+              "external_id": "DC0039",
+              "name": "File Creation",
+              "stix_id": "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c"
+            }
+          ],
+          "description": "Phishing attachment detection on macOS through correlation of Mail app logs, file creation in user directories, and abnormal process execution (e.g., Preview.app or Mail.app spawning Terminal or scripting binaries). Network traffic after attachment interaction is also monitored.",
+          "external_id": "AN0657",
+          "log_source_references": [
+            {
+              "analytic_external_id": "AN0657",
+              "analytic_ref": "x-mitre-analytic--7a6192b4-997a-4526-bb3d-76664bc31274",
+              "data_component_external_id": "DC0038",
+              "data_component_ref": "x-mitre-data-component--9c2fa0ae-7abc-485a-97f6-699e3b6cf9fa",
+              "log_source_channel": "Inbound messages with attachments from suspicious domains",
+              "log_source_name": "macos:unifiedlog",
+              "log_source_reference_index": 0
+            },
+            {
+              "analytic_external_id": "AN0657",
+              "analytic_ref": "x-mitre-analytic--7a6192b4-997a-4526-bb3d-76664bc31274",
+              "data_component_external_id": "DC0032",
+              "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+              "log_source_channel": "Execution of Terminal, osascript, or other interpreters originating from Mail or Preview",
+              "log_source_name": "macos:unifiedlog",
+              "log_source_reference_index": 1
+            },
+            {
+              "analytic_external_id": "AN0657",
+              "analytic_ref": "x-mitre-analytic--7a6192b4-997a-4526-bb3d-76664bc31274",
+              "data_component_external_id": "DC0039",
+              "data_component_ref": "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c",
+              "log_source_channel": "Attachment files written to ~/Downloads or temporary folders",
+              "log_source_name": "macos:unifiedlog",
+              "log_source_reference_index": 2
+            }
+          ],
+          "name": "Analytic 0657",
+          "platforms": [
+            "macOS"
+          ],
+          "stix_id": "x-mitre-analytic--7a6192b4-997a-4526-bb3d-76664bc31274"
+        }
+      ],
+      "expected_answer": "DET0236 (Detection Strategy for Spearphishing Attachment across OS Platforms) detects T1566.001 (Spearphishing Attachment) in the pinned Enterprise ATT&CK snapshot.",
+      "expected_data_components": [
+        {
+          "external_id": "DC0032",
+          "name": "Process Creation",
+          "stix_id": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077"
+        },
+        {
+          "external_id": "DC0038",
+          "name": "Application Log Content",
+          "stix_id": "x-mitre-data-component--9c2fa0ae-7abc-485a-97f6-699e3b6cf9fa"
+        },
+        {
+          "external_id": "DC0039",
+          "name": "File Creation",
+          "stix_id": "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c"
+        },
+        {
+          "external_id": "DC0078",
+          "name": "Network Traffic Flow",
+          "stix_id": "x-mitre-data-component--a7f22107-02e5-4982-9067-6625d4a1765a"
+        },
+        {
+          "external_id": "DC0082",
+          "name": "Network Connection Creation",
+          "stix_id": "x-mitre-data-component--181a9f8c-c780-4f1f-91a8-edb770e904ba"
+        }
+      ],
+      "expected_technique": {
+        "external_id": "T1566.001",
+        "name": "Spearphishing Attachment",
+        "platforms": [
+          "Linux",
+          "macOS",
+          "Windows"
+        ],
+        "stix_id": "attack-pattern--2e34237d-8574-43f6-aace-ae2915de8597"
+      },
+      "id": "detection-strategy-technique-det0236",
+      "provenance": {
+        "analytic_data_component_links": [
+          {
+            "analytic_external_id": "AN0655",
+            "analytic_ref": "x-mitre-analytic--db6995d9-68ab-4638-a430-c0a8d2daf306",
+            "data_component_external_id": "DC0032",
+            "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+            "log_source_channel": "EventCode=1",
+            "log_source_name": "WinEventLog:Sysmon",
+            "log_source_reference_index": 2
+          },
+          {
+            "analytic_external_id": "AN0655",
+            "analytic_ref": "x-mitre-analytic--db6995d9-68ab-4638-a430-c0a8d2daf306",
+            "data_component_external_id": "DC0038",
+            "data_component_ref": "x-mitre-data-component--9c2fa0ae-7abc-485a-97f6-699e3b6cf9fa",
+            "log_source_channel": "Send/Receive: Inbound emails with attachments from suspicious or spoofed senders",
+            "log_source_name": "m365:unified",
+            "log_source_reference_index": 0
+          },
+          {
+            "analytic_external_id": "AN0655",
+            "analytic_ref": "x-mitre-analytic--db6995d9-68ab-4638-a430-c0a8d2daf306",
+            "data_component_external_id": "DC0039",
+            "data_component_ref": "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c",
+            "log_source_channel": "EventCode=11",
+            "log_source_name": "WinEventLog:Sysmon",
+            "log_source_reference_index": 1
+          },
+          {
+            "analytic_external_id": "AN0655",
+            "analytic_ref": "x-mitre-analytic--db6995d9-68ab-4638-a430-c0a8d2daf306",
+            "data_component_external_id": "DC0082",
+            "data_component_ref": "x-mitre-data-component--181a9f8c-c780-4f1f-91a8-edb770e904ba",
+            "log_source_channel": "EventCode=3, 22",
+            "log_source_name": "WinEventLog:Sysmon",
+            "log_source_reference_index": 3
+          },
+          {
+            "analytic_external_id": "AN0656",
+            "analytic_ref": "x-mitre-analytic--02309791-384c-4ca9-b25c-6a6bc754795f",
+            "data_component_external_id": "DC0032",
+            "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+            "log_source_channel": "execve: Execution of files saved in mail or download directories",
+            "log_source_name": "auditd:SYSCALL",
+            "log_source_reference_index": 1
+          },
+          {
+            "analytic_external_id": "AN0656",
+            "analytic_ref": "x-mitre-analytic--02309791-384c-4ca9-b25c-6a6bc754795f",
+            "data_component_external_id": "DC0038",
+            "data_component_ref": "x-mitre-data-component--9c2fa0ae-7abc-485a-97f6-699e3b6cf9fa",
+            "log_source_channel": "Inbound email attachments logged from MTAs with suspicious metadata",
+            "log_source_name": "Application:Mail",
+            "log_source_reference_index": 0
+          },
+          {
+            "analytic_external_id": "AN0656",
+            "analytic_ref": "x-mitre-analytic--02309791-384c-4ca9-b25c-6a6bc754795f",
+            "data_component_external_id": "DC0078",
+            "data_component_ref": "x-mitre-data-component--a7f22107-02e5-4982-9067-6625d4a1765a",
+            "log_source_channel": "Outbound traffic from suspicious new processes post-attachment execution",
+            "log_source_name": "NSM:Flow",
+            "log_source_reference_index": 2
+          },
+          {
+            "analytic_external_id": "AN0657",
+            "analytic_ref": "x-mitre-analytic--7a6192b4-997a-4526-bb3d-76664bc31274",
+            "data_component_external_id": "DC0032",
+            "data_component_ref": "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+            "log_source_channel": "Execution of Terminal, osascript, or other interpreters originating from Mail or Preview",
+            "log_source_name": "macos:unifiedlog",
+            "log_source_reference_index": 1
+          },
+          {
+            "analytic_external_id": "AN0657",
+            "analytic_ref": "x-mitre-analytic--7a6192b4-997a-4526-bb3d-76664bc31274",
+            "data_component_external_id": "DC0038",
+            "data_component_ref": "x-mitre-data-component--9c2fa0ae-7abc-485a-97f6-699e3b6cf9fa",
+            "log_source_channel": "Inbound messages with attachments from suspicious domains",
+            "log_source_name": "macos:unifiedlog",
+            "log_source_reference_index": 0
+          },
+          {
+            "analytic_external_id": "AN0657",
+            "analytic_ref": "x-mitre-analytic--7a6192b4-997a-4526-bb3d-76664bc31274",
+            "data_component_external_id": "DC0039",
+            "data_component_ref": "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c",
+            "log_source_channel": "Attachment files written to ~/Downloads or temporary folders",
+            "log_source_name": "macos:unifiedlog",
+            "log_source_reference_index": 2
+          }
+        ],
+        "analytic_stix_ids": [
+          "x-mitre-analytic--db6995d9-68ab-4638-a430-c0a8d2daf306",
+          "x-mitre-analytic--02309791-384c-4ca9-b25c-6a6bc754795f",
+          "x-mitre-analytic--7a6192b4-997a-4526-bb3d-76664bc31274"
+        ],
+        "data_component_stix_ids": [
+          "x-mitre-data-component--3d20385b-24ef-40e1-9f56-f39750379077",
+          "x-mitre-data-component--9c2fa0ae-7abc-485a-97f6-699e3b6cf9fa",
+          "x-mitre-data-component--2b3bfe19-d59a-460d-93bb-2f546adc2d2c",
+          "x-mitre-data-component--a7f22107-02e5-4982-9067-6625d4a1765a",
+          "x-mitre-data-component--181a9f8c-c780-4f1f-91a8-edb770e904ba"
+        ],
+        "detection_strategy_stix_id": "x-mitre-detection-strategy--8d904004-e492-4f76-9f84-be75fc61e5c5",
+        "detects_relationship_stix_id": "relationship--1b5a88b4-27e1-4a35-9c47-c2a25182ce1d",
+        "methodology_note": "DetectionStrategy-to-Technique is an active STIX detects relationship. DetectionStrategy-to-Analytic is represented by the strategy object's x_mitre_analytic_refs field. Analytic-to-DataComponent is represented by the analytic object's x_mitre_log_source_references field. Repeated log source rows are preserved in provenance, while expected data-component answers are deduplicated by DataComponent STIX ID.",
+        "scope": "active_detection_strategy_with_analytics_and_data_components",
+        "source_bundle_path": "enterprise-attack/enterprise-attack.json",
+        "source_bundle_sha256": "bdf1ce86a4e604214c5076d37ae4dcb322678afc528df8492e6fdc1b554f5da3",
+        "source_commit": "a6c366439edee3a87b79cf90dc0b93f5d7975956",
+        "source_repository": "https://github.com/mitre-attack/attack-stix-data.git",
+        "strategy_analytic_links": [
+          {
+            "analytic_external_id": "AN0655",
+            "analytic_ref": "x-mitre-analytic--db6995d9-68ab-4638-a430-c0a8d2daf306",
+            "source_field": "x_mitre_analytic_refs",
+            "strategy_ref": "x-mitre-detection-strategy--8d904004-e492-4f76-9f84-be75fc61e5c5"
+          },
+          {
+            "analytic_external_id": "AN0656",
+            "analytic_ref": "x-mitre-analytic--02309791-384c-4ca9-b25c-6a6bc754795f",
+            "source_field": "x_mitre_analytic_refs",
+            "strategy_ref": "x-mitre-detection-strategy--8d904004-e492-4f76-9f84-be75fc61e5c5"
+          },
+          {
+            "analytic_external_id": "AN0657",
+            "analytic_ref": "x-mitre-analytic--7a6192b4-997a-4526-bb3d-76664bc31274",
+            "source_field": "x_mitre_analytic_refs",
+            "strategy_ref": "x-mitre-detection-strategy--8d904004-e492-4f76-9f84-be75fc61e5c5"
+          }
+        ],
+        "technique_stix_id": "attack-pattern--2e34237d-8574-43f6-aace-ae2915de8597"
+      },
+      "question": "Which technique does DET0236 (Detection Strategy for Spearphishing Attachment across OS Platforms) detect?",
+      "relationship_type": "technique_detection_strategy"
     }
   ],
   "parsed_data": {
@@ -4814,7 +6449,9 @@
     "data_component_pairs": 5,
     "negative_zero_strategy_pair_included": false,
     "negative_zero_strategy_pair_omission_reason": "All 697 active Enterprise techniques have one active DetectionStrategy in the pinned snapshot; no honest negative case exists.",
-    "pair_count": 10,
+    "original_pair_count": 10,
+    "pair_count": 15,
+    "reverse_detection_strategy_pairs": 5,
     "strategy_and_analytic_pairs": 5,
     "technique_count": 5,
     "technique_external_ids": [
