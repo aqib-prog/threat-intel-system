@@ -1,13 +1,40 @@
 import type { Icon } from "@phosphor-icons/react";
 import { canonicalSectionLabel, categoryMetaFor } from "./answerSections";
 import { humanizeLabel, type AccentColor } from "./colorTokens";
-import type { NodeSource } from "./types";
+import type { AnswerSection, NodeSource } from "./types";
 
 export interface AnswerSectionCount {
   label: string;
   count: number;
   accent: AccentColor;
   icon: Icon;
+}
+
+/**
+ * Build chart data from the backend's authoritative `answer_sections` (real
+ * category counts computed server-side from the deterministic answer). This is
+ * the correct data source for the radar/gauge - it never re-parses the answer
+ * prose, so it can't mis-count narrative text the way text parsing did.
+ */
+export function chartSectionsFromApi(
+  sections: AnswerSection[] | undefined
+): AnswerSectionCount[] {
+  if (!sections || sections.length === 0) return [];
+  const results: AnswerSectionCount[] = [];
+  for (const section of sections) {
+    if (!section || section.count < 1) continue;
+    const meta = categoryMetaFor(section.label);
+    if (!meta) continue;
+    const normalized = section.label.trim().toLowerCase();
+    if (results.some((r) => r.label.trim().toLowerCase() === normalized)) continue;
+    results.push({
+      label: section.label,
+      count: section.count,
+      accent: meta.accent,
+      icon: meta.icon,
+    });
+  }
+  return results;
 }
 
 const SECTION_RE = /\*\*([A-Za-z ]+):\*\*/g;

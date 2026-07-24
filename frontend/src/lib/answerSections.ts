@@ -131,6 +131,35 @@ export function canonicalSectionLabel(rawLabel: string): string | null {
   return match ? match[1] : null;
 }
 
+/**
+ * Resolve the canonical category of a full section-header line, tolerating the
+ * deterministic backend phrasings ("Tactics explicitly connected to FIN7:",
+ * "Supporting analytics:") where the plain label is only the LEADING part.
+ * Mirrors the backend's own leading-category detection so the scroll-target
+ * ids assigned here always match the labels the chart uses. Returns null for
+ * anything that isn't a recognized category header.
+ */
+export function sectionLabelFromHeader(headerText: string): string | null {
+  const clean = headerText.trim().replace(/\*+/g, "").replace(/:\s*$/, "").trim();
+  if (!clean) return null;
+  // Exact canonical label first (e.g. "Tools", "Tactics", "Malware").
+  const direct = canonicalSectionLabel(clean);
+  if (direct) return direct;
+  // "Tactics explicitly connected to FIN7" -> leading "Tactics".
+  const beforeConnected = clean.split(/\s+explicitly\s+connected\b/i)[0].trim();
+  if (beforeConnected && beforeConnected !== clean) {
+    const viaConnected = canonicalSectionLabel(beforeConnected);
+    if (viaConnected) return viaConnected;
+  }
+  // "Supporting analytics" -> "Analytics".
+  const supporting = clean.replace(/^supporting\s+/i, "").trim();
+  if (supporting !== clean) {
+    const viaSupporting = canonicalSectionLabel(supporting);
+    if (viaSupporting) return viaSupporting;
+  }
+  return null;
+}
+
 /** Scoped to a message id so identical category labels across different messages don't collide as duplicate DOM ids. */
 export function sectionId(messageId: string, label: string): string {
   const slug = label.trim().toLowerCase().replace(/[^a-z0-9]+/g, "-");

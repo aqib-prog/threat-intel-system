@@ -10,22 +10,21 @@ import { SourcesPanel } from "./SourcesPanel";
 import { LogEvidencePanel } from "./LogEvidencePanel";
 import { useTypewriter } from "../../hooks/useTypewriter";
 import {
-  parseAnswerSectionCounts,
+  chartSectionsFromApi,
   parseNodeSectionCounts,
-  parseSingleCategoryFallback,
 } from "../../lib/parseAnswerSections";
 
 export function MessageBubble({ message, typewrite }: { message: ChatMessage; typewrite: boolean }) {
   const isUser = message.role === "user";
   const { displayed, done } = useTypewriter(message.text, !isUser && typewrite, 3);
   const blocked = message.allowed === false;
-  const textSections = useMemo(() => parseAnswerSectionCounts(message.text), [message.text]);
+  // Chart from the backend's authoritative category counts. Fall back to node
+  // type counts only when the backend didn't supply sections (e.g. mock replies
+  // or the log-analysis path) - never by re-parsing the answer prose.
+  const apiSections = useMemo(() => chartSectionsFromApi(message.sections), [message.sections]);
   const nodeSections = useMemo(() => parseNodeSectionCounts(message.nodes), [message.nodes]);
-  const chartSections = textSections.length > 0 ? textSections : nodeSections;
-  const singleSection = useMemo(
-    () => (chartSections.length < 2 ? chartSections[0] ?? parseSingleCategoryFallback(message.text) : null),
-    [chartSections, message.text]
-  );
+  const chartSections = apiSections.length > 0 ? apiSections : nodeSections;
+  const singleSection = chartSections.length === 1 ? chartSections[0] : null;
 
   if (isUser) {
     return (

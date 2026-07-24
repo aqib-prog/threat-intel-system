@@ -1,5 +1,5 @@
 import type { Root, RootContent, Element } from "hast";
-import { canonicalSectionLabel } from "./answerSections";
+import { canonicalSectionLabel, sectionLabelFromHeader } from "./answerSections";
 
 function isElement(node: RootContent | Element["children"][number] | null | undefined): node is Element {
   return Boolean(node && node.type === "element");
@@ -19,12 +19,20 @@ function sectionLabel(node: RootContent): { label: string; heading: string } | n
   if (first?.type === "element" && first.tagName === "strong") {
     heading = textOf(first).replace(/:$/, "").trim();
   } else {
+    // A block header is a whole line that ends in a colon with nothing after
+    // it (the value is the list/paragraph that follows). Accept any such line
+    // up to a sane length - the digit-rejecting character class this used to
+    // require silently dropped real headers like
+    // "Tactics explicitly connected to FIN7:".
     const fullText = textOf(node).trim();
-    if (!/^[A-Za-z][A-Za-z /-]{1,80}:\s*$/.test(fullText)) return null;
-    heading = fullText.replace(/:$/, "").trim();
+    if (!/:\s*$/.test(fullText) || fullText.length > 90) return null;
+    heading = fullText.replace(/:\s*$/, "").trim();
   }
 
-  const label = canonicalSectionLabel(heading);
+  // Resolve the leading canonical category (tolerates the
+  // "<Category> explicitly connected to <name>:" phrasing) so the id assigned
+  // here matches the label the chart jumps to.
+  const label = sectionLabelFromHeader(heading);
   return label ? { label, heading } : null;
 }
 

@@ -36,6 +36,7 @@ if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
 from orchestration.pipeline import PipelineError, get_driver, run_pipeline  # noqa: E402
+from observability import langfuse_tracing as obs  # noqa: E402
 from retrieval.guardrail import extract_filters  # noqa: E402
 from api.settings import load_settings  # noqa: E402
 from api.stats import StatsResponse, get_stats  # noqa: E402
@@ -58,6 +59,14 @@ app = FastAPI(
     version=SETTINGS.version,
     description="REST API for guarded MITRE ATT&CK GraphRAG retrieval and generation.",
 )
+
+
+@app.on_event("shutdown")
+def _flush_langfuse_on_shutdown() -> None:
+    # Traces are sent by a background batch exporter; flush pending ones on a
+    # clean shutdown so the last few requests aren't lost. No-op when tracing
+    # is disabled, and it swallows its own errors.
+    obs.flush()
 
 # CORS: browser-facing origin allowlist. Fails closed if CORS_ORIGINS is unset
 # (see api/settings.py) rather than defaulting to "*".
@@ -96,6 +105,11 @@ class NodeSource(BaseModel):
     relevance_score: float | None = None
 
 
+class AnswerSection(BaseModel):
+    label: str
+    count: int
+
+
 class LogEvidenceEntry(BaseModel):
     technique_id: str
     technique_name: str
@@ -120,6 +134,11 @@ class QueryResponse(BaseModel):
     # keep working unchanged.
     answer_source: str = "rag"
     log_evidence: list[LogEvidenceEntry] = []
+    # Structured, authoritative category counts (Tactics/Techniques/Malware/...)
+    # computed server-side from the deterministic answer. The frontend charts
+    # these directly instead of regex-parsing the prose (which mis-counted
+    # narrative text). Empty when the answer has no chartable list sections.
+    answer_sections: list[AnswerSection] = []
     # MITRE ATT&CK ids appearing in `answer` that ACTUALLY EXIST in our graph.
     # The frontend only renders a citation/link for an id in this list, so a
     # hallucinated or unknown id (e.g. a fabricated "G9999") is never shown as
@@ -176,6 +195,95 @@ def grounded_mitre_ids(answer: str) -> list[str]:
     if not mentioned:
         return []
     return sorted(mentioned & _all_external_ids())
+
+
+# Chartable relationship categories, matched against a section header's leading
+# text. Ordered most-specific first so "detection strategies" wins over a bare
+# "detection", "related techniques" over "techniques", etc. The value is the
+# canonical label the frontend's category metadata is keyed on.
+_CHART_CATEGORY_RULES: list[tuple[re.Pattern[str], str]] = [
+    (re.compile(r"detection strateg(?:y|ies)", re.I), "Detection Strategies"),
+    (re.compile(r"data components?", re.I), "Data Components"),
+    (re.compile(r"log sources?", re.I), "Log Sources"),
+    (re.compile(r"parent techniques", re.I), "Parent Techniques"),
+    (re.compile(r"related techniques?", re.I), "Related Techniques"),
+    (re.compile(r"sub-?techniques?", re.I), "Subtechniques"),
+    (re.compile(r"analytics?", re.I), "Analytics"),
+    (re.compile(r"techniques?", re.I), "Techniques"),
+    (re.compile(r"tactics?", re.I), "Tactics"),
+    (re.compile(r"mitigations?", re.I), "Mitigations"),
+    (re.compile(r"campaigns?", re.I), "Campaigns"),
+    (re.compile(r"(?:threat )?(?:actors?|groups?)", re.I), "Actors"),
+    (re.compile(r"malware", re.I), "Malware"),
+    (re.compile(r"tools?", re.I), "Tools"),
+    (re.compile(r"platforms?", re.I), "Platforms"),
+    (re.compile(r"(?:aliases|also known as)", re.I), "Aliases"),
+    (re.compile(r"procedures?", re.I), "Procedures"),
+]
+# Header lines that are narrative or single-value and must never be charted -
+# this is what stops a Description paragraph's comma-separated prose (e.g. a
+# list of targeted industries) from being miscounted as a category.
+_NON_CHART_HEADER = re.compile(
+    r"^(?:description|summary|overview|type|id|mitre\s*id|url|cve(?:\s*id)?|"
+    r"parent technique)$",
+    re.I,
+)
+_BULLET_RE = re.compile(r"^\s*(?:[-*•]|\d+\.)\s+\S")
+_HEADER_RE = re.compile(r"^\s*(?:\*\*)?([^:\n]{2,90}?)(?:\*\*)?:\s*(.*)$")
+
+
+def _canonical_chart_category(header_text: str) -> str | None:
+    stripped = header_text.strip().strip("*").strip()
+    if _NON_CHART_HEADER.match(stripped):
+        return None
+    for pattern, label in _CHART_CATEGORY_RULES:
+        if pattern.search(stripped):
+            return label
+    return None
+
+
+def _count_inline_items(value: str) -> int:
+    cleaned = re.sub(r"\([^)]*\)", "", value)
+    cleaned = re.sub(r"\band\b", ",", cleaned, flags=re.I)
+    return sum(1 for part in cleaned.split(",") if len(part.strip()) > 1)
+
+
+def compute_answer_sections(answer: str) -> list[AnswerSection]:
+    """Extract authoritative {label, count} sections from the deterministic
+    answer text so the frontend can chart real category counts WITHOUT
+    re-parsing prose. Narrative/single-value headers are excluded, so a
+    Description paragraph never becomes a fake category. Counts come from the
+    bullet list under a header (or its inline comma list), whichever is larger.
+    """
+    lines = (answer or "").splitlines()
+    counts: dict[str, int] = {}
+    order: list[str] = []
+    for index, line in enumerate(lines):
+        match = _HEADER_RE.match(line)
+        if not match:
+            continue
+        label = _canonical_chart_category(match.group(1))
+        if not label:
+            continue
+        inline = match.group(2).strip()
+        inline_count = _count_inline_items(inline) if inline else 0
+        bullet_count = 0
+        for follow in lines[index + 1:]:
+            if _BULLET_RE.match(follow):
+                bullet_count += 1
+            elif follow.strip() == "":
+                if bullet_count:
+                    break
+                continue
+            else:
+                break
+        count = max(inline_count, bullet_count)
+        if count < 1:
+            continue
+        if label not in counts:
+            order.append(label)
+        counts[label] = max(counts.get(label, 0), count)
+    return [AnswerSection(label=label, count=counts[label]) for label in order]
 
 
 class HealthResponse(BaseModel):
@@ -324,15 +432,50 @@ async def query(request: Request, payload: QueryRequest) -> QueryResponse:
         )
 
     started = perf_counter()
-    result = await run_in_threadpool(
-        run_pipeline,
-        payload.query,
-        top_k=payload.top_k,
-        candidate_k=payload.candidate_k,
-    )
-    latency_ms = int((perf_counter() - started) * 1000)
+    # One Langfuse trace per query. No-op unless LANGFUSE_ENABLED; a tracing
+    # failure can never affect the response (obs.* swallow their own errors).
+    with obs.span("rag_query") as trace:
+        try:
+            result = await run_in_threadpool(
+                run_pipeline,
+                payload.query,
+                top_k=payload.top_k,
+                candidate_k=payload.candidate_k,
+            )
+        except PipelineError as exc:
+            # Record which stage failed so the dashboard shows where it broke,
+            # then let the existing handler format the 503 response.
+            trace.update(level="ERROR", status_message=f"pipeline stage failed: {exc.stage}")
+            trace.update_trace(
+                input=payload.query,
+                metadata={"failed_stage": exc.stage, "outcome": "pipeline_error"},
+            )
+            raise
+
+        latency_ms = int((perf_counter() - started) * 1000)
+        trace.update_trace(
+            input=payload.query,
+            output=result.answer,
+            metadata={
+                "allowed": result.allowed,
+                "guardrail_category": result.guardrail_category,
+                "retrieved_count": result.retrieved_count,
+                "context_count": result.context_count,
+                "answer_source": result.answer_source,
+                "latency_ms": latency_ms,
+                "outcome": "answered" if result.allowed else "blocked",
+            },
+        )
+        if not result.allowed:
+            # A block is a "failure" the user wants to spot in the dashboard.
+            trace.update(
+                level="WARNING",
+                status_message=f"blocked: {result.guardrail_category or 'guardrail'}",
+            )
+
     nodes = [NodeSource(**source.__dict__) for source in result.sources]
     grounded = await run_in_threadpool(grounded_mitre_ids, result.answer)
+    answer_sections = compute_answer_sections(result.answer) if result.allowed else []
 
     return QueryResponse(
         query=result.query,
@@ -348,5 +491,6 @@ async def query(request: Request, payload: QueryRequest) -> QueryResponse:
         latency_ms=latency_ms,
         answer_source=result.answer_source,
         log_evidence=[LogEvidenceEntry(**entry) for entry in result.log_evidence],
+        answer_sections=answer_sections,
         grounded_ids=grounded,
     )

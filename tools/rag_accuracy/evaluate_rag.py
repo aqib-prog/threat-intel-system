@@ -415,6 +415,12 @@ def _load_pipeline_checkpoint(
 def run_pipeline_worker(input_path: Path, output_path: Path) -> int:
     from dotenv import load_dotenv
 
+    # Force pipeline-stage tracing OFF during eval collection: the evaluation
+    # emits its own clean per-case traces (with RAGAS scores) separately, so
+    # letting every one of the 156 collection calls also fire 6 stage spans
+    # would flood the dashboard with hundreds of stray traces. Set before
+    # load_dotenv(override=False) so the backend/.env value can't turn it on.
+    os.environ["LANGFUSE_ENABLED"] = "false"
     load_dotenv(REPO_ROOT / "backend" / ".env", override=False)
     environment = configure_local_only_environment()
     sys.path.insert(0, str(REPO_ROOT / "backend"))
@@ -1003,6 +1009,72 @@ def render_markdown(report: dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
+def _maybe_load_langfuse_env() -> None:
+    """Fill LANGFUSE_* from backend/.env when not already exported, so the eval
+    can push traces without extra shell setup. Never overrides a set value."""
+    env_path = REPO_ROOT / "backend" / ".env"
+    if not env_path.exists():
+        return
+    try:
+        for line in env_path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, _, value = line.partition("=")
+            key = key.strip()
+            if key.startswith("LANGFUSE_") and key not in os.environ:
+                os.environ[key] = value.strip()
+    except Exception:
+        pass
+
+
+def emit_ragas_traces_to_langfuse(scored_rows: list[dict[str, Any]]) -> None:
+    """Optionally mirror each scored eval case into Langfuse: one trace per
+    case carrying the question/answer/reference plus the three RAGAS scores,
+    so results are filterable by relationship_type/variant_kind in the
+    dashboard.
+
+    Gated by LANGFUSE_ENABLED and fully fail-open - any error here can never
+    affect the evaluation or its report. Langfuse listens on localhost, so this
+    stays within the loopback-only network policy this tool enforces.
+    """
+    _maybe_load_langfuse_env()
+    if os.getenv("LANGFUSE_ENABLED", "false").strip().lower() not in {"1", "true", "yes", "on"}:
+        return
+    try:
+        from langfuse import get_client
+
+        client = get_client()
+    except Exception:
+        return
+    try:
+        for row in scored_rows:
+            scores = row.get("scores") or {}
+            with client.start_as_current_span(
+                name="ragas_eval_case", input=row.get("question")
+            ) as span:
+                span.update_trace(
+                    name="ragas_eval_case",
+                    output=row.get("answer"),
+                    metadata={
+                        "case_id": row.get("case_id"),
+                        "relationship_type": row.get("relationship_type"),
+                        "variant_kind": row.get("variant_kind"),
+                        "reference": row.get("reference"),
+                    },
+                )
+                for metric, value in scores.items():
+                    if value is None:
+                        continue
+                    try:
+                        span.score_trace(name=metric, value=float(value))
+                    except Exception:
+                        pass
+        client.flush()
+    except Exception:
+        pass
+
+
 def run_evaluation(
     json_report: Path,
     md_report: Path,
@@ -1181,6 +1253,9 @@ def run_evaluation(
     }
     json_report.write_text(json.dumps(report, indent=2, ensure_ascii=False, allow_nan=False) + "\n", encoding="utf-8")
     md_report.write_text(render_markdown(report), encoding="utf-8")
+    # Optional, fail-open: mirror scored cases into Langfuse for dashboard
+    # analysis. No-op unless LANGFUSE_ENABLED; never affects the report above.
+    emit_ragas_traces_to_langfuse(scored_rows)
     if dataset == FINAL_DATASET_NAME:
         print(
             json.dumps(

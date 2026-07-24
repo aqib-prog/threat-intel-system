@@ -84,6 +84,26 @@ def compact_text(value: str) -> str:
     return re.sub(r"[^a-z0-9]+", "", value.lower())
 
 
+def truncate_description(text: str, limit: int) -> str:
+    """Trim a description to at most ``limit`` chars without cutting mid-word.
+
+    Prefers ending at the last sentence boundary inside the window (so the text
+    reads as complete); otherwise falls back to the last whole word and appends
+    an ellipsis. Replaces the bare ``description[:limit]`` slices that produced
+    ugly mid-word cuts like "...United States. A p"."""
+    text = str(text or "")
+    if len(text) <= limit:
+        return text
+    window = text[:limit]
+    sentence_end = max(window.rfind(". "), window.rfind("! "), window.rfind("? "))
+    # Only end on a sentence if it isn't so early it drops most of the window.
+    if sentence_end >= int(limit * 0.6):
+        return window[: sentence_end + 1]
+    space = window.rfind(" ")
+    trimmed = window[:space] if space > 0 else window
+    return trimmed.rstrip(",;:. ") + "…"
+
+
 def is_raw_telemetry_query(query: str) -> bool:
     return bool(TELEMETRY_FIELD_RE.search(query or ""))
 
@@ -654,7 +674,7 @@ def generate_actor_relationship_list(query: str, nodes: list[dict]) -> str | Non
     if is_broad_overview_query(query):
         lines = [heading]
         if actor.get("description"):
-            lines.append(f"Description: {actor['description'][:400]}")
+            lines.append(f"Description: {truncate_description(actor['description'], 400)}")
         aliases = actor.get("aliases") or []
         if isinstance(aliases, list) and aliases:
             lines.append(f"Aliases: {', '.join(str(value) for value in aliases if value)}")
@@ -708,7 +728,7 @@ def generate_software_relationship_list(query: str, nodes: list[dict]) -> str | 
     if is_broad_overview_query(query):
         lines = [heading]
         if software.get("description"):
-            lines.append(f"Description: {software['description'][:400]}")
+            lines.append(f"Description: {truncate_description(software['description'], 400)}")
         for _, label, key in patterns:
             values = software.get(key) or []
             if isinstance(values, list) and values:
@@ -778,7 +798,7 @@ def generate_mitigation_relationship_list(query: str, nodes: list[dict]) -> str 
     if is_broad_overview_query(query):
         lines = [heading]
         if mitigation.get("description"):
-            lines.append(f"Description: {mitigation['description'][:400]}")
+            lines.append(f"Description: {truncate_description(mitigation['description'], 400)}")
         for _, label, key in patterns:
             values = mitigation.get(key) or []
             if isinstance(values, list) and values:
@@ -844,7 +864,7 @@ def generate_actor_overview(
     external_id = actor.get("external_id") or actor.get("id")
     lines = [f"{name} ({external_id})" if external_id else name]
     if actor.get("description"):
-        lines.append(f"Description: {actor['description'][:400]}")
+        lines.append(f"Description: {truncate_description(actor['description'], 400)}")
 
     labels = {
         "tactics": "Tactics",
@@ -916,7 +936,7 @@ def generate_campaign_overview(
     external_id = campaign.get("external_id") or campaign.get("id")
     lines = [f"{name} ({external_id})" if external_id else name]
     if campaign.get("description"):
-        lines.append(f"Description: {campaign['description'][:500]}")
+        lines.append(f"Description: {truncate_description(campaign['description'], 500)}")
 
     requested_fields = (
         ("Techniques", "techniques", r"\btechniques?\b"),
@@ -1287,7 +1307,7 @@ def generate_exact_id_summary(query: str, nodes: list[dict]) -> str | None:
         if node_type:
             lines.append(f"Type: {node_type}")
         if node.get("description"):
-            lines.append(f"Description: {node['description'][:400]}")
+            lines.append(f"Description: {truncate_description(node['description'], 400)}")
         for label, key in (
             ("Platforms", "platforms"),
             ("Tactics", "tactics"),
@@ -1349,7 +1369,7 @@ def generate_mixed_lookup_summary(query: str, nodes: list[dict]) -> str | None:
         heading = f"{actor.get('name')} ({external_id})" if external_id else str(actor.get("name") or "Unknown")
         lines = [heading]
         if actor.get("description"):
-            lines.append(f"Description: {actor['description'][:400]}")
+            lines.append(f"Description: {truncate_description(actor['description'], 400)}")
         aliases = actor.get("aliases") or []
         if isinstance(aliases, list) and aliases:
             lines.append(f"Aliases: {', '.join(str(value) for value in aliases if value)}")
@@ -1412,7 +1432,7 @@ def generate_actor_comparison(query: str, nodes: list[dict]) -> str | None:
 
     for actor, name in zip(actors, names):
         if actor.get("description"):
-            lines.append(f"{name}: {actor['description'][:300]}")
+            lines.append(f"{name}: {truncate_description(actor['description'], 300)}")
 
     fields = [
         ("Tactics", "tactics"),
@@ -1486,7 +1506,7 @@ def format_context(nodes: list[dict], query: str = "") -> str:
             lines.append(f"ID: {external_id}")
 
         if node.get("description"):
-            lines.append(f"Description: {node['description'][:400]}")
+            lines.append(f"Description: {truncate_description(node['description'], 400)}")
 
         fields = [
             ("Aliases", "aliases"),

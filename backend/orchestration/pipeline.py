@@ -16,6 +16,7 @@ from neo4j import GraphDatabase
 
 from config import NEO4J_PASSWORD, NEO4J_URI, NEO4J_USER
 from generation.generate import format_context, generate
+from observability import langfuse_tracing as obs
 from log_analysis import detector as log_analysis_detector
 from log_analysis.analyzer import analyze as analyze_log_evidence
 from log_analysis.formatter import format_log_analysis_answer
@@ -672,10 +673,11 @@ def run_pipeline(
             if driver is not None:
                 driver.close()
 
-    try:
-        guardrail_result = guardrail(query)
-    except Exception as exc:
-        raise PipelineError("guardrail", exc) from exc
+    with obs.span("guardrail"):
+        try:
+            guardrail_result = guardrail(query)
+        except Exception as exc:
+            raise PipelineError("guardrail", exc) from exc
     if not guardrail_result.get("allowed", True):
         return fallback_result(query, category=guardrail_result.get("category", "blocked"))
 
@@ -693,10 +695,11 @@ def run_pipeline(
         if not explicit_ids_exist(driver, focused_query):
             return fallback_result(query)
 
-        try:
-            filters = extract_filters(focused_query, driver)
-        except Exception as exc:
-            raise PipelineError("filter_extraction", exc) from exc
+        with obs.span("filter_extraction"):
+            try:
+                filters = extract_filters(focused_query, driver)
+            except Exception as exc:
+                raise PipelineError("filter_extraction", exc) from exc
         if is_ambiguous_short_reference(focused_query, filters):
             return fallback_result(query, filters=filters)
         if has_unresolved_explicit_id(focused_query, filters):
@@ -709,14 +712,15 @@ def run_pipeline(
             if node.get("name")
         }
         seed_nodes = telemetry_seed_nodes + fetch_filter_seed_nodes(driver, filters)
-        try:
-            semantic_nodes = [] if should_skip_semantic_search(
-                focused_query,
-                filters,
-                seed_nodes,
-            ) else search(focused_query, top_k=candidate_k, driver=driver)
-        except Exception as exc:
-            raise PipelineError("retrieval", exc) from exc
+        with obs.span("retrieval"):
+            try:
+                semantic_nodes = [] if should_skip_semantic_search(
+                    focused_query,
+                    filters,
+                    seed_nodes,
+                ) else search(focused_query, top_k=candidate_k, driver=driver)
+            except Exception as exc:
+                raise PipelineError("retrieval", exc) from exc
         retrieved = []
         seen_node_ids = set()
         for node in [*seed_nodes, *semantic_nodes]:
@@ -742,23 +746,25 @@ def run_pipeline(
             if exact_id_nodes:
                 retrieved = exact_id_nodes
 
-        try:
-            contexts = traverse_nodes(driver, retrieved)
-        except Exception as exc:
-            raise PipelineError("graph_traversal", exc) from exc
+        with obs.span("graph_traversal"):
+            try:
+                contexts = traverse_nodes(driver, retrieved)
+            except Exception as exc:
+                raise PipelineError("graph_traversal", exc) from exc
         if not contexts:
             return fallback_result(query, filters=filters)
 
-        try:
-            ranked = rerank(
-                focused_query,
-                contexts,
-                top_k=top_k,
-                filters=filters,
-                candidate_k=candidate_k,
-            )
-        except Exception as exc:
-            raise PipelineError("reranking", exc) from exc
+        with obs.span("reranking"):
+            try:
+                ranked = rerank(
+                    focused_query,
+                    contexts,
+                    top_k=top_k,
+                    filters=filters,
+                    candidate_k=candidate_k,
+                )
+            except Exception as exc:
+                raise PipelineError("reranking", exc) from exc
         if telemetry_seed_names:
             telemetry_contexts = [
                 {**node, "relevance_score": 10.0}
@@ -773,10 +779,11 @@ def run_pipeline(
         if not ranked or float(ranked[0].get("relevance_score") or 0.0) < MIN_RELEVANCE_SCORE:
             return fallback_result(query, filters=filters)
 
-        try:
-            answer = generate(focused_query, ranked, filters=filters)
-        except Exception as exc:
-            raise PipelineError("generation", exc) from exc
+        with obs.span("generation"):
+            try:
+                answer = generate(focused_query, ranked, filters=filters)
+            except Exception as exc:
+                raise PipelineError("generation", exc) from exc
 
         source_nodes = [] if not answer or answer.strip() == FALLBACK else ranked
         sources = [
