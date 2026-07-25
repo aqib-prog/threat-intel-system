@@ -48,13 +48,15 @@ export interface RunQueryResult {
   isMock: boolean;
 }
 
-export async function runQuery(query: string): Promise<RunQueryResult> {
+export async function runQuery(query: string, skipCorrection = false): Promise<RunQueryResult> {
   const { signal, cancel } = await withTimeout(REQUEST_TIMEOUT_MS);
   try {
     const res = await fetch(`${API_BASE}/query`, {
       method: "POST",
       headers: { "Content-Type": "application/json", ...authHeaders() },
-      body: JSON.stringify({ query }),
+      // skip_correction is set once the user answers the "did you mean" gate, so
+      // the follow-up query is answered directly and never re-offers a gate.
+      body: JSON.stringify({ query, skip_correction: skipCorrection }),
       signal,
     });
     cancel();

@@ -5,6 +5,7 @@ import { ChatNavbar } from "../components/chat/ChatNavbar";
 import { FilterSidebar } from "../components/chat/FilterSidebar";
 import { FilterDrawer } from "../components/chat/FilterDrawer";
 import { MessageBubble } from "../components/chat/MessageBubble";
+import { CorrectionGate } from "../components/chat/CorrectionGate";
 import { LoadingIndicator } from "../components/chat/LoadingIndicator";
 import { InputBar } from "../components/chat/InputBar";
 import { ScanlineOverlay } from "../components/effects/ScanlineOverlay";
@@ -23,6 +24,9 @@ export function Chat() {
   const [activeFilters, setActiveFilters] = useState<Record<string, unknown>>({});
   const [filtersDrawerOpen, setFiltersDrawerOpen] = useState(false);
   const [sessionExpired, setSessionExpired] = useState(false);
+  // Id of the message whose spell-correction gate is awaiting a Yes/No. While
+  // set, the input is disabled so the user must resolve the gate first.
+  const [pendingCorrectionId, setPendingCorrectionId] = useState<string | null>(null);
   const bottomRef = useRef<HTMLDivElement>(null);
   const [preExistingIds] = useState<Set<string>>(() => new Set(messages.map((m) => m.id)));
 
@@ -40,7 +44,9 @@ export function Chat() {
     return () => window.clearTimeout(timer);
   }, []);
 
-  const handleSend = async (query: string) => {
+  const handleSend = async (query: string, skipCorrection = false) => {
+    // Note: no pendingCorrectionId guard here - the input is disabled in the UI
+    // while a gate is open, and resolveCorrection calls this directly to answer.
     if (pending || sessionExpired) return;
     const userMessage: ChatMessage = {
       id: crypto.randomUUID(),
@@ -51,7 +57,23 @@ export function Chat() {
     append(userMessage);
     setPending(true);
 
-    const { data, isMock } = await runQuery(query);
+    const { data, isMock } = await runQuery(query, skipCorrection);
+
+    // A pre-validated spell-correction: show a blocking "did you mean" gate
+    // instead of the no-info answer, and disable input until the user chooses.
+    if (data.correction) {
+      const gateId = crypto.randomUUID();
+      append({
+        id: gateId,
+        role: "assistant",
+        text: "",
+        createdAt: Date.now(),
+        correction: data.correction,
+      });
+      setPendingCorrectionId(gateId);
+      setPending(false);
+      return;
+    }
 
     const assistantMessage: ChatMessage = {
       id: crypto.randomUUID(),
@@ -67,10 +89,20 @@ export function Chat() {
       answerSource: data.answer_source,
       logEvidence: data.log_evidence,
       sections: data.answer_sections,
+      segments: data.segments,
       groundedIds: data.grounded_ids,
+      suggestions: data.suggestions,
+      sourceQuery: query,
     };
     append(assistantMessage);
     setPending(false);
+  };
+
+  // Yes -> run the corrected query; No -> run the original. Both re-submit with
+  // skip_correction so the guardrail + pipeline run again and no gate re-appears.
+  const resolveCorrection = (query: string) => {
+    setPendingCorrectionId(null);
+    void handleSend(query, true);
   };
 
   return (
@@ -135,19 +167,34 @@ export function Chat() {
                   </p>
                 </motion.div>
               )}
-              {messages.map((message) => (
-                <MessageBubble
-                  key={message.id}
-                  message={message}
-                  typewrite={!preExistingIds.has(message.id)}
-                />
-              ))}
+              {messages.map((message) =>
+                message.correction ? (
+                  <CorrectionGate
+                    key={message.id}
+                    correction={message.correction}
+                    answered={pendingCorrectionId !== message.id}
+                    onConfirm={() => resolveCorrection(message.correction!.suggested)}
+                    onReject={() => resolveCorrection(message.correction!.original)}
+                  />
+                ) : (
+                  <MessageBubble
+                    key={message.id}
+                    message={message}
+                    typewrite={!preExistingIds.has(message.id)}
+                    onSuggestionClick={handleSend}
+                  />
+                )
+              )}
               {pending && <LoadingIndicator />}
               <div ref={bottomRef} />
             </div>
           </div>
 
-          <InputBar onSend={handleSend} disabled={pending || sessionExpired} showChips={messages.length === 0} />
+          <InputBar
+            onSend={handleSend}
+            disabled={pending || sessionExpired || pendingCorrectionId !== null}
+            showChips={messages.length === 0}
+          />
         </main>
       </div>
     </div>

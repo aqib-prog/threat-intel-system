@@ -13,16 +13,47 @@ applies per sub-question automatically, and the single-intent path is
 provably untouched.
 """
 
+import re
 from dataclasses import dataclass, field
 from typing import Any
 
+from log_analysis import detector as log_analysis_detector
 from orchestration.pipeline import PipelineResult, Source, get_driver, run_pipeline
-from orchestration.query_splitter import segment_query
+from orchestration.query_decomposer import decompose_query
 from retrieval.guardrail import (
     ensure_entity_indexes,
     generate_dynamic_hint_entities,
     has_cybersecurity_signal,
 )
+
+# A segment that survives filler-stripping but is a bare social phrase
+# ("how are you", "good morning") is chit-chat, not a question to route.
+_CHITCHAT_ONLY_RE = re.compile(
+    r"^(?:how\s+(?:are|r)\s+(?:you|u)|how'?s?\s+it\s+going|what'?s\s+up|"
+    r"good\s+(?:morning|afternoon|evening|day)|nice\s+to\s+meet\s+you|"
+    r"how\s+do\s+you\s+do)\b[\s.!?]*$",
+    re.IGNORECASE,
+)
+# Interrogative lead-ins / trailing "?" mark a genuine question worth routing
+# even with no cyber keyword (an off-topic question gets a polite guardrail
+# refusal rather than being silently dropped).
+_QUESTION_RE = re.compile(
+    r"\?\s*$|^\s*(?:what|which|who|whom|whose|when|where|why|how|"
+    r"does|do|did|is|are|was|were|can|could|should|would|will|"
+    r"list|show|tell|explain|describe|give|name)\b",
+    re.IGNORECASE,
+)
+
+
+def _looks_like_word(token: str) -> bool:
+    """A token that plausibly is a real word: has a vowel and isn't a random
+    consonant/keyboard run. Filters gibberish like 'asdfghjkl', 'qwrtp'."""
+    letters = re.sub(r"[^a-z]", "", token.lower())
+    if len(letters) < 2:
+        return False
+    if not re.search(r"[aeiou]", letters):
+        return False
+    return not re.search(r"[bcdfghjklmnpqrstvwxz]{5,}", letters)
 
 
 @dataclass
@@ -39,6 +70,12 @@ class AnswerSegment:
     retrieved_count: int
     context_count: int
     log_evidence: list[dict[str, Any]] = field(default_factory=list)
+    # Retrieved context strings for this segment, carried so an evaluator (RAGAS)
+    # can score each segment's answer against its retrieved context. Populated
+    # only when run_pipeline is called with include_contexts=True.
+    retrieved_contexts: list[str] = field(default_factory=list)
+    # "Did you mean" candidates when this segment referenced an unresolved code.
+    suggestions: list[str] = field(default_factory=list)
 
 
 @dataclass
@@ -58,27 +95,44 @@ class MultiPipelineResult:
     context_count: int
     answer_source: str = "rag"
     log_evidence: list[dict[str, Any]] = field(default_factory=list)
+    # Aggregate retrieved contexts (single-intent: the one answer's contexts).
+    retrieved_contexts: list[str] = field(default_factory=list)
+    # "Did you mean" candidates (single-intent: the one answer's suggestions).
+    suggestions: list[str] = field(default_factory=list)
     segments: list[AnswerSegment] = field(default_factory=list)
 
 
-def _segment_is_valid(segment: str, driver) -> bool:
-    """A candidate is a real question worth answering if it carries a
-    cybersecurity keyword OR fuzzy-matches a known graph entity by name.
+def _segment_disposition(segment: str, driver) -> str:
+    """Decide what to do with a candidate segment. Returns:
 
-    The second check matters: keyword-free entity questions ("who ran the
-    SolarWinds Compromise?", "what does Restrict Registry Permissions do?")
-    have no signal word, and dropping them would silently lose a valid
-    question. Chit-chat ("how are you doing today?") matches neither and is
-    dropped.
+    - "route": send to run_pipeline (a real cybersecurity question, OR a
+      genuine off-topic question — the latter gets a polite guardrail refusal
+      instead of being silently dropped, which is the more transparent UX).
+    - "drop": chit-chat or gibberish, silently removed.
+
+    Cybersecurity signal / entity match is the fast "definitely answer" path.
+    A grammatical question with neither is still routed (guardrail decides
+    on/off-topic tone). Only bare social phrases and gibberish are dropped.
     """
-    if has_cybersecurity_signal(segment):
-        return True
-    if driver is None:
-        return False
-    try:
-        return bool(generate_dynamic_hint_entities(segment))
-    except Exception:
-        return False
+    s = segment.strip()
+    if not s:
+        return "drop"
+    tokens = re.findall(r"[A-Za-z']+", s)
+    if not tokens or not any(_looks_like_word(t) for t in tokens):
+        return "drop"  # gibberish / keyboard smash
+    if has_cybersecurity_signal(s):
+        return "route"
+    if driver is not None:
+        try:
+            if generate_dynamic_hint_entities(s):
+                return "route"
+        except Exception:
+            pass
+    if _CHITCHAT_ONLY_RE.match(s):
+        return "drop"  # "how are you", "good morning"
+    if _QUESTION_RE.search(s):
+        return "route"  # genuine off-topic question -> guardrail soft-refuses
+    return "drop"
 
 
 def _as_single(result: PipelineResult) -> MultiPipelineResult:
@@ -93,6 +147,8 @@ def _as_single(result: PipelineResult) -> MultiPipelineResult:
         context_count=result.context_count,
         answer_source=result.answer_source,
         log_evidence=result.log_evidence,
+        retrieved_contexts=list(result.retrieved_contexts),
+        suggestions=list(result.suggestions),
         segments=[],
     )
 
@@ -131,7 +187,17 @@ def run_multi_pipeline(query: str, *, driver=None, **kwargs) -> MultiPipelineRes
     if not raw:
         return _as_single(run_pipeline(raw, **kwargs))
 
-    candidates = segment_query(raw)
+    # A raw-log paste must NOT be split: the log detector needs the whole
+    # multi-line block together, and sentence/newline splitting would fragment
+    # it line-by-line. Hand the intact paste to the single path, where
+    # run_pipeline's own log-analysis branch handles it.
+    try:
+        if log_analysis_detector.detect(raw).is_raw_log:
+            return _as_single(run_pipeline(raw, **kwargs))
+    except Exception:
+        pass
+
+    candidates = decompose_query(raw)
     if len(candidates) <= 1:
         return _as_single(run_pipeline(raw, **kwargs))
 
@@ -144,7 +210,7 @@ def run_multi_pipeline(query: str, *, driver=None, **kwargs) -> MultiPipelineRes
     try:
         if driver is not None:
             ensure_entity_indexes(driver)
-        valid = [c for c in candidates if _segment_is_valid(c, driver)]
+        valid = [c for c in candidates if _segment_disposition(c, driver) == "route"]
     finally:
         if owned_driver is not None:
             owned_driver.close()
@@ -171,6 +237,8 @@ def run_multi_pipeline(query: str, *, driver=None, **kwargs) -> MultiPipelineRes
                 retrieved_count=result.retrieved_count,
                 context_count=result.context_count,
                 log_evidence=result.log_evidence,
+                retrieved_contexts=list(result.retrieved_contexts),
+                suggestions=list(result.suggestions),
             )
         )
 
@@ -186,5 +254,6 @@ def run_multi_pipeline(query: str, *, driver=None, **kwargs) -> MultiPipelineRes
         context_count=sum(segment.context_count for segment in segments),
         answer_source="rag",
         log_evidence=[entry for segment in segments for entry in segment.log_evidence],
+        retrieved_contexts=[c for segment in segments for c in segment.retrieved_contexts],
         segments=segments,
     )

@@ -9,6 +9,7 @@ import json
 import os
 import re
 import sys
+import time
 from dataclasses import asdict, dataclass, field
 from typing import Any
 
@@ -34,6 +35,11 @@ REQUESTED_MITRE_ID_RE = re.compile(
     re.IGNORECASE,
 )
 REQUESTED_CVE_ID_RE = re.compile(r"\bCVE-\d{4}-\d{4,7}\b", re.IGNORECASE)
+# Actor ALIAS codes (APT29, FIN7, UNC2452) - these are actor names/aliases, NOT
+# MITRE external_ids (which are G/T/S/M/C-prefixed and handled above). A near
+# miss here changes the entity entirely (apt20 != apt2), so an alias code that
+# does not resolve to a real actor must refuse, never fuzzy-substitute.
+REQUESTED_ACTOR_CODE_RE = re.compile(r"\b(?:APT|FIN|UNC)\s?-?\d{1,5}\b", re.IGNORECASE)
 COUNT_QUERY_RE = re.compile(r"\b(?:how\s+many|count|number\s+of|total)\b", re.IGNORECASE)
 SPACED_ATTACK_ID_RE = re.compile(
     r"\b(?P<prefix>[GMSTC]A?)\s+(?P<num>\d{4})(?:\s*\.\s*(?P<sub>\d{3}))?\b",
@@ -157,6 +163,321 @@ def explicit_ids_exist(driver, query: str) -> bool:
                 found_any = True
 
     return found_any
+
+
+def _normalize_actor_code(value: str) -> str:
+    """Fold an actor code for exact comparison: lowercase, no spaces/dashes.
+    'APT 29' / 'apt-29' / 'APT29' all -> 'apt29'."""
+    return re.sub(r"[\s-]+", "", str(value or "")).lower()
+
+
+def actor_codes_in_query(query: str) -> set[str]:
+    """Normalized actor alias-codes explicitly referenced in the query."""
+    return {
+        _normalize_actor_code(match.group(0))
+        for match in REQUESTED_ACTOR_CODE_RE.finditer(query)
+    }
+
+
+def resolve_actor_codes(driver, codes: set[str]) -> set[str]:
+    """Return the subset of codes that EXACTLY match a real Actor name/alias.
+    No fuzzy matching: for a structured code a one-character miss is a different
+    group, so only an exact (normalized) hit counts."""
+    if not codes:
+        return set()
+    with driver.session() as session:
+        record = session.run(
+            """
+            MATCH (a:Actor)
+            WITH [a.name] + coalesce(a.aliases, []) AS names
+            UNWIND names AS nm
+            WITH toLower(replace(replace(nm, ' ', ''), '-', '')) AS norm
+            WHERE norm IN $codes
+            RETURN collect(DISTINCT norm) AS found
+            """,
+            codes=list(codes),
+        ).single()
+    return {str(value) for value in (record["found"] if record else [])}
+
+
+def actor_code_suggestions(driver, codes: set[str], limit: int = 4) -> list[str]:
+    """Closest real actor names/aliases that share a code's alpha prefix, so an
+    unknown 'apt20' can offer 'did you mean APT2 / APT28 / APT29'. Exact fuzzy
+    ranking, but only as a non-authoritative suggestion - never auto-applied."""
+    if not codes:
+        return []
+    prefixes = {re.match(r"[a-z]+", code).group(0) for code in codes if re.match(r"[a-z]+", code)}
+    if not prefixes:
+        return []
+    with driver.session() as session:
+        record = session.run(
+            """
+            MATCH (a:Actor)
+            WITH [a.name] + coalesce(a.aliases, []) AS names
+            UNWIND names AS nm
+            WITH nm WHERE any(p IN $prefixes WHERE toLower(nm) STARTS WITH p)
+            RETURN collect(DISTINCT nm) AS names
+            """,
+            prefixes=list(prefixes),
+        ).single()
+    candidates = list(record["names"]) if record and record["names"] else []
+    if not candidates:
+        return []
+    from rapidfuzz import fuzz, process
+
+    ranked: list[tuple[str, float]] = []
+    for code in codes:
+        for name, score, _ in process.extract(code, candidates, scorer=fuzz.ratio, limit=limit):
+            ranked.append((name, score))
+    ranked.sort(key=lambda item: item[1], reverse=True)
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for name, _ in ranked:
+        if name not in seen:
+            seen.add(name)
+            ordered.append(name)
+        if len(ordered) >= limit:
+            break
+    return ordered
+
+
+# ID/code-shaped reference tokens (T1055, G0016, S0001, apt29, TA0011...).
+_REFERENCE_TOKEN_RE = re.compile(r"\b([A-Za-z]{1,4})[-\s]?(\d{2,6})(?:\.\d{1,3})?\b")
+_MITRE_ID_PREFIXES = {"T", "G", "S", "M", "C", "TA", "DET", "AN", "DC", "DS"}
+_ACTOR_CODE_PREFIXES = {"APT", "FIN", "UNC"}
+
+# Subject-extraction for name-based "did you mean". Precise patterns (not raw
+# n-grams) so we only fuzzy a real subject phrase, keeping suggestions clean.
+_SUBJECT_PATTERNS = [
+    re.compile(r"(?:what|who)(?:'s|\s+is|\s+are|\s+was|\s+were)\s+(.+?)[?.!]*$", re.IGNORECASE),
+    re.compile(r"(?:tell me about|talk about|about|explain|describe|info on|profile of|details? (?:on|for|about))\s+(.+?)[?.!]*$", re.IGNORECASE),
+    re.compile(r"\b(?:does|do|did|is|are|was|were)\s+(.+?)\s+(?:use|uses|used|deploy|run|have|attributed|connected|do)\b", re.IGNORECASE),
+    re.compile(r"^(.+?)\s+(?:techniques?|malware|tools?|campaigns?|mitigations?|tactics?)\b", re.IGNORECASE),
+]
+_NAME_STOPWORDS = {
+    "the", "a", "an", "of", "to", "for", "is", "are", "was", "were", "do", "does",
+    "did", "what", "which", "who", "how", "that", "this", "in", "on", "and", "or",
+    "use", "uses", "used", "have", "has", "you", "me", "about", "by", "with",
+}
+# Object nouns the user asks ABOUT - trimmed off the subject phrase. Deliberately
+# excludes "group"/"actor" etc. because those are NAME components ("Lazarus
+# Group"), not the object of the question.
+_NAME_RELATION_WORDS = {
+    "techniques", "technique", "malware", "tools", "tool", "campaigns", "campaign",
+    "mitigations", "mitigation", "tactics", "tactic", "detections", "detection",
+    "analytics", "software",
+}
+# Entity-name index cache (name -> external_id), short-lived like the API's id cache.
+_ENTITY_NAME_INDEX: list[tuple[str, str]] | None = None
+_ENTITY_NAME_INDEX_EXPIRES = 0.0
+
+
+def _entity_name_index(driver) -> list[tuple[str, str]]:
+    """Cached (name, external_id) for named entities + aliases. Powers name-based
+    'did you mean'. A refresh failure keeps serving the last good cache (or [])."""
+    global _ENTITY_NAME_INDEX, _ENTITY_NAME_INDEX_EXPIRES
+    now = time.time()
+    if _ENTITY_NAME_INDEX is not None and now < _ENTITY_NAME_INDEX_EXPIRES:
+        return _ENTITY_NAME_INDEX
+    try:
+        with driver.session() as session:
+            records = session.run(
+                "MATCH (n) WHERE n.name IS NOT NULL AND "
+                "(n:Actor OR n:Malware OR n:Tool OR n:Campaign OR n:Technique OR n:Mitigation) "
+                "WITH n, [n.name] + coalesce(n.aliases, []) AS names "
+                "UNWIND names AS nm RETURN DISTINCT nm AS name, n.external_id AS id"
+            )
+            # Drop very short names ("AT", "sh") - they match almost any string
+            # via substring scoring and are pure suggestion noise.
+            data = [
+                (str(r["name"]), str(r["id"] or ""))
+                for r in records
+                if r["name"] and len(str(r["name"])) >= 4
+            ]
+    except Exception:
+        return _ENTITY_NAME_INDEX or []
+    _ENTITY_NAME_INDEX = data
+    _ENTITY_NAME_INDEX_EXPIRES = now + 300
+    return data
+
+
+def _candidate_name_phrases(query: str) -> list[str]:
+    """Extract the query's subject phrase(s) - the thing the user named - so we
+    can fuzzy it against real entity names. Trims relation/stop words so
+    'what techniques does Lazrus Grp use' yields 'Lazrus Grp'."""
+    phrases: list[str] = []
+    seen: set[str] = set()
+    for pattern in _SUBJECT_PATTERNS:
+        match = pattern.search(query or "")
+        if not match:
+            continue
+        tokens = re.findall(r"[A-Za-z0-9.'/-]+", match.group(1))
+        while tokens and tokens[-1].lower() in (_NAME_RELATION_WORDS | _NAME_STOPWORDS):
+            tokens.pop()
+        while tokens and tokens[0].lower() in _NAME_STOPWORDS:
+            tokens.pop(0)
+        phrase = " ".join(tokens).strip()
+        key = phrase.lower()
+        if len(phrase) >= 4 and key not in seen and not all(
+            t.lower() in _NAME_STOPWORDS for t in tokens
+        ):
+            seen.add(key)
+            phrases.append(phrase)
+    return phrases
+
+
+def reference_suggestions(driver, query: str, limit: int = 4) -> list[str]:
+    """Closest real entities for any ID/code-shaped reference in the query that
+    does NOT resolve exactly - so a "no information" answer can offer "did you
+    mean" instead of a dead end. Covers malformed MITRE ids (T10557 -> T1055
+    (Process Injection)) and actor codes (apt20 -> APT2). Returns [] when the
+    query has no such reference at all (e.g. plain "how are you"), so chit-chat
+    never gets spurious suggestions. Fail-safe: any error returns []."""
+    tokens: list[tuple[str, str]] = []
+    for match in _REFERENCE_TOKEN_RE.finditer(query or ""):
+        prefix = match.group(1).upper()
+        if prefix in _MITRE_ID_PREFIXES or prefix in _ACTOR_CODE_PREFIXES:
+            tokens.append((prefix, re.sub(r"[\s-]+", "", match.group(0)).upper()))
+
+    from rapidfuzz import fuzz, process
+
+    ordered: list[str] = []
+    seen: set[str] = set()
+    try:
+        with driver.session() as session:
+            for prefix, token in tokens:
+                if prefix in _ACTOR_CODE_PREFIXES:
+                    record = session.run(
+                        "MATCH (a:Actor) WITH [a.name] + coalesce(a.aliases, []) AS names "
+                        "UNWIND names AS nm WITH nm WHERE toUpper(nm) STARTS WITH $p "
+                        "RETURN collect(DISTINCT nm) AS names",
+                        p=prefix,
+                    ).single()
+                    candidates = list(record["names"]) if record and record["names"] else []
+                    if any(re.sub(r"[\s-]+", "", c).upper() == token for c in candidates):
+                        continue  # the code resolves exactly - nothing to suggest
+                    ranked = [name for name, _s, _i in process.extract(token, candidates, scorer=fuzz.ratio, limit=limit)]
+                else:
+                    record = session.run(
+                        "MATCH (n:MitreNode) WHERE n.external_id STARTS WITH $p "
+                        "RETURN collect(DISTINCT {id: n.external_id, name: n.name}) AS items",
+                        p=prefix,
+                    ).single()
+                    items = list(record["items"]) if record and record["items"] else []
+                    ids = [it["id"] for it in items if it["id"]]
+                    if token in {i.upper() for i in ids}:
+                        continue  # exact id exists - not a miss
+                    id_to_name = {it["id"]: it["name"] for it in items}
+                    ranked = []
+                    for cid, _s, _i in process.extract(token, ids, scorer=fuzz.ratio, limit=limit):
+                        nm = id_to_name.get(cid)
+                        ranked.append(f"{nm} ({cid})" if nm else cid)
+                for label in ranked:
+                    if label not in seen:
+                        seen.add(label)
+                        ordered.append(label)
+    except Exception:
+        ordered = []  # fall through to name-based matching below
+
+    # Name-based "did you mean": for a garbled entity NAME that didn't resolve
+    # (below the pipeline's fuzzy threshold but still recognizable), suggest the
+    # closest real names. High score band keeps this precise, not noisy.
+    if len(ordered) < limit:
+        phrases = _candidate_name_phrases(query)
+        if phrases:
+            names = _entity_name_index(driver)
+            if names:
+                from rapidfuzz import fuzz, process
+
+                choices = [n for n, _ in names]
+                id_by_name = {n: i for n, i in names}
+                for phrase in phrases:
+                    raw = process.extract(phrase, choices, scorer=fuzz.WRatio, limit=8)
+                    # If the phrase IS a real entity name, it's not a typo - a
+                    # no-info answer for it is a different problem, not a
+                    # "did you mean", so suggest nothing.
+                    if raw and raw[0][1] >= 100:
+                        continue
+                    hits: list[tuple[str, float]] = []
+                    for name, score, _ in raw:
+                        # 82-99: a close typo, not an exact hit and not noise.
+                        if not (82 <= score < 100):
+                            continue
+                        # Length guard: a short name matching a long phrase (or
+                        # vice-versa) is substring noise ("at" vs "weather").
+                        if min(len(phrase), len(name)) / max(len(phrase), len(name)) < 0.5:
+                            continue
+                        hits.append((name, score))
+                    # Margin gate: keep only names within a few points of the best
+                    # match, so a shared generic word ("Group" -> "Group Policy
+                    # Discovery") can't ride in behind the real match.
+                    if hits:
+                        best = hits[0][1]
+                        for name, score in hits:
+                            if best - score > 4:
+                                break
+                            ext = id_by_name.get(name)
+                            label = f"{name} ({ext})" if ext else name
+                            if label not in seen:
+                                seen.add(label)
+                                ordered.append(label)
+                            if len(ordered) >= limit:
+                                break
+                    if len(ordered) >= limit:
+                        break
+    return ordered[:limit]
+
+
+def normalize_query(query: str, driver=None) -> str:
+    """Spelling-normalize a query for the "did you mean" correction gate: fix
+    common scaffolding-word typos (via spell_normalize) AND correct a garbled
+    ENTITY name toward a real graph entity, for typos that fell below the
+    pipeline's own fuzzy-resolution threshold. Returns the query unchanged when
+    nothing confidently corrects. Fail-safe: any error returns spell_normalize
+    only. Manages its own driver when none is passed."""
+    from retrieval.spell_normalize import spell_normalize
+
+    text = spell_normalize(query)
+    phrases = _candidate_name_phrases(text)
+    if not phrases:
+        return text
+
+    owned = None
+    if driver is None:
+        try:
+            driver = owned = get_driver()
+        except Exception:
+            return text
+    try:
+        names = _entity_name_index(driver)
+        if not names:
+            return text
+        from rapidfuzz import fuzz, process
+
+        choices = [n for n, _ in names]
+        for phrase in phrases:
+            raw = process.extract(phrase, choices, scorer=fuzz.WRatio, limit=5)
+            if not raw or raw[0][1] >= 100:
+                continue  # already an exact entity - not a typo
+            best_name, best_score, _ = raw[0]
+            if not (78 <= best_score < 100):
+                continue
+            if min(len(phrase), len(best_name)) / max(len(phrase), len(best_name)) < 0.6:
+                continue  # length mismatch -> substring noise
+            second = raw[1][1] if len(raw) > 1 else 0.0
+            if best_score - second < 3:
+                continue  # ambiguous between two entities
+            if best_name.lower() == phrase.lower():
+                continue
+            pattern = re.compile(re.escape(phrase), re.IGNORECASE)
+            if pattern.search(text):
+                text = pattern.sub(best_name, text, count=1)
+    except Exception:
+        return spell_normalize(query)
+    finally:
+        if owned is not None:
+            owned.close()
+    return text
 
 
 def should_limit_to_exact_id_nodes(filters: dict[str, Any]) -> bool:
@@ -433,6 +754,10 @@ class PipelineResult:
     answer_source: str = "rag"
     log_evidence: list[dict[str, Any]] = field(default_factory=list)
     retrieved_contexts: list[str] = field(default_factory=list)
+    # Non-authoritative "did you mean" candidates, set only when an explicitly
+    # referenced entity code (e.g. an unknown APT number) could not be resolved.
+    # The frontend renders these as clickable chips; they are never auto-applied.
+    suggestions: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -452,10 +777,12 @@ def fallback_result(
     query: str,
     category: str | None = None,
     filters: dict[str, Any] | None = None,
+    answer: str | None = None,
+    suggestions: list[str] | None = None,
 ) -> PipelineResult:
     return PipelineResult(
         query=query,
-        answer=FALLBACK,
+        answer=answer or FALLBACK,
         allowed=category is None,
         guardrail_category=category,
         filters=filters or {},
@@ -463,6 +790,7 @@ def fallback_result(
         retrieved_count=0,
         context_count=0,
         retrieved_contexts=[],
+        suggestions=suggestions or [],
     )
 
 
@@ -692,8 +1020,36 @@ def run_pipeline(
         except Exception as exc:
             raise PipelineError("database_connection", exc) from exc
 
+        def _fb(**kw):
+            """A "no information" result, with universal "did you mean"
+            suggestions attached whenever the query referenced an ID/code that
+            did not resolve (T10557, G9999, ...). Chit-chat/plain queries get
+            none. Suggestion failures never affect the answer."""
+            fr = fallback_result(query, **kw)
+            if fr.allowed and fr.answer.strip() == FALLBACK and not fr.suggestions:
+                try:
+                    fr.suggestions = reference_suggestions(driver, focused_query)
+                except Exception:
+                    pass
+            return fr
+
         if not explicit_ids_exist(driver, focused_query):
-            return fallback_result(query)
+            return _fb()
+
+        # Actor alias-code guard: if the query names actor codes (APT##/FIN##/
+        # UNC##) and NONE resolve to a real actor, refuse with suggestions rather
+        # than let LLM filter extraction fabricate a different group (the exact
+        # apt20 -> "Putter Panda" failure). If at least one code resolves, proceed
+        # for the valid one(s), mirroring the mixed-ID philosophy above.
+        referenced_actor_codes = actor_codes_in_query(focused_query)
+        if referenced_actor_codes and not resolve_actor_codes(driver, referenced_actor_codes):
+            unknown = ", ".join(sorted(code.upper() for code in referenced_actor_codes))
+            suggestions = actor_code_suggestions(driver, referenced_actor_codes)
+            return fallback_result(
+                query,
+                answer=f"I don't have {unknown} in my knowledge base.",
+                suggestions=suggestions,
+            )
 
         with obs.span("filter_extraction"):
             try:
@@ -701,9 +1057,9 @@ def run_pipeline(
             except Exception as exc:
                 raise PipelineError("filter_extraction", exc) from exc
         if is_ambiguous_short_reference(focused_query, filters):
-            return fallback_result(query, filters=filters)
+            return _fb(filters=filters)
         if has_unresolved_explicit_id(focused_query, filters):
-            return fallback_result(query, filters=filters)
+            return _fb(filters=filters)
 
         telemetry_seed_nodes = fetch_telemetry_seed_nodes(driver, focused_query)
         telemetry_seed_names = {
@@ -732,7 +1088,7 @@ def run_pipeline(
             if len(retrieved) >= candidate_k:
                 break
         if not retrieved:
-            return fallback_result(query, filters=filters)
+            return _fb(filters=filters)
 
         requested_ids = {
             str(value).upper() for value in filters.get("mitre_id", []) if value
@@ -752,7 +1108,7 @@ def run_pipeline(
             except Exception as exc:
                 raise PipelineError("graph_traversal", exc) from exc
         if not contexts:
-            return fallback_result(query, filters=filters)
+            return _fb(filters=filters)
 
         with obs.span("reranking"):
             try:
@@ -777,7 +1133,7 @@ def run_pipeline(
                 *(node for node in ranked if node.get("id") not in seen_ranked),
             ][:top_k]
         if not ranked or float(ranked[0].get("relevance_score") or 0.0) < MIN_RELEVANCE_SCORE:
-            return fallback_result(query, filters=filters)
+            return _fb(filters=filters)
 
         with obs.span("generation"):
             try:
@@ -785,7 +1141,9 @@ def run_pipeline(
             except Exception as exc:
                 raise PipelineError("generation", exc) from exc
 
-        source_nodes = [] if not answer or answer.strip() == FALLBACK else ranked
+        final_answer = answer or FALLBACK
+        is_no_info = not answer or final_answer.strip() == FALLBACK
+        source_nodes = [] if is_no_info else ranked
         sources = [
             Source(
                 name=str(node.get("name") or "Unknown"),
@@ -796,9 +1154,17 @@ def run_pipeline(
             )
             for node in source_nodes
         ]
+        # A generated "no information" answer still offers "did you mean" when the
+        # query referenced an id/code that didn't resolve.
+        final_suggestions: list[str] = []
+        if is_no_info:
+            try:
+                final_suggestions = reference_suggestions(driver, focused_query)
+            except Exception:
+                final_suggestions = []
         return PipelineResult(
             query=query,
-            answer=answer or FALLBACK,
+            answer=final_answer,
             allowed=True,
             guardrail_category=None,
             filters=filters,
@@ -810,6 +1176,7 @@ def run_pipeline(
                 if include_contexts
                 else []
             ),
+            suggestions=final_suggestions,
         )
     finally:
         if driver is not None:

@@ -8,15 +8,28 @@ import { AnswerVisualization } from "./AnswerVisualization";
 import { SingleCategoryGauge } from "./SingleCategoryGauge";
 import { SourcesPanel } from "./SourcesPanel";
 import { LogEvidencePanel } from "./LogEvidencePanel";
+import { AnswerSegmentCard } from "./AnswerSegmentCard";
+import { SuggestionChips } from "./SuggestionChips";
 import { useTypewriter } from "../../hooks/useTypewriter";
 import {
   chartSectionsFromApi,
   parseNodeSectionCounts,
 } from "../../lib/parseAnswerSections";
 
-export function MessageBubble({ message, typewrite }: { message: ChatMessage; typewrite: boolean }) {
+export function MessageBubble({
+  message,
+  typewrite,
+  onSuggestionClick,
+}: {
+  message: ChatMessage;
+  typewrite: boolean;
+  onSuggestionClick?: (value: string) => void;
+}) {
   const isUser = message.role === "user";
-  const { displayed, done } = useTypewriter(message.text, !isUser && typewrite, 3);
+  // A multi-intent turn (>=2 answered sub-questions) renders one card per
+  // segment instead of a single combined answer, so skip the typewriter for it.
+  const segments = message.segments && message.segments.length >= 2 ? message.segments : null;
+  const { displayed, done } = useTypewriter(message.text, !isUser && typewrite && !segments, 3);
   const blocked = message.allowed === false;
   // Chart from the backend's authoritative category counts. Fall back to node
   // type counts only when the backend didn't supply sections (e.g. mock replies
@@ -83,59 +96,89 @@ export function MessageBubble({ message, typewrite }: { message: ChatMessage; ty
           }}
         />
 
-        {blocked && (
-          <div className="relative mb-2 flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-red">
-            <ShieldWarning size={14} weight="bold" aria-hidden="true" />
-            Guardrail blocked{message.guardrailCategory ? ` · ${message.guardrailCategory}` : ""}
+        {segments ? (
+          <div className="relative flex flex-col gap-3">
+            <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-text-dim">
+              <span className="flex h-4 w-4 items-center justify-center rounded border border-cyan/25 bg-cyan/10 text-[9px] font-bold text-cyan tabular-nums">
+                {segments.length}
+              </span>
+              questions detected
+            </div>
+            {segments.map((segment, index) => (
+              <AnswerSegmentCard
+                key={`${message.id}-s${index}`}
+                segment={segment}
+                index={index}
+                messageId={message.id}
+                onSuggestionClick={onSuggestionClick}
+              />
+            ))}
           </div>
-        )}
-        {!blocked && message.answerSource === "log_analysis" && (
-          <div className="relative mb-2 flex w-fit items-center gap-1.5 rounded border border-green/30 bg-green/10 px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-green">
-            <Terminal size={13} weight="bold" aria-hidden="true" />
-            Log Analysis
-          </div>
-        )}
-        {!blocked && done && chartSections.length >= 2 && (
-          <div className="relative">
-            <AnswerVisualization sections={chartSections} messageId={message.id} />
-          </div>
+        ) : (
+          <>
+            {blocked && (
+              <div className="relative mb-2 flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-red">
+                <ShieldWarning size={14} weight="bold" aria-hidden="true" />
+                Guardrail blocked{message.guardrailCategory ? ` · ${message.guardrailCategory}` : ""}
+              </div>
+            )}
+            {!blocked && message.answerSource === "log_analysis" && (
+              <div className="relative mb-2 flex w-fit items-center gap-1.5 rounded border border-green/30 bg-green/10 px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-green">
+                <Terminal size={13} weight="bold" aria-hidden="true" />
+                Log Analysis
+              </div>
+            )}
+            {!blocked && done && chartSections.length >= 2 && (
+              <div className="relative">
+                <AnswerVisualization sections={chartSections} messageId={message.id} />
+              </div>
+            )}
+
+            {!blocked && done && chartSections.length < 2 && singleSection && (
+              <div className="relative">
+                <SingleCategoryGauge section={singleSection} />
+              </div>
+            )}
+
+            <div className="relative">
+              <MarkdownMessage
+                text={displayed}
+                messageId={message.id}
+                groundedIds={message.groundedIds}
+                nodes={message.nodes}
+              />
+              {!done && <span className="ml-0.5 inline-block h-4 w-[7px] translate-y-0.5 bg-cyan motion-safe:animate-blink" />}
+            </div>
+
+            {message.isMock && done && (
+              <p className="relative mt-2 font-mono text-[10px] uppercase tracking-wider text-amber/80">
+                ⚠ mock response · backend offline
+              </p>
+            )}
+
+            {done && message.nodes && (
+              <div className="relative">
+                <SourcesPanel nodes={message.nodes} />
+              </div>
+            )}
+
+            {done && message.logEvidence && message.logEvidence.length > 0 && (
+              <div className="relative">
+                <LogEvidencePanel entries={message.logEvidence} />
+              </div>
+            )}
+
+            {done && message.suggestions && message.suggestions.length > 0 && (
+              <SuggestionChips
+                suggestions={message.suggestions}
+                sourceQuery={message.sourceQuery}
+                onPick={onSuggestionClick}
+              />
+            )}
+          </>
         )}
 
-        {!blocked && done && chartSections.length < 2 && singleSection && (
-          <div className="relative">
-            <SingleCategoryGauge section={singleSection} />
-          </div>
-        )}
-
-        <div className="relative">
-          <MarkdownMessage
-            text={displayed}
-            messageId={message.id}
-            groundedIds={message.groundedIds}
-            nodes={message.nodes}
-          />
-          {!done && <span className="ml-0.5 inline-block h-4 w-[7px] translate-y-0.5 bg-cyan motion-safe:animate-blink" />}
-        </div>
-
-        {message.isMock && done && (
-          <p className="relative mt-2 font-mono text-[10px] uppercase tracking-wider text-amber/80">
-            ⚠ mock response · backend offline
-          </p>
-        )}
-
-        {done && message.nodes && (
-          <div className="relative">
-            <SourcesPanel nodes={message.nodes} />
-          </div>
-        )}
-
-        {done && message.logEvidence && message.logEvidence.length > 0 && (
-          <div className="relative">
-            <LogEvidencePanel entries={message.logEvidence} />
-          </div>
-        )}
-
-        {done && typeof message.latencyMs === "number" && (
+        {typeof message.latencyMs === "number" && (done || segments) && (
           <p className="relative mt-2 font-mono text-[10px] text-text-dim">{message.latencyMs}ms</p>
         )}
       </div>

@@ -19,12 +19,30 @@ module stays pure and unit-testable without a database or model.
 
 import re
 
+# A real second question that begins with an additive adverb opens with a
+# clause starter - an interrogative ("who/what/how...") or an imperative verb
+# ("list/show/tell..."). Requiring one after the adverb is what separates a
+# genuine new intent ("...also who uses it") from an adverb used MID-clause
+# inside a single intent. The critical case: the alias phrase
+# "S0002, also known as Mimikatz" - "known" is not a clause starter, so it is
+# never split. Same protection for "also called / also referred to as ...".
+_CLAUSE_STARTER = (
+    r"what|which|who|whom|whose|when|where|why|how|"
+    r"does|do|did|is|are|was|were|can|could|should|would|will|"
+    r"list|show|tell|explain|describe|give|name"
+)
+
 # Boundaries between distinct questions: sentence/question terminators, hard
-# line breaks, and clause-initial additive adverbs. NOT bare "and"/"or".
+# line breaks, and additive adverbs that actually introduce a new clause. NOT
+# bare "and"/"or" (they join compound entities within one intent), and NOT an
+# additive adverb used mid-clause (guarded by the clause-starter lookahead).
+# Biasing toward NOT splitting is safe: an un-split turn flows through the
+# pipeline as a single question, exactly as it did before multi-intent existed.
 _SPLIT_RE = re.compile(
     r"(?<=[.!?;])\s+"
     r"|\n+"
-    r"|\b(?:also|additionally|separately|furthermore|moreover)\b[:,]?\s+",
+    r"|\b(?:also|additionally|separately|furthermore|moreover)\b[:,]?\s+"
+    rf"(?=(?:{_CLAUSE_STARTER})\b)",
     re.IGNORECASE,
 )
 

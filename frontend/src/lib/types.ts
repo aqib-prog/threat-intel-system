@@ -41,6 +41,22 @@ export interface AnswerSection {
   count: number;
 }
 
+/** One answered sub-question of a multi-intent turn. Each carries its OWN
+ * answer_sections (so its chart shows that sub-question's real counts) and its
+ * own grounded ids/sources - the frontend renders one card per segment. */
+export interface AnswerSegment {
+  query: string;
+  answer: string;
+  allowed: boolean;
+  guardrail_category?: string | null;
+  answer_source?: AnswerSource;
+  nodes?: NodeSource[];
+  answer_sections?: AnswerSection[];
+  log_evidence?: LogEvidenceEntry[];
+  grounded_ids?: string[];
+  suggestions?: string[];
+}
+
 export interface QueryResponse {
   query: string;
   response: string;
@@ -56,8 +72,21 @@ export interface QueryResponse {
   answer_source?: AnswerSource;
   log_evidence?: LogEvidenceEntry[];
   answer_sections?: AnswerSection[];
+  /** Present (>=2 entries) only for a multi-intent turn; empty for single. */
+  segments?: AnswerSegment[];
   /** MITRE ids in `answer` that exist in our graph - only these get citations. */
   grounded_ids?: string[];
+  /** "Did you mean" candidates when a referenced entity code didn't resolve. */
+  suggestions?: string[];
+  /** A spell-correction gate: present only when a single-intent query returned
+   * no info and a corrected spelling actually resolves. */
+  correction?: Correction | null;
+}
+
+/** A pre-validated spell-correction the UI offers via a blocking Yes/No gate. */
+export interface Correction {
+  original: string;
+  suggested: string;
 }
 
 export type ChatRole = "user" | "assistant";
@@ -78,8 +107,19 @@ export interface ChatMessage {
   logEvidence?: LogEvidenceEntry[];
   /** Authoritative category counts from the backend; the chart binds to these. */
   sections?: AnswerSection[];
+  /** Present (>=2) only for a multi-intent turn; each renders its own card. */
+  segments?: AnswerSegment[];
   /** MITRE ids validated to exist in our graph; gates citation rendering. */
   groundedIds?: string[];
+  /** "Did you mean" candidates rendered as clickable chips. */
+  suggestions?: string[];
+  /** The user query that produced this answer - used to rebuild a chip click
+   * that keeps the original intent. */
+  sourceQuery?: string;
+  /** When set, this assistant message is a blocking spell-correction gate
+   * ("Did you mean X?") rather than an answer; input stays disabled until the
+   * user picks Yes/No. */
+  correction?: Correction | null;
 }
 
 export type ConnectionState = "checking" | "online" | "offline";

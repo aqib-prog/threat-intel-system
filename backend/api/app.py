@@ -35,9 +35,10 @@ BACKEND_DIR = Path(__file__).resolve().parents[1]
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from orchestration.pipeline import PipelineError, get_driver, run_pipeline  # noqa: E402
+from orchestration.pipeline import PipelineError, get_driver, normalize_query, run_pipeline  # noqa: E402
+from orchestration.multi_intent import run_multi_pipeline  # noqa: E402
 from observability import langfuse_tracing as obs  # noqa: E402
-from retrieval.guardrail import extract_filters  # noqa: E402
+from retrieval.guardrail import extract_filters, has_cybersecurity_signal  # noqa: E402
 from api.settings import load_settings  # noqa: E402
 from api.stats import StatsResponse, get_stats  # noqa: E402
 from security import (  # noqa: E402
@@ -95,6 +96,11 @@ class QueryRequest(BaseModel):
         ge=1,
         le=SETTINGS.max_candidate_k,
     )
+    # When true, never offer a spell-correction "did you mean" gate for this
+    # request. The frontend sets it after the user answers the gate (Yes runs
+    # the corrected query, No runs the original) so a correction is offered at
+    # most once and can never loop.
+    skip_correction: bool = False
 
 
 class NodeSource(BaseModel):
@@ -103,6 +109,15 @@ class NodeSource(BaseModel):
     url: str | None = None
     node_type: str
     relevance_score: float | None = None
+
+
+class CorrectionSuggestion(BaseModel):
+    """A spell-correction the UI offers via a blocking Yes/No gate when the
+    original query returned no information. Yes re-queries `suggested`, No
+    re-queries `original`; both then run through the full guardrail + pipeline."""
+
+    original: str
+    suggested: str
 
 
 class AnswerSection(BaseModel):
@@ -115,6 +130,24 @@ class LogEvidenceEntry(BaseModel):
     technique_name: str
     matched_line: str
     confidence: str
+
+
+class AnswerSegmentResponse(BaseModel):
+    """One answered sub-question of a multi-intent turn. Each carries its OWN
+    answer_sections (so its chart shows that question's real counts) and its
+    own grounded_ids/sources - the frontend renders one card per segment."""
+
+    query: str
+    answer: str
+    allowed: bool
+    guardrail_category: str | None = None
+    answer_source: str = "rag"
+    nodes: list[NodeSource] = []
+    answer_sections: list[AnswerSection] = []
+    log_evidence: list[LogEvidenceEntry] = []
+    grounded_ids: list[str] = []
+    # "Did you mean" candidates when this segment referenced an unresolved code.
+    suggestions: list[str] = []
 
 
 class QueryResponse(BaseModel):
@@ -139,11 +172,24 @@ class QueryResponse(BaseModel):
     # these directly instead of regex-parsing the prose (which mis-counted
     # narrative text). Empty when the answer has no chartable list sections.
     answer_sections: list[AnswerSection] = []
+    # Populated only for a multi-intent turn (>=2 answered sub-questions); each
+    # entry is a self-contained answer with its own chart data. Empty for a
+    # single-intent turn, where the top-level fields are the whole answer -
+    # so existing single-answer clients are unaffected.
+    segments: list[AnswerSegmentResponse] = []
     # MITRE ATT&CK ids appearing in `answer` that ACTUALLY EXIST in our graph.
     # The frontend only renders a citation/link for an id in this list, so a
     # hallucinated or unknown id (e.g. a fabricated "G9999") is never shown as
     # a clickable source. Grounds every citation in our real knowledge base.
     grounded_ids: list[str] = []
+    # "Did you mean" candidates when the query referenced an entity code that
+    # did not resolve (e.g. an unknown APT number). The frontend renders these
+    # as clickable chips; empty for a normal answer.
+    suggestions: list[str] = []
+    # A spell-correction the UI offers via a blocking Yes/No gate: set only when
+    # a single-intent query returned no info AND normalizing its spelling
+    # produced a different query worth trying. Null otherwise.
+    correction: CorrectionSuggestion | None = None
 
 
 # Same prefix set as the frontend MITRE_ID_PATTERN (longer prefixes first).
@@ -436,8 +482,12 @@ async def query(request: Request, payload: QueryRequest) -> QueryResponse:
     # failure can never affect the response (obs.* swallow their own errors).
     with obs.span("rag_query") as trace:
         try:
+            # A turn may bundle several sub-questions. run_multi_pipeline answers
+            # each through the SAME unchanged run_pipeline and, for a single-intent
+            # turn, falls back to one run_pipeline call whose top-level fields are
+            # byte-identical to before (segments == []).
             result = await run_in_threadpool(
-                run_pipeline,
+                run_multi_pipeline,
                 payload.query,
                 top_k=payload.top_k,
                 candidate_k=payload.candidate_k,
@@ -477,6 +527,58 @@ async def query(request: Request, payload: QueryRequest) -> QueryResponse:
     grounded = await run_in_threadpool(grounded_mitre_ids, result.answer)
     answer_sections = compute_answer_sections(result.answer) if result.allowed else []
 
+    # Spell-correction "did you mean" gate. Offered ONLY when: the client didn't
+    # already answer a gate (skip_correction), this is a single-intent turn
+    # (no segments), the answer is a plain "no info", and normalizing the query's
+    # spelling yields a different query that still carries a cybersecurity signal
+    # (so we never suggest turning a query into off-topic noise). The corrected
+    # or original query the user picks is re-submitted and re-runs the full
+    # guardrail + pipeline, so security is unchanged either way.
+    correction: CorrectionSuggestion | None = None
+    if (
+        not payload.skip_correction
+        and not result.segments
+        and result.allowed
+        and result.answer.strip() == FALLBACK_ERROR
+    ):
+        normalized = await run_in_threadpool(normalize_query, result.query)
+        if normalized != result.query and has_cybersecurity_signal(normalized):
+            # Pre-validate: only offer the correction if the corrected query
+            # actually resolves. Otherwise we'd suggest "did you mean X" only for
+            # X to also return no info (e.g. a fixed typo around a fake id like
+            # T9999). One extra pipeline run, and only on this rare path.
+            probe = await run_in_threadpool(
+                run_multi_pipeline,
+                normalized,
+                top_k=payload.top_k,
+                candidate_k=payload.candidate_k,
+            )
+            if probe.allowed and probe.answer.strip() != FALLBACK_ERROR:
+                correction = CorrectionSuggestion(original=result.query, suggested=normalized)
+
+    # Per-segment payload for a multi-intent turn. Each segment carries its OWN
+    # answer_sections (so its radar/gauge shows THAT sub-question's real counts,
+    # never the merged combined-answer counts) and its own grounded ids/sources.
+    # Empty list for a single-intent turn, so existing clients are unaffected.
+    segments: list[AnswerSegmentResponse] = []
+    for seg in result.segments:
+        seg_sections = compute_answer_sections(seg.answer) if seg.allowed else []
+        seg_grounded = await run_in_threadpool(grounded_mitre_ids, seg.answer)
+        segments.append(
+            AnswerSegmentResponse(
+                query=seg.query,
+                answer=seg.answer,
+                allowed=seg.allowed,
+                guardrail_category=seg.guardrail_category,
+                answer_source=seg.answer_source,
+                nodes=[NodeSource(**source.__dict__) for source in seg.sources],
+                answer_sections=seg_sections,
+                log_evidence=[LogEvidenceEntry(**entry) for entry in seg.log_evidence],
+                grounded_ids=seg_grounded,
+                suggestions=list(seg.suggestions),
+            )
+        )
+
     return QueryResponse(
         query=result.query,
         response=result.answer,
@@ -492,5 +594,8 @@ async def query(request: Request, payload: QueryRequest) -> QueryResponse:
         answer_source=result.answer_source,
         log_evidence=[LogEvidenceEntry(**entry) for entry in result.log_evidence],
         answer_sections=answer_sections,
+        segments=segments,
         grounded_ids=grounded,
+        suggestions=list(result.suggestions),
+        correction=correction,
     )

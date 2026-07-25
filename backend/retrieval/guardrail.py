@@ -11,6 +11,8 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from config import NEO4J_URI, NEO4J_USER, NEO4J_PASSWORD, OLLAMA_CLIENT
 from rapidfuzz import process, fuzz
 
+from retrieval.spell_normalize import spell_normalize
+
 
 logger = logging.getLogger(__name__)
 
@@ -1102,8 +1104,9 @@ def check_topic_guardrail(query: str) -> dict:
     }
 
 
-def check_llm_guardrail(query: str) -> dict:
-    """Distinguish defensive threat intelligence from offensive uplift."""
+def _classify_harm(query: str) -> dict:
+    """Single raw LLM harm classification. Wrapped by check_llm_guardrail, which
+    adds the typo-rescue; call that, not this, everywhere."""
 
     default_result = {"allowed": False, "reason": "Could not parse, blocking by default"}
     try:
@@ -1167,6 +1170,73 @@ Respond only with valid JSON matching:
         return default_result
     parsed.setdefault("reason", "No reason provided")
     return parsed
+
+
+# Verbs/phrases that signal a request to BUILD or RUN an offensive capability
+# (uplift), as opposed to looking something up. Their presence forces the LLM
+# harm gate; their absence lets a plain entity lookup fast-allow.
+_OFFENSIVE_ACTION_RE = re.compile(
+    r"\b(?:write|build|create|make|generate|develop|produce|code|program|"
+    r"implement|compile|deploy|execute|run|inject|exfiltrate|encrypt|decrypt|"
+    r"weaponi[sz]e|obfuscate|evade|bypass|disable|escalate|pivot|craft|assemble|"
+    r"exploit|dump|steal|harvest|crack|brute[-\s]?force|spread|propagate|ransom|"
+    r"hijack|tamper|poison|spoof|install|launch|trigger|drop|plant|persist|"
+    r"how\s+to|how\s+do\s+i|how\s+can\s+i|step[-\s]by[-\s]step|give\s+me|"
+    r"show\s+me\s+the|provide|working|functional|payload|script\s+to|command\s+to)\b",
+    re.IGNORECASE,
+)
+
+
+def is_benign_entity_lookup(query: str) -> bool:
+    """Deterministic fast-allow for a plain cybersecurity lookup: a short query
+    with NO offensive build/run verb that either carries a cyber signal (MITRE
+    id / APT code) OR resolves to a REAL entity in the graph (actor, malware,
+    tool, technique, campaign - by name). Universal across named entities, not
+    just ids, so a bare "APT2", "Mimikatz", or "Lazarus Group" is never falsely
+    blocked. A harmful request carries an action verb, so it never qualifies and
+    still reaches the LLM classifier - and an over-broad verb match here only
+    routes to the LLM (which allows genuine lookups), never blocks outright."""
+    q = str(query or "").strip()
+    if not q or len(q.split()) > 15:
+        return False
+    if _OFFENSIVE_ACTION_RE.search(q):
+        return False
+    if has_cybersecurity_signal(q):
+        return True
+    try:
+        return bool(generate_dynamic_hint_entities(q))
+    except Exception:
+        return False
+
+
+def check_llm_guardrail(query: str) -> dict:
+    """Harm classifier with a universal typo-rescue.
+
+    A benign but typo-garbled cyber question ("waht tacktics duz T1078 blomg
+    two") can trip the classifier on grammar alone. When a block happens AND the
+    query carries a real cybersecurity signal, re-run the SAME classifier once on
+    a conservatively spell-normalized copy. Harmful intent survives normalization
+    (harmful words aren't in the benign vocabulary, so they're left intact and
+    still block), so this only rescues genuine typo'd questions.
+
+    This is the single chokepoint every caller uses (the RAG guardrail AND the
+    log-analysis branch), so the rescue applies universally.
+    """
+    # Fast deterministic allow for a plain entity lookup - skips the noisy LLM
+    # entirely so a bare "APT2" or "what mitigates T1055" can never be falsely
+    # blocked (and answers faster).
+    if is_benign_entity_lookup(query):
+        return {"allowed": True, "reason": "benign cybersecurity entity lookup"}
+
+    result = _classify_harm(query)
+    if result.get("allowed") or not has_cybersecurity_signal(query):
+        return result
+    normalized = spell_normalize(query)
+    if normalized != query:
+        retry = _classify_harm(normalized)
+        if retry.get("allowed"):
+            return retry
+    return result
 
 
 def guardrail(query: str) -> dict:

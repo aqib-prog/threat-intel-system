@@ -1052,7 +1052,7 @@ def relationship_subject_unresolved(
         return False
 
     node_type = str(primary.get("node_type") or primary.get("type") or "")
-    if not _relationship_intent(query, node_type):
+    if not _relationship_intent(query, node_type, primary.get("name")):
         return False
 
     # A retrieved node whose name the user actually typed = confident subject.
@@ -1069,7 +1069,9 @@ def relationship_subject_unresolved(
     return True
 
 
-def _relationship_intent(query: str, node_type: str) -> tuple[str, str, str | None] | None:
+def _relationship_intent(
+    query: str, node_type: str, entity_name: str | None = None
+) -> tuple[str, str, str | None] | None:
     """Return the requested relationship as (label, value key, detail key).
 
     All intent keywords are matched against the query with entity-name
@@ -1077,8 +1079,15 @@ def _relationship_intent(query: str, node_type: str) -> tuple[str, str, str | No
     inside an entity's own MITRE name - "Detect" in DET0001's name,
     "Analytic" in AN0001's name, "Software" as a technique name - never
     hijacks the routing. Only the user's actual intent wording counts.
+
+    The resolved subject's NAME is stripped too, not just its parenthetical id:
+    an actor named "Lazarus Group" or "Equation Group" would otherwise let the
+    "group" in its own name hijack routing to Actors, so "which campaigns are
+    attributed to Lazarus Group" answered about actors instead of campaigns.
     """
     q = _without_entity_name_parentheticals(query)
+    if entity_name:
+        q = re.sub(re.escape(str(entity_name)), " ", q, flags=re.IGNORECASE)
     if node_type == "DetectionStrategy" and re.search(r"\bAN\d{4}\b", q, re.IGNORECASE):
         return "Analytics", "analytics", "analytic_details"
     if node_type == "Analytic" and re.search(r"\bDC\d{4}\b", q, re.IGNORECASE):
@@ -1170,7 +1179,7 @@ def generate_requested_relationship_summary(query: str, nodes: list[dict]) -> st
         return None
 
     node_type = str(node.get("node_type") or node.get("type") or "")
-    intent = _relationship_intent(query, node_type)
+    intent = _relationship_intent(query, node_type, node.get("name"))
     if not intent:
         return None
 
