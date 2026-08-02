@@ -35,10 +35,11 @@ BACKEND_DIR = Path(__file__).resolve().parents[1]
 if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
-from orchestration.pipeline import PipelineError, get_driver, normalize_query, run_pipeline  # noqa: E402
+from orchestration.pipeline import PipelineError, get_driver, normalize_query  # noqa: E402
 from orchestration.multi_intent import run_multi_pipeline  # noqa: E402
 from observability import langfuse_tracing as obs  # noqa: E402
 from retrieval.guardrail import extract_filters, has_cybersecurity_signal  # noqa: E402
+from api.graph_routes import router as graph_router  # noqa: E402
 from api.settings import load_settings  # noqa: E402
 from api.stats import StatsResponse, get_stats  # noqa: E402
 from security import (  # noqa: E402
@@ -87,6 +88,11 @@ app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 app.add_middleware(SlowAPIMiddleware)
 
+# Read-only graph explorer, mounted as an independent router. It shares no code
+# path with /query - removing this single line would leave answering byte-for-
+# byte unchanged.
+app.include_router(graph_router)
+
 
 class QueryRequest(BaseModel):
     query: str = Field(..., min_length=1, max_length=SETTINGS.max_query_chars)
@@ -120,9 +126,38 @@ class CorrectionSuggestion(BaseModel):
     suggested: str
 
 
+class SuggestionActionResponse(BaseModel):
+    """A suggestion chip plus the exact intent-preserving query to submit."""
+
+    label: str
+    query: str
+    original: str
+
+
 class AnswerSection(BaseModel):
     label: str
     count: int
+
+
+class AnswerBlockEntry(BaseModel):
+    """One backend-identified content block within a canonical UI section."""
+
+    heading: str
+    markdown: str
+
+
+class AnswerBlock(BaseModel):
+    """Authoritative display grouping for one canonical answer category."""
+
+    label: str
+    entries: list[AnswerBlockEntry]
+
+
+class AnswerPresentation(BaseModel):
+    """Backend-owned answer structure used by the frontend section cards."""
+
+    preamble: str = ""
+    blocks: list[AnswerBlock] = Field(default_factory=list)
 
 
 class LogEvidenceEntry(BaseModel):
@@ -138,16 +173,20 @@ class AnswerSegmentResponse(BaseModel):
     own grounded_ids/sources - the frontend renders one card per segment."""
 
     query: str
+    display_title: str | None = None
+    segment_kind: str = "question"
     answer: str
     allowed: bool
     guardrail_category: str | None = None
     answer_source: str = "rag"
     nodes: list[NodeSource] = []
     answer_sections: list[AnswerSection] = []
+    answer_presentation: AnswerPresentation | None = None
     log_evidence: list[LogEvidenceEntry] = []
     grounded_ids: list[str] = []
     # "Did you mean" candidates when this segment referenced an unresolved code.
     suggestions: list[str] = []
+    suggestion_actions: list[SuggestionActionResponse] = []
 
 
 class QueryResponse(BaseModel):
@@ -172,6 +211,10 @@ class QueryResponse(BaseModel):
     # these directly instead of regex-parsing the prose (which mis-counted
     # narrative text). Empty when the answer has no chartable list sections.
     answer_sections: list[AnswerSection] = []
+    # Canonical section boundaries and content computed from the same backend
+    # answer as `answer_sections`. The frontend renders cards/scroll targets
+    # from this structure instead of independently guessing section headers.
+    answer_presentation: AnswerPresentation | None = None
     # Populated only for a multi-intent turn (>=2 answered sub-questions); each
     # entry is a self-contained answer with its own chart data. Empty for a
     # single-intent turn, where the top-level fields are the whole answer -
@@ -186,6 +229,10 @@ class QueryResponse(BaseModel):
     # did not resolve (e.g. an unknown APT number). The frontend renders these
     # as clickable chips; empty for a normal answer.
     suggestions: list[str] = []
+    # Structured form used by current clients. The string labels above remain
+    # for backward compatibility; these actions prevent a multi-reference chip
+    # from replacing the wrong token.
+    suggestion_actions: list[SuggestionActionResponse] = []
     # A spell-correction the UI offers via a blocking Yes/No gate: set only when
     # a single-intent query returned no info AND normalizing its spelling
     # produced a different query worth trying. Null otherwise.
@@ -282,16 +329,39 @@ def _canonical_chart_category(header_text: str) -> str | None:
     stripped = header_text.strip().strip("*").strip()
     if _NON_CHART_HEADER.match(stripped):
         return None
-    for pattern, label in _CHART_CATEGORY_RULES:
-        if pattern.search(stripped):
-            return label
-    return None
+    # Contextual headings contain both the relationship category and the
+    # subject entity, e.g. "Malware explicitly connected to Lazarus Group".
+    # Choosing solely by rule order misclassified that heading as Actors
+    # because "Group" also appears later. The category is the earliest matching
+    # term in the heading; rule order remains the specificity tie-breaker when
+    # two patterns begin at the same character (Detection Strategies before a
+    # generic detection match, Related Techniques before Techniques, etc.).
+    matches: list[tuple[int, int, str]] = []
+    for priority, (pattern, label) in enumerate(_CHART_CATEGORY_RULES):
+        match = pattern.search(stripped)
+        if match:
+            matches.append((match.start(), priority, label))
+    return min(matches)[2] if matches else None
 
 
 def _count_inline_items(value: str) -> int:
+    """Count comma-separated items on a header line.
+
+    An item must contain at least one alphanumeric character. Length alone is
+    not enough: a header the generator left empty still leaves punctuation on
+    the line - "**Tactics:**" parses to an inline value of "**", which is two
+    characters long and was therefore counted as one item, charting an empty
+    category as 1. The same guard rejects any other punctuation residue ("-",
+    "--", "...") from any label, so a category is only ever counted when real
+    content follows it.
+    """
     cleaned = re.sub(r"\([^)]*\)", "", value)
     cleaned = re.sub(r"\band\b", ",", cleaned, flags=re.I)
-    return sum(1 for part in cleaned.split(",") if len(part.strip()) > 1)
+    return sum(
+        1
+        for part in cleaned.split(",")
+        if len(part.strip()) > 1 and re.search(r"[A-Za-z0-9]", part)
+    )
 
 
 def compute_answer_sections(answer: str) -> list[AnswerSection]:
@@ -330,6 +400,95 @@ def compute_answer_sections(answer: str) -> list[AnswerSection]:
             order.append(label)
         counts[label] = max(counts.get(label, 0), count)
     return [AnswerSection(label=label, count=counts[label]) for label in order]
+
+
+_NARRATIVE_PRESENTATION_LABELS = {
+    "description": "Description",
+    "summary": "Summary",
+    "overview": "Overview",
+}
+
+
+def _presentation_label(header_text: str) -> str | None:
+    clean = header_text.strip().strip("*").strip()
+    narrative = _NARRATIVE_PRESENTATION_LABELS.get(clean.lower())
+    return narrative or _canonical_chart_category(clean)
+
+
+def _trim_presentation_lines(lines: list[str]) -> list[str]:
+    trimmed = list(lines)
+    while trimmed and not trimmed[0].strip():
+        trimmed.pop(0)
+    while trimmed and not trimmed[-1].strip():
+        trimmed.pop()
+    # Multi-entity deterministic answers use a Markdown horizontal rule as a
+    # separator. It belongs between entries, not inside either entry's content.
+    while trimmed and trimmed[-1].strip() == "---":
+        trimmed.pop()
+        while trimmed and not trimmed[-1].strip():
+            trimmed.pop()
+    return trimmed
+
+
+def compute_answer_presentation(answer: str) -> AnswerPresentation | None:
+    """Return backend-authoritative section boundaries and their Markdown.
+
+    This deliberately shares the backend's category classifier with
+    ``compute_answer_sections``. The UI therefore receives both the chart count
+    and the matching scroll/render target from one source of truth; it never
+    needs to infer contextual headers such as
+    ``Tactics explicitly connected to OilRig:`` on its own.
+    """
+    lines = (answer or "").splitlines()
+    preamble: list[str] = []
+    block_order: list[str] = []
+    grouped: dict[str, list[AnswerBlockEntry]] = {}
+    current_label: str | None = None
+    current_heading = ""
+    current_lines: list[str] = []
+
+    def flush() -> None:
+        nonlocal current_label, current_heading, current_lines
+        if current_label is None:
+            return
+        content = "\n".join(_trim_presentation_lines(current_lines)).strip()
+        if content:
+            if current_label not in grouped:
+                block_order.append(current_label)
+                grouped[current_label] = []
+            grouped[current_label].append(
+                AnswerBlockEntry(heading=current_heading, markdown=content)
+            )
+        current_label = None
+        current_heading = ""
+        current_lines = []
+
+    for line in lines:
+        match = _HEADER_RE.match(line)
+        label = _presentation_label(match.group(1)) if match else None
+        if label:
+            flush()
+            current_label = label
+            current_heading = match.group(1).strip().strip("*").strip()
+            inline = match.group(2).strip()
+            current_lines = [inline] if inline else []
+            continue
+        if current_label is None:
+            preamble.append(line)
+        else:
+            current_lines.append(line)
+    flush()
+
+    blocks = [
+        AnswerBlock(label=label, entries=grouped[label])
+        for label in block_order
+    ]
+    if not blocks:
+        return None
+    return AnswerPresentation(
+        preamble="\n".join(_trim_presentation_lines(preamble)).strip(),
+        blocks=blocks,
+    )
 
 
 class HealthResponse(BaseModel):
@@ -526,6 +685,9 @@ async def query(request: Request, payload: QueryRequest) -> QueryResponse:
     nodes = [NodeSource(**source.__dict__) for source in result.sources]
     grounded = await run_in_threadpool(grounded_mitre_ids, result.answer)
     answer_sections = compute_answer_sections(result.answer) if result.allowed else []
+    answer_presentation = (
+        compute_answer_presentation(result.answer) if result.allowed else None
+    )
 
     # Spell-correction "did you mean" gate. Offered ONLY when: the client didn't
     # already answer a gate (skip_correction), this is a single-intent turn
@@ -563,19 +725,29 @@ async def query(request: Request, payload: QueryRequest) -> QueryResponse:
     segments: list[AnswerSegmentResponse] = []
     for seg in result.segments:
         seg_sections = compute_answer_sections(seg.answer) if seg.allowed else []
+        seg_presentation = (
+            compute_answer_presentation(seg.answer) if seg.allowed else None
+        )
         seg_grounded = await run_in_threadpool(grounded_mitre_ids, seg.answer)
         segments.append(
             AnswerSegmentResponse(
                 query=seg.query,
+                display_title=seg.display_title,
+                segment_kind=seg.segment_kind,
                 answer=seg.answer,
                 allowed=seg.allowed,
                 guardrail_category=seg.guardrail_category,
                 answer_source=seg.answer_source,
                 nodes=[NodeSource(**source.__dict__) for source in seg.sources],
                 answer_sections=seg_sections,
+                answer_presentation=seg_presentation,
                 log_evidence=[LogEvidenceEntry(**entry) for entry in seg.log_evidence],
                 grounded_ids=seg_grounded,
                 suggestions=list(seg.suggestions),
+                suggestion_actions=[
+                    SuggestionActionResponse(**action.__dict__)
+                    for action in seg.suggestion_actions
+                ],
             )
         )
 
@@ -594,8 +766,13 @@ async def query(request: Request, payload: QueryRequest) -> QueryResponse:
         answer_source=result.answer_source,
         log_evidence=[LogEvidenceEntry(**entry) for entry in result.log_evidence],
         answer_sections=answer_sections,
+        answer_presentation=answer_presentation,
         segments=segments,
         grounded_ids=grounded,
         suggestions=list(result.suggestions),
+        suggestion_actions=[
+            SuggestionActionResponse(**action.__dict__)
+            for action in result.suggestion_actions
+        ],
         correction=correction,
     )

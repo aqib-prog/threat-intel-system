@@ -37,7 +37,16 @@ export function SourcesPanel({ nodes }: { nodes: NodeSource[] }) {
         </button>
 
         {open && (
-          <div className="flex items-center gap-1 rounded-lg border border-border-dim bg-void-panel/80 p-1">
+          <div
+            className="flex items-center gap-1 rounded-lg border border-cyan/15 p-1"
+            style={{
+              // Matches the source cards and answer charts - one material for
+              // the whole panel rather than a flat control beside glass cards.
+              background:
+                "linear-gradient(145deg, rgba(0,245,255,0.07) 0%, rgba(13,14,23,0.82) 55%, rgba(13,14,23,0.92) 100%)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10)",
+            }}
+          >
             <button
               type="button"
               onClick={() => setView("cards")}

@@ -18,6 +18,10 @@ RELATION_FIELDS = {
     "tool": ["tools"],
     "campaign": ["campaigns"],
     "tactic": ["tactics"],
+    "mitigation": ["mitigations"],
+    "analytic": ["analytics"],
+    "detection_strategy": ["detection_strategies", "detections"],
+    "data_component": ["log_sources"],
 }
 
 SELF_TYPE_BY_FILTER = {
@@ -26,6 +30,10 @@ SELF_TYPE_BY_FILTER = {
     "tool": "Tool",
     "campaign": "Campaign",
     "tactic": "Tactic",
+    "mitigation": "Mitigation",
+    "analytic": "Analytic",
+    "detection_strategy": "DetectionStrategy",
+    "data_component": "DataComponent",
 }
 
 
@@ -324,8 +332,11 @@ def rerank(
         scored_nodes.append(scored)
 
     scored_nodes.sort(
-        key=lambda item: (item["hard_match_priority"], item["deterministic_score"]),
-        reverse=True,
+        key=lambda item: (
+            -item["hard_match_priority"],
+            -item["deterministic_score"],
+            str(item.get("external_id") or item.get("id") or ""),
+        ),
     )
     candidates = scored_nodes[:max(top_k, min(candidate_k, len(scored_nodes)))]
 
@@ -356,8 +367,11 @@ def rerank(
         node["relevance_score"] = clipped_score(combined_score)
 
     candidates.sort(
-        key=lambda item: (item["hard_match_priority"], item["relevance_score"]),
-        reverse=True,
+        key=lambda item: (
+            -item["hard_match_priority"],
+            -item["relevance_score"],
+            str(item.get("external_id") or item.get("id") or ""),
+        ),
     )
     return candidates[:top_k]
 

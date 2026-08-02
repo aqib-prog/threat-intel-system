@@ -1,4 +1,5 @@
 import { MagnifyingGlass } from "@phosphor-icons/react";
+import type { SuggestionAction } from "../../lib/types";
 
 /**
  * "Did you mean" chips shown when a referenced entity code didn't resolve (e.g.
@@ -26,33 +27,42 @@ function buildChipQuery(sourceQuery: string | undefined, suggestion: string): st
 
 export function SuggestionChips({
   suggestions,
+  actions,
   sourceQuery,
   onPick,
 }: {
   suggestions: string[];
+  actions?: SuggestionAction[];
   sourceQuery?: string;
   onPick?: (value: string) => void;
 }) {
-  if (!suggestions || suggestions.length === 0) return null;
+  const entries =
+    actions && actions.length > 0
+      ? actions.map((action) => ({ label: action.label, query: action.query }))
+      : (suggestions || []).map((label) => ({
+          label,
+          query: buildChipQuery(sourceQuery, label),
+        }));
+  if (entries.length === 0) return null;
   return (
     <div className="relative mt-2.5">
       <p className="mb-1.5 font-mono text-[10px] uppercase tracking-wider text-text-dim">
         Did you mean
       </p>
       <div className="flex flex-wrap gap-1.5">
-        {suggestions.map((value) => (
+        {entries.map((entry) => (
           <button
-            key={value}
+            key={`${entry.label}:${entry.query}`}
             type="button"
-            // Send a well-formed lookup, never the bare entity name: a bare
-            // token like "APT2" trips the harm-gate classifier, whereas
-            // "tell me about APT2" resolves to the entity's full profile.
-            onClick={() => onPick?.(buildChipQuery(sourceQuery, value))}
+            // Current APIs provide an exact intent-preserving query. The
+            // buildChipQuery fallback keeps older API responses useful by
+            // rebuilding a complete lookup instead of sending a bare label.
+            onClick={() => onPick?.(entry.query)}
             disabled={!onPick}
             className="inline-flex items-center gap-1 rounded-full border border-cyan/30 bg-cyan/10 px-2.5 py-1 font-mono text-[11px] text-cyan transition-colors hover:border-cyan/60 hover:bg-cyan/20 disabled:cursor-default disabled:opacity-70"
           >
             <MagnifyingGlass size={11} weight="bold" aria-hidden="true" />
-            {value}
+            {entry.label}
           </button>
         ))}
       </div>

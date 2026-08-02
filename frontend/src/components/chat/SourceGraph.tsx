@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   forceSimulation,
   forceLink,
@@ -80,8 +80,17 @@ export function SourceGraph({ nodes }: { nodes: NodeSource[] }) {
   const zoomLayerRef = useRef<SVGGElement>(null);
   const nodeElRefs = useRef<Map<string, SVGGElement>>(new Map());
   const linkElRefs = useRef<Map<number, SVGLineElement>>(new Map());
+  // Each link owns a gradient (so its colour runs hub-cyan -> the node's own
+  // accent) and a packet that travels along it. Both need their coordinates
+  // rewritten as the simulation moves the endpoints.
+  const gradientRefs = useRef<Map<number, SVGLinearGradientElement>>(new Map());
+  const packetRefs = useRef<Map<number, SVGCircleElement>>(new Map());
   const simulationRef = useRef<Simulation<GraphNode, undefined> | null>(null);
   const reducedMotion = useReducedMotion();
+  // Several graphs can be mounted at once (one per answer), and SVG ids are
+  // document-global - without this, every graph would reference the first
+  // graph's gradients. Colons are stripped so the id is safe inside url().
+  const graphId = useId().replace(/:/g, "");
   const [size, setSize] = useState({ width: 480, height: 320 });
   const [hover, setHover] = useState<HoverInfo | null>(null);
 
@@ -132,6 +141,16 @@ export function SourceGraph({ nodes }: { nodes: NodeSource[] }) {
         el.setAttribute("y1", String(s.y));
         el.setAttribute("x2", String(t.x));
         el.setAttribute("y2", String(t.y));
+        // A gradient in userSpaceOnUse is anchored to absolute coordinates, so
+        // it has to follow the endpoints or the colour ramp detaches from the
+        // line it belongs to.
+        const gradient = gradientRefs.current.get(i);
+        if (gradient) {
+          gradient.setAttribute("x1", String(s.x));
+          gradient.setAttribute("y1", String(s.y));
+          gradient.setAttribute("x2", String(t.x));
+          gradient.setAttribute("y2", String(t.y));
+        }
       });
       nodeElRefs.current.forEach((el, id) => {
         const n = graphNodes.find((gn) => gn.id === id);
@@ -201,8 +220,46 @@ export function SourceGraph({ nodes }: { nodes: NodeSource[] }) {
       select(svgRef.current).call(zoomBehavior).call(zoomBehavior.transform, zoomIdentity);
     }
 
+    // Packets ride the edges on their OWN clock. The simulation stops ticking
+    // once alpha decays, so driving them from `ticked` would freeze the traffic
+    // the moment the layout settles - which is exactly when the graph is being
+    // read. Reads the live endpoint positions each frame, so packets stay on
+    // their edge even while a node is being dragged.
+    let frame = 0;
+    if (!reducedMotion) {
+      const started = performance.now();
+      const animatePackets = (now: number) => {
+        const elapsed = (now - started) / 1000;
+        packetRefs.current.forEach((el, i) => {
+          const link = graphLinks[i];
+          const source = link.source as GraphNode;
+          const target = link.target as GraphNode;
+          if (
+            source.x === undefined ||
+            source.y === undefined ||
+            target.x === undefined ||
+            target.y === undefined
+          ) {
+            return;
+          }
+          // Stronger sources transmit more often. The index offset staggers the
+          // edges so packets never depart in a single synchronised pulse.
+          const period = 2.6 - link.strength * 1.2;
+          const phase = ((elapsed + i * 0.37) % period) / period;
+          el.setAttribute("cx", String(source.x + (target.x - source.x) * phase));
+          el.setAttribute("cy", String(source.y + (target.y - source.y) * phase));
+          // Emerge from the hub and get absorbed at the node, rather than
+          // blinking in and out at the endpoints.
+          el.setAttribute("opacity", String(0.95 * Math.sin(phase * Math.PI)));
+        });
+        frame = requestAnimationFrame(animatePackets);
+      };
+      frame = requestAnimationFrame(animatePackets);
+    }
+
     return () => {
       simulation.stop();
+      if (frame) cancelAnimationFrame(frame);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [graphNodes, graphLinks, size.width, size.height, reducedMotion]);
@@ -216,6 +273,39 @@ export function SourceGraph({ nodes }: { nodes: NodeSource[] }) {
         viewBox={`0 0 ${size.width} ${size.height}`}
         className="h-full w-full touch-none select-none"
       >
+        <defs>
+          {/* Bloom for the nodes, matching the answer radar's treatment. */}
+          <filter id={`graph-bloom-${graphId}`} x="-60%" y="-60%" width="220%" height="220%">
+            <feGaussianBlur stdDeviation="2.4" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+          {/* One gradient per edge: cyan at the hub, the node's own accent at
+              the far end, so an edge visibly carries the identity of what it
+              connects to. Coordinates are rewritten every tick. */}
+          {graphLinks.map((link, i) => {
+            const target = link.target as GraphNode;
+            const node = graphNodes.find((gn) => gn.id === (target.id ?? target));
+            const hex = node && !node.isHub ? ACCENT_HEX[accentForNodeType(node.type)] : ACCENT_HEX.cyan;
+            return (
+              <linearGradient
+                key={i}
+                id={`graph-link-${graphId}-${i}`}
+                gradientUnits="userSpaceOnUse"
+                ref={(el) => {
+                  if (el) gradientRefs.current.set(i, el);
+                  else gradientRefs.current.delete(i);
+                }}
+              >
+                <stop offset="0%" stopColor={ACCENT_HEX.cyan} stopOpacity={0.5} />
+                <stop offset="100%" stopColor={hex} stopOpacity={0.85} />
+              </linearGradient>
+            );
+          })}
+        </defs>
+
         <g ref={zoomLayerRef}>
           <g>
             {graphLinks.map((link, i) => (
@@ -225,14 +315,47 @@ export function SourceGraph({ nodes }: { nodes: NodeSource[] }) {
                   if (el) linkElRefs.current.set(i, el);
                   else linkElRefs.current.delete(i);
                 }}
-                stroke={ACCENT_HEX.cyan}
-                strokeOpacity={0.14 + link.strength * 0.28}
+                className={reducedMotion ? undefined : "graph-link-flow"}
+                stroke={`url(#graph-link-${graphId}-${i})`}
+                strokeOpacity={0.3 + link.strength * 0.45}
                 strokeWidth={1 + link.strength * 1.5}
+                strokeLinecap="round"
+                // Stronger sources pulse faster - flow rate encodes relevance.
+                style={
+                  reducedMotion
+                    ? undefined
+                    : { animationDuration: `${2.4 - link.strength * 1.1}s` }
+                }
               />
             ))}
           </g>
+
+          {/* Data packets riding the edges, positioned by the rAF loop above. */}
+          {!reducedMotion && (
+            <g>
+              {graphLinks.map((link, i) => {
+                const target = link.target as GraphNode;
+                const node = graphNodes.find((gn) => gn.id === (target.id ?? target));
+                const hex = node && !node.isHub ? ACCENT_HEX[accentForNodeType(node.type)] : ACCENT_HEX.cyan;
+                return (
+                  <circle
+                    key={i}
+                    ref={(el) => {
+                      if (el) packetRefs.current.set(i, el);
+                      else packetRefs.current.delete(i);
+                    }}
+                    r={1.6 + link.strength * 1.4}
+                    fill={hex}
+                    opacity={0}
+                    filter={`url(#graph-bloom-${graphId})`}
+                    style={{ pointerEvents: "none" }}
+                  />
+                );
+              })}
+            </g>
+          )}
           <g>
-            {graphNodes.map((n) => {
+            {graphNodes.map((n, index) => {
               const accentColor = n.isHub ? "cyan" : accentForNodeType(n.type);
               const hex = ACCENT_HEX[accentColor];
               const Icon = n.isHub ? GraphIcon : iconForNodeType(n.type);
@@ -268,11 +391,31 @@ export function SourceGraph({ nodes }: { nodes: NodeSource[] }) {
                   }}
                   onBlur={() => setHover(null)}
                 >
+                  {/* Hub ping, behind the node itself. */}
+                  {n.isHub && !reducedMotion && (
+                    <circle
+                      className="graph-hub-ping"
+                      r={r}
+                      fill="none"
+                      stroke={hex}
+                      strokeWidth={1.25}
+                      style={{ pointerEvents: "none" }}
+                    />
+                  )}
                   <circle
+                    className={reducedMotion ? undefined : "graph-node-circle"}
                     r={r}
                     fill={hexToRgba(hex, n.isHub ? 0.12 : 0.16)}
                     stroke={hex}
                     strokeWidth={n.isHub ? 1.75 : 1.25}
+                    filter={`url(#graph-bloom-${graphId})`}
+                    // Staggered so the neighbourhood resolves outward from the
+                    // hub instead of every node popping at once.
+                    style={
+                      reducedMotion
+                        ? undefined
+                        : { animationDelay: `${n.isHub ? 0 : 90 + index * 45}ms` }
+                    }
                   />
                   <foreignObject x={-8} y={-8} width={16} height={16} className="pointer-events-none overflow-visible">
                     <Icon size={16} weight="bold" color={hex} />

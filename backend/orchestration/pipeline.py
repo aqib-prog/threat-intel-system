@@ -16,14 +16,24 @@ from typing import Any
 from neo4j import GraphDatabase
 
 from config import NEO4J_PASSWORD, NEO4J_URI, NEO4J_USER
-from generation.generate import format_context, generate
+from generation.generate import format_evaluation_context, generate
 from observability import langfuse_tracing as obs
 from log_analysis import detector as log_analysis_detector
 from log_analysis.analyzer import analyze as analyze_log_evidence
 from log_analysis.formatter import format_log_analysis_answer
+from log_analysis.mixed_input import is_structured_json_log, is_structured_line_log
 from log_analysis.parser import parse_log
 from retrieval.graph_traversal import traverse_nodes
-from retrieval.guardrail import check_blacklist, check_llm_guardrail, extract_filters, guardrail
+from retrieval.guardrail import (
+    check_blacklist,
+    check_llm_guardrail,
+    extract_filters,
+    guardrail,
+)
+from retrieval.input_shape import (
+    UNSUPPORTED_OPERATIONAL_COMMAND_MESSAGE,
+    is_bare_operational_command,
+)
 from retrieval.reranker import rerank
 from retrieval.semantic_search import is_low_signal_query, search
 
@@ -38,8 +48,14 @@ REQUESTED_CVE_ID_RE = re.compile(r"\bCVE-\d{4}-\d{4,7}\b", re.IGNORECASE)
 # Actor ALIAS codes (APT29, FIN7, UNC2452) - these are actor names/aliases, NOT
 # MITRE external_ids (which are G/T/S/M/C-prefixed and handled above). A near
 # miss here changes the entity entirely (apt20 != apt2), so an alias code that
-# does not resolve to a real actor must refuse, never fuzzy-substitute.
-REQUESTED_ACTOR_CODE_RE = re.compile(r"\b(?:APT|FIN|UNC)\s?-?\d{1,5}\b", re.IGNORECASE)
+# does not resolve to a real actor must refuse, never fuzzy-substitute. Common
+# digit-lookalike letters are captured as malformed codes too (APT2O must not
+# fall through and be fuzzily auto-resolved to APT2).
+REQUESTED_ACTOR_CODE_RE = re.compile(
+    r"\b(?:APT|FIN|UNC)\s?-?"
+    r"(?=[0-9OIL]{1,5}\b)(?=[0-9OIL]*\d)[0-9OIL]{1,5}\b",
+    re.IGNORECASE,
+)
 COUNT_QUERY_RE = re.compile(r"\b(?:how\s+many|count|number\s+of|total)\b", re.IGNORECASE)
 SPACED_ATTACK_ID_RE = re.compile(
     r"\b(?P<prefix>[GMSTC]A?)\s+(?P<num>\d{4})(?:\s*\.\s*(?P<sub>\d{3}))?\b",
@@ -60,6 +76,23 @@ SECURITY_SEGMENT_RE = re.compile(
     r"CVE-\d{4}-\d{4,7})\b",
     re.IGNORECASE,
 )
+HIGH_SPECIFICITY_TERM_RE = re.compile(
+    r"\b[A-Z][a-z0-9]+(?:[A-Z][A-Za-z0-9]+)+\b"
+)
+NAMED_DETECTION_LOOKUP_RE = re.compile(
+    r"\b(?:data\s+(?:source|component)s?|detection\s+strateg(?:y|ies)|"
+    r"analytics?|definition)\b",
+    re.IGNORECASE,
+)
+
+
+@dataclass(frozen=True)
+class SuggestionAction:
+    """One non-authoritative correction chip and the exact query it should run."""
+
+    label: str
+    query: str
+    original: str
 
 
 def focus_security_query(query: str) -> str:
@@ -200,6 +233,75 @@ def resolve_actor_codes(driver, codes: set[str]) -> set[str]:
     return {str(value) for value in (record["found"] if record else [])}
 
 
+def without_actor_codes(query: str, codes: set[str]) -> str:
+    """Remove unresolved actor aliases before fuzzy entity extraction.
+
+    The original query remains on the response and in suggestion actions. This
+    sanitized copy is used only for retrieval, preventing an invalid APT code
+    from being fuzzily rewritten to a different real actor.
+    """
+    if not codes:
+        return query
+
+    def replace(match: re.Match) -> str:
+        normalized = _normalize_actor_code(match.group(0))
+        return " __unresolved_actor__ " if normalized in codes else match.group(0)
+
+    value = REQUESTED_ACTOR_CODE_RE.sub(replace, query)
+    # Remove the placeholder together with one adjacent list connector. This
+    # covers first/middle/last positions without leaving fragments such as
+    # "about and APT29" or "APT29 and use".
+    value = re.sub(
+        r"(?:,\s*)?\b(?:and|or)\s+__unresolved_actor__\b",
+        " ",
+        value,
+        flags=re.IGNORECASE,
+    )
+    value = re.sub(
+        r"\b__unresolved_actor__\b\s*(?:,\s*)?(?:\b(?:and|or)\b\s*)?",
+        " ",
+        value,
+        flags=re.IGNORECASE,
+    )
+    value = re.sub(
+        r"\b(do|does|did|are|is|was|were)\s+(?:and|or)\s+",
+        r"\1 ",
+        value,
+        flags=re.IGNORECASE,
+    )
+    value = re.sub(
+        r"\b(?:and|or)\s+(?=(?:use|uses|used|run|runs|ran|have|has|"
+        r"techniques?|tools?|malware|campaigns?|tactics?|mitigations?)\b)",
+        "",
+        value,
+        flags=re.IGNORECASE,
+    )
+    connector = "or" if re.search(r"\bor\b", query, re.IGNORECASE) else "and"
+    value = re.sub(
+        r"(\b(?:APT|FIN|UNC)\s?-?\d{1,5}\b)\s*,\s*"
+        r"(\b(?:APT|FIN|UNC)\s?-?\d{1,5}\b)",
+        rf"\1 {connector} \2",
+        value,
+        flags=re.IGNORECASE,
+    )
+    value = re.sub(r",\s*(?=\band\b|\bor\b)", " ", value, flags=re.IGNORECASE)
+    value = re.sub(r"\s+([,?.!])", r"\1", value)
+    value = re.sub(r",\s*(?:,|and|or)\s*", " ", value, flags=re.IGNORECASE)
+    return re.sub(r"\s+", " ", value).strip()
+
+
+_ALL_ACTOR_REFERENCES_REQUIRED_RE = re.compile(
+    r"\b(?:compare|comparison|both|shared|common|overlap|intersection|"
+    r"similarit(?:y|ies)|differen(?:ce|ces)|versus|vs\.?)\b",
+    re.IGNORECASE,
+)
+
+
+def requires_all_actor_references(query: str) -> bool:
+    """Whether omitting one actor would change the requested relationship."""
+    return bool(_ALL_ACTOR_REFERENCES_REQUIRED_RE.search(query or ""))
+
+
 def actor_code_suggestions(driver, codes: set[str], limit: int = 4) -> list[str]:
     """Closest real actor names/aliases that share a code's alpha prefix, so an
     unknown 'apt20' can offer 'did you mean APT2 / APT28 / APT29'. Exact fuzzy
@@ -326,26 +428,59 @@ def _candidate_name_phrases(query: str) -> list[str]:
     return phrases
 
 
-def reference_suggestions(driver, query: str, limit: int = 4) -> list[str]:
+def _suggestion_replacement(label: str) -> str:
+    """Canonical value to substitute while keeping the chip's descriptive label."""
+    parenthetical = re.search(r"\(([^()]+)\)\s*$", label)
+    return parenthetical.group(1) if parenthetical else label
+
+
+def _replace_suggestion_target(query: str, original: str, replacement: str) -> str:
+    pattern = re.compile(re.escape(original), re.IGNORECASE)
+    return pattern.sub(lambda _match: replacement, query, count=1)
+
+
+def reference_suggestion_actions(
+    driver,
+    query: str,
+    limit: int = 4,
+    *,
+    target_actor_codes: set[str] | None = None,
+) -> list[SuggestionAction]:
     """Closest real entities for any ID/code-shaped reference in the query that
     does NOT resolve exactly - so a "no information" answer can offer "did you
     mean" instead of a dead end. Covers malformed MITRE ids (T10557 -> T1055
     (Process Injection)) and actor codes (apt20 -> APT2). Returns [] when the
     query has no such reference at all (e.g. plain "how are you"), so chit-chat
-    never gets spurious suggestions. Fail-safe: any error returns []."""
-    tokens: list[tuple[str, str]] = []
+    never gets spurious suggestions. Every result carries the exact corrected
+    query, so multi-reference inputs never replace the wrong token."""
+    tokens: list[tuple[str, str, str]] = []
     for match in _REFERENCE_TOKEN_RE.finditer(query or ""):
         prefix = match.group(1).upper()
         if prefix in _MITRE_ID_PREFIXES or prefix in _ACTOR_CODE_PREFIXES:
-            tokens.append((prefix, re.sub(r"[\s-]+", "", match.group(0)).upper()))
+            normalized = re.sub(r"[\s-]+", "", match.group(0)).upper()
+            if (
+                target_actor_codes is not None
+                and prefix in _ACTOR_CODE_PREFIXES
+                and normalized.lower() not in target_actor_codes
+            ):
+                continue
+            tokens.append((prefix, normalized, match.group(0)))
 
     from rapidfuzz import fuzz, process
 
-    ordered: list[str] = []
-    seen: set[str] = set()
+    ordered: list[SuggestionAction] = []
+    seen: set[tuple[str, str]] = set()
+    present_references = {
+        re.sub(r"[\s-]+", "", match.group(0)).upper()
+        for match in _REFERENCE_TOKEN_RE.finditer(query or "")
+        if match.group(1).upper()
+        in (_MITRE_ID_PREFIXES | _ACTOR_CODE_PREFIXES)
+    }
+    distinct_token_count = max(1, len({original.lower() for _, _, original in tokens}))
+    per_token_limit = max(1, limit // distinct_token_count)
     try:
         with driver.session() as session:
-            for prefix, token in tokens:
+            for prefix, token, original in tokens:
                 if prefix in _ACTOR_CODE_PREFIXES:
                     record = session.run(
                         "MATCH (a:Actor) WITH [a.name] + coalesce(a.aliases, []) AS names "
@@ -356,7 +491,15 @@ def reference_suggestions(driver, query: str, limit: int = 4) -> list[str]:
                     candidates = list(record["names"]) if record and record["names"] else []
                     if any(re.sub(r"[\s-]+", "", c).upper() == token for c in candidates):
                         continue  # the code resolves exactly - nothing to suggest
-                    ranked = [name for name, _s, _i in process.extract(token, candidates, scorer=fuzz.ratio, limit=limit)]
+                    ranked = [
+                        name
+                        for name, _s, _i in process.extract(
+                            token,
+                            candidates,
+                            scorer=fuzz.ratio,
+                            limit=per_token_limit,
+                        )
+                    ]
                 else:
                     record = session.run(
                         "MATCH (n:MitreNode) WHERE n.external_id STARTS WITH $p "
@@ -369,13 +512,36 @@ def reference_suggestions(driver, query: str, limit: int = 4) -> list[str]:
                         continue  # exact id exists - not a miss
                     id_to_name = {it["id"]: it["name"] for it in items}
                     ranked = []
-                    for cid, _s, _i in process.extract(token, ids, scorer=fuzz.ratio, limit=limit):
+                    for cid, _s, _i in process.extract(
+                        token,
+                        ids,
+                        scorer=fuzz.ratio,
+                        limit=per_token_limit,
+                    ):
                         nm = id_to_name.get(cid)
                         ranked.append(f"{nm} ({cid})" if nm else cid)
                 for label in ranked:
-                    if label not in seen:
-                        seen.add(label)
-                        ordered.append(label)
+                    replacement = _suggestion_replacement(label)
+                    normalized_replacement = re.sub(
+                        r"[\s-]+", "", replacement
+                    ).upper()
+                    if (
+                        normalized_replacement in present_references
+                        and normalized_replacement != token
+                    ):
+                        continue
+                    key = (original.lower(), label)
+                    if key not in seen:
+                        seen.add(key)
+                        ordered.append(
+                            SuggestionAction(
+                                label=label,
+                                original=original,
+                                query=_replace_suggestion_target(
+                                    query, original, replacement
+                                ),
+                            )
+                        )
     except Exception:
         ordered = []  # fall through to name-based matching below
 
@@ -391,7 +557,22 @@ def reference_suggestions(driver, query: str, limit: int = 4) -> list[str]:
 
                 choices = [n for n, _ in names]
                 id_by_name = {n: i for n, i in names}
-                for phrase in phrases:
+                for raw_phrase in phrases:
+                    # A subject phrase may contain a valid structured reference
+                    # plus a misspelled name ("APT29 and Lazrus Group"). Codes
+                    # have their own resolver above; remove them before fuzzy
+                    # name matching so "APT29 and APT20" cannot become an
+                    # unrelated entity-name suggestion.
+                    phrase = _REFERENCE_TOKEN_RE.sub(" ", raw_phrase)
+                    phrase = re.sub(
+                        r"^\s*(?:and|or)\b|\b(?:and|or)\s*$",
+                        " ",
+                        phrase,
+                        flags=re.IGNORECASE,
+                    )
+                    phrase = re.sub(r"\s+", " ", phrase).strip(" ,")
+                    if len(phrase) < 4:
+                        continue
                     raw = process.extract(phrase, choices, scorer=fuzz.WRatio, limit=8)
                     # If the phrase IS a real entity name, it's not a typo - a
                     # no-info answer for it is a different problem, not a
@@ -418,14 +599,31 @@ def reference_suggestions(driver, query: str, limit: int = 4) -> list[str]:
                                 break
                             ext = id_by_name.get(name)
                             label = f"{name} ({ext})" if ext else name
-                            if label not in seen:
-                                seen.add(label)
-                                ordered.append(label)
+                            key = (phrase.lower(), label)
+                            if key not in seen:
+                                seen.add(key)
+                                ordered.append(
+                                    SuggestionAction(
+                                        label=label,
+                                        original=phrase,
+                                        query=_replace_suggestion_target(
+                                            query, phrase, name
+                                        ),
+                                    )
+                                )
                             if len(ordered) >= limit:
                                 break
                     if len(ordered) >= limit:
                         break
     return ordered[:limit]
+
+
+def reference_suggestions(driver, query: str, limit: int = 4) -> list[str]:
+    """Backward-compatible labels for callers that do not need click actions."""
+    return [
+        action.label
+        for action in reference_suggestion_actions(driver, query, limit=limit)
+    ]
 
 
 def normalize_query(query: str, driver=None) -> str:
@@ -529,6 +727,9 @@ def fetch_filter_seed_nodes(driver, filters: dict[str, Any]) -> list[dict]:
         "campaigns": filters.get("campaign", []),
         "tactics": filters.get("tactic", []),
         "mitigations": filters.get("mitigation", []),
+        "analytics": filters.get("analytic", []),
+        "detection_strategies": filters.get("detection_strategy", []),
+        "data_components": filters.get("data_component", []),
         "ids": filters.get("mitre_id", []),
     }
     if not any(parameters.values()):
@@ -544,6 +745,9 @@ def fetch_filter_seed_nodes(driver, filters: dict[str, Any]) -> list[dict]:
                OR (n:Campaign AND n.name IN $campaigns)
                OR (n:Tactic AND n.name IN $tactics)
                OR (n:Mitigation AND n.name IN $mitigations)
+               OR (n:Analytic AND n.name IN $analytics)
+               OR (n:DetectionStrategy AND n.name IN $detection_strategies)
+               OR (n:DataComponent AND n.name IN $data_components)
                OR n.external_id IN $ids
             RETURN n.id AS id, n.name AS name, n.external_id AS external_id,
                    CASE
@@ -610,6 +814,73 @@ def fetch_filter_seed_nodes(driver, filters: dict[str, Any]) -> list[dict]:
                 })
 
         return seeds
+
+
+def fetch_exact_named_detection_seed_nodes(
+    driver,
+    query: str,
+) -> list[dict]:
+    """Resolve exact names for ATT&CK's newer detection entity families.
+
+    This belongs to retrieval orchestration, not the separately measured harm
+    guard. It runs only when no older authoritative filter seed resolved.
+    """
+    with driver.session() as session:
+        records = session.run(
+            """
+            MATCH (n:MitreNode)
+            WHERE (n:DetectionStrategy OR n:Analytic OR n:DataComponent)
+              AND n.name IS NOT NULL
+              AND size(n.name) >= 4
+              AND toLower($search_text) CONTAINS toLower(n.name)
+            RETURN n.id AS id, n.name AS name, n.external_id AS external_id,
+                   CASE
+                       WHEN n:DetectionStrategy THEN 'DetectionStrategy'
+                       WHEN n:Analytic THEN 'Analytic'
+                       ELSE 'DataComponent'
+                   END AS type
+            ORDER BY size(n.name) DESC, n.external_id
+            """,
+            search_text=query,
+        )
+        return [
+            {
+                "id": record["id"],
+                "name": record["name"],
+                "external_id": record["external_id"],
+                "type": record["type"],
+                "score": 10.0,
+                "source": "exact_detection_name",
+            }
+            for record in records
+        ]
+
+
+def should_resolve_named_detection_entity(query: str) -> bool:
+    """Limit the newer-name resolver to unambiguous detection terminology."""
+    return bool(NAMED_DETECTION_LOOKUP_RE.search(query or ""))
+
+
+def add_named_detection_filters(
+    filters: dict[str, Any],
+    seed_nodes: list[dict],
+) -> dict[str, Any]:
+    """Expose exact detection-name seeds to reranking and deterministic output."""
+    field_by_type = {
+        "DetectionStrategy": "detection_strategy",
+        "Analytic": "analytic",
+        "DataComponent": "data_component",
+    }
+    updated = dict(filters)
+    for node in seed_nodes:
+        field = field_by_type.get(str(node.get("type") or ""))
+        name = node.get("name")
+        if not field or not name:
+            continue
+        bucket = updated.setdefault(field, [])
+        if name not in bucket:
+            bucket.append(name)
+    return updated
 
 
 def telemetry_technique_names(query: str) -> list[str]:
@@ -700,18 +971,29 @@ def should_skip_semantic_search(
     """Use deterministic graph seeds directly for anchored lookup questions."""
     if not seed_nodes:
         return False
-    if any(node.get("source") == "telemetry_seed" for node in seed_nodes):
+    if any(
+        node.get("source") in {"telemetry_seed", "exact_detection_name"}
+        for node in seed_nodes
+    ):
         return True
-    if filters.get("mitre_id"):
-        return True
-    if filters.get("campaign"):
-        return True
-    if filters.get("mitigation"):
-        return True
-    if filters.get("tactic") and re.search(
-        r"\b(?:what\s+is|tell\s+me\s+about|show\s+me)\b",
-        query,
-        re.IGNORECASE,
+    # Once a named/ID entity has been validated against Neo4j, its traversed
+    # relationship fields are the authoritative context for entity lookups.
+    # Mixing approximate vector candidates back in makes the exposed Sources
+    # list fluctuate between identical requests and can surface unrelated
+    # entities even though the deterministic answer remains correct.
+    if any(
+        filters.get(field)
+        for field in (
+            "mitre_id",
+            "malware",
+            "tool",
+            "campaign",
+            "mitigation",
+            "tactic",
+            "analytic",
+            "detection_strategy",
+            "data_component",
+        )
     ):
         return True
     if filters.get("threat_actor") and not (
@@ -719,6 +1001,49 @@ def should_skip_semantic_search(
     ):
         return True
     return False
+
+
+def filter_relevant_ranked_nodes(
+    nodes: list[dict],
+    minimum_score: float = MIN_RELEVANCE_SCORE,
+) -> list[dict]:
+    """Keep only evidence that independently clears the relevance gate."""
+    return [
+        node
+        for node in nodes
+        if float(node.get("relevance_score") or 0.0) >= minimum_score
+    ]
+
+
+def focus_ranked_nodes_on_explicit_terms(
+    query: str,
+    nodes: list[dict],
+    *,
+    has_authoritative_seeds: bool = False,
+) -> list[dict]:
+    """Prefer evidence that literally contains a user-supplied API/event term.
+
+    Mixed-case identifiers such as AssumeRole and GetFederationToken are more
+    authoritative than broad semantic similarity. If no candidate contains
+    the term, preserve the normal semantic result rather than failing closed.
+    Never narrow a validated entity lookup: mixed-case entity names such as
+    PsExec are anchors, not telemetry terms, and every requested anchor must
+    remain available to relationship renderers (including negative cases).
+    """
+    if has_authoritative_seeds:
+        return nodes
+    terms = {
+        match.group(0).lower()
+        for match in HIGH_SPECIFICITY_TERM_RE.finditer(query or "")
+    }
+    if not terms:
+        return nodes
+    matching = [
+        node
+        for node in nodes
+        if any(term in str(node).lower() for term in terms)
+    ]
+    return matching or nodes
 
 
 class PipelineError(RuntimeError):
@@ -758,6 +1083,9 @@ class PipelineResult:
     # referenced entity code (e.g. an unknown APT number) could not be resolved.
     # The frontend renders these as clickable chips; they are never auto-applied.
     suggestions: list[str] = field(default_factory=list)
+    # Structured equivalents carrying the exact corrected query. Kept additive
+    # so existing API clients that only consume string labels remain compatible.
+    suggestion_actions: list[SuggestionAction] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -779,6 +1107,7 @@ def fallback_result(
     filters: dict[str, Any] | None = None,
     answer: str | None = None,
     suggestions: list[str] | None = None,
+    suggestion_actions: list[SuggestionAction] | None = None,
 ) -> PipelineResult:
     return PipelineResult(
         query=query,
@@ -791,6 +1120,7 @@ def fallback_result(
         context_count=0,
         retrieved_contexts=[],
         suggestions=suggestions or [],
+        suggestion_actions=suggestion_actions or [],
     )
 
 
@@ -910,7 +1240,7 @@ def run_log_analysis_pipeline(
             retrieved_contexts.append(
                 "\n".join(
                     (
-                        format_context([node], query),
+                        format_evaluation_context([node], query),
                         f"Matched Line: {match.matched_line}",
                         f"Match Reason: {match.reason}",
                         f"Confidence: {match.confidence}",
@@ -943,8 +1273,8 @@ def run_pipeline(
     """Run one query through the complete grounded GraphRAG pipeline.
 
     ``include_contexts`` is an evaluation-only opt-in. When enabled, the
-    result carries the same formatted node facts supplied to generation;
-    the production default performs no context serialization.
+    result carries a lossless serialization of the structured node facts used
+    by generation; the production default performs no context serialization.
     """
     query = normalize_spaced_attack_ids(str(query or "").strip())
     if not query:
@@ -954,6 +1284,16 @@ def run_pipeline(
     if top_k < 1 or candidate_k < top_k:
         raise ValueError("candidate_k must be greater than or equal to top_k >= 1")
 
+    # This input-type boundary precedes log detection. A multiline CLI paste
+    # can contain paths, flags and KEY=value tokens that superficially resemble
+    # telemetry; it must not enter log analysis or consume an LLM request.
+    if is_bare_operational_command(query):
+        return fallback_result(
+            query,
+            category="unsupported_operational_command",
+            answer=UNSUPPORTED_OPERATIONAL_COMMAND_MESSAGE,
+        )
+
     # Isolated branch: genuinely large raw-log pastes skip the
     # question-answering path entirely (see log_analysis/detector.py's
     # stricter, multi-signal bar - a short question that merely mentions a
@@ -961,29 +1301,41 @@ def run_pipeline(
     # exactly as it did before this branch existed).
     #
     # Detection runs BEFORE guardrail() deliberately: raw telemetry is
-    # unconditionally cybersecurity-relevant, so only the deterministic
-    # layer-1 blacklist (jailbreak/injection strings) applies to it -
-    # guardrail()'s layer-2 LLM topic classifier asks "is this even about
-    # cybersecurity?", a question that's both unnecessary for confirmed log
-    # data and, being LLM-based, non-deterministic - reproduced directly
-    # during testing: 1 of 15 identical calls got a false "not allowed" from
-    # the LLM layer alone, which would otherwise make an entirely
-    # deterministic analysis path randomly fail with no code-level cause.
+    # unconditionally cybersecurity-relevant, so guardrail()'s topic question
+    # is redundant. Complete JSON/NDJSON is a typed data envelope and goes
+    # straight to deterministic analysis; malformed/plain-text telemetry still
+    # passes the blacklist and harm gate conservatively. This avoids treating a
+    # malicious command or quoted prompt inside a structured field as an
+    # instruction while preserving fail-closed behaviour at uncertain edges.
     log_detection = log_analysis_detector.detect(query)
     if log_detection.is_raw_log:
-        try:
-            blacklist_result = check_blacklist(query)
-        except Exception as exc:
-            raise PipelineError("guardrail", exc) from exc
-        if not blacklist_result.get("allowed", True):
-            return fallback_result(query, category=blacklist_result.get("category", "blocked"))
+        # A complete JSON/NDJSON record is a typed data envelope. Instruction-
+        # like or malicious strings inside its fields are evidence to analyze,
+        # never user instructions. Text outside that envelope (including an
+        # appended request) is intentionally NOT exempt and still passes both
+        # safety layers. run_multi_pipeline separates a clear attached request
+        # and guards it independently; direct run_pipeline callers retain this
+        # conservative whole-input fallback for ambiguous/malformed boundaries.
+        structurally_contained = (
+            is_structured_json_log(query) or is_structured_line_log(query)
+        )
+        if not structurally_contained:
+            try:
+                blacklist_result = check_blacklist(query)
+            except Exception as exc:
+                raise PipelineError("guardrail", exc) from exc
+            if not blacklist_result.get("allowed", True):
+                return fallback_result(
+                    query,
+                    category=blacklist_result.get("category", "blocked"),
+                )
 
-        try:
-            harm_result = check_llm_guardrail(query)
-        except Exception as exc:
-            raise PipelineError("guardrail", exc) from exc
-        if not harm_result.get("allowed", True):
-            return fallback_result(query, category="llm_harm_blocked")
+            try:
+                harm_result = check_llm_guardrail(query)
+            except Exception as exc:
+                raise PipelineError("guardrail", exc) from exc
+            if not harm_result.get("allowed", True):
+                return fallback_result(query, category="llm_harm_blocked")
 
         driver = None
         try:
@@ -1020,17 +1372,34 @@ def run_pipeline(
         except Exception as exc:
             raise PipelineError("database_connection", exc) from exc
 
+        pending_suggestion_actions: list[SuggestionAction] = []
+        unresolved_actor_codes: set[str] = set()
+
         def _fb(**kw):
             """A "no information" result, with universal "did you mean"
             suggestions attached whenever the query referenced an ID/code that
             did not resolve (T10557, G9999, ...). Chit-chat/plain queries get
             none. Suggestion failures never affect the answer."""
             fr = fallback_result(query, **kw)
-            if fr.allowed and fr.answer.strip() == FALLBACK and not fr.suggestions:
+            if fr.allowed and fr.answer.strip() == FALLBACK:
                 try:
-                    fr.suggestions = reference_suggestions(driver, focused_query)
+                    actions = reference_suggestion_actions(driver, query)
+                    existing = {
+                        (action.original.lower(), action.label)
+                        for action in pending_suggestion_actions
+                    }
+                    pending_suggestion_actions.extend(
+                        action
+                        for action in actions
+                        if (action.original.lower(), action.label) not in existing
+                    )
                 except Exception:
                     pass
+            if pending_suggestion_actions:
+                fr.suggestion_actions = list(pending_suggestion_actions)
+                fr.suggestions = [
+                    action.label for action in pending_suggestion_actions
+                ]
             return fr
 
         if not explicit_ids_exist(driver, focused_query):
@@ -1042,13 +1411,44 @@ def run_pipeline(
         # apt20 -> "Putter Panda" failure). If at least one code resolves, proceed
         # for the valid one(s), mirroring the mixed-ID philosophy above.
         referenced_actor_codes = actor_codes_in_query(focused_query)
-        if referenced_actor_codes and not resolve_actor_codes(driver, referenced_actor_codes):
-            unknown = ", ".join(sorted(code.upper() for code in referenced_actor_codes))
-            suggestions = actor_code_suggestions(driver, referenced_actor_codes)
+        resolved_actor_codes = resolve_actor_codes(driver, referenced_actor_codes)
+        unresolved_actor_codes = referenced_actor_codes - resolved_actor_codes
+        if unresolved_actor_codes:
+            pending_suggestion_actions = reference_suggestion_actions(
+                driver,
+                query,
+                target_actor_codes=unresolved_actor_codes,
+            )
+        if referenced_actor_codes and not resolved_actor_codes:
+            unknown = ", ".join(
+                sorted(code.upper() for code in unresolved_actor_codes)
+            )
             return fallback_result(
                 query,
                 answer=f"I don't have {unknown} in my knowledge base.",
-                suggestions=suggestions,
+                suggestions=[
+                    action.label for action in pending_suggestion_actions
+                ],
+                suggestion_actions=pending_suggestion_actions,
+            )
+        if unresolved_actor_codes and requires_all_actor_references(focused_query):
+            unknown = ", ".join(
+                sorted(code.upper() for code in unresolved_actor_codes)
+            )
+            return fallback_result(
+                query,
+                answer=(
+                    f"I can't answer this comparison reliably because "
+                    f"{unknown} is not in my knowledge base."
+                ),
+                suggestions=[
+                    action.label for action in pending_suggestion_actions
+                ],
+                suggestion_actions=pending_suggestion_actions,
+            )
+        if unresolved_actor_codes:
+            focused_query = without_actor_codes(
+                focused_query, unresolved_actor_codes
             )
 
         with obs.span("filter_extraction"):
@@ -1068,6 +1468,17 @@ def run_pipeline(
             if node.get("name")
         }
         seed_nodes = telemetry_seed_nodes + fetch_filter_seed_nodes(driver, filters)
+        if not seed_nodes and should_resolve_named_detection_entity(focused_query):
+            exact_detection_nodes = fetch_exact_named_detection_seed_nodes(
+                driver,
+                focused_query,
+            )
+            if exact_detection_nodes:
+                filters = add_named_detection_filters(
+                    filters,
+                    exact_detection_nodes,
+                )
+                seed_nodes.extend(exact_detection_nodes)
         with obs.span("retrieval"):
             try:
                 semantic_nodes = [] if should_skip_semantic_search(
@@ -1132,7 +1543,13 @@ def run_pipeline(
                 *telemetry_contexts,
                 *(node for node in ranked if node.get("id") not in seen_ranked),
             ][:top_k]
-        if not ranked or float(ranked[0].get("relevance_score") or 0.0) < MIN_RELEVANCE_SCORE:
+        ranked = filter_relevant_ranked_nodes(ranked)
+        ranked = focus_ranked_nodes_on_explicit_terms(
+            focused_query,
+            ranked,
+            has_authoritative_seeds=bool(seed_nodes),
+        )
+        if not ranked:
             return _fb(filters=filters)
 
         with obs.span("generation"):
@@ -1143,6 +1560,14 @@ def run_pipeline(
 
         final_answer = answer or FALLBACK
         is_no_info = not answer or final_answer.strip() == FALLBACK
+        if unresolved_actor_codes and not is_no_info:
+            unknown = ", ".join(
+                sorted(code.upper() for code in unresolved_actor_codes)
+            )
+            final_answer = (
+                f"I couldn't resolve {unknown}; the answer below covers only "
+                f"the recognized references.\n\n{final_answer}"
+            )
         source_nodes = [] if is_no_info else ranked
         sources = [
             Source(
@@ -1156,12 +1581,21 @@ def run_pipeline(
         ]
         # A generated "no information" answer still offers "did you mean" when the
         # query referenced an id/code that didn't resolve.
-        final_suggestions: list[str] = []
+        final_suggestion_actions = list(pending_suggestion_actions)
         if is_no_info:
             try:
-                final_suggestions = reference_suggestions(driver, focused_query)
+                actions = reference_suggestion_actions(driver, query)
+                existing = {
+                    (action.original.lower(), action.label)
+                    for action in final_suggestion_actions
+                }
+                final_suggestion_actions.extend(
+                    action
+                    for action in actions
+                    if (action.original.lower(), action.label) not in existing
+                )
             except Exception:
-                final_suggestions = []
+                pass
         return PipelineResult(
             query=query,
             answer=final_answer,
@@ -1169,14 +1603,24 @@ def run_pipeline(
             guardrail_category=None,
             filters=filters,
             sources=sources,
-            retrieved_count=len(retrieved),
-            context_count=len(contexts),
+            # A fallback exposes no usable evidence. Reporting discarded
+            # internal candidates was both misleading and unstable.
+            retrieved_count=0 if is_no_info else len(retrieved),
+            context_count=0 if is_no_info else len(contexts),
             retrieved_contexts=(
-                [format_context([node], focused_query) for node in ranked]
+                [
+                    format_evaluation_context([node], focused_query)
+                    for node in ranked
+                ]
+                # Evaluation callers need to inspect the evidence that led to
+                # a fallback; hiding it would mask retrieval failures in RAGAS.
                 if include_contexts
                 else []
             ),
-            suggestions=final_suggestions,
+            suggestions=[
+                action.label for action in final_suggestion_actions
+            ],
+            suggestion_actions=final_suggestion_actions,
         )
     finally:
         if driver is not None:

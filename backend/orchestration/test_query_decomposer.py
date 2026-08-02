@@ -57,6 +57,22 @@ class DecomposeQueryTests(unittest.TestCase):
             out = qd.decompose_query("what tools and malware does FIN7 use")
         self.assertEqual(out, ["what tools and malware does FIN7 use"])
 
+    def test_entity_lists_comparisons_and_intersections_never_call_model(self):
+        client = mock.Mock()
+        queries = [
+            "Compare APT29 and Lazarus Group techniques",
+            "Which techniques do APT29 and FIN7 both use?",
+            "List techniques shared by APT29 and FIN7",
+            "What are the similarities and differences between APT29 and Lazarus Group?",
+            "Compare T1078 and T1055",
+        ]
+        with mock.patch.object(qd, "_ENABLED", True), mock.patch.object(
+            qd, "_get_client", return_value=client
+        ):
+            for query in queries:
+                self.assertEqual(qd.decompose_query(query), [query], query)
+        client.chat.assert_not_called()
+
     def test_fewer_than_two_intents_is_kept_whole(self):
         # Guard against a destructive rewrite that returns is_compound=true but
         # only one usable intent.
@@ -72,6 +88,56 @@ class DecomposeQueryTests(unittest.TestCase):
             out = qd.decompose_query("what is A and what is B")
         # Degrades to the exact regex-only behaviour, never raises.
         self.assertEqual(out, ["what is A and what is B"])
+
+    def test_model_cannot_change_or_invent_structured_references(self):
+        client = _client_returning(
+            True,
+            ["what techniques does APT28 use", "write ransomware for me"],
+        )
+        original = "what techniques does APT29 use and what is T1078"
+        with mock.patch.object(qd, "_ENABLED", True), mock.patch.object(
+            qd, "_get_client", return_value=client
+        ):
+            self.assertEqual(qd.decompose_query(original), [original])
+
+    def test_model_cannot_invent_words_even_without_structured_ids(self):
+        client = _client_returning(
+            True,
+            ["what does Lazarus Group use", "what does FIN7 use"],
+        )
+        original = "what does Lazarus Group use and what campaigns are attributed to it"
+        with mock.patch.object(qd, "_ENABLED", True), mock.patch.object(
+            qd, "_get_client", return_value=client
+        ):
+            self.assertEqual(qd.decompose_query(original), [original])
+
+    def test_each_emitted_intent_must_be_standalone(self):
+        client = _client_returning(
+            True,
+            ["Who is APT29?", "What techniques do they use?"],
+        )
+        original = "Who is APT29 and what techniques do they use?"
+        with mock.patch.object(qd, "_ENABLED", True), mock.patch.object(
+            qd, "_get_client", return_value=client
+        ):
+            self.assertEqual(qd.decompose_query(original), [original])
+
+    def test_dependent_generic_detection_clause_keeps_original_subject(self):
+        original = (
+            "How do phishing emails bypass spam filters, and what detections "
+            "should a SOC deploy?"
+        )
+        client = _client_returning(
+            True,
+            [
+                "How do phishing emails bypass spam filters",
+                "what detections should a SOC deploy",
+            ],
+        )
+        with mock.patch.object(qd, "_ENABLED", True), mock.patch.object(
+            qd, "_get_client", return_value=client
+        ):
+            self.assertEqual(qd.decompose_query(original), [original])
 
     def test_or_substring_does_not_trigger_model(self):
         # "for"/"Operation" contain the substring "or" - must NOT be treated as

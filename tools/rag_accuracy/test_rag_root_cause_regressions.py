@@ -325,7 +325,7 @@ class RagRootCauseRegressionTests(unittest.TestCase):
         with mock.patch.object(
             guardrail.OLLAMA_CLIENT, "chat", return_value=response
         ) as chat:
-            result = guardrail.check_llm_guardrail(
+            result = guardrail._classify_harm(
                 "What tools or malware does Axiom use?"
             )
         prompt = chat.call_args.kwargs["messages"][0]["content"]

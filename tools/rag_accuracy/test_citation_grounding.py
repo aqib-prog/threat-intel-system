@@ -127,6 +127,10 @@ class CitationGroundingTests(unittest.TestCase):
             context_count=1,
             answer_source="rag",
             log_evidence=[],
+            retrieved_contexts=[],
+            suggestions=[],
+            suggestion_actions=[],
+            segments=[],
         )
         api_app._ALL_EXTERNAL_IDS = {"T1078"}
         api_app._ALL_EXTERNAL_IDS_EXPIRES_AT = 0.0
@@ -135,7 +139,9 @@ class CitationGroundingTests(unittest.TestCase):
         endpoint = inspect.unwrap(api_app.query)
 
         with (
-            mock.patch.object(api_app, "run_pipeline", return_value=pipeline_result),
+            mock.patch.object(
+                api_app, "run_multi_pipeline", return_value=pipeline_result
+            ),
             mock.patch.object(api_app, "get_driver", side_effect=RuntimeError("neo4j unavailable")),
             mock.patch.object(api_app, "log_and_sanitize", return_value="sanitized") as log_error,
         ):

@@ -15,14 +15,22 @@ BACKEND = Path(__file__).resolve().parents[1]
 if str(BACKEND) not in sys.path:
     sys.path.insert(0, str(BACKEND))
 
-from retrieval.spell_normalize import spell_normalize  # noqa: E402
+from retrieval.spell_normalize import (  # noqa: E402
+    normalize_question_scaffolding,
+    spell_normalize,
+)
 
 
 class SpellNormalizeTests(unittest.TestCase):
     def test_fixes_common_query_typos(self):
         self.assertEqual(
             spell_normalize("waht tacktics duz T1078 blomg two?"),
-            "what tactics does T1078 belong two?",
+            # Single-edit slips are repaired ("waht"->"what" by transposition,
+            # "tacktics"->"tactics"). "duz" (3 edits from "does") and "blomg"
+            # (2 from "belong") are deliberately left alone: repair fixes
+            # near-certain slips, it never guesses. "two" is a real word and is
+            # protected. The ID is untouched.
+            "what tactics duz T1078 blomg two?",
         )
         self.assertEqual(spell_normalize("wht mitigates T1055"), "what mitigates T1055")
         self.assertEqual(spell_normalize("teh tehcniques of APT29"), "the techniques of APT29")
@@ -44,6 +52,40 @@ class SpellNormalizeTests(unittest.TestCase):
     def test_short_tokens_untouched(self):
         # <=2 chars are never "corrected" (avoids mangling "of", "to", "is").
         self.assertEqual(spell_normalize("is T1078 ok"), "is T1078 ok")
+
+    def test_question_scaffolding_repairs_only_grammar(self):
+        cases = {
+            "What os APT29?": "What is APT29?",
+            "**What os APT29?**": "**What is APT29?**",
+            "which ar APT29 techniques?": "which are APT29 techniques?",
+            "What dose FIN7 use?": "What does FIN7 use?",
+            "Waht os Cobalt Strike?": "What is Cobalt Strike?",
+            "Tell me what os SUNBURST?": "Tell me what is SUNBURST?",
+            "waht is APT29?": "what is APT29?",
+            "wht is FIN7?": "what is FIN7?",
+            "whcih ar APT29 techniques?": "which are APT29 techniques?",
+            "what si Lazarus Group?": "what is Lazarus Group?",
+            "what re Sandworm Team techniques?": "what are Sandworm Team techniques?",
+            "what dsoe FIN7 use?": "what does FIN7 use?",
+            "who ws APT29?": "who is APT29?",
+            "where cn I find T1078?": "where can I find T1078?",
+        }
+        for query, expected in cases.items():
+            with self.subTest(query=query):
+                self.assertEqual(normalize_question_scaffolding(query), expected)
+
+    def test_question_scaffolding_never_rewrites_content(self):
+        unchanged = (
+            "What OS does APT29 target?",
+            "Does T1001 get detected by DET0011?",
+            "What is on the host?",
+            "What on earth does APT29 do?",
+            "EventData: Message=what os APT29",
+            "Tell me about APT29",
+        )
+        for query in unchanged:
+            with self.subTest(query=query):
+                self.assertEqual(normalize_question_scaffolding(query), query)
 
 
 if __name__ == "__main__":

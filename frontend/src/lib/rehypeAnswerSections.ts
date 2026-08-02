@@ -206,13 +206,23 @@ function groupSections(nodes: RootContent[]): RootContent[] {
 
   const flush = () => {
     if (!current) return;
-    const section: Element = {
-      type: "element",
-      tagName: "answer-section",
-      properties: { label: current.label },
-      children: current.children as Element["children"],
-    };
-    result.push(section);
+    // A header with nothing under it is never rendered. Any generation path can
+    // emit a bare label whose body is missing (an LLM writing "Tactics:" and
+    // then listing the tactics somewhere else, a relationship with no rows, a
+    // truncated stream). Rendering that produced an empty titled panel that
+    // looked like data had been lost. Applies to every label, not one case.
+    const hasContent = current.children.some(
+      (child) => textOf(child).trim().length > 0
+    );
+    if (hasContent) {
+      const section: Element = {
+        type: "element",
+        tagName: "answer-section",
+        properties: { label: current.label },
+        children: current.children as Element["children"],
+      };
+      result.push(section);
+    }
     current = null;
   };
 

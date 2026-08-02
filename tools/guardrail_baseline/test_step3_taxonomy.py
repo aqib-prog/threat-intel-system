@@ -27,7 +27,7 @@ class Step3TaxonomyTests(unittest.TestCase):
                 '{"allowed": true, "reason": "Conceptual threat intelligence"}'
             ),
         ) as chat:
-            result = production.check_llm_guardrail(query)
+            result = production._classify_harm(query)
 
         self.assertTrue(result["allowed"])
         kwargs = chat.call_args.kwargs

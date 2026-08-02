@@ -17,6 +17,7 @@ if str(BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(BACKEND_DIR))
 
 from api import app as api_app  # noqa: E402
+from orchestration import multi_intent  # noqa: E402
 from orchestration import pipeline  # noqa: E402
 from retrieval import graph_traversal  # noqa: E402
 
@@ -217,7 +218,11 @@ class ApiUrlTests(unittest.TestCase):
         endpoint = inspect.unwrap(api_app.query)
 
         with (
-            mock.patch.object(api_app, "run_pipeline", return_value=pipeline_result),
+            mock.patch.object(
+                api_app,
+                "run_multi_pipeline",
+                return_value=multi_intent._as_single(pipeline_result),
+            ),
             mock.patch.object(api_app, "grounded_mitre_ids", return_value=["AN0110"]),
         ):
             response = asyncio.run(endpoint(request, payload))

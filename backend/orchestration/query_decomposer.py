@@ -22,10 +22,39 @@ import re
 
 from orchestration.query_splitter import segment_query
 
-# Only invoke the model when a segment actually contains a coordinating
-# conjunction that MIGHT join two questions. Word-boundary anchored so it never
-# fires on the substring "or" inside "for"/"Operation"/"actor"/"more".
-_CONJUNCTION_RE = re.compile(r"\b(?:and|or)\b|&", re.IGNORECASE)
+# Only invoke the model when a conjunction is followed by a new clause starter.
+# A bare conjunction between entities/attributes is one intent ("APT29 and
+# FIN7", "tools and malware", "shared by X and Y") and sending it to the model
+# was the root cause of comparisons/intersections being destructively split.
+_CLAUSE_STARTER = (
+    r"what|which|who|whom|whose|when|where|why|how|"
+    r"does|do|did|is|are|was|were|can|could|should|would|will|"
+    r"list|show|tell|explain|describe|give|name"
+)
+_SEPARATE_CLAUSE_RE = re.compile(
+    rf"(?:\b(?:and|or)\b|&)\s+(?=(?:{_CLAUSE_STARTER})\b)",
+    re.IGNORECASE,
+)
+
+_STRUCTURED_REFERENCE_RE = re.compile(
+    r"\b(?:CVE-\d{4}-\d{4,7}|(?:TA|DET|DC|DS|AN|T|G|S|M|C)\d{4}"
+    r"(?:\.\d{3})?|(?:APT|FIN|UNC)\s*-?\s*\d{1,5})\b",
+    re.IGNORECASE,
+)
+_REWRITE_SCAFFOLD_WORDS = {
+    "a", "an", "and", "are", "does", "do", "for", "how", "is", "it", "list",
+    "me", "of", "or", "show", "tell", "the", "to", "what", "which", "who",
+}
+_DEPENDENT_PRONOUN_RE = re.compile(
+    r"\b(?:it|its|they|them|their|this|that|these|those|former|latter)\b",
+    re.IGNORECASE,
+)
+_SUBJECT_SCAFFOLD_WORDS = {
+    "a", "an", "and", "are", "can", "could", "deploy", "detect", "detections",
+    "did", "do", "does", "explain", "for", "give", "has", "have", "how", "is",
+    "it", "list", "me", "of", "or", "our", "please", "should", "show", "soc",
+    "tell", "the", "to", "use", "uses", "what", "which", "who", "why", "would",
+}
 
 # A structured JSON schema forces the model to answer as a compiler, not a chat
 # partner - eliminating prose drift and making the output parseable/repeatable.
@@ -75,6 +104,18 @@ def _get_client():
     return _client
 
 
+def _has_independent_subject(intent: str) -> bool:
+    """Whether a proposed card retains its own subject after splitting."""
+    if _STRUCTURED_REFERENCE_RE.search(intent):
+        return True
+    content_words = [
+        word
+        for word in re.findall(r"[a-z0-9]+", intent.lower())
+        if word not in _SUBJECT_SCAFFOLD_WORDS
+    ]
+    return bool(content_words)
+
+
 def _llm_split_segment(segment: str) -> list[str]:
     """Ask the model whether ``segment`` is two questions. Returns the split
     sub-questions, or ``[segment]`` for a single intent or on ANY failure."""
@@ -96,8 +137,48 @@ def _llm_split_segment(segment: str) -> list[str]:
         return [segment]
     intents = [str(item).strip() for item in parsed.get("intents", []) if str(item).strip()]
     # Guard against a destructive rewrite: require at least two real intents,
-    # otherwise keep the original segment intact.
-    return intents if len(intents) >= 2 else [segment]
+    # preserve every structured reference exactly, and reject any word the
+    # model invented rather than copied from the source (apart from a tiny set
+    # of grammatical scaffolding words). The model chooses a split boundary; it
+    # is never trusted to rewrite the user's subjects or intent.
+    if len(intents) < 2:
+        return [segment]
+
+    source_refs = sorted(
+        re.sub(r"[\s-]+", "", match.group(0)).upper()
+        for match in _STRUCTURED_REFERENCE_RE.finditer(segment)
+    )
+    output_refs = sorted(
+        re.sub(r"[\s-]+", "", match.group(0)).upper()
+        for intent in intents
+        for match in _STRUCTURED_REFERENCE_RE.finditer(intent)
+    )
+    if output_refs != source_refs:
+        return [segment]
+
+    source_words = set(re.findall(r"[a-z0-9]+", segment.lower()))
+    for intent in intents:
+        # Each card is routed independently and has no conversational state.
+        # A model output such as "what techniques do they use?" is therefore
+        # not a valid split even when every word came from the source.
+        if _DEPENDENT_PRONOUN_RE.search(intent):
+            return [segment]
+        words = re.findall(r"[a-z0-9]+", intent.lower())
+        if not words:
+            return [segment]
+        for word in words:
+            if word in source_words or word in _REWRITE_SCAFFOLD_WORDS:
+                continue
+            # Permit only trivial singular/plural or verb-agreement changes.
+            if (
+                word.rstrip("s") in {source.rstrip("s") for source in source_words}
+                or word.rstrip("es") in {source.rstrip("es") for source in source_words}
+            ):
+                continue
+            return [segment]
+        if not _has_independent_subject(intent):
+            return [segment]
+    return intents
 
 
 def decompose_query(query: str) -> list[str]:
@@ -110,7 +191,7 @@ def decompose_query(query: str) -> list[str]:
 
     result: list[str] = []
     for candidate in candidates:
-        if _CONJUNCTION_RE.search(candidate):
+        if _SEPARATE_CLAUSE_RE.search(candidate):
             result.extend(_llm_split_segment(candidate))
         else:
             result.append(candidate)

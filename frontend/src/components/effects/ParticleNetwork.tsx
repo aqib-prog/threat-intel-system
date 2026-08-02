@@ -29,8 +29,13 @@ export function ParticleNetwork() {
     let dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     const resize = () => {
-      width = canvas.clientWidth;
-      height = canvas.clientHeight;
+      // Sized from the VIEWPORT, never from clientHeight. This canvas lives in
+      // a `fixed` full-screen background layer, so the viewport is by
+      // definition its correct size - whereas clientHeight follows whatever the
+      // layout says, and on a long scrolling page that produced a backbuffer
+      // ~10x too tall (13.5 megapixels), repainted every frame.
+      width = Math.max(1, window.innerWidth || canvas.clientWidth);
+      height = Math.max(1, window.innerHeight || canvas.clientHeight);
       dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = width * dpr;
       canvas.height = height * dpr;

@@ -73,7 +73,7 @@ export function AnswerSegmentCard({
           {index + 1}
         </span>
         <p className="min-w-0 flex-1 pt-0.5 text-[13px] font-medium leading-snug text-text-mid">
-          {segment.query}
+          {segment.display_title || segment.query}
         </p>
       </div>
 
@@ -102,6 +102,7 @@ export function AnswerSegmentCard({
         messageId={scopedId}
         groundedIds={segment.grounded_ids}
         nodes={segment.nodes}
+        presentation={segment.answer_presentation}
       />
 
       {segment.nodes && segment.nodes.length > 0 && <SourcesPanel nodes={segment.nodes} />}
@@ -113,6 +114,7 @@ export function AnswerSegmentCard({
       {segment.suggestions && segment.suggestions.length > 0 && (
         <SuggestionChips
           suggestions={segment.suggestions}
+          actions={segment.suggestion_actions}
           sourceQuery={segment.query}
           onPick={onSuggestionClick}
         />

@@ -15,6 +15,7 @@ Three layers are covered, none of which need Neo4j or Ollama:
 from __future__ import annotations
 
 import os
+import json
 import sys
 import unittest
 from pathlib import Path
@@ -36,8 +37,11 @@ from orchestration.multi_intent import (  # noqa: E402
     _segment_disposition,
     run_multi_pipeline,
 )
-from orchestration.pipeline import PipelineResult, Source  # noqa: E402
+from orchestration.pipeline import PipelineResult, Source, SuggestionAction  # noqa: E402
 from orchestration.query_splitter import segment_query  # noqa: E402
+from log_analysis.mixed_input import MixedLogInput  # noqa: E402
+from log_analysis.detector import detect as detect_log  # noqa: E402
+from retrieval.test_input_shape import EXACT_RAGAS_COMMAND  # noqa: E402
 
 
 class SegmentQueryTests(unittest.TestCase):
@@ -49,6 +53,12 @@ class SegmentQueryTests(unittest.TestCase):
         self.assertEqual(
             segment_query("What techniques does APT29 use?"),
             ["What techniques does APT29 use?"],
+        )
+
+    def test_shell_continuation_is_not_a_line_boundary(self):
+        self.assertEqual(
+            segment_query("python tool.py \\\n  --mode full"),
+            ["python tool.py \\\n  --mode full"],
         )
 
     def test_three_questions_split(self):
@@ -154,6 +164,9 @@ class SegmentDispositionTests(unittest.TestCase):
             _segment_disposition("What techniques does APT29 use?", None), "route"
         )
 
+    def test_identifier_only_segment_is_not_mistaken_for_gibberish(self):
+        self.assertEqual(_segment_disposition("T1055?", None), "route")
+
     def test_offtopic_question_still_routed(self):
         # A genuine off-topic question routes (guardrail soft-refuses) rather
         # than being silently dropped - the more transparent UX.
@@ -213,6 +226,17 @@ class RunMultiPipelineTests(unittest.TestCase):
         # Called with the RAW query, unchanged - the single path is untouched.
         self.assertEqual(fake.call_args.args[0], raw)
 
+    def test_operational_command_is_kept_atomic(self):
+        fake = mock.Mock(side_effect=lambda q, **k: _result(q, allowed=False))
+        with mock.patch.object(multi_intent, "run_pipeline", fake), mock.patch.object(
+            multi_intent, "decompose_query"
+        ) as decomposer:
+            out = run_multi_pipeline(EXACT_RAGAS_COMMAND)
+
+        self.assertFalse(out.allowed)
+        fake.assert_called_once_with(EXACT_RAGAS_COMMAND)
+        decomposer.assert_not_called()
+
     def test_raw_log_paste_is_not_split(self):
         # A multi-line log has sentence-like punctuation, but the detector says
         # it is a raw log, so it must go to the single path intact.
@@ -227,6 +251,389 @@ class RunMultiPipelineTests(unittest.TestCase):
         self.assertEqual(out.segments, [])
         fake.assert_called_once()
         self.assertEqual(fake.call_args.args[0], log)
+
+    def test_standalone_fenced_log_is_unwrapped_for_structured_analysis(self):
+        log = json.dumps(
+            {
+                "EventID": 1,
+                "Channel": "Microsoft-Windows-Sysmon/Operational",
+                "ProviderName": "Microsoft-Windows-Sysmon",
+                "UtcTime": "2026-07-29T10:00:00Z",
+                "Image": "C:\\Windows\\System32\\whoami.exe",
+                "CommandLine": "whoami.exe /all",
+                "ParentImage": "C:\\Windows\\System32\\cmd.exe",
+            },
+            indent=2,
+        )
+        raw = f"```json\n{log}\n```"
+        fake = mock.Mock(
+            return_value=_result(
+                log,
+                answer="LOG",
+                answer_source="log_analysis",
+            )
+        )
+        with (
+            mock.patch.object(
+                multi_intent.log_analysis_detector,
+                "detect",
+                side_effect=detect_log,
+            ),
+            mock.patch.object(multi_intent, "run_pipeline", fake),
+        ):
+            out = run_multi_pipeline(raw)
+
+        self.assertEqual(out.segments, [])
+        self.assertEqual(out.query, raw)
+        fake.assert_called_once_with(log)
+
+    def test_mixed_log_and_one_question_produce_two_typed_segments(self):
+        raw = '{"EventID":1}\nWhat techniques does APT29 use?'
+        mixed = MixedLogInput(
+            log_text='{"EventID":1}',
+            request_text="What techniques does APT29 use?",
+            platform="windows",
+            request_position="after",
+        )
+
+        def fake(query, **_kwargs):
+            if query == mixed.log_text:
+                return _result(query, answer="LOG", answer_source="log_analysis")
+            return _result(query)
+
+        with (
+            mock.patch.object(
+                multi_intent.log_analysis_detector,
+                "detect",
+                return_value=SimpleNamespace(is_raw_log=True),
+            ),
+            mock.patch.object(multi_intent, "split_mixed_log_input", return_value=mixed),
+            mock.patch.object(multi_intent, "run_pipeline", side_effect=fake),
+        ):
+            out = run_multi_pipeline(raw)
+
+        self.assertEqual(len(out.segments), 2)
+        self.assertEqual(out.segments[0].answer_source, "log_analysis")
+        self.assertEqual(out.segments[0].display_title, "Log Analysis")
+        self.assertEqual(out.segments[0].segment_kind, "log_analysis")
+        self.assertEqual(out.segments[1].query, mixed.request_text)
+        self.assertEqual(out.segments[1].segment_kind, "question")
+
+    def test_mixed_log_and_multiple_questions_routes_each_independently(self):
+        raw = '{"EventID":1}\nWhat is T1055? Who is APT29?'
+        mixed = MixedLogInput(
+            log_text='{"EventID":1}',
+            request_text="What is T1055? Who is APT29?",
+            platform="windows",
+            request_position="after",
+        )
+        with (
+            mock.patch.object(
+                multi_intent.log_analysis_detector,
+                "detect",
+                return_value=SimpleNamespace(is_raw_log=True),
+            ),
+            mock.patch.object(multi_intent, "split_mixed_log_input", return_value=mixed),
+            mock.patch.object(
+                multi_intent,
+                "run_pipeline",
+                side_effect=lambda query, **_kwargs: _result(
+                    query,
+                    answer_source=(
+                        "log_analysis" if query == mixed.log_text else "rag"
+                    ),
+                ),
+            ) as fake,
+        ):
+            out = run_multi_pipeline(raw)
+
+        self.assertEqual(len(out.segments), 3)
+        self.assertEqual(
+            [call.args[0] for call in fake.call_args_list],
+            [mixed.log_text, "What is T1055?", "Who is APT29?"],
+        )
+
+    def test_questions_before_and_after_real_log_are_both_routed(self):
+        log = json.dumps(
+            {
+                "EventID": 1,
+                "Channel": "Microsoft-Windows-Sysmon/Operational",
+                "ProviderName": "Microsoft-Windows-Sysmon",
+                "UtcTime": "2026-07-29T10:00:00Z",
+                "Image": "C:\\Windows\\System32\\whoami.exe",
+                "CommandLine": "whoami.exe /all",
+                "ParentImage": "C:\\Windows\\System32\\cmd.exe",
+            },
+            indent=2,
+        )
+        raw = f"What is T1055?\n{log}\nWho is APT29?"
+
+        def fake(query, **_kwargs):
+            return _result(
+                query,
+                answer_source=("log_analysis" if query == log else "rag"),
+            )
+
+        with (
+            mock.patch.object(
+                multi_intent.log_analysis_detector,
+                "detect",
+                side_effect=detect_log,
+            ),
+            mock.patch.object(multi_intent, "run_pipeline", side_effect=fake) as run,
+        ):
+            out = run_multi_pipeline(raw)
+
+        self.assertEqual(len(out.segments), 3)
+        self.assertEqual(out.segments[0].display_title, "Log Analysis")
+        self.assertEqual(
+            [call.args[0] for call in run.call_args_list],
+            [log, "What is T1055?", "Who is APT29?"],
+        )
+
+    def test_pure_analyze_log_directive_does_not_create_context_free_rag_card(self):
+        raw = '{"EventID":1}\nPlease analyze this log.'
+        mixed = MixedLogInput(
+            log_text='{"EventID":1}',
+            request_text="Please analyze this log.",
+            platform="windows",
+            request_position="after",
+        )
+        fake = mock.Mock(
+            return_value=_result(
+                mixed.log_text,
+                answer="LOG",
+                answer_source="log_analysis",
+            )
+        )
+        with (
+            mock.patch.object(
+                multi_intent.log_analysis_detector,
+                "detect",
+                return_value=SimpleNamespace(is_raw_log=True),
+            ),
+            mock.patch.object(multi_intent, "split_mixed_log_input", return_value=mixed),
+            mock.patch.object(multi_intent, "run_pipeline", fake),
+        ):
+            out = run_multi_pipeline(raw)
+
+        self.assertEqual(out.segments, [])
+        self.assertEqual(out.query, raw)
+        fake.assert_called_once_with(mixed.log_text)
+
+    def test_log_directive_is_dropped_when_independent_question_also_exists(self):
+        raw = '{"EventID":1}\nAnalyze this log. What is T1055?'
+        mixed = MixedLogInput(
+            log_text='{"EventID":1}',
+            request_text="Analyze this log. What is T1055?",
+            platform="windows",
+            request_position="after",
+        )
+        fake = mock.Mock(
+            side_effect=lambda query, **_kwargs: _result(
+                query,
+                answer_source=(
+                    "log_analysis" if query == mixed.log_text else "rag"
+                ),
+            )
+        )
+        with (
+            mock.patch.object(
+                multi_intent.log_analysis_detector,
+                "detect",
+                return_value=SimpleNamespace(is_raw_log=True),
+            ),
+            mock.patch.object(multi_intent, "split_mixed_log_input", return_value=mixed),
+            mock.patch.object(multi_intent, "run_pipeline", fake),
+        ):
+            out = run_multi_pipeline(raw)
+
+        self.assertEqual(len(out.segments), 2)
+        self.assertEqual(
+            [call.args[0] for call in fake.call_args_list],
+            [mixed.log_text, "What is T1055?"],
+        )
+
+    def test_platform_qualified_log_directive_is_not_a_second_rag_card(self):
+        raw = 'What is T1055?\nAnalyze this Windows Sysmon event:\n{"EventID":1}'
+        mixed = MixedLogInput(
+            log_text='{"EventID":1}',
+            request_text="What is T1055?\nAnalyze this Windows Sysmon event",
+            platform="windows",
+            request_position="before",
+        )
+        fake = mock.Mock(
+            side_effect=lambda query, **_kwargs: _result(
+                query,
+                answer_source=(
+                    "log_analysis" if query == mixed.log_text else "rag"
+                ),
+            )
+        )
+        with (
+            mock.patch.object(
+                multi_intent.log_analysis_detector,
+                "detect",
+                return_value=SimpleNamespace(is_raw_log=True),
+            ),
+            mock.patch.object(
+                multi_intent, "split_mixed_log_input", return_value=mixed
+            ),
+            mock.patch.object(
+                multi_intent,
+                "decompose_query",
+                return_value=[
+                    "What is T1055?",
+                    "Analyze this Windows Sysmon event",
+                ],
+            ),
+            mock.patch.object(multi_intent, "run_pipeline", fake),
+        ):
+            out = run_multi_pipeline(raw)
+
+        self.assertEqual(len(out.segments), 2)
+        self.assertEqual(
+            [call.args[0] for call in fake.call_args_list],
+            [mixed.log_text, "What is T1055?"],
+        )
+
+    def test_independent_sysmon_question_is_not_mistaken_for_log_directive(self):
+        self.assertFalse(
+            multi_intent._is_redundant_log_directive(
+                "How does Windows Sysmon detect process creation?"
+            )
+        )
+        self.assertTrue(
+            multi_intent._is_redundant_log_directive(
+                "Analyze this Windows Sysmon event:"
+            )
+        )
+
+    def test_log_attribution_question_gets_evidence_limit_not_context_free_rag(self):
+        raw = '{"EventID":1}\nDoes this log prove APT29 was responsible?'
+        question = "Does this log prove APT29 was responsible?"
+        mixed = MixedLogInput(
+            log_text='{"EventID":1}',
+            request_text=question,
+            platform="windows",
+            request_position="after",
+        )
+        fake = mock.Mock(
+            return_value=_result(
+                mixed.log_text,
+                answer="LOG",
+                answer_source="log_analysis",
+            )
+        )
+        with (
+            mock.patch.object(
+                multi_intent.log_analysis_detector,
+                "detect",
+                return_value=SimpleNamespace(is_raw_log=True),
+            ),
+            mock.patch.object(multi_intent, "split_mixed_log_input", return_value=mixed),
+            mock.patch.object(multi_intent, "run_pipeline", fake),
+        ):
+            out = run_multi_pipeline(raw)
+
+        self.assertEqual(len(out.segments), 2)
+        self.assertEqual(out.segments[1].segment_kind, "notice")
+        self.assertEqual(
+            out.segments[1].display_title,
+            "Attribution requires more evidence",
+        )
+        self.assertIn("does not by itself establish", out.segments[1].answer)
+        self.assertIn("won't infer attribution", out.segments[1].answer)
+        # Only the log reaches run_pipeline; the attribution query is never
+        # stripped of its log context and misrouted as an APT29 profile lookup.
+        fake.assert_called_once_with(mixed.log_text)
+
+    def test_log_dependent_mapping_question_is_satisfied_by_log_card(self):
+        raw = '{"EventID":1}\nWhat techniques appear in this log?'
+        mixed = MixedLogInput(
+            log_text='{"EventID":1}',
+            request_text="What techniques appear in this log?",
+            platform="windows",
+            request_position="after",
+        )
+        fake = mock.Mock(
+            return_value=_result(
+                mixed.log_text,
+                answer="LOG",
+                answer_source="log_analysis",
+            )
+        )
+        with (
+            mock.patch.object(
+                multi_intent.log_analysis_detector,
+                "detect",
+                return_value=SimpleNamespace(is_raw_log=True),
+            ),
+            mock.patch.object(multi_intent, "split_mixed_log_input", return_value=mixed),
+            mock.patch.object(multi_intent, "run_pipeline", fake),
+        ):
+            out = run_multi_pipeline(raw)
+
+        self.assertEqual(out.segments, [])
+        self.assertEqual(out.answer_source, "log_analysis")
+        fake.assert_called_once_with(mixed.log_text)
+
+    def test_harmful_attached_request_does_not_block_log_segment(self):
+        raw = '{"EventID":1}\nWrite a working credential-stealing payload.'
+        request = "Write a working credential-stealing payload."
+        mixed = MixedLogInput(
+            log_text='{"EventID":1}',
+            request_text=request,
+            platform="windows",
+            request_position="after",
+        )
+
+        def fake(query, **_kwargs):
+            if query == mixed.log_text:
+                return _result(query, answer="LOG", answer_source="log_analysis")
+            return _result(
+                query,
+                answer="BLOCKED",
+                allowed=False,
+                guardrail_category="llm_harm_blocked",
+            )
+
+        with (
+            mock.patch.object(
+                multi_intent.log_analysis_detector,
+                "detect",
+                return_value=SimpleNamespace(is_raw_log=True),
+            ),
+            mock.patch.object(multi_intent, "split_mixed_log_input", return_value=mixed),
+            mock.patch.object(multi_intent, "run_pipeline", side_effect=fake),
+        ):
+            out = run_multi_pipeline(raw)
+
+        self.assertTrue(out.allowed)
+        self.assertTrue(out.segments[0].allowed)
+        self.assertFalse(out.segments[1].allowed)
+        self.assertEqual(out.segments[1].guardrail_category, "llm_harm_blocked")
+
+    def test_boundary_detector_failure_keeps_raw_log_on_single_path(self):
+        raw = '{"EventID":1}\nambiguous tail'
+        fake = mock.Mock(return_value=_result(raw, answer_source="log_analysis"))
+        with (
+            mock.patch.object(
+                multi_intent.log_analysis_detector,
+                "detect",
+                return_value=SimpleNamespace(is_raw_log=True),
+            ),
+            mock.patch.object(
+                multi_intent,
+                "split_mixed_log_input",
+                side_effect=RuntimeError("unexpected parser failure"),
+            ),
+            mock.patch.object(multi_intent, "run_pipeline", fake),
+        ):
+            out = run_multi_pipeline(raw)
+
+        self.assertEqual(out.segments, [])
+        fake.assert_called_once_with(raw)
 
     def test_two_valid_questions_produce_two_segments(self):
         raw = "What techniques does APT29 use? Also who ran the SolarWinds Compromise?"
@@ -244,16 +651,24 @@ class RunMultiPipelineTests(unittest.TestCase):
         self.assertIn(out.segments[1].answer, out.answer)
         self.assertEqual(out.retrieved_count, 4)  # 2 + 2
 
-    def test_one_valid_plus_chitchat_falls_back_to_single(self):
-        # Only one real question survives validity filtering -> single path,
-        # run on the RAW turn (its own focus step strips the filler).
+    def test_one_valid_plus_chitchat_runs_only_the_valid_candidate(self):
+        # Once decomposition has positively separated multiple candidates,
+        # discarded filler must not be reattached to the guardrail input.
         raw = "hi how are you? What is T1055?"
         fake = mock.Mock(side_effect=lambda q, **k: _result(q))
         with mock.patch.object(multi_intent, "run_pipeline", fake):
             out = run_multi_pipeline(raw)
         self.assertEqual(out.segments, [])
         fake.assert_called_once()
-        self.assertEqual(fake.call_args.args[0], raw)
+        self.assertEqual(fake.call_args.args[0], "What is T1055?")
+
+    def test_one_valid_plus_gibberish_runs_only_the_valid_candidate(self):
+        raw = "What techniques does Axiom use? asdfghjkl qwrtplkjhg."
+        fake = mock.Mock(side_effect=lambda q, **k: _result(q))
+        with mock.patch.object(multi_intent, "run_pipeline", fake):
+            out = run_multi_pipeline(raw)
+        self.assertEqual(out.segments, [])
+        fake.assert_called_once_with("What techniques does Axiom use?")
 
     def test_all_chitchat_falls_back_to_single(self):
         raw = "hi how are you? thanks so much!"
@@ -280,6 +695,66 @@ class RunMultiPipelineTests(unittest.TestCase):
         self.assertEqual(len(out.sources), 3)  # 1 shared + 2 unique
         # Filters merged across segments under the same key.
         self.assertEqual(len(out.filters["actor"]), 2)
+
+    def test_same_named_sources_with_different_ids_are_not_collapsed(self):
+        raw = "What is T1087.004? Also what is T1136.003?"
+        first = Source(
+            name="Cloud Account",
+            external_id="T1087.004",
+            node_type="Technique",
+            relevance_score=5.0,
+        )
+        second = Source(
+            name="Cloud Account",
+            external_id="T1136.003",
+            node_type="Technique",
+            relevance_score=5.0,
+        )
+
+        def fake(query, **_kwargs):
+            source = first if "T1087.004" in query else second
+            return _result(query, sources=[source])
+
+        with mock.patch.object(
+            multi_intent, "run_pipeline", mock.Mock(side_effect=fake)
+        ):
+            out = run_multi_pipeline(raw)
+        self.assertEqual(
+            {source.external_id for source in out.sources},
+            {"T1087.004", "T1136.003"},
+        )
+
+    def test_segment_suggestion_actions_are_preserved_and_aggregated(self):
+        raw = "What is APT20? Also what is T10557?"
+
+        def fake(query, **_kwargs):
+            original = "APT20" if "APT20" in query else "T10557"
+            replacement = "APT2" if original == "APT20" else "T1055"
+            action = SuggestionAction(
+                label=replacement,
+                query=query.replace(original, replacement),
+                original=original,
+            )
+            return _result(
+                query,
+                suggestions=[action.label],
+                suggestion_actions=[action],
+            )
+
+        with mock.patch.object(
+            multi_intent, "run_pipeline", mock.Mock(side_effect=fake)
+        ):
+            out = run_multi_pipeline(raw)
+
+        self.assertEqual(len(out.segments), 2)
+        self.assertEqual(
+            [action.original for action in out.suggestion_actions],
+            ["APT20", "T10557"],
+        )
+        self.assertEqual(
+            [segment.suggestion_actions[0].original for segment in out.segments],
+            ["APT20", "T10557"],
+        )
 
 
 if __name__ == "__main__":

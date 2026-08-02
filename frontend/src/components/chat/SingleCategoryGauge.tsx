@@ -1,4 +1,5 @@
 import { clsx } from "clsx";
+import { motion } from "framer-motion";
 import { Gauge } from "@phosphor-icons/react";
 import { ACCENT_CLASSES, ACCENT_HEX } from "../../lib/colorTokens";
 import { categoryMetaFor } from "../../lib/answerSections";
@@ -18,7 +19,15 @@ export function SingleCategoryGauge({ section }: { section: AnswerSectionCount }
   const dash = CIRCUMFERENCE * ARC_FRACTION;
 
   return (
-    <div className="mb-3 rounded-lg border border-border-glow bg-void-raised/50 p-4">
+    <div
+      className="relative mb-3 overflow-hidden rounded-xl border border-cyan/20 p-4"
+      style={{
+        background:
+          "linear-gradient(140deg, rgba(0,245,255,0.09) 0%, rgba(180,220,255,0.03) 45%, rgba(124,58,237,0.07) 100%), rgba(10,10,18,0.72)",
+        boxShadow:
+          "inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 40px -22px rgba(0,245,255,0.55), 0 18px 44px -30px rgba(0,245,255,0.4)",
+      }}
+    >
       <div className="mb-3 flex items-start gap-2">
         <Gauge size={14} weight="bold" className="mt-0.5 shrink-0 text-cyan" aria-hidden="true" />
         <div>
@@ -41,7 +50,9 @@ export function SingleCategoryGauge({ section }: { section: AnswerSectionCount }
               strokeDasharray={`${dash} ${CIRCUMFERENCE}`}
               strokeLinecap="round"
             />
-            <circle
+            {/* The arc draws itself on mount instead of appearing complete -
+                the reading lands as a measurement being taken. */}
+            <motion.circle
               cx={GAUGE_CENTER}
               cy={GAUGE_CENTER}
               r={GAUGE_RADIUS}
@@ -50,6 +61,10 @@ export function SingleCategoryGauge({ section }: { section: AnswerSectionCount }
               strokeWidth={5}
               strokeLinecap="round"
               strokeDasharray={`${dash} ${CIRCUMFERENCE}`}
+              initial={{ strokeDashoffset: dash }}
+              animate={{ strokeDashoffset: 0 }}
+              transition={{ duration: 1.05, ease: [0.16, 1, 0.3, 1] }}
+              style={{ filter: `drop-shadow(0 0 6px ${hex})` }}
             />
           </svg>
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">

@@ -21,9 +21,20 @@ export function SourceCard({ node, index = 0 }: { node: NodeSource; index?: numb
       transition={{ duration: 0.3, delay: index * 0.04, ease: "easeOut" }}
       whileHover={{ y: -2 }}
       className={clsx(
-        "group relative flex flex-col gap-2.5 overflow-hidden rounded-lg border bg-void-panel/80 p-3 backdrop-blur-sm transition-shadow duration-300",
+        "group relative flex flex-col gap-2.5 overflow-hidden rounded-xl border p-3 transition-shadow duration-300",
         accent.border
       )}
+      style={{
+        // Same instrument-panel glass as the answer charts, but tinted with the
+        // node's own accent so the card's TYPE is legible from the material
+        // itself, not only from the badge. No backdrop-filter: this list
+        // scrolls, and a blurred backdrop re-rasterizes on every scroll frame.
+        background: `linear-gradient(145deg, ${hexToRgba(ACCENT_HEX[accentColor], 0.11)} 0%, rgba(13,14,23,0.80) 46%, rgba(13,14,23,0.92) 100%)`,
+        boxShadow: `inset 0 1px 0 rgba(255,255,255,0.13), 0 12px 32px -22px ${hexToRgba(
+          ACCENT_HEX[accentColor],
+          0.75
+        )}`,
+      }}
     >
       <div
         aria-hidden="true"

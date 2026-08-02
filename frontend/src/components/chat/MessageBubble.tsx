@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { motion } from "framer-motion";
 import { clsx } from "clsx";
-import { Robot, ShieldWarning, Terminal, UserCircle } from "@phosphor-icons/react";
+import { Robot, ShieldWarning, Terminal, UserCircle, WarningOctagon } from "@phosphor-icons/react";
 import type { ChatMessage } from "../../lib/types";
 import { MarkdownMessage } from "./MarkdownMessage";
 import { AnswerVisualization } from "./AnswerVisualization";
@@ -30,7 +30,8 @@ export function MessageBubble({
   // segment instead of a single combined answer, so skip the typewriter for it.
   const segments = message.segments && message.segments.length >= 2 ? message.segments : null;
   const { displayed, done } = useTypewriter(message.text, !isUser && typewrite && !segments, 3);
-  const blocked = message.allowed === false;
+  const requestFailed = Boolean(message.requestError);
+  const blocked = message.allowed === false && !requestFailed;
   // Chart from the backend's authoritative category counts. Fall back to node
   // type counts only when the backend didn't supply sections (e.g. mock replies
   // or the log-analysis path) - never by re-parsing the answer prose.
@@ -57,11 +58,11 @@ export function MessageBubble({
     );
   }
 
-  const stateColor = blocked ? "red" : message.isMock ? "amber" : "cyan";
+  const stateColor = blocked ? "red" : requestFailed ? "amber" : "cyan";
   const stateClasses = {
-    red: { border: "border-red/30", ring: "bg-red/10 text-red border-red/30", glow: "rgba(255,51,102,0.18)" },
-    amber: { border: "border-amber/25", ring: "bg-amber/10 text-amber border-amber/30", glow: "rgba(255,215,0,0.14)" },
-    cyan: { border: "border-cyan/25", ring: "bg-cyan/10 text-cyan border-cyan/30", glow: "rgba(0,245,255,0.16)" },
+    red: { border: "border-red/30", ring: "bg-red/10 text-red border-red/30", glow: "rgba(255,51,102,0.18)", spine: "rgba(255,51,102,0.85)", spineSoft: "rgba(255,51,102,0.22)" },
+    amber: { border: "border-amber/25", ring: "bg-amber/10 text-amber border-amber/30", glow: "rgba(255,215,0,0.14)", spine: "rgba(255,215,0,0.8)", spineSoft: "rgba(255,215,0,0.2)" },
+    cyan: { border: "border-cyan/25", ring: "bg-cyan/10 text-cyan border-cyan/30", glow: "rgba(0,245,255,0.16)", spine: "rgba(0,245,255,0.85)", spineSoft: "rgba(0,245,255,0.22)" },
   }[stateColor];
 
   return (
@@ -83,10 +84,17 @@ export function MessageBubble({
       <div
         id={`message-${message.id}`}
         className={clsx(
-          "relative max-w-[92%] overflow-visible rounded-2xl rounded-tl-sm border bg-void-panel/80 px-4 py-3 backdrop-blur-sm sm:max-w-[80%]",
+          "relative max-w-[92%] overflow-visible rounded-2xl rounded-tl-sm border px-4 py-3 sm:max-w-[80%]",
           stateClasses.border
         )}
-        style={{ boxShadow: `0 4px 28px -10px ${stateClasses.glow}` }}
+        style={{
+          // Glass sheet lit from the top-left. backdrop-blur was removed on
+          // purpose: these bubbles scroll, and a blurred backdrop re-rasterizes
+          // on every scroll frame. The layered gradient reproduces the depth.
+          background:
+            "linear-gradient(145deg, rgba(255,255,255,0.055) 0%, rgba(13,14,23,0.86) 42%, rgba(13,14,23,0.94) 100%)",
+          boxShadow: `inset 0 1px 0 rgba(255,255,255,0.13), 0 10px 34px -16px ${stateClasses.glow}`,
+        }}
       >
         <div
           aria-hidden="true"
@@ -96,13 +104,25 @@ export function MessageBubble({
           }}
         />
 
+        {/* Left spine: a lit rail marking the full extent of the answer. It
+            caps bright at the top, holds a steady low tone down the body, and
+            eases off only at the very end - a one-directional fade read as an
+            unfinished border on long answers. */}
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-y-3 left-0 w-px rounded-full"
+          style={{
+            background: `linear-gradient(180deg, ${stateClasses.spine} 0%, ${stateClasses.spineSoft} 6%, ${stateClasses.spineSoft} 88%, transparent 100%)`,
+          }}
+        />
+
         {segments ? (
           <div className="relative flex flex-col gap-3">
             <div className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-text-dim">
               <span className="flex h-4 w-4 items-center justify-center rounded border border-cyan/25 bg-cyan/10 text-[9px] font-bold text-cyan tabular-nums">
                 {segments.length}
               </span>
-              questions detected
+              responses
             </div>
             {segments.map((segment, index) => (
               <AnswerSegmentCard
@@ -116,25 +136,34 @@ export function MessageBubble({
           </div>
         ) : (
           <>
+            {requestFailed && (
+              <div
+                role="alert"
+                className="relative mb-2 flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-amber"
+              >
+                <WarningOctagon size={14} weight="bold" aria-hidden="true" />
+                {message.requestError?.title}
+              </div>
+            )}
             {blocked && (
               <div className="relative mb-2 flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-wider text-red">
                 <ShieldWarning size={14} weight="bold" aria-hidden="true" />
                 Guardrail blocked{message.guardrailCategory ? ` · ${message.guardrailCategory}` : ""}
               </div>
             )}
-            {!blocked && message.answerSource === "log_analysis" && (
+            {!blocked && !requestFailed && message.answerSource === "log_analysis" && (
               <div className="relative mb-2 flex w-fit items-center gap-1.5 rounded border border-green/30 bg-green/10 px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-wider text-green">
                 <Terminal size={13} weight="bold" aria-hidden="true" />
                 Log Analysis
               </div>
             )}
-            {!blocked && done && chartSections.length >= 2 && (
+            {!blocked && !requestFailed && done && chartSections.length >= 2 && (
               <div className="relative">
                 <AnswerVisualization sections={chartSections} messageId={message.id} />
               </div>
             )}
 
-            {!blocked && done && chartSections.length < 2 && singleSection && (
+            {!blocked && !requestFailed && done && chartSections.length < 2 && singleSection && (
               <div className="relative">
                 <SingleCategoryGauge section={singleSection} />
               </div>
@@ -146,31 +175,27 @@ export function MessageBubble({
                 messageId={message.id}
                 groundedIds={message.groundedIds}
                 nodes={message.nodes}
+                presentation={done ? message.presentation : undefined}
               />
               {!done && <span className="ml-0.5 inline-block h-4 w-[7px] translate-y-0.5 bg-cyan motion-safe:animate-blink" />}
             </div>
 
-            {message.isMock && done && (
-              <p className="relative mt-2 font-mono text-[10px] uppercase tracking-wider text-amber/80">
-                ⚠ mock response · backend offline
-              </p>
-            )}
-
-            {done && message.nodes && (
+            {!requestFailed && done && message.nodes && (
               <div className="relative">
                 <SourcesPanel nodes={message.nodes} />
               </div>
             )}
 
-            {done && message.logEvidence && message.logEvidence.length > 0 && (
+            {!requestFailed && done && message.logEvidence && message.logEvidence.length > 0 && (
               <div className="relative">
                 <LogEvidencePanel entries={message.logEvidence} />
               </div>
             )}
 
-            {done && message.suggestions && message.suggestions.length > 0 && (
+            {!requestFailed && done && message.suggestions && message.suggestions.length > 0 && (
               <SuggestionChips
                 suggestions={message.suggestions}
+                actions={message.suggestionActions}
                 sourceQuery={message.sourceQuery}
                 onPick={onSuggestionClick}
               />

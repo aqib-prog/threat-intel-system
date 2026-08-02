@@ -57,7 +57,7 @@ export function Chat() {
     append(userMessage);
     setPending(true);
 
-    const { data, isMock } = await runQuery(query, skipCorrection);
+    const { data, isMock, error } = await runQuery(query, skipCorrection);
 
     // A pre-validated spell-correction: show a blocking "did you mean" gate
     // instead of the no-info answer, and disable input until the user chooses.
@@ -86,12 +86,15 @@ export function Chat() {
       guardrailCategory: data.guardrail_category,
       latencyMs: data.latency_ms,
       isMock,
+      requestError: error,
       answerSource: data.answer_source,
       logEvidence: data.log_evidence,
       sections: data.answer_sections,
+      presentation: data.answer_presentation,
       segments: data.segments,
       groundedIds: data.grounded_ids,
       suggestions: data.suggestions,
+      suggestionActions: data.suggestion_actions,
       sourceQuery: query,
     };
     append(assistantMessage);
@@ -113,6 +116,48 @@ export function Chat() {
           style={{
             background:
               "radial-gradient(ellipse 70% 50% at 50% -10%, rgba(124,58,237,0.1), transparent), radial-gradient(ellipse 50% 40% at 100% 100%, rgba(0,245,255,0.06), transparent)",
+          }}
+        />
+        {/* Ambient film: the same network-graph footage as the landing hero,
+            pushed far back (heavily dimmed, blurred, slowed) so the workspace
+            feels alive without competing with the answer text. Muted + looping
+            + playsInline so it never asks for permission or steals focus. */}
+        <video
+          className="absolute inset-0 h-full w-full object-cover opacity-[0.10]"
+          src="/video/hero-scrub.mp4"
+          poster="/video/hero-poster.jpg"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          aria-hidden="true"
+          tabIndex={-1}
+          // Heavier blur keeps only the soft bokeh blobs and discards the sharp
+          // wireframe edges, which were the part competing with the text.
+          style={{ filter: "blur(7px) saturate(135%) brightness(0.75)", transform: "scale(1.12)" }}
+          ref={(el) => {
+            // Quarter speed: ambient motion should drift, not race.
+            if (el) el.playbackRate = 0.25;
+          }}
+        />
+        {/* Centre-weighted scrim: near-opaque exactly where the conversation
+            column sits, easing off toward the edges so the drifting blobs stay
+            visible in the periphery instead of being flattened everywhere. */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse 62% 58% at 50% 46%, rgba(5,5,8,0.95) 0%, rgba(5,5,8,0.88) 42%, rgba(5,5,8,0.62) 72%, rgba(5,5,8,0.42) 100%)",
+          }}
+        />
+        {/* Bloom pass: lifts the surviving blobs so they read as glowing motes
+            rather than grey smudges, without raising the video's brightness. */}
+        <div
+          className="absolute inset-0 opacity-40"
+          style={{
+            background:
+              "radial-gradient(ellipse 45% 35% at 18% 22%, rgba(0,245,255,0.10), transparent 70%), radial-gradient(ellipse 40% 32% at 82% 74%, rgba(124,58,237,0.10), transparent 70%)",
           }}
         />
         <div className="absolute inset-0 opacity-25">

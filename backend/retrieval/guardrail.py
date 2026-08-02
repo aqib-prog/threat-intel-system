@@ -43,7 +43,7 @@ STOPWORD_CANDIDATES = {
     "uses", "used", "using", "for", "from", "with", "about", "the", "and",
     "or", "me", "all", "are", "is", "in", "on", "of", "to", "run", "runs",
     "ran", "tool", "tools", "malware", "actor", "actors", "campaign",
-    "campaigns", "operation", "operations", "technique", "techniques",
+    "campaigns", "operation", "operations", "software", "technique", "techniques",
     "tactic", "tactics", "access", "bear", "spider", "panda", "kitten",
     "typhoon", "blizzard", "tempest", "tiger", "dragon", "windows",
     "macos", "linux", "android", "ios", "esxi", "iaas", "saas",
@@ -53,7 +53,7 @@ STOPWORD_CANDIDATES = {
 STRUCTURAL_WORDS = {
     "tool", "tools", "malware", "actor", "actors", "campaign", "campaigns",
     "operation", "operations", "technique", "techniques", "tactic",
-    "tactics", "platform", "platforms"
+    "tactics", "platform", "platforms", "software"
 }
 
 NAMED_ENTITY_FIELDS = {
@@ -241,7 +241,15 @@ def ensure_entity_indexes(driver):
 
 
 def query_ngrams(query: str, max_words: int = 4) -> list[str]:
-    tokens = re.findall(r'\b\w+\b', query.lower())
+    # Preserve punctuation that is internal to an entity token. ATT&CK names
+    # such as "Trojan.Mebromi" and "Threat Group-3390" are exact graph names;
+    # flattening them to separate words can make the generic-category guard
+    # reject the subject before matching. Sentence punctuation is still
+    # excluded because separators must have alphanumeric text on both sides.
+    tokens = re.findall(
+        r"\b[a-z0-9]+(?:[._/-][a-z0-9]+)*\b",
+        query.lower(),
+    )
     candidates = []
     for n in range(1, max_words + 1):
         for i in range(len(tokens) - n + 1):
@@ -429,17 +437,44 @@ def is_confident_entity_match(candidate: str, matched_key: str,
     return score >= 82
 
 
+def is_adjacent_transposition(candidate: str, matched_key: str) -> bool:
+    """Whether two names differ only by one swapped adjacent character.
+
+    This narrow exception covers common human transpositions such as
+    ``Axoim`` -> ``Axiom`` without lowering the general fuzzy threshold. It is
+    deliberately limited to equal-length single-token names of at least five
+    characters, so it cannot turn a short generic word into another entity.
+    """
+    left = compact_text(candidate)
+    right = compact_text(matched_key)
+    if len(left) < 5 or len(left) != len(right):
+        return False
+    differences = [
+        index for index, (a, b) in enumerate(zip(left, right)) if a != b
+    ]
+    return (
+        len(differences) == 2
+        and differences[1] == differences[0] + 1
+        and left[differences[0]] == right[differences[1]]
+        and left[differences[1]] == right[differences[0]]
+    )
+
+
 def best_entity_match(candidate: str, choices, scorer, threshold: int,
                       allow_single_to_multi: bool = False):
     results = process.extract(
         candidate,
         choices,
         scorer=scorer,
-        score_cutoff=threshold,
+        # Adjacent transpositions commonly score around 80 even though their
+        # edit shape is much safer than an arbitrary 80%-similar fuzzy match.
+        score_cutoff=min(threshold, 78),
         limit=10
     )
 
     for matched_key, score, _ in results:
+        if is_adjacent_transposition(candidate, matched_key):
+            return matched_key, score
         if is_confident_entity_match(
             candidate,
             matched_key,
@@ -646,6 +681,15 @@ def extract_database_entity_hints(query: str, low_threshold: int = 82) -> dict:
             continue
 
         add_entity_match(matches, entity_type, real_name, candidate, score)
+
+    # An exact canonical name in the query is authoritative within its entity
+    # family. Keep multiple exact names for genuine multi-entity questions,
+    # but discard lower-scoring siblings produced by overlapping n-grams
+    # ("System Service Discovery" must not also seed "System Services").
+    for entity_type, items in list(matches.items()):
+        exact_items = [item for item in items if item.get("score", 0) >= 100]
+        if exact_items:
+            matches[entity_type] = exact_items
 
     return matches
 
@@ -983,12 +1027,18 @@ FALLBACK_MESSAGES = {
     "dangerous_content": "I'm a cybersecurity assistant and can't help with that request.",
 }
 
+ACTOR_ALIAS_CODE_PATTERN = (
+    r"(?:APT|FIN|UNC)\s*-?\s*"
+    r"(?=[0-9OIL]{1,5}\b)(?=[0-9OIL]*\d)[0-9OIL]{1,5}"
+)
+
 CYBERSECURITY_SIGNAL_RE = re.compile(
     r"\b(?:cyber(?:security)?|security\s+investigation|threat|attack|"
     r"malware|ransomware|phishing|adversar(?:y|ies)|detect(?:ion)?|"
     r"logs?|mitre|techniques?|tactics?|mitigations?|analytics?|"
-    r"data\s+sources?|actors?|tools?|APT\s*\d+|"
-    r"[GMSTC]A?\d{4}(?:\.\d{3})?|CVE-\d{4}-\d{4,7})\b",
+    r"data\s+sources?|actors?|tools?|"
+    + ACTOR_ALIAS_CODE_PATTERN
+    + r"|[GMSTC]A?\d{4}(?:\.\d{3})?|CVE-\d{4}-\d{4,7})\b",
     re.IGNORECASE,
 )
 
@@ -1172,41 +1222,180 @@ Respond only with valid JSON matching:
     return parsed
 
 
-# Verbs/phrases that signal a request to BUILD or RUN an offensive capability
-# (uplift), as opposed to looking something up. Their presence forces the LLM
-# harm gate; their absence lets a plain entity lookup fast-allow.
+# Defense in depth for the deterministic lookup recognizer below. This list is
+# deliberately NOT the security boundary: a request must also match the
+# positive lookup grammar before it can fast-allow. Keeping the action check
+# prevents an accidentally broadened grammar from turning common operational
+# requests into lookups, while the positive grammar closes the unbounded
+# "unknown verb" problem inherent in a deny-list-only design.
 _OFFENSIVE_ACTION_RE = re.compile(
     r"\b(?:write|build|create|make|generate|develop|produce|code|program|"
     r"implement|compile|deploy|execute|run|inject|exfiltrate|encrypt|decrypt|"
     r"weaponi[sz]e|obfuscate|evade|bypass|disable|escalate|pivot|craft|assemble|"
     r"exploit|dump|steal|harvest|crack|brute[-\s]?force|spread|propagate|ransom|"
     r"hijack|tamper|poison|spoof|install|launch|trigger|drop|plant|persist|"
+    r"wipe|erase|delete|destroy|sabotage|ddos|leak|disrupt|damage|corrupt|"
     r"how\s+to|how\s+do\s+i|how\s+can\s+i|step[-\s]by[-\s]step|give\s+me|"
     r"show\s+me\s+the|provide|working|functional|payload|script\s+to|command\s+to)\b",
     re.IGNORECASE,
 )
 
+# Explicit references do not need a warm graph index to be recognized as a
+# lookup subject. Actor aliases are included because a typo such as APT20 is
+# still a benign *lookup* even when it does not resolve; the pipeline later
+# handles existence and suggestions without fabricating an answer.
+_LOOKUP_REFERENCE_RE = re.compile(
+    r"\b(?:CVE-\d{4}-\d{4,7}|(?:TA|DET|DC|DS|AN|T|G|S|M|C)\d{4}"
+    r"(?:\.\d{3})?|"
+    + ACTOR_ALIAS_CODE_PATTERN
+    + r")\b",
+    re.IGNORECASE,
+)
+_LOOKUP_TOPIC_RE = re.compile(
+    r"\b(?:cybersecurity|threat\s+intelligence|ransomware|malware|phishing|"
+    r"persistence|credential\s+access|lateral\s+movement|defense\s+evasion|"
+    r"command\s+and\s+control|incident\s+response)\b",
+    re.IGNORECASE,
+)
+_LOOKUP_ENTITY = "__entity__"
+_LOOKUP_SAFE_WORDS = {
+    _LOOKUP_ENTITY,
+    "a", "about", "all", "an", "and", "are", "associated", "attributed",
+    "belong", "belongs", "by", "campaign", "campaigns", "component",
+    "components", "connected", "coverage", "covered", "data", "describe",
+    "details", "detect", "detected", "detects", "detection", "did", "do",
+    "does", "employ", "employed", "employs", "explain", "for", "group",
+    "groups", "has", "have", "how", "information", "is", "its", "list",
+    "malware", "me", "mitigate", "mitigated", "mitigates", "mitigation",
+    "mitigations", "name", "of", "on", "operate", "operates", "overview",
+    "parent", "parents", "part", "platform", "platforms", "profile", "ran",
+    "related", "relationship", "relationships", "run", "runs", "show",
+    "software", "strategy", "strategies", "subtechnique", "subtechniques",
+    "summary", "tactic", "tactics", "technique", "techniques", "tell", "the",
+    "their", "to", "tool", "tools", "under", "use", "used", "uses", "using",
+    "was", "were", "what", "which", "who", "work", "works",
+}
+_LOOKUP_START_RE = re.compile(
+    r"^(?:what|which|who|how|does|do|did|is|are|was|were|list|show|tell|"
+    r"explain|describe|name)\b",
+    re.IGNORECASE,
+)
+_INSTRUCTION_SHAPE_RE = re.compile(
+    r"\b(?:how\s+to|how\s+(?:do|can|could|should|would)\s+i|"
+    r"steps?\s+(?:to|for)|instructions?\s+(?:to|for)|ways?\s+to)\b",
+    re.IGNORECASE,
+)
+
+
+def _warm_lookup_entity_index() -> None:
+    """Populate the exact entity-name index on a cold process.
+
+    This is attempted only for short lookup-shaped inputs. Failure is harmless:
+    the query simply proceeds to the normal fail-closed LLM harm classifier.
+    """
+    if GLOBAL_INDEX:
+        return
+    driver = None
+    try:
+        driver = get_driver()
+        ensure_entity_indexes(driver)
+    except Exception:
+        return
+    finally:
+        if driver is not None:
+            driver.close()
+
+
+def _replace_lookup_subjects(query: str) -> tuple[str, int]:
+    """Replace explicit ids/topics and exact graph names with one placeholder."""
+    value = str(query or "")
+    replacements = 0
+
+    def replace_reference(_match: re.Match) -> str:
+        nonlocal replacements
+        replacements += 1
+        return f" {_LOOKUP_ENTITY} "
+
+    value = _LOOKUP_REFERENCE_RE.sub(replace_reference, value)
+    value = _LOOKUP_TOPIC_RE.sub(replace_reference, value)
+
+    # Longest names first so "Lazarus Group" wins over any shorter alias/name
+    # contained inside it. Exact, boundary-aware matching only: fuzzy matching
+    # is useful for suggestions, but is not authoritative enough for a harm
+    # bypass.
+    for name in sorted(GLOBAL_INDEX, key=len, reverse=True):
+        if len(name) < 3 or name not in value.lower():
+            continue
+        pattern = re.compile(
+            rf"(?<![A-Za-z0-9]){re.escape(name)}(?![A-Za-z0-9])",
+            re.IGNORECASE,
+        )
+        value, count = pattern.subn(f" {_LOOKUP_ENTITY} ", value)
+        replacements += count
+
+    normalized = re.sub(r"[^A-Za-z0-9_]+", " ", value.lower()).strip()
+    normalized = re.sub(r"\s+", " ", normalized)
+    return normalized, replacements
+
+
+def _matches_positive_lookup_grammar(query: str) -> bool:
+    """True only for a closed, auditable family of read-only lookup forms."""
+    if _INSTRUCTION_SHAPE_RE.search(query):
+        return False
+
+    # Named entities require the graph-backed exact-name index. Explicit ids
+    # and standard threat-intelligence topics are recognized without it, so
+    # those common paths never pay for an unnecessary database round trip.
+    if not (_LOOKUP_REFERENCE_RE.search(query) or _LOOKUP_TOPIC_RE.search(query)):
+        _warm_lookup_entity_index()
+    normalized, subject_count = _replace_lookup_subjects(query)
+    if subject_count == 0:
+        return False
+
+    tokens = normalized.split()
+    if not tokens or any(token not in _LOOKUP_SAFE_WORDS for token in tokens):
+        return False
+
+    # Relationship lookups need "use" ("Does APT29 use T1055?"), but an
+    # entity-selection request ("Which ransomware to use?") asks for
+    # operational guidance rather than graph facts. Keep it on the harm gate.
+    if re.search(
+        rf"\b{re.escape(_LOOKUP_ENTITY)}\s+(?:to|for)\s+"
+        r"(?:use|run|operate)\b",
+        normalized,
+    ):
+        return False
+
+    # A bare entity (or a simple "X and Y" list) is an unambiguous lookup.
+    if all(token in {_LOOKUP_ENTITY, "and"} for token in tokens):
+        return tokens.count(_LOOKUP_ENTITY) >= 1
+
+    # All sentence forms must start like a question/read-only lookup. This is
+    # what rejects "wipe ENTITY", "leak ENTITY", and every future action verb
+    # without needing that verb to appear in a deny-list.
+    if not _LOOKUP_START_RE.match(normalized):
+        return False
+
+    # "give/provide ENTITY" is intentionally absent. Informational phrasing is
+    # accepted through explicit nouns ("show profile of ENTITY", etc.), while
+    # requests with any unrecognized operational word fall through to the LLM.
+    return True
+
 
 def is_benign_entity_lookup(query: str) -> bool:
-    """Deterministic fast-allow for a plain cybersecurity lookup: a short query
-    with NO offensive build/run verb that either carries a cyber signal (MITRE
-    id / APT code) OR resolves to a REAL entity in the graph (actor, malware,
-    tool, technique, campaign - by name). Universal across named entities, not
-    just ids, so a bare "APT2", "Mimikatz", or "Lazarus Group" is never falsely
-    blocked. A harmful request carries an action verb, so it never qualifies and
-    still reaches the LLM classifier - and an over-broad verb match here only
-    routes to the LLM (which allows genuine lookups), never blocks outright."""
+    """Deterministic fast-allow for proven read-only cybersecurity lookups.
+
+    This is a positive grammar, not "everything without a known bad verb".
+    Exact ids, exact graph names, and standard cyber topics must occur inside a
+    closed set of lookup words/forms. Any unknown or operational wording reaches
+    the normal LLM harm classifier, preserving the mandatory harm decision.
+    """
     q = str(query or "").strip()
-    if not q or len(q.split()) > 15:
+    if not q or len(q.split()) > 20 or "\n" in q:
         return False
     if _OFFENSIVE_ACTION_RE.search(q):
         return False
-    if has_cybersecurity_signal(q):
-        return True
-    try:
-        return bool(generate_dynamic_hint_entities(q))
-    except Exception:
-        return False
+    return _matches_positive_lookup_grammar(q)
 
 
 def check_llm_guardrail(query: str) -> dict:
@@ -1277,7 +1466,9 @@ CYBER_ENTITY_REGEX = {
         r"\b(CVE-\d{4}-\d{4,7})\b", re.IGNORECASE
     ),
     "threat_actor": re.compile(
-        r"\b(APT\s*\d+|UNC\s*\d+|G\d{4}|(?:[A-Z][a-z]+\s+(?:Bear|Spider|Typhoon|Panda|Kitten|Blizzard|Tempest|Tiger|Dragon)))\b"
+        r"\b("
+        + ACTOR_ALIAS_CODE_PATTERN
+        + r"|G\d{4}|(?:[A-Z][a-z]+\s+(?:Bear|Spider|Typhoon|Panda|Kitten|Blizzard|Tempest|Tiger|Dragon)))\b"
     ),
     "platform": re.compile(
         r"\b(Windows|macOS|Linux|Containers|Kubernetes|IaaS|SaaS|Android|iOS|ESXi)\b",
@@ -1336,6 +1527,17 @@ QUALIFIER_NODE_TYPE_PATTERNS = {
     "Campaign": re.compile(r"\bcampaign\b", re.IGNORECASE),
 }
 
+SOFTWARE_RELATIONSHIP_RE = re.compile(
+    r"(?:"
+    r"\bsoftware\b.{0,80}\b(?:use|uses|used|using|utili[sz](?:e|es|ed|ing)|"
+    r"employ(?:s|ed|ing)?|associated|linked|connected)\b|"
+    r"\b(?:use|uses|used|using|utili[sz](?:e|es|ed|ing)|"
+    r"employ(?:s|ed|ing)?|associated|linked|connected)\b.{0,80}\bsoftware\b|"
+    r"\b(?:list|show)\b.{0,80}\bsoftware\b"
+    r")",
+    re.IGNORECASE,
+)
+
 
 def extract_requested_node_types(query: str) -> list[str]:
     requested = [
@@ -1355,6 +1557,14 @@ def extract_requested_node_types(query: str) -> list[str]:
 
 def reconcile_node_type_filters(query: str, filters: dict) -> dict:
     node_types = extract_requested_node_types(query)
+    # ATT&CK's "software" category is the union of Malware and Tool. Apply
+    # that meaning only when the query has relationship/list grammar and no
+    # more specific requested object type. This keeps "Software Discovery"
+    # usable as a Technique name while making natural questions such as
+    # "What software does FIN7 use?" equivalent to "What malware and tools
+    # does FIN7 use?".
+    if not node_types and SOFTWARE_RELATIONSHIP_RE.search(query):
+        node_types = ["Malware", "Tool"]
     if not node_types:
         return filters
 
@@ -1641,6 +1851,24 @@ def extract_filters(query: str, driver) -> dict:
     regex_entities = extract_entities_regex(query)
     database_hints = generate_dynamic_hint_entities(query)
     deterministic_entities = entities_from_hints(database_hints)
+    # An identifier written by the user is authoritative. Name-based fuzzy
+    # hints may still resolve other entity families in a mixed query (for
+    # example T1001 plus the Frankenstein campaign), but they must never add a
+    # same-family sibling ID merely because its name resembles the supplied
+    # label. This was the source of T1007 -> T1569 and T1583.002 -> T1584.002.
+    explicit_mitre_ids = {
+        str(value).upper()
+        for value in regex_entities.get("mitre_id", [])
+        if value
+    }
+    if explicit_mitre_ids and deterministic_entities.get("mitre_id"):
+        deterministic_entities["mitre_id"] = [
+            value
+            for value in deterministic_entities["mitre_id"]
+            if str(value).upper() in explicit_mitre_ids
+        ]
+        if not deterministic_entities["mitre_id"]:
+            deterministic_entities.pop("mitre_id")
     seeded_regex_entities = dict(regex_entities)
 
     for k, values in deterministic_entities.items():

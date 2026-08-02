@@ -180,7 +180,7 @@ def vector_search(driver, query: str, k: int = 10) -> list[dict]:
                        head([label IN labels(node) WHERE label <> 'MitreNode']) as type,
                        score
             ''', embedding=embedding, k=k)
-            return [dict(r) for r in result]
+            rows = [dict(r) for r in result]
         except Exception:
             # Compatibility fallback for databases without an online vector index.
             result = session.run('''
@@ -194,8 +194,15 @@ def vector_search(driver, query: str, k: int = 10) -> list[dict]:
                        head([label IN labels(node) WHERE label <> 'MitreNode']) as type,
                        score
             ''', embedding=embedding, k=k)
+            rows = [dict(r) for r in result]
         
-        return [dict(r) for r in result]
+        return sorted(
+            rows,
+            key=lambda item: (
+                -float(item.get("score") or 0.0),
+                str(item.get("external_id") or item.get("id") or ""),
+            ),
+        )
 
 def bm25_search(driver, query: str, k: int=10) -> list[dict]:
     search_query = sanitize_bm25_query(query)
@@ -212,7 +219,14 @@ def bm25_search(driver, query: str, k: int=10) -> list[dict]:
                                     head([label IN labels(node) WHERE label <> 'MitreNode']) as type, score
                                  LIMIT $k''',
                                  index='mitre_bm25', search_query=search_query, k=k)
-            return [dict(r) for r in result]
+            rows = [dict(r) for r in result]
+            return sorted(
+                rows,
+                key=lambda item: (
+                    -float(item.get("score") or 0.0),
+                    str(item.get("external_id") or item.get("id") or ""),
+                ),
+            )
         except Exception:
             return []
 
@@ -236,6 +250,7 @@ def exact_id_search(driver, query: str) -> list[dict]:
             RETURN node.id as id, node.name as name,
                    node.external_id as external_id,
                    head([label IN labels(node) WHERE label <> 'MitreNode']) as type, 1.0 as score
+            ORDER BY node.external_id
         ''', ids=ids)
         return [dict(r) for r in result]
 
@@ -260,6 +275,7 @@ def exact_name_search(driver, query: str, k: int = 10) -> list[dict]:
             RETURN node.id as id, node.name as name,
                    node.external_id as external_id,
                    head([label IN labels(node) WHERE label <> 'MitreNode']) as type, 1.0 as score
+            ORDER BY node.external_id
             LIMIT $k
         ''', search_text=query, query_tokens=query_tokens, k=k)
         return [dict(r) for r in result]
@@ -307,7 +323,12 @@ def fuzzy_entity_search(driver, query: str, k: int = 5) -> list[dict]:
             item["score"] = best / 100.0
             matches.append(item)
 
-    matches.sort(key=lambda item: item["score"], reverse=True)
+    matches.sort(
+        key=lambda item: (
+            -item["score"],
+            str(item.get("external_id") or item.get("id") or ""),
+        )
+    )
     return matches[:k]
 
 
@@ -340,23 +361,7 @@ def deterministic_query_expansions(query: str) -> list[str]:
 
 
 def expand_query(query: str) -> list[str]:
-    try:
-        response = OLLAMA_CLIENT.chat(
-            model='llama3.1',
-            messages=[{
-                'role': 'user',
-                'content': f"""
-                 Generate 3 different search queries for this cybersecurity question.
-                 Preserve any MITRE ATT&CK IDs exactly as written.
-                 Return ONLY the queries, one per line, no numbering, no explanation.
-                 Original query: {query}"""
-            }]
-        )
-        expanded = response['message']['content'].strip().split('\n')
-    except Exception:
-        expanded = []
-
-    original_ids = referenced_ids(query)
+    """Build reproducible retrieval queries without generative query drift."""
     deterministic = deterministic_query_expansions(query)
     queries = [query]
     seen = {query.lower()}
@@ -364,15 +369,6 @@ def expand_query(query: str) -> list[str]:
         if candidate.lower() not in seen:
             queries.append(candidate)
             seen.add(candidate.lower())
-    for candidate in expanded:
-        cleaned = clean_expanded_query(candidate)
-        candidate_ids = referenced_ids(cleaned)
-        if candidate_ids and not candidate_ids <= original_ids:
-            continue
-        if cleaned and cleaned.lower() not in seen:
-            queries.append(cleaned)
-            seen.add(cleaned.lower())
-
     return queries[:4]
 
 def rrf_fusion(vector_results: list, bm25_results: list, exact_results: list | None = None,
@@ -402,7 +398,13 @@ def rrf_fusion(vector_results: list, bm25_results: list, exact_results: list | N
             if item['data'].get('type') in requested_types:
                 item['score'] += 0.08
     
-    ranked = sorted(scores.values(), key=lambda x: x['score'], reverse=True)
+    ranked = sorted(
+        scores.values(),
+        key=lambda item: (
+            -item["score"],
+            str(item["data"].get("external_id") or item["data"].get("id") or ""),
+        ),
+    )
     fused = []
     for r in ranked:
         item = dict(r['data'])

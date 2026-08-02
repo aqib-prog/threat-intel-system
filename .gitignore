@@ -37,3 +37,8 @@ DEPLOYMENT.md
 
 .claude/
 frontend/.claude/
+
+# Local agent/skill packages installed for workspace tooling. These are not
+# application dependencies and should not be published with the product.
+.agents/
+skills-lock.json

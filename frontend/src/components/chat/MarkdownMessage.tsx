@@ -1,5 +1,6 @@
 import { useMemo, type ReactNode } from "react";
 import { clsx } from "clsx";
+import { motion } from "framer-motion";
 import ReactMarkdown, { type Components, type Options } from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { rehypeMitreHighlight } from "../../lib/rehypeMitreHighlight";
@@ -9,6 +10,8 @@ import { extractMitreId, extractMitreIds, mitreCitationUrl } from "../../lib/mit
 import { ACCENT_CLASSES } from "../../lib/colorTokens";
 import type { NodeSource } from "../../lib/types";
 import { MitreId } from "./MitreId";
+import { markdownFromAnswerPresentation } from "../../lib/answerPresentation";
+import type { AnswerPresentation } from "../../lib/types";
 
 // Renders a markdown link as its plain name + a compact "cite ↗" chip, but
 // only when the link resolves to a real MITRE page AND (when a grounded id set
@@ -146,11 +149,71 @@ function stripTrailingIncompleteLink(text: string): string {
     .replace(/[ \t]+$/, "");
 }
 
+// A already-bold label line ("**Tactics:**") emitted by the free-form
+// generation path. Rewritten to the plain "Tactics:" form so it takes the exact
+// same route as every other label below, instead of reaching ReactMarkdown as
+// raw bold and leaving stray asterisks behind when its section is extracted.
+const BOLD_LABEL_LINE_RE = /^(\s*)\*\*([A-Za-z][A-Za-z0-9 /-]{0,60}):\*\*[ \t]*/;
+
+/** Repair invalid strong-marker shapes before ReactMarkdown sees them.
+ *
+ * The backend performs the authoritative sanitization. This defensive pass is
+ * intentionally grammar-based (and uses the shared category registry) so an
+ * answer already held in client state from an older backend cannot keep
+ * rendering literal `**` until the page is refreshed.
+ */
+function normalizeMalformedStrongLines(text: string): string {
+  const lines = text.split(/\r?\n/);
+  const output: string[] = [];
+
+  for (let index = 0; index < lines.length; index += 1) {
+    const line = lines[index];
+    const markerOnly = /^\s*\*{2,}\s*$/.test(line);
+    if (markerOnly) continue;
+
+    const split = line.match(/^(\s*)\*\*\s*([A-Za-z][A-Za-z0-9 /-]{0,60})\s*:?\s*$/);
+    if (split && index + 1 < lines.length && /^\s*\*{2,}\s*$/.test(lines[index + 1])) {
+      const label = canonicalSectionLabel(split[2]);
+      if (label) {
+        output.push(`${split[1]}${label}:`);
+        index += 1;
+        continue;
+      }
+    }
+
+    const noColon = line.match(/^(\s*)\*\*\s*([A-Za-z][A-Za-z0-9 /-]{0,60})\s*\*\*\s*$/);
+    if (noColon) {
+      const label = canonicalSectionLabel(noColon[2]);
+      if (label) {
+        output.push(`${noColon[1]}${label}:`);
+        continue;
+      }
+    }
+
+    const spacedBalanced = line.match(/^(\s*)\*\*\s+(.+?)\s*\*\*(\s*)$/);
+    if (spacedBalanced) {
+      output.push(`${spacedBalanced[1]}**${spacedBalanced[2].trim()}**${spacedBalanced[3]}`);
+      continue;
+    }
+
+    const spacedUnclosed = line.match(/^(\s*)\*\*\s+(.+)$/);
+    if (spacedUnclosed && !line.trimEnd().endsWith("**")) {
+      output.push(`${spacedUnclosed[1]}${spacedUnclosed[2].trimEnd()}`);
+      continue;
+    }
+
+    output.push(line);
+  }
+
+  return output.join("\n");
+}
+
 function normalizePlainLabeledLines(text: string): string {
   const output: string[] = [];
   let inFence = false;
 
-  for (const line of text.split(/\r?\n/)) {
+  for (const rawLine of text.split(/\r?\n/)) {
+    const line = inFence ? rawLine : rawLine.replace(BOLD_LABEL_LINE_RE, "$1$2: ");
     if (/^\s*```/.test(line)) {
       inFence = !inFence;
       output.push(line);
@@ -204,15 +267,23 @@ export function MarkdownMessage({
   messageId,
   groundedIds,
   nodes,
+  presentation,
 }: {
   text: string;
   messageId: string;
   groundedIds?: string[];
   nodes?: NodeSource[];
+  presentation?: AnswerPresentation | null;
 }) {
+  const presentedText = useMemo(
+    () => markdownFromAnswerPresentation(text, presentation),
+    [text, presentation]
+  );
   const normalizedText = useMemo(
-    () => normalizePlainLabeledLines(stripTrailingIncompleteLink(text)),
-    [text]
+    () => normalizePlainLabeledLines(
+      normalizeMalformedStrongLines(stripTrailingIncompleteLink(presentedText))
+    ),
+    [presentedText]
   );
   // A set when the backend told us which ids exist in the graph (even if
   // empty); null when it did not (mock/offline) so we degrade to showing all.
@@ -246,13 +317,33 @@ export function MarkdownMessage({
         const Icon = meta.icon;
         const accent = ACCENT_CLASSES[meta.accent];
         return (
-          <div
+          <motion.div
             id={sectionId(messageId, label)}
+            // Each category panel lifts in as it is written, so a long answer
+            // assembles itself section by section instead of dumping at once.
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
             className={clsx(
-              "scroll-mt-4 mb-3 overflow-hidden rounded-lg border bg-void-panel/50 transition-shadow last:mb-0",
+              "group/sec relative scroll-mt-4 mb-3 overflow-hidden rounded-lg border transition-shadow last:mb-0",
               accent.border
             )}
+            style={{
+              background:
+                "linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(13,14,23,0.72) 45%, rgba(13,14,23,0.86) 100%)",
+              boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1)",
+            }}
           >
+            {/* One-shot scan sweep across the panel as it arrives - the visual
+                language of a readout being populated. */}
+            <span
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 -left-1/3 w-1/3 motion-safe:animate-section-scan"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent, rgba(0,245,255,0.14), transparent)",
+              }}
+            />
             <div className={clsx("flex items-center gap-2 border-b px-3 py-2", accent.border, accent.bg)}>
               <span className={clsx("flex h-5 w-5 shrink-0 items-center justify-center rounded", accent.bg)}>
                 <Icon size={12} weight="bold" className={accent.text} aria-hidden="true" />
@@ -261,8 +352,8 @@ export function MarkdownMessage({
                 {label}
               </span>
             </div>
-            <div className="px-3 py-2.5">{children}</div>
-          </div>
+            <div className="relative px-3 py-2.5">{children}</div>
+          </motion.div>
         );
       },
     }),

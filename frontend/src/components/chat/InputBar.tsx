@@ -109,7 +109,11 @@ export function InputBar({ onSend, disabled, showChips }: InputBarProps) {
         <div
           className={clsx(
             "corner-brackets relative flex items-end gap-2 rounded-xl border bg-void-panel px-3 py-2.5 transition-shadow duration-200",
-            focused ? "border-cyan/60 shadow-[0_0_0_3px_rgba(0,245,255,0.12)]" : "border-border-dim"
+            focused
+              ? // Tight ring for the edge, plus a wide soft cyan bloom so the
+                // field reads as lit rather than merely outlined.
+                "corner-brackets-active border-cyan/60 shadow-[0_0_0_3px_rgba(0,245,255,0.12),0_0_34px_-6px_rgba(0,245,255,0.45)]"
+              : "border-border-dim"
           )}
         >
           <textarea

@@ -66,6 +66,57 @@
   60%, 100% { transform: translateX(120%); }
 }
 
+/* ---- Source graph motion -------------------------------------------------
+   The force simulation writes `transform` on each node's <g> every tick, so
+   nothing here may animate that element's transform - these all target INNER
+   elements (the circle, a ping ring, the link stroke) which the simulation
+   never touches. All are transform/opacity/stroke only, so they stay on the
+   compositor and cost nothing per frame. */
+
+/* Nodes resolve out of the centre as the layout settles. */
+@keyframes graph-node-in {
+  from { opacity: 0; transform: scale(0.15); }
+  to { opacity: 1; transform: scale(1); }
+}
+.graph-node-circle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: graph-node-in 560ms cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  transition: r 200ms ease, stroke-width 200ms ease;
+}
+
+/* Signal flowing outward along each edge - the graph reads as live traffic
+   rather than a static diagram. Dash offset animates fine while the endpoints
+   move, which a path-following particle could not. */
+@keyframes graph-link-flow {
+  to { stroke-dashoffset: -24; }
+}
+.graph-link-flow {
+  stroke-dasharray: 3 9;
+  animation: graph-link-flow 1.7s linear infinite;
+}
+
+/* The hub emits a slow ping, echoing the radar chart's scope. */
+@keyframes graph-hub-ping {
+  0% { opacity: 0.5; transform: scale(0.45); }
+  70%, 100% { opacity: 0; transform: scale(2); }
+}
+.graph-hub-ping {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: graph-hub-ping 3.4s ease-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .graph-node-circle,
+  .graph-link-flow,
+  .graph-hub-ping {
+    animation: none;
+  }
+  .graph-link-flow { stroke-dasharray: none; }
+  .graph-hub-ping { display: none; }
+}
+
 .corner-brackets::before,
 .corner-brackets::after {
   content: "";
@@ -74,6 +125,25 @@
   height: 14px;
   border-color: var(--color-cyan);
   opacity: 0.6;
+  transition: opacity 220ms ease, width 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    height 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Focused state: the brackets extend and brighten, so the field visibly
+   "arms" itself rather than just changing border colour. Opt-in class, so
+   every other corner-brackets surface keeps its existing static look. */
+.corner-brackets-active::before,
+.corner-brackets-active::after {
+  opacity: 1;
+  width: 22px;
+  height: 22px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .corner-brackets::before,
+  .corner-brackets::after {
+    transition: none;
+  }
 }
 .corner-brackets::before {
   top: -1px;

@@ -41,20 +41,52 @@ export interface AnswerSection {
   count: number;
 }
 
+export interface AnswerBlockEntry {
+  heading: string;
+  markdown: string;
+}
+
+export interface AnswerBlock {
+  label: string;
+  entries: AnswerBlockEntry[];
+}
+
+/** Backend-authoritative section boundaries and content. This is the display
+ * counterpart to answer_sections' chart counts, eliminating a second,
+ * frontend-owned interpretation of the answer text. */
+export interface AnswerPresentation {
+  preamble: string;
+  blocks: AnswerBlock[];
+}
+
+/** A visible suggestion label paired with the exact corrected query the
+ * backend validated. The UI remains a compact chip; this only makes its click
+ * deterministic when the original query contains several references. */
+export interface SuggestionAction {
+  label: string;
+  query: string;
+  original: string;
+}
+
 /** One answered sub-question of a multi-intent turn. Each carries its OWN
  * answer_sections (so its chart shows that sub-question's real counts) and its
  * own grounded ids/sources - the frontend renders one card per segment. */
 export interface AnswerSegment {
   query: string;
+  /** Backend-authoritative card title; avoids frontend log/entity heuristics. */
+  display_title?: string | null;
+  segment_kind?: "question" | "log_analysis" | string;
   answer: string;
   allowed: boolean;
   guardrail_category?: string | null;
   answer_source?: AnswerSource;
   nodes?: NodeSource[];
   answer_sections?: AnswerSection[];
+  answer_presentation?: AnswerPresentation | null;
   log_evidence?: LogEvidenceEntry[];
   grounded_ids?: string[];
   suggestions?: string[];
+  suggestion_actions?: SuggestionAction[];
 }
 
 export interface QueryResponse {
@@ -72,12 +104,14 @@ export interface QueryResponse {
   answer_source?: AnswerSource;
   log_evidence?: LogEvidenceEntry[];
   answer_sections?: AnswerSection[];
+  answer_presentation?: AnswerPresentation | null;
   /** Present (>=2 entries) only for a multi-intent turn; empty for single. */
   segments?: AnswerSegment[];
   /** MITRE ids in `answer` that exist in our graph - only these get citations. */
   grounded_ids?: string[];
   /** "Did you mean" candidates when a referenced entity code didn't resolve. */
   suggestions?: string[];
+  suggestion_actions?: SuggestionAction[];
   /** A spell-correction gate: present only when a single-intent query returned
    * no info and a corrected spelling actually resolves. */
   correction?: Correction | null;
@@ -91,6 +125,19 @@ export interface Correction {
 
 export type ChatRole = "user" | "assistant";
 
+export type QueryRequestErrorKind =
+  | "timeout"
+  | "unauthorized"
+  | "backend_error"
+  | "unreachable";
+
+/** A transport failure, distinct from a valid backend/guardrail response. */
+export interface QueryRequestError {
+  kind: QueryRequestErrorKind;
+  title: string;
+  message: string;
+}
+
 export interface ChatMessage {
   id: string;
   role: ChatRole;
@@ -102,17 +149,21 @@ export interface ChatMessage {
   guardrailCategory?: string | null;
   latencyMs?: number;
   isMock?: boolean;
+  requestError?: QueryRequestError;
   pending?: boolean;
   answerSource?: AnswerSource;
   logEvidence?: LogEvidenceEntry[];
   /** Authoritative category counts from the backend; the chart binds to these. */
   sections?: AnswerSection[];
+  presentation?: AnswerPresentation | null;
   /** Present (>=2) only for a multi-intent turn; each renders its own card. */
   segments?: AnswerSegment[];
   /** MITRE ids validated to exist in our graph; gates citation rendering. */
   groundedIds?: string[];
   /** "Did you mean" candidates rendered as clickable chips. */
   suggestions?: string[];
+  /** Exact backend-generated query for each suggestion chip. */
+  suggestionActions?: SuggestionAction[];
   /** The user query that produced this answer - used to rebuild a chip click
    * that keeps the original intent. */
   sourceQuery?: string;

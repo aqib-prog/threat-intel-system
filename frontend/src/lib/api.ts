@@ -1,5 +1,9 @@
-import { buildMockResponse, MOCK_STATS } from "./mock";
-import type { QueryResponse, StatsResponse } from "./types";
+import { MOCK_STATS } from "./mock";
+import type {
+  QueryRequestError,
+  QueryResponse,
+  StatsResponse,
+} from "./types";
 
 // Configurable so builds can target a real deployed backend without a code
 // change (and so a CSP connect-src directive can be scoped to one origin
@@ -46,6 +50,66 @@ export async function checkHealth(): Promise<boolean> {
 export interface RunQueryResult {
   data: QueryResponse;
   isMock: boolean;
+  error?: QueryRequestError;
+}
+
+class QueryHttpError extends Error {
+  readonly status: number;
+
+  constructor(status: number) {
+    super(`Backend responded ${status}`);
+    this.name = "QueryHttpError";
+    this.status = status;
+  }
+}
+
+function classifyQueryFailure(error: unknown, timedOut: boolean): QueryRequestError {
+  if (timedOut) {
+    return {
+      kind: "timeout",
+      title: "Request timed out",
+      message:
+        "The backend did not finish within 90 seconds. No answer was fabricated. " +
+        "The server may still be busy; wait briefly, then retry.",
+    };
+  }
+  if (error instanceof QueryHttpError && error.status === 401) {
+    return {
+      kind: "unauthorized",
+      title: "Authentication failed",
+      message: "The backend rejected the API key. Check the frontend and backend API-key configuration.",
+    };
+  }
+  if (error instanceof QueryHttpError) {
+    return {
+      kind: "backend_error",
+      title: "Backend request failed",
+      message: `The backend returned HTTP ${error.status}. No answer was generated.`,
+    };
+  }
+  return {
+    kind: "unreachable",
+    title: "Backend unreachable",
+    message: "The query service could not be reached. No answer was generated.",
+  };
+}
+
+function buildQueryFailureResponse(query: string, failure: QueryRequestError): QueryResponse {
+  // This object intentionally contains no ATT&CK claims, IDs, graph nodes, or
+  // sources. Transport failures must never look like grounded RAG answers.
+  return {
+    query,
+    response: failure.message,
+    answer: failure.message,
+    filters: {},
+    nodes: [],
+    sources: [],
+    allowed: false,
+    guardrail_category: null,
+    retrieved_count: 0,
+    context_count: 0,
+    latency_ms: 0,
+  };
 }
 
 export async function runQuery(query: string, skipCorrection = false): Promise<RunQueryResult> {
@@ -59,20 +123,18 @@ export async function runQuery(query: string, skipCorrection = false): Promise<R
       body: JSON.stringify({ query, skip_correction: skipCorrection }),
       signal,
     });
-    cancel();
-    if (res.status === 401) {
-      // Falls back to mock like any other failure below, but this
-      // specifically means VITE_API_KEY doesn't match the backend's
-      // API_KEYS - surface it distinctly so it isn't mistaken for the
-      // backend simply being offline.
-      console.error("API key rejected (401) - check VITE_API_KEY matches the backend's API_KEYS.");
-    }
-    if (!res.ok) throw new Error(`Backend responded ${res.status}`);
+    if (!res.ok) throw new QueryHttpError(res.status);
     const data = (await res.json()) as QueryResponse;
     return { data, isMock: false };
-  } catch {
+  } catch (error) {
+    const failure = classifyQueryFailure(error, signal.aborted);
+    return {
+      data: buildQueryFailureResponse(query, failure),
+      isMock: false,
+      error: failure,
+    };
+  } finally {
     cancel();
-    return { data: buildMockResponse(query), isMock: true };
   }
 }
 
@@ -105,4 +167,61 @@ export async function fetchStats(): Promise<RunStatsResult> {
       isFallback: true,
     };
   }
+}
+
+// --- Graph explorer -------------------------------------------------------
+// Backed by the standalone /graph router, which shares no code path with
+// /query. A failure here is contained: the caller renders an inline error in
+// the explorer panel and the answer already on screen is untouched.
+
+export interface GraphNodeRef {
+  name: string;
+  external_id: string;
+  node_type: string;
+}
+
+export interface GraphGroup {
+  relationship: string;
+  label: string;
+  direction: "in" | "out";
+  nodes: GraphNodeRef[];
+  truncated: boolean;
+}
+
+export interface GraphNeighbors {
+  anchor: GraphNodeRef;
+  groups: GraphGroup[];
+  total: number;
+}
+
+export class GraphLookupError extends Error {
+  readonly status: number;
+  constructor(message: string, status: number) {
+    super(message);
+    this.name = "GraphLookupError";
+    this.status = status;
+  }
+}
+
+export async function fetchGraphNeighbors(
+  externalId: string,
+  signal?: AbortSignal
+): Promise<GraphNeighbors> {
+  const res = await fetch(
+    `${API_BASE}/graph/neighbors/${encodeURIComponent(externalId)}`,
+    { headers: { ...authHeaders() }, signal }
+  );
+  if (!res.ok) {
+    // The backend sends a human-readable `detail` for 404/422/503; fall back to
+    // a generic line so the panel never renders "[object Object]".
+    let detail = "Could not load the graph for this node.";
+    try {
+      const body = await res.json();
+      if (typeof body?.detail === "string") detail = body.detail;
+    } catch {
+      /* non-JSON error body - keep the generic message */
+    }
+    throw new GraphLookupError(detail, res.status);
+  }
+  return (await res.json()) as GraphNeighbors;
 }

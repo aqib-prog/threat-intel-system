@@ -6,10 +6,18 @@ const Landing = lazy(() => import("./pages/Landing").then((m) => ({ default: m.L
 const Chat = lazy(() => import("./pages/Chat").then((m) => ({ default: m.Chat })));
 const NotFound = lazy(() => import("./pages/NotFound").then((m) => ({ default: m.NotFound })));
 
+// Opacity only - deliberately NO scale/transform.
+//
+// Framer Motion writes `scale` as a CSS transform, and a transformed ancestor
+// becomes the containing block for every `position: fixed` descendant. That
+// silently turned the landing page's fixed full-screen background layer into a
+// page-height element, so its canvases sized themselves to the whole document
+// (~21 megapixels) and repainted that every frame. Keeping this transform-free
+// is what lets `fixed` mean "viewport" again.
 const pageTransition = {
-  initial: { opacity: 0, scale: 0.98 },
-  animate: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 1.02 },
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 },
 };
 
 function AnimatedPage({ children }: { children: React.ReactNode }) {

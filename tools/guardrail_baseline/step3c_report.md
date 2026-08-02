@@ -1,6 +1,6 @@
 # Card 6 Part A step 3c: copyright creative-reproduction harm gate
 
-Status: **MEASURED** (2026-07-21T16:27:33.453494+00:00)
+Status: **MEASURED** (2026-07-30T06:48:34.326215+00:00)
 
 The topic gate, classifier split, structured output, fail-closed default,
 and step-1/2 routing are unchanged. The harm gate now also blocks verbatim

@@ -43,8 +43,11 @@ jobs:
           python -m unittest \
             orchestration.test_multi_intent \
             orchestration.test_query_decomposer \
+            orchestration.test_entity_resolution \
             generation.test_relationship_routing \
+            retrieval.test_graph_traversal_scope \
             retrieval.test_spell_normalize \
             retrieval.test_benign_lookup \
             api.test_answer_sections \
+            api.test_query_response \
             observability.test_langfuse_tracing

@@ -35,7 +35,14 @@ CONTEXT = {
         "as a means of gaining access."
     ),
     "tactics": ["Initial Access", "Persistence"],
+    "tactic_details": [
+        {"name": "Initial Access", "external_id": "TA0001"},
+        {"name": "Persistence", "external_id": "TA0003"},
+    ],
     "mitigations": ["Multi-factor Authentication"],
+    "mitigation_details": [
+        {"name": "Multi-factor Authentication", "external_id": "M1032"},
+    ],
     "relevance_score": 9.0,
 }
 
@@ -87,6 +94,11 @@ class PipelineRetrievedContextTests(unittest.TestCase):
 
         legacy = implicit.to_dict()
         legacy.pop("retrieved_contexts")
+        # These are later, additive UX fields and are covered by their own
+        # regression tests. This assertion protects the original RAG response
+        # contract that predates both context export and suggestion actions.
+        legacy.pop("suggestions")
+        legacy.pop("suggestion_actions")
         actual = json.dumps(
             legacy, sort_keys=True, separators=(",", ":"), ensure_ascii=False
         ).encode("utf-8")
@@ -120,8 +132,10 @@ class PipelineRetrievedContextTests(unittest.TestCase):
     def test_default_false_does_not_format_or_export_contexts(self) -> None:
         with mock.patch.object(
             pipeline,
-            "format_context",
-            side_effect=AssertionError("format_context must not run without opt-in"),
+            "format_evaluation_context",
+            side_effect=AssertionError(
+                "format_evaluation_context must not run without opt-in"
+            ),
         ):
             result = self.run_success(include_contexts=False)
         self.assertEqual(result.retrieved_contexts, [])
@@ -131,9 +145,105 @@ class PipelineRetrievedContextTests(unittest.TestCase):
 
         self.assertEqual(len(result.retrieved_contexts), 1)
         context = result.retrieved_contexts[0]
-        self.assertIn("Adversaries may obtain and abuse credentials", context)
-        self.assertIn("Mitigations: Multi-factor Authentication", context)
-        self.assertIn("Tactics: Initial Access, Persistence", context)
+        self.assertIn("Mitigations that mitigate this Technique:", context)
+        self.assertIn("- Multi-factor Authentication (M1032)", context)
+        self.assertNotIn("Adversaries may obtain and abuse credentials", context)
+        self.assertNotIn("Tactics this Technique belongs to:", context)
+
+    def test_opt_in_pairwise_context_keeps_cross_link_without_unrelated_fields(self) -> None:
+        context = pipeline.format_evaluation_context(
+            [CONTEXT],
+            "Does T1078 belong to TA0003?",
+        )
+
+        self.assertIn("Tactics this Technique belongs to:", context)
+        self.assertIn("- Persistence (TA0003)", context)
+        self.assertNotIn("Mitigations that mitigate this Technique:", context)
+
+    def test_opt_in_multihop_non_subject_keeps_only_explicit_cross_link(self) -> None:
+        campaign = {
+            "name": "Example Campaign",
+            "external_id": "C0001",
+            "node_type": "Campaign",
+            "technique_details": [
+                {"name": "Unrelated Direct Technique", "external_id": "T9999"}
+            ],
+            "tool_details": [
+                {"name": "Example Tool", "external_id": "S0363"}
+            ],
+        }
+        context = pipeline.format_evaluation_context(
+            [campaign],
+            "What techniques does Tool S0363, used by C0001, employ?",
+        )
+
+        self.assertIn("Tools directly used by this Campaign:", context)
+        self.assertIn("- Example Tool (S0363)", context)
+        self.assertNotIn("Techniques directly used by this Campaign:", context)
+
+    def test_opt_in_set_difference_exports_both_complete_operands(self) -> None:
+        campaign = {
+            "name": "Example Campaign",
+            "external_id": "C0001",
+            "node_type": "Campaign",
+            "technique_details": [
+                {"name": "Campaign Direct Technique", "external_id": "T1001"}
+            ],
+            "tool_details": [
+                {"name": "Example Tool", "external_id": "S0363"}
+            ],
+        }
+        tool = {
+            "name": "Example Tool",
+            "external_id": "S0363",
+            "node_type": "Tool",
+            "technique_details": [
+                {"name": "Campaign Direct Technique", "external_id": "T1001"},
+                {"name": "Tool-only Technique", "external_id": "T1113"},
+            ],
+            "campaign_details": [
+                {"name": "Example Campaign", "external_id": "C0001"}
+            ],
+        }
+        query = (
+            "Which techniques used by Tool S0363 are absent from C0001's "
+            "own direct technique relationships?"
+        )
+
+        campaign_context = pipeline.format_evaluation_context([campaign], query)
+        tool_context = pipeline.format_evaluation_context([tool], query)
+
+        self.assertIn("Tools directly used by this Campaign:", campaign_context)
+        self.assertIn("Techniques directly used by this Campaign:", campaign_context)
+        self.assertIn("- Campaign Direct Technique (T1001)", campaign_context)
+        self.assertIn("Techniques directly used by this Tool:", tool_context)
+        self.assertIn("- Tool-only Technique (T1113)", tool_context)
+
+    def test_opt_in_relationship_context_is_lossless_and_not_char_truncated(self) -> None:
+        details = [
+            {
+                "name": f"Synthetic Technique Name {index:03d} With Sufficient Length",
+                "external_id": f"T{index:04d}",
+            }
+            for index in range(1, 80)
+        ]
+        context = {
+            **CONTEXT,
+            "techniques": [detail["name"] for detail in details],
+            "technique_details": details,
+        }
+        result = self._run_main_path(contexts=[context], ranked=[context])
+
+        exported = result.retrieved_contexts[0]
+        self.assertIn(
+            "- Synthetic Technique Name 001 With Sufficient Length (T0001)",
+            exported,
+        )
+        self.assertIn(
+            "- Synthetic Technique Name 079 With Sufficient Length (T0079)",
+            exported,
+        )
+        self.assertNotIn(", ...", exported)
 
     def test_opt_in_keeps_context_used_even_when_generation_returns_fallback(self) -> None:
         result = self.run_success(

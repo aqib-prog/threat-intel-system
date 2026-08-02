@@ -8,14 +8,31 @@ import { StatCardSkeleton } from "../components/landing/StatCardSkeleton";
 import { LaunchButton } from "../components/landing/LaunchButton";
 import { Logo } from "../components/shared/Logo";
 import { useLiveStats } from "../hooks/useLiveStats";
+import { useSmoothScroll } from "../hooks/useSmoothScroll";
 
 const Globe = lazy(() => import("../components/landing/Globe").then((m) => ({ default: m.Globe })));
+const ScrollDismantle = lazy(() =>
+  import("../components/landing/ScrollDismantle").then((m) => ({ default: m.ScrollDismantle }))
+);
+const PipelineFlow = lazy(() =>
+  import("../components/landing/PipelineFlow").then((m) => ({ default: m.PipelineFlow }))
+);
+const ScrollVideo = lazy(() =>
+  import("../components/landing/ScrollVideo").then((m) => ({ default: m.ScrollVideo }))
+);
 
 export function Landing() {
   const { stats, isFallback, loading } = useLiveStats();
+  // Marketing surface only - the chat route keeps native scrolling.
+  useSmoothScroll();
 
   return (
-    <div className="relative min-h-dvh overflow-hidden bg-void">
+    // No overflow-hidden here: it would break `position: sticky` in the
+    // scroll-scrubbed sections below. BackgroundStack already renders its own
+    // `fixed inset-0` layer, so it must NOT be wrapped again - the extra
+    // wrapper made the ambient canvases size themselves against the document
+    // instead of the viewport, which is what tanked scroll performance.
+    <div className="relative bg-void">
       <BackgroundStack />
       <MitreBadges />
 
@@ -104,6 +121,18 @@ export function Landing() {
           </Suspense>
         </div>
       </main>
+
+      <Suspense fallback={<div className="h-dvh" />}>
+        <ScrollVideo />
+      </Suspense>
+
+      <Suspense fallback={<div className="h-dvh" />}>
+        <ScrollDismantle />
+      </Suspense>
+
+      <Suspense fallback={<div className="h-96" />}>
+        <PipelineFlow />
+      </Suspense>
 
       <footer className="relative z-10 border-t border-border-dim px-6 py-5 text-center font-mono text-[11px] tracking-widest text-text-dim sm:px-10">
         MITRE ATT&CK® IS A REGISTERED TRADEMARK OF THE MITRE CORPORATION · DATA FOR RESEARCH PURPOSES

@@ -10,6 +10,9 @@ import type { AnswerSectionCount } from "../../lib/parseAnswerSections";
 const SIZE = 180;
 const CENTER = SIZE / 2;
 const MAX_RADIUS = SIZE / 2 - 14;
+// Floor for the smallest category so it reads as a plotted vertex, not a dot
+// sitting on the origin.
+const MIN_RADIUS = 18;
 const RING_COUNT = 4;
 
 function angleFor(index: number, total: number): number {
@@ -44,7 +47,17 @@ export function AnswerVisualization({
   const vertices = useMemo(
     () =>
       sections.map((s, i) => {
-        const radius = (s.count / maxCount) * MAX_RADIUS;
+        // Square-root scale, not linear. Category counts routinely span two
+        // orders of magnitude (115 techniques vs 2 campaigns); on a linear
+        // radius that pins every smaller axis to the centre and the polygon
+        // degenerates into a sliver pointing at the single largest value.
+        // sqrt is the standard magnitude encoding (it is what bubble charts
+        // use for area) - it preserves rank order and relative weight while
+        // keeping every axis legible. MIN_RADIUS guarantees a count of 1 is
+        // still a visible vertex rather than a dot at the origin.
+        // The exact counts are unchanged and shown verbatim in the legend.
+        const ratio = maxCount > 0 ? Math.sqrt(s.count) / Math.sqrt(maxCount) : 0;
+        const radius = MIN_RADIUS + ratio * (MAX_RADIUS - MIN_RADIUS);
         return { ...s, ...pointAt(i, n, radius) };
       }),
     [sections, maxCount, n]
@@ -89,7 +102,20 @@ export function AnswerVisualization({
     : undefined;
 
   return (
-    <div ref={containerRef} className="relative mb-3 rounded-lg border border-border-glow bg-void-raised/50 p-4">
+    <div
+      ref={containerRef}
+      className="relative mb-3 overflow-hidden rounded-xl border border-cyan/20 p-4"
+      style={{
+        // Instrument-panel glass: a cool sheet lit from the top-left, with a
+        // bright inner top edge so it reads as a physical readout rather than a
+        // flat card. No backdrop-filter - this sits inside scrolling chat and
+        // would re-rasterize on every scroll frame.
+        background:
+          "linear-gradient(140deg, rgba(0,245,255,0.09) 0%, rgba(180,220,255,0.03) 45%, rgba(124,58,237,0.07) 100%), rgba(10,10,18,0.72)",
+        boxShadow:
+          "inset 0 1px 0 rgba(255,255,255,0.16), inset 0 0 40px -22px rgba(0,245,255,0.55), 0 18px 44px -30px rgba(0,245,255,0.4)",
+      }}
+    >
       <div className="mb-3 flex items-start gap-2">
         <Target size={14} weight="bold" className="mt-0.5 shrink-0 text-cyan" aria-hidden="true" />
         <div>
@@ -142,31 +168,122 @@ export function AnswerVisualization({
             height={SIZE}
             className="shrink-0 overflow-visible"
           >
+            <defs>
+              {/* Depth for the plotted shape: hot at the centre, transparent at
+                  the rim, so the polygon reads as a signal return rather than a
+                  flat tint. */}
+              <radialGradient id="radar-fill" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor={ACCENT_HEX.cyan} stopOpacity="0.42" />
+                <stop offset="55%" stopColor={ACCENT_HEX.cyan} stopOpacity="0.16" />
+                <stop offset="100%" stopColor={ACCENT_HEX.cyan} stopOpacity="0.04" />
+              </radialGradient>
+              {/* The sweep: a cyan wedge fading to nothing behind it, rotated
+                  continuously - the afterglow of a scanning radar head. */}
+              <linearGradient id="radar-sweep" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor={ACCENT_HEX.cyan} stopOpacity="0" />
+                <stop offset="100%" stopColor={ACCENT_HEX.cyan} stopOpacity="0.5" />
+              </linearGradient>
+              <filter id="radar-glow" x="-50%" y="-50%" width="200%" height="200%">
+                <feGaussianBlur stdDeviation="2.2" result="blur" />
+                <feMerge>
+                  <feMergeNode in="blur" />
+                  <feMergeNode in="SourceGraphic" />
+                </feMerge>
+              </filter>
+            </defs>
+
+            {/* Scanning sweep, behind the data. Pure CSS rotation so it stays on
+                the compositor and costs nothing per frame. */}
+            <g
+              className="motion-safe:animate-radar-sweep"
+              style={{ transformOrigin: `${CENTER}px ${CENTER}px` }}
+            >
+              <path
+                d={`M ${CENTER} ${CENTER} L ${CENTER + MAX_RADIUS} ${CENTER} A ${MAX_RADIUS} ${MAX_RADIUS} 0 0 0 ${
+                  CENTER + MAX_RADIUS * Math.cos(-Math.PI / 3)
+                } ${CENTER + MAX_RADIUS * Math.sin(-Math.PI / 3)} Z`}
+                fill="url(#radar-sweep)"
+                opacity={0.5}
+              />
+            </g>
+
+            {/* Ping: a ring expanding from the centre out past the rim, on the
+                same cadence as the sweep - the pulse a scope emits before the
+                returns come back. */}
+            <circle
+              cx={CENTER}
+              cy={CENTER}
+              r={MAX_RADIUS}
+              fill="none"
+              stroke={ACCENT_HEX.cyan}
+              strokeWidth={1}
+              className="motion-safe:animate-radar-ping"
+              style={{ transformOrigin: `${CENTER}px ${CENTER}px` }}
+            />
+
+            {/* Range rings */}
+            <circle cx={CENTER} cy={CENTER} r={MAX_RADIUS} fill="none" stroke="rgba(0,245,255,0.14)" strokeWidth={1} />
             {rings.map((points, i) => (
               <polygon key={i} points={points} fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth={1} />
             ))}
             {vertices.map((v, i) => {
               const edge = pointAt(i, n, MAX_RADIUS);
-              return <line key={v.label} x1={CENTER} y1={CENTER} x2={edge.x} y2={edge.y} stroke="rgba(255,255,255,0.08)" strokeWidth={1} />;
+              // Hovering a legend chip lights that category's axis in its own
+              // accent and recedes the rest, so the two halves of the chart read
+              // as one control rather than a picture beside a list.
+              const isActive = hovered === v.label;
+              const isMuted = hovered !== null && !isActive;
+              return (
+                <line
+                  key={v.label}
+                  x1={CENTER}
+                  y1={CENTER}
+                  x2={edge.x}
+                  y2={edge.y}
+                  stroke={isActive ? ACCENT_HEX[v.accent] : "rgba(255,255,255,0.08)"}
+                  strokeWidth={isActive ? 1.75 : 1}
+                  opacity={isMuted ? 0.3 : 1}
+                  style={{ transition: "stroke 200ms ease, stroke-width 200ms ease, opacity 200ms ease" }}
+                />
+              );
             })}
 
             <motion.polygon
               points={polygonPoints}
-              fill={hexToRgba(ACCENT_HEX.cyan, 0.16)}
+              fill="url(#radar-fill)"
               stroke={ACCENT_HEX.cyan}
               strokeWidth={1.5}
-              initial={{ opacity: 0, scale: 0.8 }}
+              filter="url(#radar-glow)"
+              initial={{ opacity: 0, scale: 0.72 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
+              transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
               style={{ transformOrigin: "center" }}
             />
 
             {vertices.map((v) => {
               const hex = ACCENT_HEX[v.accent];
               const isHovered = hovered === v.label;
+              const isMuted = hovered !== null && !isHovered;
               return (
-                <motion.circle
+                <g
                   key={v.label}
+                  // Non-focused contacts recede rather than disappear - the
+                  // shape of the profile stays readable while one axis leads.
+                  opacity={isMuted ? 0.35 : 1}
+                  style={{ transition: "opacity 200ms ease" }}
+                >
+                  {/* Contact halo - reads as a radar return, and grows on hover
+                      so the whole marker responds, not just the dot. */}
+                  <motion.circle
+                    cx={v.x}
+                    cy={v.y}
+                    fill={hex}
+                    initial={{ opacity: 0, r: 0 }}
+                    animate={{ opacity: isHovered ? 0.3 : 0.14, r: isHovered ? 13 : 8 }}
+                    transition={{ duration: 0.35, ease: "easeOut" }}
+                    style={{ pointerEvents: "none" }}
+                  />
+                <motion.circle
                   cx={v.x}
                   cy={v.y}
                   fill={hex}
@@ -191,6 +308,7 @@ export function AnswerVisualization({
                     }
                   }}
                 />
+                </g>
               );
             })}
 
@@ -199,14 +317,20 @@ export function AnswerVisualization({
         )}
 
         <div className={clsx("grid w-full grid-cols-1 gap-1.5", n >= 3 ? "sm:grid-cols-2" : "sm:grid-cols-2")}>
-          {sections.map((s) => {
+          {sections.map((s, i) => {
             const accent = ACCENT_CLASSES[s.accent];
             const Icon = s.icon;
             const isHovered = hovered === s.label;
             return (
-              <button
+              <motion.button
                 type="button"
                 key={s.label}
+                // Chips register one after another, like contacts being logged.
+                // The count text itself is never animated - it renders at its
+                // final value immediately so a number is never shown wrong.
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.35, delay: 0.12 + i * 0.07, ease: "easeOut" }}
                 onMouseEnter={(e) => showTooltip(s.label, e.currentTarget)}
                 onMouseLeave={hideTooltip}
                 onFocus={(e) => showTooltip(s.label, e.currentTarget)}
@@ -227,7 +351,7 @@ export function AnswerVisualization({
                 <span className={clsx("ml-auto shrink-0 font-mono text-[10px] font-semibold", accent.text)}>
                   {s.count}
                 </span>
-              </button>
+              </motion.button>
             );
           })}
         </div>

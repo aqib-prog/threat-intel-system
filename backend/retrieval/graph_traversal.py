@@ -27,10 +27,20 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
                 MATCH (t:Technique {id: $id})
                 CALL { WITH t OPTIONAL MATCH (t)-[:BELONGS_TO_TACTIC]->(n:Tactic) RETURN collect(DISTINCT n.name) AS tactics, collect(DISTINCT n {.name, .external_id}) AS tactic_details }
                 CALL { WITH t OPTIONAL MATCH (n:Mitigation)-[:MITIGATES]->(t) RETURN collect(DISTINCT n.name) AS mitigations, collect(DISTINCT n {.name, .external_id}) AS mitigation_details }
-                CALL { WITH t OPTIONAL MATCH (n:Actor)-[:USES]->(t) RETURN collect(DISTINCT n.name) AS actors, collect(DISTINCT n {.name, .external_id}) AS actor_details }
+                CALL { WITH t OPTIONAL MATCH (n:Actor)-[:USES]->(t) RETURN collect(DISTINCT n.name) AS direct_actors, collect(DISTINCT n {.name, .external_id}) AS direct_actor_details }
+                CALL { WITH t OPTIONAL MATCH (c:Campaign)-[:USES]->(t) OPTIONAL MATCH (c)-[:ATTRIBUTED_TO]->(n:Actor) RETURN collect(DISTINCT n.name) AS campaign_actors, collect(DISTINCT n {.name, .external_id}) AS campaign_actor_details }
                 CALL { WITH t OPTIONAL MATCH (n:Malware)-[:USES]->(t) RETURN collect(DISTINCT n.name) AS malware, collect(DISTINCT n {.name, .external_id}) AS malware_details }
                 CALL { WITH t OPTIONAL MATCH (n:Tool)-[:USES]->(t) RETURN collect(DISTINCT n.name) AS tools, collect(DISTINCT n {.name, .external_id}) AS tool_details }
                 CALL { WITH t OPTIONAL MATCH (n:Campaign)-[:USES]->(t) RETURN collect(DISTINCT n.name) AS campaigns, collect(DISTINCT n {.name, .external_id}) AS campaign_details }
+                CALL {
+                    WITH t
+                    OPTIONAL MATCH (c:Campaign)-[:USES]->(s)-[:USES]->(t)
+                    WHERE s:Malware OR s:Tool
+                    RETURN collect(DISTINCT c.name) AS campaigns_via_software,
+                           collect(DISTINCT c {.name, .external_id}) AS campaign_via_software_details,
+                           collect(DISTINCT s.name) AS campaign_software,
+                           collect(DISTINCT s {.name, .external_id}) AS campaign_software_details
+                }
                 CALL { WITH t OPTIONAL MATCH (n:DetectionStrategy)-[:DETECTS]->(t) RETURN collect(DISTINCT n.name) AS detections, collect(DISTINCT n {.name, .external_id}) AS detection_strategy_details }
                 CALL { WITH t OPTIONAL MATCH (ds:DetectionStrategy)-[:DETECTS]->(t) OPTIONAL MATCH (ds)-[:HAS_ANALYTIC]->(n:Analytic) RETURN collect(DISTINCT n.description) AS analytics, collect(DISTINCT n {.name, .external_id}) AS detection_analytic_details }
                 CALL { WITH t OPTIONAL MATCH (ds:DetectionStrategy)-[:DETECTS]->(t) OPTIONAL MATCH (ds)-[:HAS_ANALYTIC]->(:Analytic)-[:USES_DATA_COMPONENT]->(n:DataComponent) RETURN collect(DISTINCT n.name) AS log_sources }
@@ -40,12 +50,19 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
                        t.description as description,
                        t.platforms as platforms,
                        t.is_subtechnique as is_subtechnique,
-                       tactics, mitigations, actors, malware, tools, campaigns,
+                       tactics, mitigations,
+                       reduce(acc = [], value IN direct_actors + campaign_actors |
+                           CASE WHEN value IN acc THEN acc ELSE acc + value END) AS actors,
+                       malware, tools, campaigns,
+                       campaigns_via_software, campaign_software,
                        detections, analytics, log_sources, parent_technique,
                        subtechniques, tactic_details, mitigation_details,
-                       actor_details, detection_strategy_details,
+                       reduce(acc = [], value IN direct_actor_details + campaign_actor_details |
+                           CASE WHEN value IN acc THEN acc ELSE acc + value END) AS actor_details,
+                       detection_strategy_details,
                        parent_technique_detail, subtechnique_details,
                        malware_details, tool_details, campaign_details,
+                       campaign_via_software_details, campaign_software_details,
                        detection_analytic_details
             """, id=node_id)
 
@@ -54,15 +71,30 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
                 MATCH (a:Actor {id: $id})
                 CALL { WITH a
                     OPTIONAL MATCH (a)-[:USES]->(t:Technique)
-                    RETURN collect(DISTINCT t.name) AS techniques, collect(DISTINCT t {.name, .external_id}) AS technique_details
+                    RETURN collect(DISTINCT t.name) AS direct_techniques, collect(DISTINCT t {.name, .external_id}) AS direct_technique_details
+                }
+                CALL { WITH a
+                    OPTIONAL MATCH (c:Campaign)-[:ATTRIBUTED_TO]->(a)
+                    OPTIONAL MATCH (c)-[:USES]->(t:Technique)
+                    RETURN collect(DISTINCT t.name) AS campaign_techniques, collect(DISTINCT t {.name, .external_id}) AS campaign_technique_details
                 }
                 CALL { WITH a
                     OPTIONAL MATCH (a)-[:USES]->(mal:Malware)
-                    RETURN collect(DISTINCT mal.name) AS malware, collect(DISTINCT mal {.name, .external_id}) AS malware_details
+                    RETURN collect(DISTINCT mal.name) AS direct_malware, collect(DISTINCT mal {.name, .external_id}) AS direct_malware_details
+                }
+                CALL { WITH a
+                    OPTIONAL MATCH (c:Campaign)-[:ATTRIBUTED_TO]->(a)
+                    OPTIONAL MATCH (c)-[:USES]->(mal:Malware)
+                    RETURN collect(DISTINCT mal.name) AS campaign_malware, collect(DISTINCT mal {.name, .external_id}) AS campaign_malware_details
                 }
                 CALL { WITH a
                     OPTIONAL MATCH (a)-[:USES]->(tool:Tool)
-                    RETURN collect(DISTINCT tool.name) AS tools, collect(DISTINCT tool {.name, .external_id}) AS tool_details
+                    RETURN collect(DISTINCT tool.name) AS direct_tools, collect(DISTINCT tool {.name, .external_id}) AS direct_tool_details
+                }
+                CALL { WITH a
+                    OPTIONAL MATCH (c:Campaign)-[:ATTRIBUTED_TO]->(a)
+                    OPTIONAL MATCH (c)-[:USES]->(tool:Tool)
+                    RETURN collect(DISTINCT tool.name) AS campaign_tools, collect(DISTINCT tool {.name, .external_id}) AS campaign_tool_details
                 }
                 CALL { WITH a
                     OPTIONAL MATCH (c:Campaign)-[:ATTRIBUTED_TO]->(a)
@@ -70,21 +102,42 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
                 }
                 CALL { WITH a
                     OPTIONAL MATCH (a)-[:USES]->(:Technique)-[:BELONGS_TO_TACTIC]->(tac:Tactic)
-                    RETURN collect(DISTINCT tac.name) AS tactics, collect(DISTINCT tac {.name, .external_id}) AS tactic_details
+                    RETURN collect(DISTINCT tac.name) AS direct_tactics, collect(DISTINCT tac {.name, .external_id}) AS direct_tactic_details
+                }
+                CALL { WITH a
+                    OPTIONAL MATCH (c:Campaign)-[:ATTRIBUTED_TO]->(a)
+                    OPTIONAL MATCH (c)-[:USES]->(:Technique)-[:BELONGS_TO_TACTIC]->(tac:Tactic)
+                    RETURN collect(DISTINCT tac.name) AS campaign_tactics, collect(DISTINCT tac {.name, .external_id}) AS campaign_tactic_details
                 }
                 RETURN a.name as name, a.external_id as id, a.url as url,
                        a.description as description,
                        a.aliases as aliases,
-                       techniques, malware, tools, campaigns, tactics,
-                       technique_details, malware_details, tool_details,
-                       campaign_details, tactic_details
+                       reduce(acc = [], value IN direct_techniques + campaign_techniques |
+                           CASE WHEN value IN acc THEN acc ELSE acc + value END) AS techniques,
+                       reduce(acc = [], value IN direct_malware + campaign_malware |
+                           CASE WHEN value IN acc THEN acc ELSE acc + value END) AS malware,
+                       reduce(acc = [], value IN direct_tools + campaign_tools |
+                           CASE WHEN value IN acc THEN acc ELSE acc + value END) AS tools,
+                       campaigns,
+                       reduce(acc = [], value IN direct_tactics + campaign_tactics |
+                           CASE WHEN value IN acc THEN acc ELSE acc + value END) AS tactics,
+                       reduce(acc = [], value IN direct_technique_details + campaign_technique_details |
+                           CASE WHEN value IN acc THEN acc ELSE acc + value END) AS technique_details,
+                       reduce(acc = [], value IN direct_malware_details + campaign_malware_details |
+                           CASE WHEN value IN acc THEN acc ELSE acc + value END) AS malware_details,
+                       reduce(acc = [], value IN direct_tool_details + campaign_tool_details |
+                           CASE WHEN value IN acc THEN acc ELSE acc + value END) AS tool_details,
+                       campaign_details,
+                       reduce(acc = [], value IN direct_tactic_details + campaign_tactic_details |
+                           CASE WHEN value IN acc THEN acc ELSE acc + value END) AS tactic_details
             """, id=node_id)
 
         elif node_type == "Malware":
             result = run_query(session, """
                 MATCH (mal:Malware {id: $id})
                 CALL { WITH mal OPTIONAL MATCH (mal)-[:USES]->(n:Technique) RETURN collect(DISTINCT n.name) AS techniques, collect(DISTINCT n {.name, .external_id}) AS technique_details }
-                CALL { WITH mal OPTIONAL MATCH (n:Actor)-[:USES]->(mal) RETURN collect(DISTINCT n.name) AS actors, collect(DISTINCT n {.name, .external_id}) AS actor_details }
+                CALL { WITH mal OPTIONAL MATCH (n:Actor)-[:USES]->(mal) RETURN collect(DISTINCT n.name) AS direct_actors, collect(DISTINCT n {.name, .external_id}) AS direct_actor_details }
+                CALL { WITH mal OPTIONAL MATCH (c:Campaign)-[:USES]->(mal) OPTIONAL MATCH (c)-[:ATTRIBUTED_TO]->(n:Actor) RETURN collect(DISTINCT n.name) AS campaign_actors, collect(DISTINCT n {.name, .external_id}) AS campaign_actor_details }
                 CALL { WITH mal OPTIONAL MATCH (n:Campaign)-[:USES]->(mal) RETURN collect(DISTINCT n.name) AS campaigns, collect(DISTINCT n {.name, .external_id}) AS campaign_details }
                 CALL { WITH mal OPTIONAL MATCH (mal)-[:USES]->(:Technique)-[:BELONGS_TO_TACTIC]->(n:Tactic) RETURN collect(DISTINCT n.name) AS tactics, collect(DISTINCT n {.name, .external_id}) AS tactic_details }
                 CALL { WITH mal OPTIONAL MATCH (mal)-[:USES]->(t:Technique) OPTIONAL MATCH (n:Mitigation)-[:MITIGATES]->(t) RETURN collect(DISTINCT n.name) AS mitigations, collect(DISTINCT n {.name, .external_id}) AS mitigation_details }
@@ -92,8 +145,14 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
                        mal.description as description,
                        mal.platforms as platforms,
                        mal.aliases as aliases,
-                       techniques, actors, campaigns, tactics, mitigations,
-                       technique_details, actor_details, campaign_details,
+                       techniques,
+                       reduce(acc = [], value IN direct_actors + campaign_actors |
+                           CASE WHEN value IN acc THEN acc ELSE acc + value END) AS actors,
+                       campaigns, tactics, mitigations,
+                       technique_details,
+                       reduce(acc = [], value IN direct_actor_details + campaign_actor_details |
+                           CASE WHEN value IN acc THEN acc ELSE acc + value END) AS actor_details,
+                       campaign_details,
                        tactic_details, mitigation_details
             """, id=node_id)
 
@@ -101,7 +160,8 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
             result = run_query(session, """
                 MATCH (tool:Tool {id: $id})
                 CALL { WITH tool OPTIONAL MATCH (tool)-[:USES]->(n:Technique) RETURN collect(DISTINCT n.name) AS techniques, collect(DISTINCT n {.name, .external_id}) AS technique_details }
-                CALL { WITH tool OPTIONAL MATCH (n:Actor)-[:USES]->(tool) RETURN collect(DISTINCT n.name) AS actors, collect(DISTINCT n {.name, .external_id}) AS actor_details }
+                CALL { WITH tool OPTIONAL MATCH (n:Actor)-[:USES]->(tool) RETURN collect(DISTINCT n.name) AS direct_actors, collect(DISTINCT n {.name, .external_id}) AS direct_actor_details }
+                CALL { WITH tool OPTIONAL MATCH (c:Campaign)-[:USES]->(tool) OPTIONAL MATCH (c)-[:ATTRIBUTED_TO]->(n:Actor) RETURN collect(DISTINCT n.name) AS campaign_actors, collect(DISTINCT n {.name, .external_id}) AS campaign_actor_details }
                 CALL { WITH tool OPTIONAL MATCH (n:Campaign)-[:USES]->(tool) RETURN collect(DISTINCT n.name) AS campaigns, collect(DISTINCT n {.name, .external_id}) AS campaign_details }
                 CALL { WITH tool OPTIONAL MATCH (tool)-[:USES]->(:Technique)-[:BELONGS_TO_TACTIC]->(n:Tactic) RETURN collect(DISTINCT n.name) AS tactics, collect(DISTINCT n {.name, .external_id}) AS tactic_details }
                 CALL { WITH tool OPTIONAL MATCH (tool)-[:USES]->(t:Technique) OPTIONAL MATCH (n:Mitigation)-[:MITIGATES]->(t) RETURN collect(DISTINCT n.name) AS mitigations, collect(DISTINCT n {.name, .external_id}) AS mitigation_details }
@@ -109,8 +169,14 @@ def traverse_node(driver, node_id:str, node_type:str) -> dict:
                        tool.description as description,
                        tool.platforms as platforms,
                        tool.aliases as aliases,
-                       techniques, actors, campaigns, tactics, mitigations,
-                       technique_details, actor_details, campaign_details,
+                       techniques,
+                       reduce(acc = [], value IN direct_actors + campaign_actors |
+                           CASE WHEN value IN acc THEN acc ELSE acc + value END) AS actors,
+                       campaigns, tactics, mitigations,
+                       technique_details,
+                       reduce(acc = [], value IN direct_actor_details + campaign_actor_details |
+                           CASE WHEN value IN acc THEN acc ELSE acc + value END) AS actor_details,
+                       campaign_details,
                        tactic_details, mitigation_details
             """, id=node_id)
 

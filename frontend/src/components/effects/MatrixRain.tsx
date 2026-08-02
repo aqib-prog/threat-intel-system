@@ -22,8 +22,11 @@ export function MatrixRain({ opacity = 0.12 }: { opacity?: number }) {
     let lastTime = 0;
 
     const resize = () => {
-      width = canvas.clientWidth;
-      height = canvas.clientHeight;
+      // Viewport-sized, not clientHeight-sized - see ParticleNetwork for why:
+      // on a long page this backbuffer grew to ~7.6 megapixels and was cleared
+      // and redrawn on every frame.
+      width = Math.max(1, window.innerWidth || canvas.clientWidth);
+      height = Math.max(1, window.innerHeight || canvas.clientHeight);
       const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       canvas.width = width * dpr;
       canvas.height = height * dpr;

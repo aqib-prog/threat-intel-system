@@ -40,7 +40,7 @@ _CLAUSE_STARTER = (
 # pipeline as a single question, exactly as it did before multi-intent existed.
 _SPLIT_RE = re.compile(
     r"(?<=[.!?;])\s+"
-    r"|\n+"
+    r"|(?<!\\)\n+"
     r"|\b(?:also|additionally|separately|furthermore|moreover)\b[:,]?\s+"
     rf"(?=(?:{_CLAUSE_STARTER})\b)",
     re.IGNORECASE,
