@@ -30,7 +30,11 @@
 
   --color-border-dim: #1a1c2b;
   --color-border-glow: #1f3a44;
-  --color-text-dim: #6b7280;
+  /* Secondary text. Raised from #6b7280, which measured 3.98-4.21:1 on the
+     void surfaces - below the 4.5:1 floor for body text, and it carries most
+     of the labels, hints and metadata in the product. Cool-tinted rather than
+     neutral: on a blue-black surface, gray secondary text reads as dirty. */
+  --color-text-dim: #7d8a9e;
   --color-text-mid: #9ca3af;
 
   --animate-pulse-glow: pulse-glow 2.4s ease-in-out infinite;
@@ -72,6 +76,19 @@
     0%, 49% { opacity: 1; }
     50%, 100% { opacity: 0; }
   }
+}
+
+/* Keyboard focus, applied once for the whole app.
+   Nine interactive components shipped buttons with no focus style at all, which
+   makes the product unusable by keyboard and fails WCAG 2.4.7. That is a missing
+   system value rather than nine separate defects, so it is fixed here.
+   Wrapped in :where() so it carries zero specificity: any component that
+   defines its own focus treatment still wins, and this only fills the gaps.
+   :focus-visible, not :focus, so pointer users never see a ring they did not
+   ask for. */
+:where(a, button, [role="button"], input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--color-cyan);
+  outline-offset: 2px;
 }
 
 html {

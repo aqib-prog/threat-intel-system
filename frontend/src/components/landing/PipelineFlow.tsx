@@ -92,6 +92,20 @@ export function PipelineFlow() {
       );
 
       rows.forEach((row) => {
+        // Already on screen when the trigger is created? Reveal it now.
+        //
+        // ScrollTrigger computes positions at creation time. This section sits
+        // below a lazily-loaded scroll video, so the page height changes AFTER
+        // these triggers exist - their start points end up wrong, "top 82%"
+        // never fires, and the stage stays at opacity 0 forever. That is the
+        // intermittent blank section: the content was always in the DOM, just
+        // permanently invisible.
+        const rect = row.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.82) {
+          gsap.set(row, { opacity: 1, y: 0, rotateX: 0 });
+          return;
+        }
+
         gsap.fromTo(
           row,
           { opacity: 0, y: 34, rotateX: -12 },
@@ -105,6 +119,34 @@ export function PipelineFlow() {
           }
         );
       });
+
+      // Recompute once the rest of the page has settled. The video's metadata
+      // and the lazy sections above land after this effect runs, and every
+      // trigger position measured before that is stale.
+      const refresh = () => ScrollTrigger.refresh();
+      window.addEventListener("load", refresh);
+      const settle = window.setTimeout(refresh, 600);
+
+      // Fail-open. If anything at all prevents a reveal from firing - a
+      // refresh that lands wrong, a plugin error, a resize mid-scroll - the
+      // stages become visible anyway. Content must never be lost to a
+      // decorative animation that did not run.
+      const failOpen = window.setTimeout(() => {
+        rows.forEach((row) => {
+          if (Number(getComputedStyle(row).opacity) < 0.05) {
+            gsap.set(row, { opacity: 1, y: 0, rotateX: 0 });
+          }
+        });
+        if (lineRef.current && Number(getComputedStyle(lineRef.current).opacity) < 0.05) {
+          gsap.set(lineRef.current, { opacity: 1, scaleY: 1 });
+        }
+      }, 2500);
+
+      return () => {
+        window.removeEventListener("load", refresh);
+        window.clearTimeout(settle);
+        window.clearTimeout(failOpen);
+      };
     }, sectionRef);
 
     return () => context.revert();

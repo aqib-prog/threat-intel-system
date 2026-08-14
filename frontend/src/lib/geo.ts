@@ -40,3 +40,33 @@ export const ATTACK_ROUTES: [number, number][] = [
   [6, 10], // Beijing -> Sydney
   [5, 3], // Dubai -> Moscow
 ];
+
+
+/**
+ * Per-region context shown when a node is probed on the globe.
+ *
+ * Deliberately real ATT&CK vocabulary - actor names, tactic names, technique
+ * ids that exist in the graph - rather than invented telemetry. The globe is
+ * the front door of a threat-intel product; putting fake numbers on it would
+ * undercut the one thing the product claims, which is that nothing is invented.
+ */
+export interface RegionIntel {
+  actors: string;
+  tactic: string;
+  technique: string;
+}
+
+export const REGION_INTEL: Record<string, RegionIntel> = {
+  "New York": { actors: "FIN7 · Carbanak", tactic: "Initial Access", technique: "T1566" },
+  "Sao Paulo": { actors: "FIN13", tactic: "Credential Access", technique: "T1110" },
+  London: { actors: "APT29 · Wizard Spider", tactic: "Persistence", technique: "T1078" },
+  Moscow: { actors: "APT28 · Sandworm", tactic: "Defense Evasion", technique: "T1027" },
+  Lagos: { actors: "SilverTerrier", tactic: "Collection", technique: "T1114" },
+  Dubai: { actors: "OilRig · MuddyWater", tactic: "Command & Control", technique: "T1071" },
+  Mumbai: { actors: "SideWinder", tactic: "Discovery", technique: "T1082" },
+  Beijing: { actors: "APT41 · Axiom", tactic: "Lateral Movement", technique: "T1021" },
+  Tokyo: { actors: "BlackTech", tactic: "Execution", technique: "T1059" },
+  Singapore: { actors: "APT32", tactic: "Exfiltration", technique: "T1041" },
+  Sydney: { actors: "APT40", tactic: "Reconnaissance", technique: "T1595" },
+  "San Francisco": { actors: "Scattered Spider", tactic: "Privilege Escalation", technique: "T1548" },
+};

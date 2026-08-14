@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { clsx } from "clsx";
+import { SessionMenu } from "./SessionMenu";
 import { Logo } from "../shared/Logo";
 import type { ConnectionState } from "../../lib/types";
 
@@ -37,6 +38,7 @@ export function ChatNavbar({ connection, onToggleFilters }: ChatNavbarProps) {
         </Link>
       </div>
 
+      <div className="flex items-center gap-2.5">
       <div
         className={clsx(
           "flex items-center gap-2 rounded-full border px-2.5 py-1",
@@ -55,6 +57,10 @@ export function ChatNavbar({ connection, onToggleFilters }: ChatNavbarProps) {
         <span className={clsx("font-mono text-[11px] font-medium tracking-wider", status.text)}>
           {status.label}
         </span>
+      </div>
+
+      {/* Who is signed in, and the way out. */}
+      <SessionMenu />
       </div>
     </header>
   );

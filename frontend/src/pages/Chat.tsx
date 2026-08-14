@@ -18,6 +18,25 @@ import type { ChatMessage } from "../lib/types";
 const SESSION_REFRESH_MS = 60 * 60 * 1000;
 
 export function Chat() {
+  // Ambient background is mounted AFTER the page has painted.
+  //
+  // Arriving from the landing page means a WebGL context, two canvases, and a
+  // video decode all starting inside the same frame as the route transition -
+  // which is what makes the hand-off stutter. Deferring the decorative layer by
+  // one idle callback lets the interactive UI paint first; the backdrop fades in
+  // a moment later and nobody notices it was late.
+  const [ambientReady, setAmbientReady] = useState(false);
+  useEffect(() => {
+    const idle =
+      "requestIdleCallback" in window
+        ? window.requestIdleCallback(() => setAmbientReady(true), { timeout: 800 })
+        : window.setTimeout(() => setAmbientReady(true), 400);
+    return () => {
+      if ("cancelIdleCallback" in window) window.cancelIdleCallback(idle as number);
+      else window.clearTimeout(idle as number);
+    };
+  }, []);
+
   const { messages, append } = useChatHistory();
   const connection = useConnectionStatus();
   const [pending, setPending] = useState(false);
@@ -122,8 +141,9 @@ export function Chat() {
             pushed far back (heavily dimmed, blurred, slowed) so the workspace
             feels alive without competing with the answer text. Muted + looping
             + playsInline so it never asks for permission or steals focus. */}
+        {ambientReady && (
         <video
-          className="absolute inset-0 h-full w-full object-cover opacity-[0.10]"
+          className="absolute inset-0 h-full w-full object-cover opacity-[0.10] transition-opacity duration-700"
           src="/video/hero-scrub.mp4"
           poster="/video/hero-poster.jpg"
           autoPlay
@@ -141,6 +161,7 @@ export function Chat() {
             if (el) el.playbackRate = 0.25;
           }}
         />
+        )}
         {/* Centre-weighted scrim: near-opaque exactly where the conversation
             column sits, easing off toward the edges so the drifting blobs stay
             visible in the periphery instead of being flattened everywhere. */}
@@ -160,9 +181,11 @@ export function Chat() {
               "radial-gradient(ellipse 45% 35% at 18% 22%, rgba(0,245,255,0.10), transparent 70%), radial-gradient(ellipse 40% 32% at 82% 74%, rgba(124,58,237,0.10), transparent 70%)",
           }}
         />
-        <div className="absolute inset-0 opacity-25">
-          <ParticleNetwork />
-        </div>
+        {ambientReady && (
+          <div className="absolute inset-0 opacity-25">
+            <ParticleNetwork />
+          </div>
+        )}
       </div>
       <ScanlineOverlay animated={false} />
       <div className="relative z-10">

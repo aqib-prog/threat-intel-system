@@ -6,6 +6,7 @@ import { GlitchTitle } from "../components/landing/GlitchTitle";
 import { StatCard } from "../components/landing/StatCard";
 import { StatCardSkeleton } from "../components/landing/StatCardSkeleton";
 import { LaunchButton } from "../components/landing/LaunchButton";
+import { SiteFooter } from "../components/landing/SiteFooter";
 import { Logo } from "../components/shared/Logo";
 import { useLiveStats } from "../hooks/useLiveStats";
 import { useSmoothScroll } from "../hooks/useSmoothScroll";
@@ -134,9 +135,7 @@ export function Landing() {
         <PipelineFlow />
       </Suspense>
 
-      <footer className="relative z-10 border-t border-border-dim px-6 py-5 text-center font-mono text-[11px] tracking-widest text-text-dim sm:px-10">
-        MITRE ATT&CK® IS A REGISTERED TRADEMARK OF THE MITRE CORPORATION · DATA FOR RESEARCH PURPOSES
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

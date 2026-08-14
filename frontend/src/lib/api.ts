@@ -117,6 +117,9 @@ export async function runQuery(query: string, skipCorrection = false): Promise<R
   try {
     const res = await fetch(`${API_BASE}/query`, {
       method: "POST",
+      // The session lives in an HttpOnly cookie; without this the browser
+      // withholds it and every request 401s despite being signed in.
+      credentials: "include",
       headers: { "Content-Type": "application/json", ...authHeaders() },
       // skip_correction is set once the user answers the "did you mean" gate, so
       // the follow-up query is answered directly and never re-offers a gate.
@@ -209,7 +212,7 @@ export async function fetchGraphNeighbors(
 ): Promise<GraphNeighbors> {
   const res = await fetch(
     `${API_BASE}/graph/neighbors/${encodeURIComponent(externalId)}`,
-    { headers: { ...authHeaders() }, signal }
+    { headers: { ...authHeaders() }, credentials: "include", signal }
   );
   if (!res.ok) {
     // The backend sends a human-readable `detail` for 404/422/503; fall back to

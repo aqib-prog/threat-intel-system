@@ -41,6 +41,11 @@ from observability import langfuse_tracing as obs  # noqa: E402
 from retrieval.guardrail import extract_filters, has_cybersecurity_signal  # noqa: E402
 from api.graph_routes import router as graph_router  # noqa: E402
 from api.settings import load_settings  # noqa: E402
+from auth.cleanup import start_session_cleanup, stop_session_cleanup  # noqa: E402
+from auth.models import init_db as init_auth_db  # noqa: E402
+from auth.routes import current_user, router as auth_router  # noqa: E402
+from auth.session_gate import require_session  # noqa: E402
+from auth.settings import SETTINGS as AUTH_SETTINGS, production_warnings  # noqa: E402
 from api.stats import StatsResponse, get_stats  # noqa: E402
 from security import (  # noqa: E402
     AUTH_ENABLED,
@@ -61,6 +66,29 @@ app = FastAPI(
     version=SETTINGS.version,
     description="REST API for guarded MITRE ATT&CK GraphRAG retrieval and generation.",
 )
+
+
+@app.on_event("startup")
+async def _start_session_cleanup() -> None:
+    # Reclaims expired session rows on an interval. Purely housekeeping: an
+    # expired session is already refused at authentication, so a failure here
+    # can never grant access - it only means storage is reclaimed later.
+    app.state.session_cleanup_task = start_session_cleanup()
+
+
+@app.on_event("shutdown")
+async def _stop_session_cleanup() -> None:
+    await stop_session_cleanup(getattr(app.state, "session_cleanup_task", None))
+
+
+@app.on_event("startup")
+def _init_auth_storage() -> None:
+    # Idempotent: creates the users/sessions tables if they do not exist yet.
+    init_auth_db()
+    # Configuration that is fine locally but unsafe once deployed is surfaced
+    # loudly at boot rather than left to a deployment checklist someone forgets.
+    for warning in production_warnings(AUTH_SETTINGS):
+        print(f"[auth] CONFIG WARNING: {warning}", file=sys.stderr)
 
 
 @app.on_event("shutdown")
@@ -92,6 +120,9 @@ app.add_middleware(SlowAPIMiddleware)
 # path with /query - removing this single line would leave answering byte-for-
 # byte unchanged.
 app.include_router(graph_router)
+
+# Per-user authentication (sign-up / login / logout / session check).
+app.include_router(auth_router)
 
 
 class QueryRequest(BaseModel):
@@ -595,7 +626,11 @@ async def stats(request: Request) -> StatsResponse:
     return await run_in_threadpool(fetch)
 
 
-@app.get("/filters", response_model=FiltersResponse, dependencies=[Depends(require_api_key)])
+@app.get(
+    "/filters",
+    response_model=FiltersResponse,
+    dependencies=[Depends(require_api_key), Depends(require_session)],
+)
 @limiter.limit(SETTINGS.rate_limit_filters)
 async def filters(
     request: Request,
@@ -627,7 +662,11 @@ async def filters(
     )
 
 
-@app.post("/query", response_model=QueryResponse, dependencies=[Depends(require_api_key)])
+@app.post(
+    "/query",
+    response_model=QueryResponse,
+    dependencies=[Depends(require_api_key), Depends(require_session)],
+)
 @limiter.limit(SETTINGS.rate_limit_query)
 async def query(request: Request, payload: QueryRequest) -> QueryResponse:
     if payload.candidate_k < payload.top_k:
